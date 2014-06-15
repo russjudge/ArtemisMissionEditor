@@ -1,0 +1,286 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="c:\program files (x86)\microsoft visual studio 11.0\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
+<FxCopReport Version="11.0">
+ <Targets>
+  <Target Name="E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\bin\Debug\ArtemisMissionEditor.exe">
+   <Modules>
+    <Module Name="artemismissioneditor.exe">
+     <Namespaces>
+      <Namespace Name="ArtemisMissionEditor">
+       <Types>
+        <Type Name="_PanelSpaceMap" Kind="Class" Accessibility="Assembly" ExternallyVisible="False">
+         <Members>
+          <Member Name="#Finalize()" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="RemoveEmptyFinalizers" Category="Microsoft.Performance" CheckId="CA1821" Status="Active" Created="2014-06-15 22:06:53Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning" Path="e:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="2577">'_PanelSpaceMap' implements a finalizer that only calls conditionally emitted methods or the base type finalizer. Remove the finalizer or ensure that it is only conditionally compiled into the assembly. If this violation occurs against a finalizer that is entirely wrapped in a conditionally-emitted block of code, suppress this message.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="CheckedListBoxUITypeEditor_raceKeys" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Messages>
+          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2014-06-15 22:06:53Z" FixCategory="DependsOnFix">
+           <Issue Name="DependsOnFix" Certainty="95" Level="CriticalError">Implement IDisposable on 'CheckedListBoxUITypeEditor_raceKeys' because it creates members of the following IDisposable types: 'CheckedListBox'. If 'CheckedListBoxUITypeEditor_raceKeys' has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Issue>
+          </Message>
+         </Messages>
+        </Type>
+        <Type Name="CheckedListBoxUITypeEditor_raceNames" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Messages>
+          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2014-06-15 22:06:53Z" FixCategory="DependsOnFix">
+           <Issue Name="DependsOnFix" Certainty="95" Level="CriticalError">Implement IDisposable on 'CheckedListBoxUITypeEditor_raceNames' because it creates members of the following IDisposable types: 'CheckedListBox'. If 'CheckedListBoxUITypeEditor_raceNames' has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Issue>
+          </Message>
+         </Messages>
+        </Type>
+        <Type Name="CheckedListBoxUITypeEditor_vesselBroadTypes" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Messages>
+          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2014-06-15 22:06:53Z" FixCategory="DependsOnFix">
+           <Issue Name="DependsOnFix" Certainty="95" Level="CriticalError">Implement IDisposable on 'CheckedListBoxUITypeEditor_vesselBroadTypes' because it creates members of the following IDisposable types: 'CheckedListBox'. If 'CheckedListBoxUITypeEditor_vesselBroadTypes' has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Issue>
+          </Message>
+         </Messages>
+        </Type>
+        <Type Name="CheckedListBoxUITypeEditor_vesselClassNames" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Messages>
+          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2014-06-15 22:06:53Z" FixCategory="DependsOnFix">
+           <Issue Name="DependsOnFix" Certainty="95" Level="CriticalError">Implement IDisposable on 'CheckedListBoxUITypeEditor_vesselClassNames' because it creates members of the following IDisposable types: 'CheckedListBox'. If 'CheckedListBoxUITypeEditor_vesselClassNames' has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Issue>
+          </Message>
+         </Messages>
+        </Type>
+        <Type Name="ExpressionMember" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#.ctor(System.String,ArtemisMissionEditor.ExpressionMemberValueDescription,System.String,System.Boolean)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2014-06-15 22:06:53Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="CriticalWarning" Path="e:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\Classes\Mission\ExpressionMember" File="ExpressionMember.cs" Line="129">'ExpressionMember.ExpressionMember(string, ExpressionMemberValueDescription, string, bool)' contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: &#xD;&#xA;&#xD;&#xA;ExpressionMember..ctor(String, ExpressionMemberValueDescription, String, Boolean)&#xD;&#xA;ExpressionMember.set_ValueDescription(ExpressionMemberValueDescription):Void&#xD;&#xA;ExpressionMember.OnValueDescriptionChange():Void</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="ExpressionMemberValueDescription" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#OnClick(ArtemisMissionEditor.ExpressionMemberContainer,ArtemisMissionEditor.NormalLabel,System.Drawing.Point,ArtemisMissionEditor.EditorActivationMode)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2014-06-15 22:06:53Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="e:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\Classes\Mission\ExpressionMember\Enumerators &amp; Descriptor Classes" File="ExpressionMemberValueDescription.cs" Line="246">Object 'curCMS' can be disposed more than once in method 'ExpressionMemberValueDescription.OnClick(ExpressionMemberContainer, NormalLabel, Point, EditorActivationMode)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 246</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="ExpressionMemberValueEditor" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Messages>
+          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2014-06-15 22:06:53Z" FixCategory="DependsOnFix">
+           <Issue Name="DependsOnFix" Certainty="95" Level="CriticalError">Implement IDisposable on 'ExpressionMemberValueEditor' because it creates members of the following IDisposable types: 'ContextMenuStrip'. If 'ExpressionMemberValueEditor' has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Issue>
+          </Message>
+         </Messages>
+        </Type>
+        <Type Name="Log" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Save()" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200" Status="Active" Created="2014-06-15 22:06:53Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Error" Path="e:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\Classes\Shared" File="Log.cs" Line="43">'Log.Save()' rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#NewLogEntry" Kind="Event" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2014-06-15 22:06:53Z" FixCategory="Breaking">
+             <Issue Name="First" Certainty="95" Level="Error">Declare the first parameter of 'NewLogEntryEventHandler' as an object named 'sender'.</Issue>
+             <Issue Name="Second" Certainty="95" Level="Error">Declare the second parameter of 'NewLogEntryEventHandler' as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="Mission" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Finalize()" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="RemoveEmptyFinalizers" Category="Microsoft.Performance" CheckId="CA1821" Status="Active" Created="2014-06-15 22:06:53Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning" Path="e:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\Classes\Mission" File="Mission.cs" Line="425">'Mission' implements a finalizer that only calls conditionally emitted methods or the base type finalizer. Remove the finalizer or ensure that it is only conditionally compiled into the assembly. If this violation occurs against a finalizer that is entirely wrapped in a conditionally-emitted block of code, suppress this message.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#FromFile(System.String)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2014-06-15 22:06:53Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="e:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\Classes\Mission" File="Mission.cs" Line="570">Object 'streamReader' can be disposed more than once in method 'Mission.FromFile(string)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 570</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Save(System.String,System.Boolean)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2014-06-15 22:06:53Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="e:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\Classes\Mission" File="Mission.cs" Line="945">Object 'streamWriter' can be disposed more than once in method 'Mission.Save(string, bool)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 945</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="MissionNode_Unknown" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#_node" Kind="Field" Static="False" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="MarkAllNonSerializableFields" Category="Microsoft.Usage" CheckId="CA2235" Status="Active" Created="2014-06-15 22:06:53Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Error">Field 'MissionNode_Unknown._node' is a member of type 'MissionNode_Unknown', which is serializable, but is of type 'XmlNode', which is not serializable. Add the NonSerializedAttribute to 'MissionNode_Unknown._node'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="NamelessMapObject" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#TypeToStringShort" Kind="Property" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Accessors>
+            <Accessor Name="#get_TypeToStringShort()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+             <Messages>
+              <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Active" Created="2014-06-15 22:06:53Z" FixCategory="Breaking">
+               <Issue Name="PropertyGetter" Certainty="90" Level="Warning" Path="e:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\Classes\SpaceMap" File="NamelessMapObject.cs" Line="247">'NamelessMapObject.TypeToStringShort.get()' creates an exception of type 'Exception', an exception type that should not be raised in a property. If this exception instance might be raised, use a different exception type, convert this property into a method, or change this property's logic so that it no longer raises an exception.</Issue>
+              </Message>
+             </Messages>
+            </Accessor>
+           </Accessors>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="Settings" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Load()" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2014-06-15 22:06:53Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="e:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\Classes\Shared" File="Settings.cs" Line="235">Object 'istream' can be disposed more than once in method 'Settings.Load()'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 235</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="TreeViewEx" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#NodeMoved" Kind="Event" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2014-06-15 22:06:53Z" FixCategory="Breaking">
+             <Issue Name="First" Certainty="95" Level="Error">Declare the first parameter of 'TreeViewEx.NodeMovedEventHandler' as an object named 'sender'.</Issue>
+             <Issue Name="Second" Certainty="95" Level="Error">Declare the second parameter of 'TreeViewEx.NodeMovedEventHandler' as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+       </Types>
+      </Namespace>
+     </Namespaces>
+    </Module>
+   </Modules>
+  </Target>
+ </Targets>
+ <Rules>
+  <Rule TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009">
+   <Name>Declare event handlers correctly</Name>
+   <Description>By convention, .NET events have two parameters that specify the event sender and event data. Event handler signatures should follow this form: void MyEventHandler(object sender, EventArgs e). The 'sender' parameter is always of type System.Object, even if it is possible to employ a more specific type. The 'e' parameter is always of type System.EventArgs. Events that do not provide event data should use the System.EventHandler delegate type. Event handlers return void so that they can send each event to multiple target methods. Any value returned by a target would be lost after the first call.</Description>
+   <Resolution Name="First">Declare the first parameter of {0} as an object named 'sender'.</Resolution>
+   <Resolution Name="Second">Declare the second parameter of {0} as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182133(VS.100).aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">Error</MessageLevel>
+   <File Name="designrules.dll" Version="11.0.0.0" />
+  </Rule>
+  <Rule TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202">
+   <Name>Do not dispose objects multiple times</Name>
+   <Description>A correctly implemented Dispose method can be called multiple times without throwing an exception. However, this is not guaranteed and to avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.</Description>
+   <Resolution Name="Default">Object {0} can be disposed more than once in method {1}. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 235</Resolution>
+   <Owner>RuleOwner</Owner>
+   <Url>http://msdn.microsoft.com/library/ms182334(VS.100).aspx</Url>
+   <Email />
+   <MessageLevel Certainty="75">Warning</MessageLevel>
+   <File Name="dataflowrules.dll" Version="11.0.0.0" />
+  </Rule>
+  <Rule TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214">
+   <Name>Do not call overridable methods in constructors</Name>
+   <Description>Virtual methods defined on the class should not be called from constructors. If a derived class has overridden the method, the derived class version will be called (before the derived class constructor is called).</Description>
+   <Resolution Name="Default">{0} contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: {1}</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182331(VS.100).aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">CriticalWarning</MessageLevel>
+   <File Name="usagerules.dll" Version="11.0.0.0" />
+  </Rule>
+  <Rule TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065">
+   <Name>Do not raise exceptions in unexpected locations</Name>
+   <Description>Do not explicitly raise exceptions from unexpected locations. There are some methods, such as Equals and GetHashCode, which users do not expect to raise exceptions. Therefore calls to these methods are not commonly wrapped in try catch blocks.</Description>
+   <Resolution Name="PropertyGetter">{0} creates an exception of type {1}, an exception type that should not be raised in a property. If this exception instance might be raised, use a different exception type, convert this property into a method, or change this property's logic so that it no longer raises an exception.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/bb386039(VS.100).aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="90">Error, Warning</MessageLevel>
+   <File Name="designrules.dll" Version="11.0.0.0" />
+  </Rule>
+  <Rule TypeName="MarkAllNonSerializableFields" Category="Microsoft.Usage" CheckId="CA2235">
+   <Name>Mark all non-serializable fields</Name>
+   <Description>All fields that cannot be serialized directly should have the NonSerializedAttribute. Types that have the SerializableAttribute should not have fields of types that do not have the SerializableAttribute unless the fields are marked with the NonSerializedAttribute.</Description>
+   <Resolution Name="Default">Field {0} is a member of type {1}, which is serializable, but is of type {2}, which is not serializable. Add the NonSerializedAttribute to {0}.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182349(VS.100).aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">Error</MessageLevel>
+   <File Name="usagerules.dll" Version="11.0.0.0" />
+  </Rule>
+  <Rule TypeName="RemoveEmptyFinalizers" Category="Microsoft.Performance" CheckId="CA1821">
+   <Name>Remove empty finalizers</Name>
+   <Description>Finalizers should be avoided where possible, to avoid the additional performance overhead involved in tracking object lifetime.</Description>
+   <Resolution Name="Default">{0} implements a finalizer that only calls conditionally emitted methods or the base type finalizer. Remove the finalizer or ensure that it is only conditionally compiled into the assembly. If this violation occurs against a finalizer that is entirely wrapped in a conditionally-emitted block of code, suppress this message.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/bb264476(VS.100).aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="75">Warning</MessageLevel>
+   <File Name="performancerules.dll" Version="11.0.0.0" />
+  </Rule>
+  <Rule TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200">
+   <Name>Rethrow to preserve stack details</Name>
+   <Description>Use the IL rethrow instruction to preserve original stack details when re-raising a caught exception.</Description>
+   <Resolution Name="Default">{0} rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182363(VS.100).aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">Error</MessageLevel>
+   <File Name="usagerules.dll" Version="11.0.0.0" />
+  </Rule>
+  <Rule TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001">
+   <Name>Types that own disposable fields should be disposable</Name>
+   <Description>Types that declare disposable members should also implement IDisposable. If the type does not own any unmanaged resources, do not implement a finalizer on it.</Description>
+   <Resolution Name="DependsOnFix">Implement IDisposable on {0} because it creates members of the following IDisposable types: {1}. If {0} has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182172(VS.100).aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">CriticalError</MessageLevel>
+   <File Name="designrules.dll" Version="11.0.0.0" />
+  </Rule>
+ </Rules>
+ <Localized>
+  <String Key="Category">Category</String>
+  <String Key="Certainty">Certainty</String>
+  <String Key="CollapseAll">Collapse All</String>
+  <String Key="CheckId">Check Id</String>
+  <String Key="Error">Error</String>
+  <String Key="Errors">error(s)</String>
+  <String Key="ExpandAll">Expand All</String>
+  <String Key="Help">Help</String>
+  <String Key="Line">Line</String>
+  <String Key="Messages">message(s)</String>
+  <String Key="LocationNotStoredInPdb">[Location not stored in Pdb]</String>
+  <String Key="Project">Project</String>
+  <String Key="Resolution">Resolution</String>
+  <String Key="Rule">Rule</String>
+  <String Key="RuleFile">Rule File</String>
+  <String Key="RuleDescription">Rule Description</String>
+  <String Key="Source">Source</String>
+  <String Key="Status">Status</String>
+  <String Key="Target">Target</String>
+  <String Key="Warning">Warning</String>
+  <String Key="Warnings">warning(s)</String>
+  <String Key="ReportTitle">Code Analysis Report</String>
+ </Localized>
+</FxCopReport>

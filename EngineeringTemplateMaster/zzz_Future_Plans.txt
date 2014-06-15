@@ -1,0 +1,3 @@
+﻿* 0-8 in coolant textbox instead of input
+* +- in energy and coolant textbox
+* I have no clue what i meant in the 2 lines above ^_^

@@ -1,0 +1,24 @@
+﻿Convert to comment/from comment for statements
+
+BUG! Convert comms/etc
+* Multiselect with one click (ctrl_click)
+
+* Somehow show how many spaces there are in names consisting only of them
+[David] Dosen't 1.7 disallow this now?
+
+2) Edit set_property also on the map
+
+*) Text description for all properties on space map
+
+LONG TODO's
+
+*) Add MANDATORY wherever it is needed!
+
+*) Icons for actions?
+
+*) Drag and drop whole selection?
+
+
+These are links about graphs:
+http://code.google.com/p/diagramnet/
+http://code.google.com/p/nshape/

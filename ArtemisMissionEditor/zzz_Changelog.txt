@@ -1,0 +1,290 @@
+﻿----------------------
+New Version B2.1.1.0 [6-15-2014] (Russ Judge)
+* Updated for Version 2.1.1 of Artemis.
+
+* Put on GitHub for source control.  If you wish to have access to assist with maintaining this application, please contact the project leader.
+
+----------------------
+New version B1.7.3.2 [6-5-13] (David Wolfe)
+
+* Fixed crash on the opening of the dependancy form. This has been a lingering bug since the 1.7 revamp.
+  DependancyGraph classes from the 1.6 version were added to fix the problem.
+
+----------------------
+New version B1.7.3.1 [6-4-13] (David Wolfe)
+
+* Fixed my mistake of accidentally deleting the menu drop downs in the Space Map form.
+
+----------------------
+New version B1.7.3.0 [6-2-13] (David Wolfe)
+
+* Fixed arcs with degrees with decimals created by the Space Map being caught by the error finder on main form. Changed allowed variable type to double.
+* Fixed divide by 0 error when form becomes too small. Prevented FormSpaceMap (Create objects) and DialogSpaceMap (Edit logic statements) from becoming less than 100x100 px
+  Not sure if this also needs to be applied to other forms.
+* Changed version number formatting to the following:
+  (B)version.of_artemis.main_version.revision
+  Where the first two digits represent the current Artemis version, and the second two represent the editor's version. Also, a "B" in front represents that it is a beta version.
+  I will start this release with a major version number of 3 as I am the third person to touch this project. However, this number will only go up in the future for major releases. Otherwise, use the revision number for quick bug fixes.
+  Lastly, make sure a release date is added to the forums to indicate when each version came out.
+
+----------------------
+New version 13.06.02.0 (David Wolfe)
+
+* Fixed logic map not loading due to outdated calls from 1.6 version.
+* Added info in the Info form
+* Updated information in the About form and added a graphic.
+
+----------------------
+New version 13.03.26.1 (Russ Judge)
+
+* Replaced all occurences of "if_targeting" with "if_player_is_targeting".
+
+----------------------
+New version 13.02.12.1 (Russ Judge)
+
+* Specified the number format to US English to ensure numbers get saved to mission files correctly.
+  Please note that if your culture uses commas as decimal points, you may now need to use periods if you used commas before.
+  Not certain of this, though, since my system is US English.
+
+----------------------
+New version 13.02.05.2 (Russ Judge)
+
+* Corrected spelling of Intrepid from Interpid.
+
+----------------------
+New version 13.02.05.1 (Russ Judge)
+
+* Changed default for LAUNCH_FIGHTERS for add_ai to value1 instead of value2.
+
+----------------------
+New version 13.01.31.1 (Russ Judge)
+
+Thanks to KatoKatonian for identifying these bugs, and doing an excellent job of identifying the fix.
+* Fixed bug introduced with version 13.01.18.1 for handling objects with expressions in X and Z for objects.
+  If the event had nameless objects that were mappable (no expressions), the process would crash upon Accept & Close.
+* Fixed typo for setting the "targetName" attribute to null (not included in Xml) on the "Direct" command.
+* Fixed process for adding whales to spacemap.  It would simply never add them.
+
+* Ran Code Analysis with Minimum Recommended Microsoft Rules and fixed a handful of issues.
+ 
+----------------------
+New version 13.01.25.1 (by Russ Judge)
+
+* Fixed bug where if the space map was loaded and all objects were mappable, then accept/close would crash application.
+* added limiter to dialogSimple so that it could never display larger than the screen size.
+ 
+----------------------
+New version 13.01.21.1 (by Russ Judge)
+
+* On create object (enemy) made "hull keys/race keys" the default over "Hull ID", since "Hull ID" is deprecated in preference to hull/race keys.
+
+----------------------
+New version 13.01.18.1 (by Russ Judge)
+
+* Where before you could only enter numbers, now anything can be entered (the box will turn red still to alert you of possible invalid entry, but will let you click OK).  The risk here is that if you do not enter a valid expression, you could potentially crash Artemis.
+* If an expression is entered in the X, Y, or Z coordinates, or on any attribute that used to be a number only, that object won't be able to be rendered on the SpaceMap.  Instead, you will see a count of "Unmappable objects" on the status bar at the bottom.  The unmappable objects should still remain in the Event when you exit the spacemap.
+* The new commands "start_getting_keypresses_from", "end_getting_keypresses_from", "set_ship_text", and "if_client_key" are now all available, and I believe they will be saved correctly to the mission's Xml file.
+* Minor change for globalization (to handle the various ways numbers can be entered in different cultures), but I can't be certain that the code is correct (though I'm pretty sure).  If strange things happen when you enter a number, let me know--and I'll need to know the region information that you have your PC set to.
+
+----------------------
+New version 13.01.11.1
+
+* Added command line options (mission file name, and -v vessel data file name)
+
+----------------------
+New version 12.12.22.1
+
+* Fixed bug ("Chase enemy" did not appear as an ai command in the dropdown)
+
+----------------------
+New version 12.11.05.1
+
+* Added cursor coordinate display to space map, shows your cursor's exact X and Z coordiantes on space map (as suggested on youtube, thanks Dan Pickens).
+* Changed the way editor works with unknown race and hull keys. They are now set aside and stored, instead of discarded. What this means to you is that if you load a mission that used different vesselData.xml than your editor uses currently, you won't lose race and hull keys that are in your mission. What it also means is that you will now be able to edit race and hull keys w/o having a vesselData.xml file present, or w/o proper vesselData.xml file. This works both for the event editor and the space map.
+* While at it, added descriptions for all the editable properties on the space map (tell me if there are any inconsistencies or incorrect descriptions)
+
+----------------------
+New version 12.09.16.1
+
+* Updated to game version 1.66 (new object property - coolant amount, mission version in xml)
+
+----------------------
+New version 12.08.25.1
+
+* Fixed certain problem that could cause the main form to appear off screen when program is ran (effectively making editor unusable)
+
+----------------------
+New version 12.07.23.1
+
+* Changed how list of undo/redo entries is shown - now you can only go back 1 to 9 steps, or the the last step in undo/redo stack. Otherwise, Edit menu would open too slow when amount of undo/redo stack entries reached big numbers.
+
+----------------------
+New version 12.07.11.1
+
+* Fixed bug - opening file dialog would crash if mission was a new one (not saved to disk yet)
+
+----------------------
+New version 12.06.11.1
+
+* Opening a malformed vesselData.xml no longer leaves you with partially parsed vesselData.xml, and reports at which vessel there was an error.
+
+----------------------
+New version 12.06.04.1
+
+* Fixed bug with if_damcon_members incorrect attribute name (was index instead of team_index)
+
+----------------------
+New version 12.05.23.1
+
+* Added ability to enable/disable events
+* Added ability to comment/uncomment statements
+
+* Fixed bug (timer names from if_timer_finished conditions were not included in the dropdown timer names list)
+
+----------------------
+New version 12.05.15.1
+
+* Added ability to set bg node from the context menu
+* Made "Move In/Out" functionality work more naturally (moving in moves into folder on top, if folders are present on both sides, moving out moves node under the folder, not over it)
+* Hotkeys for statement treeview will work when focus is on one of expression labels
+
+* Fixed bug - loading a mission from malformed xml cancelled the opening process, but displayed file name as mission name
+* Fixed bug - certain combination of actions could screw the selection of nodes (actions like delete would stop working)
+* Fixed bug - copy/paste/cut functionality on space map worked when focus isnt on space map, which made it impossible to copypaste inside the property grid
+* Fixed bug - angles in create statement were considered integer (while they are actually float)
+* Fixed bug - end points of nameless objects were not saved correctly if they matched start points, which made mision unstable
+* Fixed bug - quotes were doubled at the end of text message body display
+
+----------------------
+Version 12.05.05.1
+
+* Added ability to cut/copy/paste on Space Map
+* Added ability to convert nodes (like, convert commentary to folder, etc)
+* Added ability to select multiple nodes (using Shift key + click or arrows) - you can cut them, copy them, delete them, convert them (you can only drag and drop single nodes)
+* Added setting that makes delete operation on state node clear its contents (or you can set it to false so nothing happens when you try to delete start node, since start node cannot be deleted)
+* Added hull id editor to exrpession editor (you can now choose hullid from list and see what ship is behind a hull id in main form as you could before on space map)
+* Added racekeys/hullkeys editors to expression editor (you can now check those from list as in the space map)
+* Added "about" form
+* Added autosave functionality (you can set the amount of stored autosave entries, and the interval of the autosave timer)
+* Added ability to undo/redo more than one action at once (use "Undo list" and "Redo list" and there you can select how many entries you want to undo/redo)
+
+* Fixed bug when adding node into folder (this created two undo entries, one for "expand folder" and one for "add node")
+* Fixed bug (undo on space map removed bg objects)
+
+----------------------
+Version 12.05.04.1
+
+* Added support for whale podnumbers (on space map and in main form too)
+* Direct statements are now converted to point/target throttle
+* More statements are now marked to have unknown property/systemtype/etc
+* Added [Delete], [Ctrl]+[Up]/[Down] hotkeys to the space map' objects list
+* Added captions with number of objects to objects list on space map
+* Added context menu to objects lists on space map
+* Added undo/redo functionality on space map
+* Added mission property form:
+* * Added ability to edit mission's outer commentaries (before and after <mission_data> node)
+* * Background for space map can now be chosen (any other event can be used instead of start node)
+* Added scrolling when dragging nodes in treeview (you can scroll up and down by dragging node to the top or to the bottom of the treeview)
+* State of folders (expanded/collapsed) is now persistent on save/load and undo/redo
+* Added editors for paths - you can use open file dialog to open wav, ogg, dxs, png files where appropriate, and path is adjusted to relative automatically
+* Folders are now copied along with their contents (this allows to copypaste more than one node at once from within the editor, which is useful if you need to duplicate a big part of your mission)
+
+* Fixed small problem with default property name showing as unknown property name
+* Fixed bug when trying to move folder inside itself (previously it was possible by some wierd manipulations to do it, and managing to do that would hang the program)
+
+----------------------
+Version 12.05.02.1
+
+* Added support for all 1.65 scripting changes
+* Changed default hotkey to add nebulas, it is now P, hotkey 9 is now used for Whales
+* Changed default player color to the default player color on science map (purple)
+* Added ability to paste mission xml file into the editor (in other words, copypasting whole mission now works)
+* Added ability to expand/shrink all nodes in the tree viev [Ctrl]+[E] / [Ctrl]+[R]
+* Added ability to change value by +- 0.1 to 1000 [+]/[Num+] and [-]/[Num-] with [Alt], [Shift], [Ctrl], [Ctrl+Shift] modifiers (this allows for fast editing of statements like set_variable without having to select the correct label)
+
+* Fixed bug with undo/redo (mission file name was forgotten on undo/redo)
+* Fixed bug with pasting start node contents (Yes and No were mismatched)
+* Fixed bug for editors of variable/object name not showing for some statements (like set_variable, add_ai)
+* Fixed bug when loading xml (undo/redo or load from file) (folders nested inside folders were not assigned parents correctly)
+* Fixed bug when moving node from inside folder to the root (parent id wasnt cleared properly)
+* Fixed bug with body text (body text had both line breaks and ^ converted to line breaks for edit, and then to ^ when finishing editing, thus doubling the amount of line breaks when in-game)
+* Fixed bug with node name - it was possible to make an invalid commentary (containing -- or - as last character) 
+* Fixed bug with commentary inside statements - same problem as above (now -- are replaced with --, if - is at the end space is appended)
+* Fixed bug when inserting multiple statements (their order was sometimes reversed)
+* Fixed bug with boolean values (like block shots flag) throwing exception
+* Fixed bug with renaming nodes (events/start/folder/...) - when canceling edit or making no change, the value was lost (you might have noticed nodes having blank names out of sudden).
+* Fixed bug with incorrectly considering coordinates to be integer (while they were float all along)
+
+----------------------
+New version 12.04.29.1
+
+* Added ability to see both precursors and successors of the node
+* Added display of the statements that are involved in the precursor - successor  link
+
+* Fixed lack of hotkeys ([F4] in dependency form, [Enter] key)
+* Fixed some minor bugs with random integer variables and percent display
+
+----------------------
+Version 12.04.28.1
+
+* Added replace previous
+* Added ability to find next/previous ([F3] / [Shift]+[F3])
+* Added ability to edit if_in/out_sphere/box conditions on the space map
+* Partially added the dependency graph (rght now you have the ability to see precursors of the node) [F4]
+
+* Fixed absence of Ctrl+F/H hotkeys in search results form
+* Fixed minor bug in find next/previous functonality
+* Fixed exception when trying to add statement into non-event/start node
+* Fixed bug when filling a station name
+* Fixed critical bug when parsing mission ("=" in comparators was wrongly converted to "EQUAL" instead of correct "EQUALS")
+
+----------------------
+Version 12.04.27.2
+
+* Added find next, find previous, and replace capabilities
+* Found items are highlighted in tree views
+
+* Fixed ding sound when using keyboard to open / save mission
+
+----------------------
+Version 12.04.26.1
+
+* Named objects from start node are displayed when adding objects in events (in addition to nameless objects that were shown before)
+* Added ability to paste multipe event/start nodes and statements from a text file
+* Edit direct, add_ai POINT_THROTTLE, destroy_near statements on space map
+* Improved label selection - selected label is now shown when editing in dialog, and label is now shown as selected when clicking it, meaning it becomes selected before and not after the context menu appears
+* Added context menu to expression label's right click, to hint the hotkeys mainly
+* Added ability to find and replace (only "Find All" works right now, but i'm going to make find next/previous and replace work asap)
+
+* Fixed minor bug in asteroid display
+* Fixed minor bug in nameless objects display
+* Fixed critical bug about deleting statements (didnt work before at all)
+* Fixed minor bug in "next value" action (space hotkey when selecting label)
+
+----------------------
+Version 12.04.23.1 
+
+* Added default names of the player ships for create statement's name attribute 
+* Added custom editor windows for console list (warning_popup_message) and elite ability bits (set_property) - you can now use hotkeys or mouse to check corresponding checkboxes 
+* Added customised types and boundaries for set_property statement (like, integer within 0...100 000 for x and z, 0 to 100 for surrender chance, etc) 
+* Generic mesh's color is now 255,0,255 by default when spawning on the space map 
+* Generic mesh's color is used to draw generic mesh on the space map (there is a setting of minimal allowed luminance, so that very dark generic meshes are not invisible on the space map) 
+* Added functional settings form (allows you to set numerous settings and parameters, and change colors) 
+* Added ability to define default start node contents (so that when you make a new mission - you already have all the statements you need in a start node, like create player ship, set difficulty etc)
+
+* Fixed generic mesh's color capital letter (should be colorRed instead of ColorRed etc.)
+
+----------------------
+Version 12.04.21.1 
+
+* Added ability to copy and paste nodes and events. 
+* Nameless objects (like nebulas) from the start node show on the map when you add create statements to other nodes 
+* Objects named with whitespaces display in square brackets so you can distinguish those from unnamed ones
+
+* Fixed auto-convert of direct statement, now you can convert manually by clicking the label inside the direct expression 
+* Fixed some problems and bugs
+
+----------------------
+Version 12.04.19.1
+
+* First version providing a complete mission editing suite (evolved from a map tool that only allowed placing objects around and generating xml code to put into mission file)
