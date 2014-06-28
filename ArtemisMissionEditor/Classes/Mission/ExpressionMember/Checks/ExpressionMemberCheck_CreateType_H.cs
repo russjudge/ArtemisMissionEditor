@@ -96,7 +96,7 @@ namespace ArtemisMissionEditor
 			eML.Add(new ExpressionMember("name "));
 			eML.Add(new ExpressionMember("<>", EMVD.GetItem(name), "name", nameMandatory));
 		}
-
+      
 		/// <summary>
 		/// Adds "and hull ID (hullID) " or "and race/hull keys ("raceKeys") ("hullKeys") "
 		/// </summary>
@@ -215,7 +215,7 @@ namespace ArtemisMissionEditor
 			eML.Add(new ExpressionMember("<>",		EMVD.GetItem("colorB"), "colorBlue"));
 
 			#endregion
-
+           
 			#region <NAMELESS_MAP_OBJECT>		(Nebulas / Asteroids / Mines)
 
 			eML = this.Add("<NAMELESS_MAP_OBJECT>");

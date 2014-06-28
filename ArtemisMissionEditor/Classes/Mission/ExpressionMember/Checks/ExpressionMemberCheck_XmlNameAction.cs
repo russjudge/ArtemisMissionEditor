@@ -89,7 +89,8 @@ namespace ArtemisMissionEditor
 
 			eML = this.Add("create");
 			eML.Add(new ExpressionMemberCheck_CreateType_H());
-
+            eML.Add(new ExpressionMember("on side "));
+            eML.Add(new ExpressionMember("<>", EMVD.GetItem("sideValue"), "sideValue"));
 			#endregion
 
 			#region destroy + destroy_near

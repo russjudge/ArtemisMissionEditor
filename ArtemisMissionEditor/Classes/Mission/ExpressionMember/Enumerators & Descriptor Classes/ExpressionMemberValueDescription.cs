@@ -323,7 +323,7 @@ namespace ArtemisMissionEditor
 			Items.Add("check_point/gmpos",  new EMVD(EMVT.VarString,	EMVB.Ignored,			EMVE.DefaultCheckUnsorted));					// Check point / gm position	from [create, destroy, ...]
             Items.Add("shipState", new EMVD(EMVT.VarInteger, EMVB.AsIsWhenFilled, EMVE.DefaultInteger, -1, 3, "", ""));	//  x coordinate				from [create, destroy, ...]
             Items.Add("captainState", new EMVD(EMVT.VarInteger, EMVB.AsIsWhenFilled, EMVE.DefaultInteger, -1, 5, "", ""));
-            Items.Add("sidevalue", new EMVD(EMVT.VarInteger, EMVB.AsIsWhenFilled, EMVE.DefaultInteger, 0, 3, "", ""));
+            Items.Add("sideValue", new EMVD(EMVT.VarInteger, EMVB.AsIsWhenFilled, EMVE.DefaultInteger, 0, 31, "", ""));
             Items.Add("x", new EMVD(EMVT.VarDouble, EMVB.AsIsWhenFilled, EMVE.DefaultDouble, 0.0, 100000.0, "(", ", "));	//  x coordinate				from [create, destroy, ...]
 			Items.Add("y",				    new EMVD(EMVT.VarDouble,	EMVB.AsIsWhenFilled,	EMVE.DefaultDouble, -100000.0, 100000.0,"",", "));//  y coordinate				from [create, destroy, ...]
 			Items.Add("z",				    new EMVD(EMVT.VarDouble,	EMVB.AsIsWhenFilled,	EMVE.DefaultDouble, 0.0, 100000.0,"",") "));	//  z coordinate				from [create, destroy, ...]

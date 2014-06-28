@@ -1,4 +1,8 @@
 ﻿----------------------
+Version 2.1.1.1 [6-28-2014] (Russ Judge)
+* Added sideValue to Create.
+
+----------------------
 New Version B2.1.1.0 [6-15-2014] (Russ Judge)
 * Updated for Version 2.1.1 of Artemis.
 
