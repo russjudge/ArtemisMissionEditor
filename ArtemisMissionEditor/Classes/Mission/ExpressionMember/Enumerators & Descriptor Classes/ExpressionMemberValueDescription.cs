@@ -425,7 +425,7 @@ namespace ArtemisMissionEditor
 
 			Items.Add("fleetIndex",		    new EMVD(EMVT.VarInteger,	EMVB.AsIsWhenFilled,	EMVE.DefaultInteger, 0, 99,""," ","0"));		// [fleetIndex]					from [set_fleet_property]
 			
-			Items.Add("index",			    new EMVD(EMVT.VarInteger,	EMVB.AsIsWhenFilled,	EMVE.SkyboxIndex, 0, 9,""," ","0"));			// [index]						from [set_skybox_index]
+			Items.Add("index",			    new EMVD(EMVT.VarInteger,	EMVB.AsIsWhenFilled,	EMVE.SkyboxIndex, 0, 20,""," ","0"));			// [index]						from [set_skybox_index]
 			Items.Add("difficulty",		    new EMVD(EMVT.VarInteger,	EMVB.AsIsWhenFilled,	EMVE.Difficulty, 1, 11,""," ","1"));			// [value]						from [set_difficulty_level]
 			
 			Items.Add("damage",			    new EMVD(EMVT.VarDouble,	EMVB.AsIsWhenFilled,	EMVE.DamageValue,0.0,1.0,""," ","0.0"));		// [value]						from [set_player_grid_damage]

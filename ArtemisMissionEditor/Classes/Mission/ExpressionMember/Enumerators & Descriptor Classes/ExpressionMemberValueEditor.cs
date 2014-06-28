@@ -872,30 +872,21 @@ namespace ArtemisMissionEditor
 			PropertyFleet._prepareCMS = PrepareCMS_DefaultList;
 
 			SkyboxIndex = new EMVE();
-			SkyboxIndex.AddToDictionary("0", "0");
-			SkyboxIndex.AddToDictionary("1", "1");
-			SkyboxIndex.AddToDictionary("2", "2");
-			SkyboxIndex.AddToDictionary("3", "3");
-			SkyboxIndex.AddToDictionary("4", "4");
-			SkyboxIndex.AddToDictionary("5", "5");
-			SkyboxIndex.AddToDictionary("6", "6");
-			SkyboxIndex.AddToDictionary("7", "7");
-			SkyboxIndex.AddToDictionary("8", "8");
-			SkyboxIndex.AddToDictionary("9", "9");
+
+            for (int i = 0; i <= 20; i++)
+            {
+                SkyboxIndex.AddToDictionary(i.ToString(), i.ToString());
+            }
+			
 			SkyboxIndex._prepareCMS = PrepareCMS_DefaultList;
 
 			Difficulty = new EMVE();
-			Difficulty.AddToDictionary("1", "1");
-			Difficulty.AddToDictionary("2", "2");
-			Difficulty.AddToDictionary("3", "3");
-			Difficulty.AddToDictionary("4", "4");
-			Difficulty.AddToDictionary("5", "5");
-			Difficulty.AddToDictionary("6", "6");
-			Difficulty.AddToDictionary("7", "7");
-			Difficulty.AddToDictionary("8", "8");
-			Difficulty.AddToDictionary("9", "9");
-			Difficulty.AddToDictionary("10", "10");
-			Difficulty.AddToDictionary("11", "11");
+            for (int i = 0; i <= 11; i++)
+            {
+
+                Difficulty.AddToDictionary(i.ToString(), i.ToString());
+            }
+			
 			Difficulty._prepareCMS = PrepareCMS_DefaultList;
 
 			ShipSystem = new EMVE();
