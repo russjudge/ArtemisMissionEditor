@@ -1,4 +1,8 @@
 ﻿----------------------
+Version 2.1.1.2 [7-19-2014] (Alexey Andronov)
+* Fixed Destroy command to process whales, drones and all correctly
+
+----------------------
 Version 2.1.1.1 [6-28-2014] (Russ Judge)
 * Added sideValue to Create.
 

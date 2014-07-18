@@ -22,8 +22,14 @@ namespace ArtemisMissionEditor
 				return _choices[1]; // destroy_near asteroids
 			if (container.GetAttribute("type") == "mines")
 				return _choices[2]; // destroy_near mines
-			if (true)
-				return _choices[3]; // destroy_near nebulas
+            if (container.GetAttribute("type") == "nebulas")
+                return _choices[3]; // destroy_near nebulas
+            if (container.GetAttribute("type") == "whales")
+                return _choices[4]; // destroy_near whales
+            if (container.GetAttribute("type") == "drones")
+                return _choices[5]; // destroy_near drones
+            if (true)
+				return _choices[6]; // destroy_near all
 		}
 
 		protected override void SetValueInternal(ExpressionMemberContainer container, string value)
@@ -39,6 +45,12 @@ namespace ArtemisMissionEditor
 				container.SetAttribute("type", "mines");
 			if (value == _choices[3]) // destroy nebulas
 				container.SetAttribute("type", "nebulas");
+            if (value == _choices[4]) // destroy whales
+                container.SetAttribute("type", "whales");
+            if (value == _choices[5]) // destroy drones
+                container.SetAttribute("type", "drones");
+            if (value == _choices[6]) // destroy all
+                container.SetAttribute("type", "all");
 
 			base.SetValueInternal(container, value);
 		}
@@ -79,6 +91,7 @@ namespace ArtemisMissionEditor
 
             eML = this.Add("drones"); //_choices[5]
             ____Add_Nameless(eML);
+            
             eML = this.Add("all"); //_choices[6]
             ____Add_Nameless(eML);
 			

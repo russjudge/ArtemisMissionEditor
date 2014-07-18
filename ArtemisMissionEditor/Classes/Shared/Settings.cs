@@ -488,7 +488,7 @@ namespace ArtemisMissionEditor
 			AutoSaveInterval = 5;
 			AutoSaveFilesCount = 10;
 
-			NewMissionStartBlock = "<create type=\"player\" name = \"Artemis\" x=\"50000\" y=\"0\" z=\"50000\"/>\r\n<set_difficulty_level value=\"5\"/>\r\n<set_skybox_index index=\"9\"/><big_message title=\"Unnamed mission\" subtitle1=\"by Unknown Author\" subtitle2=\"adventure for Artemis 1.7\"/>\r\n<set_timer name=\"start_mission_timer_1\" seconds=\"10\"/>\r\n<set_variable name=\"chapter_1\" value=\"1\"/>";
+			NewMissionStartBlock = "<create type=\"player\" name = \"Artemis\" x=\"50000\" y=\"0\" z=\"50000\"/>\r\n<set_difficulty_level value=\"5\"/>\r\n<set_skybox_index index=\"9\"/><big_message title=\"Unnamed mission\" subtitle1=\"by Unknown Author\" subtitle2=\"adventure for Artemis 2.1\"/>\r\n<set_timer name=\"start_mission_timer_1\" seconds=\"10\"/>\r\n<set_variable name=\"chapter_1\" value=\"1\"/>";
 
 			if (Program.FM!=null)
 				Program.FM.SubscribeToVesselDataUpdates(VesselData);
@@ -515,7 +515,7 @@ namespace ArtemisMissionEditor
 						MinimalLuminance = 0.05;
 						MinimalSpaceMapSize = 100;
 						MaximalSpaceMapSize = 15000;
-						NewMissionStartBlock = "<create type=\"player\" name = \"Artemis\" x=\"50000\" y=\"0\" z=\"50000\"/>\r\n<set_difficulty_level value=\"5\"/>\r\n<set_skybox_index index=\"9\"/><big_message title=\"Unnamed mission\" subtitle1=\"by Unknown Author\" subtitle2=\"adventure for Artemis 1.7\"/>\r\n<set_timer name=\"start_mission_timer_1\" seconds=\"10\"/>\r\n<set_variable name=\"chapter_1\" value=\"1\"/>";
+						NewMissionStartBlock = "<create type=\"player\" name = \"Artemis\" x=\"50000\" y=\"0\" z=\"50000\"/>\r\n<set_difficulty_level value=\"5\"/>\r\n<set_skybox_index index=\"9\"/><big_message title=\"Unnamed mission\" subtitle1=\"by Unknown Author\" subtitle2=\"adventure for Artemis 2.1\"/>\r\n<set_timer name=\"start_mission_timer_1\" seconds=\"10\"/>\r\n<set_variable name=\"chapter_1\" value=\"1\"/>";
 						UseYForSelection = true;
                         break;
 					case 2:
