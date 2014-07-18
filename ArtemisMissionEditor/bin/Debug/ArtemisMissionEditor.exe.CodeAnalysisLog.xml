@@ -1,95 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="d:\program files (x86)\microsoft visual studio 10.0\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
-<FxCopReport Version="10.0">
+<?xml-stylesheet type="text/xsl" href="c:\program files (x86)\microsoft visual studio 11.0\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
+<FxCopReport Version="11.0">
  <Targets>
-  <Target Name="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\bin\Debug\ArtemisMissionEditor.exe">
+  <Target Name="E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\bin\Debug\ArtemisMissionEditor.exe">
    <Modules>
     <Module Name="artemismissioneditor.exe">
      <Namespaces>
       <Namespace Name="ArtemisMissionEditor">
        <Types>
-        <Type Name="_FormSettings" Kind="Class" Accessibility="Public" ExternallyVisible="True">
-         <Members>
-          <Member Name="#.ctor()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
-           <Messages>
-            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="NonBreaking">
-             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Forms" File="FormSettings.Designer.cs" Line="8">'_FormSettings._FormSettings()' calls into 'PropertyGrid.SelectedObject.set(object)' which has a LinkDemand. By making this call, 'PropertyGrid.SelectedObject.set(object)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'_FormSettings._FormSettings()'&#xD;&#xA;   -&gt;'_FormSettings._FormSettings()'</Issue>
-            </Message>
-           </Messages>
-          </Member>
-          <Member Name="#InitializeComponent()" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
-           <Messages>
-            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="NonBreaking">
-             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Forms" File="FormSettings.Designer.cs" Line="30">'_FormSettings.InitializeComponent()' calls into 'PropertyGrid.PropertySort.set(PropertySort)' which has a LinkDemand. By making this call, 'PropertyGrid.PropertySort.set(PropertySort)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'_FormSettings.InitializeComponent()'&#xD;&#xA;   -&gt;'_FormSettings.InitializeComponent()'&#xD;&#xA;   -&gt;'_FormSettings._FormSettings()'</Issue>
-            </Message>
-           </Messages>
-          </Member>
-         </Members>
-        </Type>
         <Type Name="_PanelSpaceMap" Kind="Class" Accessibility="Assembly" ExternallyVisible="False">
          <Members>
-          <Member Name="#AssignPropertyGrid(System.Windows.Forms.PropertyGrid)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="False">
+          <Member Name="#Finalize()" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="NonBreaking">
-             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="249">'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)' calls into 'PropertyGrid.PropertyValueChanged.add(PropertyValueChangedEventHandler)' which has a LinkDemand. By making this call, 'PropertyGrid.PropertyValueChanged.add(PropertyValueChangedEventHandler)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'DialogSpaceMap.DialogSpaceMap()'</Issue>
-             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="249">'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)' calls into 'PropertyGrid.PropertyValueChanged.add(PropertyValueChangedEventHandler)' which has a LinkDemand. By making this call, 'PropertyGrid.PropertyValueChanged.add(PropertyValueChangedEventHandler)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap._PanelSpaceMap()'&#xD;&#xA;   -&gt;'DialogSpaceMap.InitializeComponent()'&#xD;&#xA;   -&gt;'DialogSpaceMap.DialogSpaceMap()'</Issue>
-             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="249">'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)' calls into 'PropertyGrid.PropertyValueChanged.add(PropertyValueChangedEventHandler)' which has a LinkDemand. By making this call, 'PropertyGrid.PropertyValueChanged.add(PropertyValueChangedEventHandler)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap._PanelSpaceMap()'&#xD;&#xA;   -&gt;'FormSpaceMap.InitializeComponent()'&#xD;&#xA;   -&gt;'FormSpaceMap.FormSpaceMap()'&#xD;&#xA;   -&gt;'FormSpaceMap.CreateSpaceMapForm(string, List&lt;int&gt;, List&lt;int&gt;, string, string)'&#xD;&#xA;   -&gt;'FormSpaceMap.AddViaSpaceMap(string)'</Issue>
-             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="249">'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)' calls into 'PropertyGrid.PropertyValueChanged.add(PropertyValueChangedEventHandler)' which has a LinkDemand. By making this call, 'PropertyGrid.PropertyValueChanged.add(PropertyValueChangedEventHandler)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap._PanelSpaceMap()'&#xD;&#xA;   -&gt;'FormSpaceMap.InitializeComponent()'&#xD;&#xA;   -&gt;'FormSpaceMap.FormSpaceMap()'&#xD;&#xA;   -&gt;'FormSpaceMap.CreateSpaceMapForm(string, List&lt;int&gt;, List&lt;int&gt;, string, string)'&#xD;&#xA;   -&gt;'FormSpaceMap.EditOnSpaceMap(List&lt;int&gt;, List&lt;int&gt;, string, string)'</Issue>
-             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="249">'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)' calls into 'PropertyGrid.PropertyValueChanged.remove(PropertyValueChangedEventHandler)' which has a LinkDemand. By making this call, 'PropertyGrid.PropertyValueChanged.remove(PropertyValueChangedEventHandler)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'DialogSpaceMap.DialogSpaceMap()'</Issue>
-             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="249">'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)' calls into 'PropertyGrid.PropertyValueChanged.remove(PropertyValueChangedEventHandler)' which has a LinkDemand. By making this call, 'PropertyGrid.PropertyValueChanged.remove(PropertyValueChangedEventHandler)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap._PanelSpaceMap()'&#xD;&#xA;   -&gt;'DialogSpaceMap.InitializeComponent()'&#xD;&#xA;   -&gt;'DialogSpaceMap.DialogSpaceMap()'</Issue>
-             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="249">'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)' calls into 'PropertyGrid.PropertyValueChanged.remove(PropertyValueChangedEventHandler)' which has a LinkDemand. By making this call, 'PropertyGrid.PropertyValueChanged.remove(PropertyValueChangedEventHandler)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap._PanelSpaceMap()'&#xD;&#xA;   -&gt;'FormSpaceMap.InitializeComponent()'&#xD;&#xA;   -&gt;'FormSpaceMap.FormSpaceMap()'&#xD;&#xA;   -&gt;'FormSpaceMap.CreateSpaceMapForm(string, List&lt;int&gt;, List&lt;int&gt;, string, string)'&#xD;&#xA;   -&gt;'FormSpaceMap.AddViaSpaceMap(string)'</Issue>
-             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="249">'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)' calls into 'PropertyGrid.PropertyValueChanged.remove(PropertyValueChangedEventHandler)' which has a LinkDemand. By making this call, 'PropertyGrid.PropertyValueChanged.remove(PropertyValueChangedEventHandler)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap._PanelSpaceMap()'&#xD;&#xA;   -&gt;'FormSpaceMap.InitializeComponent()'&#xD;&#xA;   -&gt;'FormSpaceMap.FormSpaceMap()'&#xD;&#xA;   -&gt;'FormSpaceMap.CreateSpaceMapForm(string, List&lt;int&gt;, List&lt;int&gt;, string, string)'&#xD;&#xA;   -&gt;'FormSpaceMap.EditOnSpaceMap(List&lt;int&gt;, List&lt;int&gt;, string, string)'</Issue>
-            </Message>
-           </Messages>
-          </Member>
-          <Member Name="#DrawSpaceMap(System.Drawing.Graphics)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="False">
-           <Messages>
-            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="762">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'anomalyFont' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="558">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'asteroidPen' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="559">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'asteroidPenBG' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="758">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'bhFont' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="759">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'blackHolePenBG' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="755">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'blackHolePenInner' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="754">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'blackHolePenOuter' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="569">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'darkHeightPen' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="688">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'drawFormat' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="706">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'enemyFont' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="703">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'enemyPenBG' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="724">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'genericMeshFont' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="717">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'genericMeshPen1' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="718">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'genericMeshPen2' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="725">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'genericMeshPenBG' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="976">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'genericMeshPenCurrent1' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="977">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'genericMeshPenCurrent2' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="719">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'genericMeshSolidBrush' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="655">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'gridPen' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="685">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'heightPen' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="1219">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'heightSpecialPen' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="1266">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'heightSpecialPen' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="1288">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'heightSpecialPen' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="564">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'minePen' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="566">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'minePenBG' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="565">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'minePenDark' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="731">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'monsterFont' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="728">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'monsterPen' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="554">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'nebulaPen' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="736">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'neutralFont' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="737">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'neutralPenBG' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="1219">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'new HatchBrush(HatchStyle.WideDownwardDiagonal, heightPen.Color)' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="1266">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'new HatchBrush(HatchStyle.WideDownwardDiagonal, heightPen.Color)' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="1288">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'new HatchBrush(HatchStyle.WideDownwardDiagonal, heightPen.Color)' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="742">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'playerFont' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="743">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'playerPenBG' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="673">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'qFont' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="1027">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'selectionPen' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="1028">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'selectionPenDark' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="1200">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'selectionPenRectangle' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="714">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'stationFont' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="710">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'stationPen' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="711">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'stationPenBG' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="748">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'whaleFont' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="749">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'whalePenBG' before all references to it are out of scope.</Issue>
+            <Message TypeName="RemoveEmptyFinalizers" Category="Microsoft.Performance" CheckId="CA1821" Status="Active" Created="2014-06-28 14:35:51Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning" Path="e:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\Classes\User Controls" File="PanelSpaceMap.cs" Line="2577">'_PanelSpaceMap' implements a finalizer that only calls conditionally emitted methods or the base type finalizer. Remove the finalizer or ensure that it is only conditionally compiled into the assembly. If this violation occurs against a finalizer that is entirely wrapped in a conditionally-emitted block of code, suppress this message.</Issue>
             </Message>
            </Messages>
           </Member>
@@ -97,106 +21,38 @@
         </Type>
         <Type Name="CheckedListBoxUITypeEditor_raceKeys" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
+          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2014-06-28 14:35:51Z" FixCategory="DependsOnFix">
            <Issue Name="DependsOnFix" Certainty="95" Level="CriticalError">Implement IDisposable on 'CheckedListBoxUITypeEditor_raceKeys' because it creates members of the following IDisposable types: 'CheckedListBox'. If 'CheckedListBoxUITypeEditor_raceKeys' has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Issue>
           </Message>
          </Messages>
-         <Members>
-          <Member Name="#.ctor()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
-           <Messages>
-            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="NonBreaking">
-             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\SpaceMap" File="NamedMapObject_UIEditorscs.cs" Line="184">'CheckedListBoxUITypeEditor_raceKeys.CheckedListBoxUITypeEditor_raceKeys()' calls into 'UITypeEditor.UITypeEditor()' which has a LinkDemand. By making this call, 'UITypeEditor.UITypeEditor()' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'CheckedListBoxUITypeEditor_raceKeys.CheckedListBoxUITypeEditor_raceKeys()'&#xD;&#xA;   -&gt;'CheckedListBoxUITypeEditor_raceKeys.CheckedListBoxUITypeEditor_raceKeys()'</Issue>
-            </Message>
-           </Messages>
-          </Member>
-         </Members>
         </Type>
         <Type Name="CheckedListBoxUITypeEditor_raceNames" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
+          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2014-06-28 14:35:51Z" FixCategory="DependsOnFix">
            <Issue Name="DependsOnFix" Certainty="95" Level="CriticalError">Implement IDisposable on 'CheckedListBoxUITypeEditor_raceNames' because it creates members of the following IDisposable types: 'CheckedListBox'. If 'CheckedListBoxUITypeEditor_raceNames' has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Issue>
           </Message>
          </Messages>
-         <Members>
-          <Member Name="#.ctor()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
-           <Messages>
-            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="NonBreaking">
-             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\SpaceMap" File="NamedMapObject_UIEditorscs.cs" Line="128">'CheckedListBoxUITypeEditor_raceNames.CheckedListBoxUITypeEditor_raceNames()' calls into 'UITypeEditor.UITypeEditor()' which has a LinkDemand. By making this call, 'UITypeEditor.UITypeEditor()' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'CheckedListBoxUITypeEditor_raceNames.CheckedListBoxUITypeEditor_raceNames()'&#xD;&#xA;   -&gt;'CheckedListBoxUITypeEditor_raceNames.CheckedListBoxUITypeEditor_raceNames()'</Issue>
-            </Message>
-           </Messages>
-          </Member>
-         </Members>
         </Type>
         <Type Name="CheckedListBoxUITypeEditor_vesselBroadTypes" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
+          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2014-06-28 14:35:51Z" FixCategory="DependsOnFix">
            <Issue Name="DependsOnFix" Certainty="95" Level="CriticalError">Implement IDisposable on 'CheckedListBoxUITypeEditor_vesselBroadTypes' because it creates members of the following IDisposable types: 'CheckedListBox'. If 'CheckedListBoxUITypeEditor_vesselBroadTypes' has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Issue>
           </Message>
          </Messages>
-         <Members>
-          <Member Name="#.ctor()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
-           <Messages>
-            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="NonBreaking">
-             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\SpaceMap" File="NamedMapObject_UIEditorscs.cs" Line="72">'CheckedListBoxUITypeEditor_vesselBroadTypes.CheckedListBoxUITypeEditor_vesselBroadTypes()' calls into 'UITypeEditor.UITypeEditor()' which has a LinkDemand. By making this call, 'UITypeEditor.UITypeEditor()' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'CheckedListBoxUITypeEditor_vesselBroadTypes.CheckedListBoxUITypeEditor_vesselBroadTypes()'&#xD;&#xA;   -&gt;'CheckedListBoxUITypeEditor_vesselBroadTypes.CheckedListBoxUITypeEditor_vesselBroadTypes()'</Issue>
-            </Message>
-           </Messages>
-          </Member>
-         </Members>
         </Type>
         <Type Name="CheckedListBoxUITypeEditor_vesselClassNames" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
+          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2014-06-28 14:35:51Z" FixCategory="DependsOnFix">
            <Issue Name="DependsOnFix" Certainty="95" Level="CriticalError">Implement IDisposable on 'CheckedListBoxUITypeEditor_vesselClassNames' because it creates members of the following IDisposable types: 'CheckedListBox'. If 'CheckedListBoxUITypeEditor_vesselClassNames' has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Issue>
           </Message>
          </Messages>
-         <Members>
-          <Member Name="#.ctor()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
-           <Messages>
-            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="NonBreaking">
-             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\SpaceMap" File="NamedMapObject_UIEditorscs.cs" Line="16">'CheckedListBoxUITypeEditor_vesselClassNames.CheckedListBoxUITypeEditor_vesselClassNames()' calls into 'UITypeEditor.UITypeEditor()' which has a LinkDemand. By making this call, 'UITypeEditor.UITypeEditor()' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'CheckedListBoxUITypeEditor_vesselClassNames.CheckedListBoxUITypeEditor_vesselClassNames()'&#xD;&#xA;   -&gt;'CheckedListBoxUITypeEditor_vesselClassNames.CheckedListBoxUITypeEditor_vesselClassNames()'</Issue>
-            </Message>
-           </Messages>
-          </Member>
-         </Members>
-        </Type>
-        <Type Name="DialogSimple" Kind="Class" Accessibility="Public" ExternallyVisible="True">
-         <Members>
-          <Member Name="#Show(System.String,ArtemisMissionEditor.ExpressionMemberValueType,System.String,System.Boolean,System.String,System.Object,System.Object,System.Boolean)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
-           <Messages>
-            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Forms" File="DialogSimple.cs" Line="54">In method 'DialogSimple.Show(string, ExpressionMemberValueType, string, bool, string, object, object, bool)', call System.IDisposable.Dispose on object 'form' before all references to it are out of scope.</Issue>
-            </Message>
-           </Messages>
-          </Member>
-         </Members>
-        </Type>
-        <Type Name="DialogSpaceMap" Kind="Class" Accessibility="Public" ExternallyVisible="True">
-         <Members>
-          <Member Name="#CreateSpaceMapDialog(System.String,System.String,System.String,System.String)" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
-           <Messages>
-            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
-             <Issue Name="ExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Forms" File="DialogSpaceMap.cs" Line="29">In method 'DialogSpaceMap.CreateSpaceMapDialog(string, string, string, string)', object 'form' is not disposed along all exception paths. Call System.IDisposable.Dispose on object 'form' before all references to it are out of scope.</Issue>
-            </Message>
-            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="NonBreaking">
-             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Forms" File="DialogSpaceMap.cs" Line="28">'DialogSpaceMap.CreateSpaceMapDialog(string, string, string, string)' calls into 'PropertyGrid.SelectedObject.set(object)' which has a LinkDemand. By making this call, 'PropertyGrid.SelectedObject.set(object)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'DialogSpaceMap.CreateSpaceMapDialog(string, string, string, string)'&#xD;&#xA;   -&gt;'DialogSpaceMap.CreateSpaceMapDialog(string, string, string, string)'&#xD;&#xA;   -&gt;'DialogSpaceMap.EditStatementOnSpaceMap(string, string, string)'</Issue>
-            </Message>
-           </Messages>
-          </Member>
-          <Member Name="#EditStatementOnSpaceMap(System.String,System.String,System.String)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
-           <Messages>
-            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Forms" File="DialogSpaceMap.cs" Line="44">In method 'DialogSpaceMap.EditStatementOnSpaceMap(string, string, string)', call System.IDisposable.Dispose on object 'form' before all references to it are out of scope.</Issue>
-            </Message>
-           </Messages>
-          </Member>
-         </Members>
         </Type>
         <Type Name="ExpressionMember" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Members>
           <Member Name="#.ctor(System.String,ArtemisMissionEditor.ExpressionMemberValueDescription,System.String,System.Boolean)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="NonBreaking">
-             <Issue Certainty="95" Level="CriticalWarning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\Mission\ExpressionMember" File="ExpressionMember.cs" Line="129">'ExpressionMember.ExpressionMember(string, ExpressionMemberValueDescription, string, bool)' contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: &#xD;&#xA;&#xD;&#xA;ExpressionMember..ctor(String, ExpressionMemberValueDescription, String, Boolean)&#xD;&#xA;ExpressionMember.set_ValueDescription(ExpressionMemberValueDescription):Void&#xD;&#xA;ExpressionMember.OnValueDescriptionChange():Void</Issue>
+            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2014-06-28 14:35:51Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="CriticalWarning" Path="e:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\Classes\Mission\ExpressionMember" File="ExpressionMember.cs" Line="129">'ExpressionMember.ExpressionMember(string, ExpressionMemberValueDescription, string, bool)' contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: &#xD;&#xA;&#xD;&#xA;ExpressionMember..ctor(String, ExpressionMemberValueDescription, String, Boolean)&#xD;&#xA;ExpressionMember.set_ValueDescription(ExpressionMemberValueDescription):Void&#xD;&#xA;ExpressionMember.OnValueDescriptionChange():Void</Issue>
             </Message>
            </Messages>
           </Member>
@@ -206,8 +62,8 @@
          <Members>
           <Member Name="#OnClick(ArtemisMissionEditor.ExpressionMemberContainer,ArtemisMissionEditor.NormalLabel,System.Drawing.Point,ArtemisMissionEditor.EditorActivationMode)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
-             <Issue Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\Mission\ExpressionMember\Enumerators &amp; Descriptor Classes" File="ExpressionMemberValueDescription.cs" Line="246">Object 'curCMS' can be disposed more than once in method 'ExpressionMemberValueDescription.OnClick(ExpressionMemberContainer, NormalLabel, Point, EditorActivationMode)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 246</Issue>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2014-06-28 14:35:51Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="e:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\Classes\Mission\ExpressionMember\Enumerators &amp; Descriptor Classes" File="ExpressionMemberValueDescription.cs" Line="246">Object 'curCMS' can be disposed more than once in method 'ExpressionMemberValueDescription.OnClick(ExpressionMemberContainer, NormalLabel, Point, EditorActivationMode)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 246</Issue>
             </Message>
            </Messages>
           </Member>
@@ -215,48 +71,23 @@
         </Type>
         <Type Name="ExpressionMemberValueEditor" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
+          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2014-06-28 14:35:51Z" FixCategory="DependsOnFix">
            <Issue Name="DependsOnFix" Certainty="95" Level="CriticalError">Implement IDisposable on 'ExpressionMemberValueEditor' because it creates members of the following IDisposable types: 'ContextMenuStrip'. If 'ExpressionMemberValueEditor' has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Issue>
           </Message>
          </Messages>
-        </Type>
-        <Type Name="FormSpaceMap" Kind="Class" Accessibility="Public" ExternallyVisible="True">
-         <Members>
-          <Member Name="#AddViaSpaceMap(System.String)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
-           <Messages>
-            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Forms" File="FormSpaceMap.cs" Line="76">In method 'FormSpaceMap.AddViaSpaceMap(string)', call System.IDisposable.Dispose on object 'form' before all references to it are out of scope.</Issue>
-            </Message>
-           </Messages>
-          </Member>
-          <Member Name="#CreateSpaceMapForm(System.String,System.Collections.Generic.List`1&lt;System.Int32&gt;,System.Collections.Generic.List`1&lt;System.Int32&gt;,System.String,System.String)" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
-           <Messages>
-            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
-             <Issue Name="ExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Forms" File="FormSpaceMap.cs" Line="96">In method 'FormSpaceMap.CreateSpaceMapForm(string, List&lt;int&gt;, List&lt;int&gt;, string, string)', object 'form' is not disposed along all exception paths. Call System.IDisposable.Dispose on object 'form' before all references to it are out of scope.</Issue>
-            </Message>
-           </Messages>
-          </Member>
-          <Member Name="#EditOnSpaceMap(System.Collections.Generic.List`1&lt;System.Int32&gt;,System.Collections.Generic.List`1&lt;System.Int32&gt;,System.String,System.String)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
-           <Messages>
-            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Forms" File="FormSpaceMap.cs" Line="86">In method 'FormSpaceMap.EditOnSpaceMap(List&lt;int&gt;, List&lt;int&gt;, string, string)', call System.IDisposable.Dispose on object 'form' before all references to it are out of scope.</Issue>
-            </Message>
-           </Messages>
-          </Member>
-         </Members>
         </Type>
         <Type Name="Log" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Members>
           <Member Name="#Save()" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="NonBreaking">
-             <Issue Certainty="95" Level="Error" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\Shared" File="Log.cs" Line="43">'Log.Save()' rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Issue>
+            <Message TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200" Status="Active" Created="2014-06-28 14:35:51Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Error" Path="e:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\Classes\Shared" File="Log.cs" Line="43">'Log.Save()' rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#NewLogEntry" Kind="Event" Static="True" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="Breaking">
+            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2014-06-28 14:35:51Z" FixCategory="Breaking">
              <Issue Name="First" Certainty="95" Level="Error">Declare the first parameter of 'NewLogEntryEventHandler' as an object named 'sender'.</Issue>
              <Issue Name="Second" Certainty="95" Level="Error">Declare the second parameter of 'NewLogEntryEventHandler' as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Issue>
             </Message>
@@ -266,47 +97,24 @@
         </Type>
         <Type Name="Mission" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Members>
-          <Member Name="#FromFile(System.String)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+          <Member Name="#Finalize()" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
-             <Issue Name="ExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\Mission" File="Mission.cs" Line="567">In method 'Mission.FromFile(string)', object 'streamReader' is not disposed along all exception paths. Call System.IDisposable.Dispose on object 'streamReader' before all references to it are out of scope.</Issue>
-            </Message>
-            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
-             <Issue Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\Mission" File="Mission.cs" Line="570">Object 'streamReader' can be disposed more than once in method 'Mission.FromFile(string)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 570</Issue>
+            <Message TypeName="RemoveEmptyFinalizers" Category="Microsoft.Performance" CheckId="CA1821" Status="Active" Created="2014-06-28 14:35:51Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning" Path="e:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\Classes\Mission" File="Mission.cs" Line="425">'Mission' implements a finalizer that only calls conditionally emitted methods or the base type finalizer. Remove the finalizer or ensure that it is only conditionally compiled into the assembly. If this violation occurs against a finalizer that is entirely wrapped in a conditionally-emitted block of code, suppress this message.</Issue>
             </Message>
            </Messages>
           </Member>
-          <Member Name="#Open(System.Boolean)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+          <Member Name="#FromFile(System.String)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
-             <Issue Name="ExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\Mission" File="Mission.cs" Line="601">In method 'Mission.Open(bool)', object 'ofd' is not disposed along all exception paths. Call System.IDisposable.Dispose on object 'ofd' before all references to it are out of scope.</Issue>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2014-06-28 14:35:51Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="e:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\Classes\Mission" File="Mission.cs" Line="570">Object 'streamReader' can be disposed more than once in method 'Mission.FromFile(string)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 570</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#Save(System.String,System.Boolean)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\Mission" File="Mission.cs" Line="942">In method 'Mission.Save(string, bool)', call System.IDisposable.Dispose on object 'streamWriter' before all references to it are out of scope.</Issue>
-            </Message>
-            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
-             <Issue Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\Mission" File="Mission.cs" Line="945">Object 'streamWriter' can be disposed more than once in method 'Mission.Save(string, bool)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 945</Issue>
-            </Message>
-           </Messages>
-          </Member>
-          <Member Name="#SaveAs()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
-           <Messages>
-            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
-             <Issue Name="ExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\Mission" File="Mission.cs" Line="911">In method 'Mission.SaveAs()', object 'sfd' is not disposed along all exception paths. Call System.IDisposable.Dispose on object 'sfd' before all references to it are out of scope.</Issue>
-            </Message>
-           </Messages>
-          </Member>
-          <Member Name="#UpdateExpression()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
-           <Messages>
-            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
-             <Issue Name="ExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\Mission" File="Mission.cs" Line="2102">In method 'Mission.UpdateExpression()', object 'l' is not disposed along all exception paths. Call System.IDisposable.Dispose on object 'l' before all references to it are out of scope.</Issue>
-            </Message>
-            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="NonBreaking">
-             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\Mission" File="Mission.cs" Line="2070">'Mission.UpdateExpression()' calls into 'Control.PreviewKeyDown.add(PreviewKeyDownEventHandler)' which has a LinkDemand. By making this call, 'Control.PreviewKeyDown.add(PreviewKeyDownEventHandler)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'Mission.UpdateExpression()'&#xD;&#xA;   -&gt;'Mission.UpdateExpression()'</Issue>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2014-06-28 14:35:51Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="e:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\Classes\Mission" File="Mission.cs" Line="945">Object 'streamWriter' can be disposed more than once in method 'Mission.Save(string, bool)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 945</Issue>
             </Message>
            </Messages>
           </Member>
@@ -316,7 +124,7 @@
          <Members>
           <Member Name="#_node" Kind="Field" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MarkAllNonSerializableFields" Category="Microsoft.Usage" CheckId="CA2235" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="NonBreaking">
+            <Message TypeName="MarkAllNonSerializableFields" Category="Microsoft.Usage" CheckId="CA2235" Status="Active" Created="2014-06-28 14:35:51Z" FixCategory="NonBreaking">
              <Issue Certainty="95" Level="Error">Field 'MissionNode_Unknown._node' is a member of type 'MissionNode_Unknown', which is serializable, but is of type 'XmlNode', which is not serializable. Add the NonSerializedAttribute to 'MissionNode_Unknown._node'.</Issue>
             </Message>
            </Messages>
@@ -329,8 +137,8 @@
            <Accessors>
             <Accessor Name="#get_TypeToStringShort()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
              <Messages>
-              <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="Breaking">
-               <Issue Name="PropertyGetter" Certainty="90" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\SpaceMap" File="NamelessMapObject.cs" Line="247">'NamelessMapObject.TypeToStringShort.get()' creates an exception of type 'Exception', an exception type that should not be raised in a property. If this exception instance might be raised, use a different exception type, convert this property into a method, or change this property's logic so that it no longer raises an exception.</Issue>
+              <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Active" Created="2014-06-28 14:35:51Z" FixCategory="Breaking">
+               <Issue Name="PropertyGetter" Certainty="90" Level="Warning" Path="e:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\Classes\SpaceMap" File="NamelessMapObject.cs" Line="247">'NamelessMapObject.TypeToStringShort.get()' creates an exception of type 'Exception', an exception type that should not be raised in a property. If this exception instance might be raised, use a different exception type, convert this property into a method, or change this property's logic so that it no longer raises an exception.</Issue>
               </Message>
              </Messages>
             </Accessor>
@@ -340,21 +148,10 @@
         </Type>
         <Type Name="Settings" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Members>
-          <Member Name="#Current" Kind="Property" Static="True" Accessibility="Public" ExternallyVisible="True">
-           <Accessors>
-            <Accessor Name="#set_Current(ArtemisMissionEditor.Settings)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
-             <Messages>
-              <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="NonBreaking">
-               <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\Shared" File="Settings.cs" Line="29">'Settings.Current.set(Settings)' calls into 'PropertyGrid.SelectedObject.set(object)' which has a LinkDemand. By making this call, 'PropertyGrid.SelectedObject.set(object)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'Settings.Current.set(Settings)'&#xD;&#xA;   -&gt;'Settings.Current.set(Settings)'</Issue>
-              </Message>
-             </Messages>
-            </Accessor>
-           </Accessors>
-          </Member>
           <Member Name="#Load()" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
-             <Issue Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\Shared" File="Settings.cs" Line="235">Object 'istream' can be disposed more than once in method 'Settings.Load()'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 235</Issue>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2014-06-28 14:35:51Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="e:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\Classes\Shared" File="Settings.cs" Line="235">Object 'istream' can be disposed more than once in method 'Settings.Load()'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 235</Issue>
             </Message>
            </Messages>
           </Member>
@@ -362,20 +159,9 @@
         </Type>
         <Type Name="TreeViewEx" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Members>
-          <Member Name="#PaintDragDestinationGraphics(System.Int32,System.Windows.Forms.TreeNode)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
-           <Messages>
-            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="DependsOnFix">
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="TreeViewEx.cs" Line="116">In method 'TreeViewEx.PaintDragDestinationGraphics(int, TreeNode)', call System.IDisposable.Dispose on object 'linePen' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="TreeViewEx.cs" Line="136">In method 'TreeViewEx.PaintDragDestinationGraphics(int, TreeNode)', call System.IDisposable.Dispose on object 'new Pen(DrawColor, 1F)' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="TreeViewEx.cs" Line="134">In method 'TreeViewEx.PaintDragDestinationGraphics(int, TreeNode)', call System.IDisposable.Dispose on object 'new SolidBrush(Color.FromArgb(64, SelectColor))' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="TreeViewEx.cs" Line="138">In method 'TreeViewEx.PaintDragDestinationGraphics(int, TreeNode)', call System.IDisposable.Dispose on object 'new SolidBrush(DrawColor)' before all references to it are out of scope.</Issue>
-             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Classes\User Controls" File="TreeViewEx.cs" Line="128">In method 'TreeViewEx.PaintDragDestinationGraphics(int, TreeNode)', call System.IDisposable.Dispose on object 'new SolidBrush(SelectColor)' before all references to it are out of scope.</Issue>
-            </Message>
-           </Messages>
-          </Member>
           <Member Name="#NodeMoved" Kind="Event" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2014-07-18 21:38:12Z" FixCategory="Breaking">
+            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2014-06-28 14:35:51Z" FixCategory="Breaking">
              <Issue Name="First" Certainty="95" Level="Error">Declare the first parameter of 'TreeViewEx.NodeMovedEventHandler' as an object named 'sender'.</Issue>
              <Issue Name="Second" Certainty="95" Level="Error">Declare the second parameter of 'TreeViewEx.NodeMovedEventHandler' as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Issue>
             </Message>
@@ -400,18 +186,7 @@
    <Url>http://msdn.microsoft.com/library/ms182133(VS.100).aspx</Url>
    <Email>[none]</Email>
    <MessageLevel Certainty="95">Error</MessageLevel>
-   <File Name="designrules.dll" Version="10.0.0.0" />
-  </Rule>
-  <Rule TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000">
-   <Name>Dispose objects before losing scope</Name>
-   <Description>If a disposable object is not explicitly disposed before all references to it are out of scope, the object will be disposed at some indeterminate time when the garbage collector runs the finalizer of the object. Because an exceptional event might occur that will prevent the finalizer of the object from running, the object should be explicitly disposed instead.</Description>
-   <Resolution Name="ExceptionEdge">In method {0}, object {1} is not disposed along all exception paths. Call System.IDisposable.Dispose on object {1} before all references to it are out of scope.</Resolution>
-   <Resolution Name="NonExceptionEdge">In method {0}, call System.IDisposable.Dispose on object {1} before all references to it are out of scope.</Resolution>
-   <Owner>RuleOwner</Owner>
-   <Url>http://msdn.microsoft.com/library/ms182289(VS.100).aspx</Url>
-   <Email />
-   <MessageLevel Certainty="75">Warning</MessageLevel>
-   <File Name="dataflowrules.dll" Version="10.0.0.0" />
+   <File Name="designrules.dll" Version="11.0.0.0" />
   </Rule>
   <Rule TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202">
    <Name>Do not dispose objects multiple times</Name>
@@ -421,7 +196,7 @@
    <Url>http://msdn.microsoft.com/library/ms182334(VS.100).aspx</Url>
    <Email />
    <MessageLevel Certainty="75">Warning</MessageLevel>
-   <File Name="dataflowrules.dll" Version="10.0.0.0" />
+   <File Name="dataflowrules.dll" Version="11.0.0.0" />
   </Rule>
   <Rule TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214">
    <Name>Do not call overridable methods in constructors</Name>
@@ -431,17 +206,7 @@
    <Url>http://msdn.microsoft.com/library/ms182331(VS.100).aspx</Url>
    <Email>[none]</Email>
    <MessageLevel Certainty="95">CriticalWarning</MessageLevel>
-   <File Name="usagerules.dll" Version="10.0.0.0" />
-  </Rule>
-  <Rule TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122">
-   <Name>Do not indirectly expose methods with link demands</Name>
-   <Description>Do not wrap a method protected by a LinkDemand with a method that does not perform a security check. A LinkDemand checks the permissions of the immediate caller rather than checking the permissions of all callers in the call stack. In this case, the permissions of the wrapper method will be checked. If the wrapper method does not, itself, check the permissions of callers higher in the call stack, malicious code might be able to execute the wrapped function even though it lacks permission to do so.</Description>
-   <Resolution Name="Default">{0} calls into {1} which has a LinkDemand. By making this call, {1} is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: {2}</Resolution>
-   <Owner />
-   <Url>http://msdn.microsoft.com/library/ms182303(VS.100).aspx</Url>
-   <Email>[none]</Email>
-   <MessageLevel Certainty="33">CriticalError</MessageLevel>
-   <File Name="securityrules.dll" Version="10.0.0.0" />
+   <File Name="usagerules.dll" Version="11.0.0.0" />
   </Rule>
   <Rule TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065">
    <Name>Do not raise exceptions in unexpected locations</Name>
@@ -451,7 +216,7 @@
    <Url>http://msdn.microsoft.com/library/bb386039(VS.100).aspx</Url>
    <Email>[none]</Email>
    <MessageLevel Certainty="90">Error, Warning</MessageLevel>
-   <File Name="designrules.dll" Version="10.0.0.0" />
+   <File Name="designrules.dll" Version="11.0.0.0" />
   </Rule>
   <Rule TypeName="MarkAllNonSerializableFields" Category="Microsoft.Usage" CheckId="CA2235">
    <Name>Mark all non-serializable fields</Name>
@@ -461,7 +226,17 @@
    <Url>http://msdn.microsoft.com/library/ms182349(VS.100).aspx</Url>
    <Email>[none]</Email>
    <MessageLevel Certainty="95">Error</MessageLevel>
-   <File Name="usagerules.dll" Version="10.0.0.0" />
+   <File Name="usagerules.dll" Version="11.0.0.0" />
+  </Rule>
+  <Rule TypeName="RemoveEmptyFinalizers" Category="Microsoft.Performance" CheckId="CA1821">
+   <Name>Remove empty finalizers</Name>
+   <Description>Finalizers should be avoided where possible, to avoid the additional performance overhead involved in tracking object lifetime.</Description>
+   <Resolution Name="Default">{0} implements a finalizer that only calls conditionally emitted methods or the base type finalizer. Remove the finalizer or ensure that it is only conditionally compiled into the assembly. If this violation occurs against a finalizer that is entirely wrapped in a conditionally-emitted block of code, suppress this message.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/bb264476(VS.100).aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="75">Warning</MessageLevel>
+   <File Name="performancerules.dll" Version="11.0.0.0" />
   </Rule>
   <Rule TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200">
    <Name>Rethrow to preserve stack details</Name>
@@ -471,7 +246,7 @@
    <Url>http://msdn.microsoft.com/library/ms182363(VS.100).aspx</Url>
    <Email>[none]</Email>
    <MessageLevel Certainty="95">Error</MessageLevel>
-   <File Name="usagerules.dll" Version="10.0.0.0" />
+   <File Name="usagerules.dll" Version="11.0.0.0" />
   </Rule>
   <Rule TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001">
    <Name>Types that own disposable fields should be disposable</Name>
@@ -481,7 +256,7 @@
    <Url>http://msdn.microsoft.com/library/ms182172(VS.100).aspx</Url>
    <Email>[none]</Email>
    <MessageLevel Certainty="95">CriticalError</MessageLevel>
-   <File Name="designrules.dll" Version="10.0.0.0" />
+   <File Name="designrules.dll" Version="11.0.0.0" />
   </Rule>
  </Rules>
  <Localized>
