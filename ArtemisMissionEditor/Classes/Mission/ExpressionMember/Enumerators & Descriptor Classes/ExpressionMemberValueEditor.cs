@@ -44,6 +44,9 @@ namespace ArtemisMissionEditor
 		public static EMVE TeamIndex;
 		public static EMVE TeamAmount;
 		public static EMVE TeamAmountF;
+        public static EMVE SpecialShipType;
+        public static EMVE SpecialCapitainType;
+        public static EMVE Side;
 		public static EMVE Comparator;
 		public static EMVE DistanceNebulaCheck;
 		public static EMVE ConvertDirectCheck;
@@ -90,8 +93,9 @@ namespace ArtemisMissionEditor
 		private Dictionary<string, string> _valueToXml;
 		private void AddToDictionary(string xml, string display)
 		{
-			_valueToDisplay.Add(xml,display);
-			_valueToXml.Add(display,xml);
+			if (xml!=null)
+                _valueToDisplay.Add(xml, display);
+			_valueToXml.Add(display, xml);
 			_menuItems.Add(display);
 		}
 
@@ -692,7 +696,12 @@ namespace ArtemisMissionEditor
 			DefaultCheckSorted._prepareCMS = PrepareCMS_DefaultCheckSorted;
 
 			XmlNameActionCheck = new ExpressionMemberValueEditor_XmlName();
-			XmlNameActionCheck.AddToDictionary("<destroy>", "Destroy");
+            XmlNameActionCheck.AddToDictionary("start_getting_keypresses_from", "Start getting keypresses from consoles: ");
+            XmlNameActionCheck.AddToDictionary("end_getting_keypresses_from", "End getting keypresses from consoles: ");
+            XmlNameActionCheck.AddToDictionary("set_special", "Set");
+            XmlNameActionCheck.AddToDictionary("set_side_value", "Set side");
+            XmlNameActionCheck.AddToDictionary("set_ship_text", "Set text strings");
+            XmlNameActionCheck.AddToDictionary("<destroy>", "Destroy");
 			XmlNameActionCheck.AddToDictionary("clear_ai", "Clear AI command stack");
 			XmlNameActionCheck.AddToDictionary("add_ai", "Add an AI command");
 			XmlNameActionCheck.AddToDictionary("set_object_property", "Set property");
@@ -707,14 +716,16 @@ namespace ArtemisMissionEditor
 			XmlNameActionCheck.AddToDictionary("play_sound_now", "Play sound on main screen");
 			XmlNameActionCheck.AddToDictionary("set_damcon_members", "Set DamCon members");
 			XmlNameActionCheck.AddToDictionary("log", "Log new entry");
-
-
 			
 
 			//We need to display both as same, so we have to go around using AddToDictionary, otherwise _valueToXml will have same key exception!
 			XmlNameActionCheck._valueToDisplay.Add("set_fleet_property", "Set property");
 			XmlNameActionCheck._valueToDisplay.Add("set_to_gm_position", "Set position");
-			XmlNameActionCheck.AddToMenuDictionary("set_ship_text", "Set ship text");
+            XmlNameActionCheck.AddToMenuDictionary("start_getting_keypresses_from", "Start getting keypresses from consoles");
+            XmlNameActionCheck.AddToMenuDictionary("end_getting_keypresses_from", "End getting keypresses from consoles");
+            XmlNameActionCheck.AddToMenuDictionary("set_special", "Set ship's special values");
+            XmlNameActionCheck.AddToMenuDictionary("set_side_value", "Set object's side");
+            XmlNameActionCheck.AddToMenuDictionary("set_ship_text", "Set object's text");
 			XmlNameActionCheck.AddToMenuDictionary("set_object_property", "Set property of object");
 			XmlNameActionCheck.AddToMenuDictionary("copy_object_property", "Copy property of object");
 			XmlNameActionCheck.AddToMenuDictionary("addto_object_property", "Add to property of object");
@@ -873,17 +884,16 @@ namespace ArtemisMissionEditor
 
 			SkyboxIndex = new EMVE();
 
-            for (int i = 0; i <= 20; i++)
+            for (int i = 0; i <= 29; i++)
             {
                 SkyboxIndex.AddToDictionary(i.ToString(), i.ToString());
             }
 			
-			SkyboxIndex._prepareCMS = PrepareCMS_DefaultList;
+			SkyboxIndex._prepareCMS = PrepareCMS_DefaultListPlusGUI;
 
 			Difficulty = new EMVE();
             for (int i = 0; i <= 11; i++)
             {
-
                 Difficulty.AddToDictionary(i.ToString(), i.ToString());
             }
 			
@@ -939,6 +949,32 @@ namespace ArtemisMissionEditor
 			TeamAmountF.AddToDictionary("5", "5");
 			TeamAmountF.AddToDictionary("6", "6");
 			TeamAmountF._prepareCMS = PrepareCMS_DefaultListPlusGUI;
+
+            SpecialShipType = new EMVE();
+            SpecialShipType.AddToDictionary(null, "<>");
+            SpecialShipType.AddToDictionary("-1", "nothing");
+            SpecialShipType.AddToDictionary("0",  "dilapidated");
+            SpecialShipType.AddToDictionary("1",  "upgraded");
+            SpecialShipType.AddToDictionary("2",  "overpowered");
+            SpecialShipType.AddToDictionary("3",  "underpowered");
+            SpecialShipType._prepareCMS = PrepareCMS_DefaultList;
+
+            SpecialCapitainType = new EMVE();
+            SpecialCapitainType.AddToDictionary(null, "<>");
+            SpecialCapitainType.AddToDictionary("-1","nothing");
+            SpecialCapitainType.AddToDictionary("0", "cowardly");
+            SpecialCapitainType.AddToDictionary("1", "brave");
+            SpecialCapitainType.AddToDictionary("2", "bombastic");
+            SpecialCapitainType.AddToDictionary("3", "seething");
+            SpecialCapitainType.AddToDictionary("4", "duplicitous");
+            SpecialCapitainType.AddToDictionary("5", "exceptional");
+            SpecialCapitainType._prepareCMS = PrepareCMS_DefaultList;
+
+            Side = new EMVE();
+            Side.AddToDictionary("0", "0 (no side)");
+            Side.AddToDictionary("1", "1 (enemy)");
+            Side.AddToDictionary("2", "2 (player)");
+            Side._prepareCMS = PrepareCMS_DefaultListPlusGUI;
 
 			Comparator = new EMVE();
 			Comparator.AddToDictionary("GREATER", ">");
@@ -1013,6 +1049,8 @@ namespace ArtemisMissionEditor
 			RaceKeys = new ExpressionMemberValueEditor_RaceKeys();
 
 			HullKeys = new ExpressionMemberValueEditor_HullKeys();
+
+
 		}
 	}
 
@@ -1091,9 +1129,9 @@ namespace ArtemisMissionEditor
 			value = value.ToLower();
 
 			if (value.Contains('m'))
-				result += "Main ";
+				result += "Msc ";
 			if (value.Contains('h'))
-				result += "Helm ";
+				result += "Hlm ";
 			if (value.Contains('w'))
 				result += "Wep ";
 			if (value.Contains('e'))
@@ -1138,22 +1176,26 @@ namespace ArtemisMissionEditor
 			string result = "";
 
 			if (value == null || !Helper.IntTryParse(value))
-				return "[No]";
+				return "[NO]";
 
 			int bits = Helper.StringToInt(value);
 
-			if ((bits & 1) == 1)    result += "[INV-MS] ";
-			if ((bits & 2) == 2)    result += "[INV-SCI] ";
-			if ((bits & 4) == 4)    result += "[INV-LRS] ";
-			if ((bits & 8) == 8)    result += "[CLOAK] ";
-			if ((bits & 16) == 16)  result += "[HET] ";
-			if ((bits & 32) == 32)  result += "[WARP] ";
-			if ((bits & 64) == 64)  result += "[TELEPORT] ";
+			if ((bits & 1) == 1)        result += "[INV-MS] ";
+			if ((bits & 2) == 2)        result += "[INV-LRS/TAC] ";
+			if ((bits & 4) == 4)        result += "[CLOAK] ";
+			if ((bits & 8) == 8)        result += "[HET] ";
+			if ((bits & 16) == 16)      result += "[WARP] ";
+			if ((bits & 32) == 32)      result += "[TELEPORT] ";
+            if ((bits & 64) == 64)      result += "[TRACTOR] ";
+            if ((bits & 128) == 128)    result += "[DRONE] ";
+            if ((bits & 256) == 256)    result += "[ANTI-MINE] ";
+            if ((bits & 512) == 512)    result += "[ANTI-TORP] ";
+            if ((bits & 1024) == 1024)  result += "[ANTI-SHLD] ";
 
 			if (result.Length > 0)
 				return result.Substring(0, result.Length - 1);
 			else
-				return "[No]";
+				return "[NO]";
 		}
 
 		public override string ValueToXml(string value, EMVT type, object min, object max)
