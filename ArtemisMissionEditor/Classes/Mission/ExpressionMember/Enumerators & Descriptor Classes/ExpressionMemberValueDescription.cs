@@ -321,10 +321,7 @@ namespace ArtemisMissionEditor
 			Items.Add("unknown",		    new EMVD(EMVT.VarString,	EMVB.Ignored,			EMVE.DefaultString));							// Unknown expression for editing something not known to the editor
 
 			Items.Add("check_point/gmpos",  new EMVD(EMVT.VarString,	EMVB.Ignored,			EMVE.DefaultCheckUnsorted));					// Check point / gm position	from [create, destroy, ...]
-            Items.Add("shipState", new EMVD(EMVT.VarInteger, EMVB.AsIsWhenFilled, EMVE.DefaultInteger, -1, 3, "", ""));	//  x coordinate				from [create, destroy, ...]
-            Items.Add("captainState", new EMVD(EMVT.VarInteger, EMVB.AsIsWhenFilled, EMVE.DefaultInteger, -1, 5, "", ""));
-            Items.Add("sideValue", new EMVD(EMVT.VarInteger, EMVB.AsIsWhenFilled, EMVE.DefaultInteger, 0, 31, "", ""));
-            Items.Add("x", new EMVD(EMVT.VarDouble, EMVB.AsIsWhenFilled, EMVE.DefaultDouble, 0.0, 100000.0, "(", ", "));	//  x coordinate				from [create, destroy, ...]
+            Items.Add("x",                  new EMVD(EMVT.VarDouble,    EMVB.AsIsWhenFilled,    EMVE.DefaultDouble, 0.0, 100000.0, "(", ", "));	//  x coordinate				from [create, destroy, ...]
 			Items.Add("y",				    new EMVD(EMVT.VarDouble,	EMVB.AsIsWhenFilled,	EMVE.DefaultDouble, -100000.0, 100000.0,"",", "));//  y coordinate				from [create, destroy, ...]
 			Items.Add("z",				    new EMVD(EMVT.VarDouble,	EMVB.AsIsWhenFilled,	EMVE.DefaultDouble, 0.0, 100000.0,"",") "));	//  z coordinate				from [create, destroy, ...]
 			Items.Add("xu",				    new EMVD(EMVT.VarDouble,	EMVB.AsIsWhenFilled,	EMVE.DefaultDouble, null,null,"(",", "));		//  x coordinate unbound		from [create, destroy, ...]
@@ -349,7 +346,8 @@ namespace ArtemisMissionEditor
 			Items.Add("use_gm",             new EMVD(EMVT.VarString,	EMVB.AsIs,				EMVE.Nothing));									//  use_gm_position/selection	from [create, destroy, ...]
 			Items.Add("type",			    new EMVD(EMVT.VarString,	EMVB.AsIsWhenFilled,	EMVE.CreateType));								// [type]						from [create] 
             Items.Add("name",			    new EMVD(EMVT.VarString,	EMVB.AsIsWhenFilled,	EMVE.DefaultString,null,null,"\"","\" "));		// [name]						from [create, destroy, ...]
-			Items.Add("angle",			    new EMVD(EMVT.VarDouble,	EMVB.AsIsWhenFilled,	EMVE.DefaultDouble, 0.0, 360.0));					// [angle]						from [create, ...]
+			Items.Add("name_with_comma",    new EMVD(EMVT.VarString,	EMVB.AsIsWhenFilled,	EMVE.DefaultString,null,null,"\"","\", "));		
+			Items.Add("angle",			    new EMVD(EMVT.VarDouble,	EMVB.AsIsWhenFilled,	EMVE.DefaultDouble, 0.0, 360.0));				// [angle]						from [create, ...]
 			Items.Add("fleetnumber",	    new EMVD(EMVT.VarInteger,	EMVB.AsIsWhenFilled,	EMVE.DefaultInteger, -1, 99));					// [fleetnumber]				from [create, ...]
 			Items.Add("podnumber",		    new EMVD(EMVT.VarInteger,	EMVB.AsIsWhenFilled,	EMVE.DefaultInteger, 0, 9));					// [podnumber]					from [create]
 			Items.Add("meshFileName",	    new EMVD(EMVT.VarString,	EMVB.AsIsWhenFilled,	EMVE.PathEditor,"DeleD Mesh Files|*.dxs|All Files|*.*","Select Delgine mesh file","\"","\" "));// [meshFileName]			from [create]
@@ -417,7 +415,7 @@ namespace ArtemisMissionEditor
             Items.Add("flt-100k...100k",    new EMVD(EMVT.VarDouble,	EMVB.AsIsWhenFilled,	EMVE.DefaultDouble,-100000.0,100000.0,""," ")); //  value from -100k to 100k	from [set_object_property]
             Items.Add("boolyesno",	        new EMVD(EMVT.VarBool,  	EMVB.AsIsWhenFilled,	EMVE.DefaultBool,"no","yes",""," "));		    //  value yes,no          		from [set_object_property]
             Items.Add("eliteaitype",        new EMVD(EMVT.VarInteger,  	EMVB.AsIsWhenFilled,	EMVE.EliteAIType,0,2,"\"","\" "));		        //  value for eliteAIType  		from [set_object_property]
-            Items.Add("eliteabilitybits",   new EMVD(EMVT.VarInteger, 	EMVB.AsIsWhenFilled,	EMVE.EliteAbilityBits,0,127,""," "));		    //  value for eliteAbilityBits	from [set_object_property]
+            Items.Add("eliteabilitybits",   new EMVD(EMVT.VarInteger, 	EMVB.AsIsWhenFilled,	EMVE.EliteAbilityBits,0,null,""," "));		    //  value for eliteAbilityBits	from [set_object_property]
 			
             Items.Add("property_f",		    new EMVD(EMVT.VarString,	EMVB.AsIsWhenFilled,	EMVE.PropertyFleet,null,null,"\"","\" ","fleetSpacing"));// [property]			from [set_fleet_property] 
             
@@ -425,7 +423,7 @@ namespace ArtemisMissionEditor
 
 			Items.Add("fleetIndex",		    new EMVD(EMVT.VarInteger,	EMVB.AsIsWhenFilled,	EMVE.DefaultInteger, 0, 99,""," ","0"));		// [fleetIndex]					from [set_fleet_property]
 			
-			Items.Add("index",			    new EMVD(EMVT.VarInteger,	EMVB.AsIsWhenFilled,	EMVE.SkyboxIndex, 0, 20,""," ","0"));			// [index]						from [set_skybox_index]
+			Items.Add("index",			    new EMVD(EMVT.VarInteger,	EMVB.AsIsWhenFilled,	EMVE.SkyboxIndex, 0, null,""," ","0"));			// [index]						from [set_skybox_index]
 			Items.Add("difficulty",		    new EMVD(EMVT.VarInteger,	EMVB.AsIsWhenFilled,	EMVE.Difficulty, 1, 11,""," ","1"));			// [value]						from [set_difficulty_level]
 			
 			Items.Add("damage",			    new EMVD(EMVT.VarDouble,	EMVB.AsIsWhenFilled,	EMVE.DamageValue,0.0,1.0,""," ","0.0"));		// [value]						from [set_player_grid_damage]
@@ -454,10 +452,14 @@ namespace ArtemisMissionEditor
             Items.Add("name_timer",		    new EMVD(EMVT.VarString,	EMVB.AsIsWhenFilled,	EMVE.TimerName,null,null,"\"","\" "));			// [name]						from [if_timer]
 			Items.Add("name_var",		    new EMVD(EMVT.VarString,	EMVB.AsIsWhenFilled,	EMVE.VariableName,null,null,"\"","\" "));		// [name]						from [if_variable]
 			Items.Add("name_all",		    new EMVD(EMVT.VarString,	EMVB.AsIsWhenFilled,	EMVE.NamedAllName,null,null,"\"","\" "));		// [name]						from [...]
+			Items.Add("name_all_with_colon",new EMVD(EMVT.VarString,	EMVB.AsIsWhenFilled,	EMVE.NamedAllName,null,null,"\"","\": "));		// [name]						from [...]
 			Items.Add("name_station",	    new EMVD(EMVT.VarString,	EMVB.AsIsWhenFilled,	EMVE.NamedStationName,null,null,"\"","\" "));	// [name]						from [if_docked]
 			Items.Add("name_createplayer",	new EMVD(EMVT.VarString,	EMVB.AsIsWhenFilled,	EMVE.PlayerNames,null,null,"\"","\" "));		// [name]						from [create]
-            //Items.Add("sideValue", new EMVD(EMVT.VarInteger, EMVB.AsIsWhenFilled, EMVE.DefaultInteger, 0, 2, "", " "));
 
+            Items.Add("shipState",          new EMVD(EMVT.VarInteger,   EMVB.AsIsWhenFilled,    EMVE.SpecialShipType, -1, 3,"\"","\" "));
+            Items.Add("captainState",       new EMVD(EMVT.VarInteger,   EMVB.AsIsWhenFilled,    EMVE.SpecialCapitainType, -1, 5,"\"","\" "));
+            Items.Add("sideValue",          new EMVD(EMVT.VarInteger,   EMVB.AsIsWhenFilled,    EMVE.Side, 0, 31));
+            
             //Items.Add("newname", new EMVD(EMVT.VarString, EMVB.AsIs, EMVE.DefaultString, null, null, "\"", "\" "));		// [newname]					from [set_ship_text]
             //Items.Add("race", new EMVD(EMVT.VarString, EMVB.AsIs, EMVE.DefaultString, null, null, "\"", "\" "));		// [race]					from [set_ship_text]
             //Items.Add("class", new EMVD(EMVT.VarString, EMVB.AsIs, EMVE.DefaultString, null, null, "\"", "\" "));		// [class]					from [set_ship_text]

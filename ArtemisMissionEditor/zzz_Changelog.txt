@@ -1,4 +1,18 @@
 ﻿----------------------
+Version 2.1.1.3 [7-19-2014] (Alexey Andronov)
+* Fixed "set_side_value" and "set_special"
+* Added custom menues for set_side_value and set_special
+* Fixed limits and editing form for elite ability bits
+* Improved "set_ship_text" and "start/end_getting_keypresses_from" statement texts
+* In many cases with these commands added dropdown for names (to select object name from a list of objects created somewhere in the script)
+* Added additional hotkeys to checklist (consoles and ability bits) forms: tilde for all and numbers for exact items
+* Allowed up to 29 skyboxes and manual input of any number
+
+----------------------
+Version 2.1.1.2 [7-19-2014] (Alexey Andronov)
+* Fixed Destroy command to process whales, drones and all correctly
+
+----------------------
 Version 2.1.1.1 [6-28-2014] (Russ Judge)
 * Added sideValue to Create.
 

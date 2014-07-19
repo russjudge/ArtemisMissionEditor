@@ -25,3 +25,30 @@ E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3
 E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.csproj.GenerateResource.Cache
 E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.exe
 E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.pdb
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.exe
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.pdb
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\bin\Debug\ArtemisMissionEditor.exe
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\bin\Debug\ArtemisMissionEditor.pdb
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\bin\Debug\ArtemisMissionEditor.exe.CodeAnalysisLog.xml
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\bin\Debug\ArtemisMissionEditor.exe.lastcodeanalysissucceeded
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.csprojResolveAssemblyReference.cache
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor._PanelSpaceMap.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.TreeViewEx.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.AboutBox.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.DialogRHKeys.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.DialogAbilityBits.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.DialogConsoleList.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.DialogSimple.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.DialogSpaceMap.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor._FormDependency.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor._FormFindReplace.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor._FormHelp.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor._FormMissionProperties.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor._FormSearchResults.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor._FormLog.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor._FormMain.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.FormSerializeableToRegistry.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.FormSpaceMap.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor._FormSettings.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.Properties.Resources.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.csproj.GenerateResource.Cache
