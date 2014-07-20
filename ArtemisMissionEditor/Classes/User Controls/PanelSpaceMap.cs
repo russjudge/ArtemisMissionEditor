@@ -10,12 +10,12 @@ using System.Xml;
 using System.Reflection;
 using System.IO;
 using System.Drawing.Drawing2D;
-
+using System.Runtime.CompilerServices;
+using System.Diagnostics;
+	
 namespace ArtemisMissionEditor
 {
-	using db = Double;
-
-	class _PanelSpaceMap : UserControl
+    class _PanelSpaceMap : UserControl
 	{
 		[DisplayName("Mode"), Description("Mode used by this instance of space map panel."), DefaultValue(PanelSpaceMapMode.Normal)]
         public PanelSpaceMapMode Mode { get; set; }
@@ -32,7 +32,6 @@ namespace ArtemisMissionEditor
 		private ToolStripStatusLabel    _objectsSelectedTSSL;
 		private ToolStripStatusLabel    _namedObjectsTotalTSSL;
 		private ToolStripStatusLabel    _namelessObjectsTotalTSSL;
-        private ToolStripStatusLabel _unmappable;
         private ToolStripStatusLabel    _cursorCoordinates;
 		private TabPage					_namedObjectsPage;
 		private TabPage					_namelessObjectsPage;
@@ -135,22 +134,16 @@ namespace ArtemisMissionEditor
 
 		#region Helper functions
 
-		//Return rounded value (simply)
-		public int __r(double value)
-		{
-			return (int)Math.Round(value);
-		}
-
 		//Return rounded value (to nearest odd) //Doesnt fucking work
-		public int __ro(double value)
+		public static int RoundToNearestOddInt(double value)
 		{
 			//int rv = (int)Math.Floor(value + 0.5);
 			//return (rv % 2 == 0) ? rv - 1 : rv;
-			return __r(value);
+            return (int)Math.Round(value);
 		}
 
 		//Return rounded value but not 2
-		public int __rn2(double value)
+		public static int FloorToIntNot2(double value)
 		{
 			int rv = (int)Math.Floor(value + 0.5);
 			return (rv == 2) ? 1 : rv;
@@ -158,17 +151,21 @@ namespace ArtemisMissionEditor
 
 		public double GetMapScale()
 		{
-			return (db)_PSM_p_mapSurface.Width / (SpaceMap._maxX + SpaceMap._paddingX * 2);
+            return (double)_PSM_p_mapSurface.Width / (SpaceMap._maxX + SpaceMap._paddingX * 2.0);
 		}
 
 		public double GetMapScaleMin()
 		{
-			return (db)_PSM_p_mapSurface.Width / (SpaceMap._maxX + SpaceMap._paddingX * 2) < (db)_PSM_p_mapSurface.Height / (SpaceMap._maxZ + SpaceMap._paddingZ * 2) ? (db)_PSM_p_mapSurface.Width / (SpaceMap._maxX + SpaceMap._paddingX * 2) : (db)_PSM_p_mapSurface.Height / (SpaceMap._maxZ + SpaceMap._paddingZ * 2);
+			return (double)_PSM_p_mapSurface.Width / (SpaceMap._maxX + SpaceMap._paddingX * 2.0) < (double)_PSM_p_mapSurface.Height / (SpaceMap._maxZ + SpaceMap._paddingZ * 2.0) 
+                ? (double)_PSM_p_mapSurface.Width / (SpaceMap._maxX + SpaceMap._paddingX * 2.0) 
+                : (double)_PSM_p_mapSurface.Height / (SpaceMap._maxZ + SpaceMap._paddingZ * 2.0);
 		}
 
 		public double GetMapScaleMax()
 		{
-			return (db)_PSM_p_mapSurface.Width / (SpaceMap._maxX + SpaceMap._paddingX * 2) > (db)_PSM_p_mapSurface.Height / (SpaceMap._maxZ + SpaceMap._paddingZ * 2) ? (db)_PSM_p_mapSurface.Width / (SpaceMap._maxX + SpaceMap._paddingX * 2) : (db)_PSM_p_mapSurface.Height / (SpaceMap._maxZ + SpaceMap._paddingZ * 2);
+            return (double)_PSM_p_mapSurface.Width / (SpaceMap._maxX + SpaceMap._paddingX * 2.0) > (double)_PSM_p_mapSurface.Height / (SpaceMap._maxZ + SpaceMap._paddingZ * 2.0)
+                ? (double)_PSM_p_mapSurface.Width / (SpaceMap._maxX + SpaceMap._paddingX * 2.0)
+                : (double)_PSM_p_mapSurface.Height / (SpaceMap._maxZ + SpaceMap._paddingZ * 2.0);
 		}
 
 		public int PointXToScreen(int space_map_x)
@@ -383,16 +380,13 @@ namespace ArtemisMissionEditor
 					_namelessObjectsTotalTSSL = (ToolStripStatusLabel)item;
                 if (item.GetType() == typeof(ToolStripStatusLabel) && item.Tag != null && item.Tag.GetType() == typeof(string) && ((string)item.Tag).ToLower() == "cursorcoordinates")
                     _cursorCoordinates = (ToolStripStatusLabel)item;
-
-                if (item.GetType() == typeof(ToolStripStatusLabel) && item.Tag != null && item.Tag.GetType() == typeof(string) && ((string)item.Tag).ToLower() == "unmappable")
-                    _unmappable = (ToolStripStatusLabel)item;
 			}
 		}
 
-		public Point DrawSpaceMap_private_RotateScalePoint(Point p1, double x, double y, double angle, double scale100)
+		public Point DrawSpaceMap_RotateScalePoint(Point p1, double x, double y, double angle, double scale100)
 		{
-			return new Point(__r((db)x + (Math.Cos(angle) * (p1.X) - Math.Sin(angle) * (p1.Y)) * scale100 / 100),
-							 __r((db)y + (Math.Sin(angle) * (p1.X) + Math.Cos(angle) * (p1.Y)) * scale100 / 100));
+			return new Point((int)Math.Round(x + (Math.Cos(angle) * (p1.X) - Math.Sin(angle) * (p1.Y)) * scale100 / 100.0),
+                             (int)Math.Round(y + (Math.Sin(angle) * (p1.X) + Math.Cos(angle) * (p1.Y)) * scale100 / 100.0));
 		}
 
 		private int HowManyAsteroidsFitOnArc(double startRadius, double angle, int orbitID, double rem, int max, int skip)
@@ -408,13 +402,13 @@ namespace ArtemisMissionEditor
 
 			//Arc length in units
 			double arcLength = radius * angle;
-			
-            int result = (int)Math.Truncate(arcLength / (db)SpaceMap._asteroidWidth / 2.0);
+
+            int result = (int)Math.Truncate(arcLength / SpaceMap._asteroidWidth / 2.0);
 
 			//Subtract as needed
-			result -= (int)Math.Truncate((db)(result) * skip / (max + skip) + rem);
+            result -= (int)Math.Truncate((double)(result) * skip / (max + skip) + rem);
 			remLast = rem;
-			rem = ((db)(result) * skip / (max + skip) + rem) - Math.Truncate((db)(result) * skip / (max + skip) + rem);
+            rem = ((double)(result) * skip / (max + skip) + rem) - Math.Truncate((double)(result) * skip / (max + skip) + rem);
 
 			//Arc smaller than an asteroid can still hold one
 			return result >= 1 ? result : 1;
@@ -422,7 +416,7 @@ namespace ArtemisMissionEditor
 
 		private int GetOrbitRadius(double startRadius, int orbitID)
 		{
-			return (int)Math.Round(startRadius + (((int)orbitID / 2) * Math.Pow(-1, (int)orbitID % 2)) * (db)SpaceMap._asteroidWidth * 2.0);
+            return (int)Math.Round(startRadius + ((orbitID / 2) * Math.Pow(-1, orbitID % 2)) * SpaceMap._asteroidWidth * 2.0);
 		}
 
 		private int GetAsteroidReserveOnLastArc(double startRadius, double angle, int maxAsteroids)
@@ -455,15 +449,15 @@ namespace ArtemisMissionEditor
 			double res;
 			//If we are not on the last orbit we distribute according to the information
 			if (currentAsteroid + remAsteroids >= HowManyAsteroidsFitOnArc(startRadius, angle, i, rem, maxAsteroids, reserve)) // Minus two here prevents occasional one or two asteroids from remaining on the next orbit
-				res = ((db)currentAsteroid + 0.5) / (HowManyAsteroidsFitOnArc(startRadius, angle, i, rem, maxAsteroids, reserve));
+				res = (currentAsteroid + 0.5) / (HowManyAsteroidsFitOnArc(startRadius, angle, i, rem, maxAsteroids, reserve));
 			else //If we are on the last orbit then we evently distribute asteroids on the orbit
-				res = ((db)currentAsteroid + 0.5) / (currentAsteroid + remAsteroids);
+                res = (currentAsteroid + 0.5) / (currentAsteroid + remAsteroids);
 
 			return new KeyValuePair<double, double>
 				(GetOrbitRadius(startRadius, i), res);
 		}
 
-		public bool DrawSpaceMap_private_GetPoint(double screen_y_scale, Random rnd, NamelessMapObject item, int i, double a_s, double a_e, out double x, out double zy, out double z)
+		public bool DrawSpaceMap_GetPoint(double screen_y_scale, Random rnd, NamelessMapObject item, int i, double angleStart, double angleEnd, out double x, out double zy, out double z)
         {
             int j;
             double a, length;
@@ -476,31 +470,31 @@ namespace ArtemisMissionEditor
                 switch (item._type)
                 {
                     case NamelessMapObjectType.asteroids:
-                        KeyValuePair<double, double> result = GetAsteroidPositionOnArc(item.radius, a_e - a_s, i, item.count);
+                        KeyValuePair<double, double> result = GetAsteroidPositionOnArc(item.radius, angleEnd - angleStart, i, item.count);
                         if (result.Value < 0)
                             MessageBox.Show("FAIL!");
                         a = 3 * Math.PI / 2 - //Convert from map coords to screen coords
-                            (a_s + ((a_e - a_s) * result.Value)); //start angle plus position inside arc from start to end angle
+                            (angleStart + ((angleEnd - angleStart) * result.Value)); //start angle plus position inside arc from start to end angle
                         length = result.Key;
                         break;
                     default:
                         a = 3 * Math.PI / 2 - //Convert from map coords to screen coords
-                            (a_s + ((a_e - a_s) * (((db)i + 0.5) / item.count))); //start angle plus position inside arc from start to end angle
+                            (angleStart + ((angleEnd - angleStart) * ((i + 0.5) / item.count))); //start angle plus position inside arc from start to end angle
                         length = item.radius;
                         break;
                 }
 
-                c.X = item.CoordinatesStart.X + __r(length * Math.Cos(a)) + item.randomRange - rnd.Next(2 * item.randomRange);
+                c.X = item.CoordinatesStart.X + (int)Math.Round(length * Math.Cos(a)) + item.randomRange - rnd.Next(2 * item.randomRange);
                 c.Y = item._coordinatesStart.Y;
-                c.Z = item.CoordinatesStart.Z + __r(length * Math.Sin(a)) + item.randomRange - rnd.Next(2 * item.randomRange);
+                c.Z = item.CoordinatesStart.Z + (int)Math.Round(length * Math.Sin(a)) + item.randomRange - rnd.Next(2 * item.randomRange);
 
             }
             else
             {
-				a = item.count == 1 ? 0.5 : (db)i /  (item.count - 1);
-                c.X = __r(a * item.CoordinatesStart.X + (1 - a) * item.CoordinatesEnd.X + item.randomRange - rnd.Next(2 * (item.randomRange)));
-                c.Y = __r(a * item.CoordinatesStart.Y + (1 - a) * item.CoordinatesEnd.Y);
-                c.Z = __r(a * item.CoordinatesStart.Z + (1 - a) * item.CoordinatesEnd.Z + item.randomRange - rnd.Next(2 * item.randomRange));
+				a = item.count == 1 ? 0.5 : (double)i /  (double)(item.count - 1.0);
+                c.X = (int)Math.Round(a * item.CoordinatesStart.X + (1 - a) * item.CoordinatesEnd.X + item.randomRange - rnd.Next(2 * (item.randomRange)));
+                c.Y = (int)Math.Round(a * item.CoordinatesStart.Y + (1 - a) * item.CoordinatesEnd.Y);
+                c.Z = (int)Math.Round(a * item.CoordinatesStart.Z + (1 - a) * item.CoordinatesEnd.Z + item.randomRange - rnd.Next(2 * item.randomRange));
             }
 
             switch (item._type)
@@ -517,20 +511,29 @@ namespace ArtemisMissionEditor
             //WTF IS THIS?
             //if (c.X < SpaceMap._minX || c.Y < SpaceMap._minY || c.Z < SpaceMap._minZ || c.X > SpaceMap._maxX || c.Y > SpaceMap._maxY || c.Z > SpaceMap._maxZ)
             //{ x = -1; z = -1; zy = -1; return false; } else { }
-            x = PointXToScreen((db)c.X_Scr);
-            zy = PointZToScreen((db)c.Z_Scr) - c.Y_Scr * screen_y_scale;
-            z = PointZToScreen((db)c.Z_Scr);
+            x = PointXToScreen(c.X_Scr);
+            zy = PointZToScreen(c.Z_Scr) - c.Y_Scr * screen_y_scale;
+            z = PointZToScreen(c.Z_Scr);
             return true;
         }
 
-		public void DrawSpaceMap(Graphics g)
+        private void DrawSpaceMap_DrawHeightLine(Graphics g, Pen pen, Brush brush, double x, double zy, double z)
+        {
+            g.DrawLineD(pen, x, zy, x, z);
+            g.FillCircle(brush, x, z, 6.0);
+        }
+
+        public void DrawSpaceMap(Graphics g)
 		{
+            List<IDisposable> ListObjectsToDispose = new List<IDisposable>();
+
 			#region INIT everything and DRAW Background
 
-			int i, j, fn, pn, rt;
-			double x, zy, z, xe, zye, ze, a, rad, rad2, rad3, a_s, a_e;
-			double s_a, s_v, s_sel, s_bh1, s_bh2, s_nn, s_na, s_nm, s_nm2;
-			string n;
+			int i, j, fleetNumber, podNumber, randomThreshold;
+			double x, zy, z, xe, zye, ze, angle, radius1, radius2, radius3, angleStart, angleEnd;
+			double sizeAnomaly, sizeVessel, sizeSelection, 
+                sizeNamelessBlackholeOuter, sizeNamelessBlackholeInner, sizeNamelessNebula, sizeNamelessAsteroid, sizeNamelessMineBright, sizeNamelessMineDark;
+			string name;
 			double screen_y_scale = Settings.Current.YScale * GetMapScale();
 
 			//objects for every1
@@ -543,107 +546,128 @@ namespace ArtemisMissionEditor
 
 			#region DRAW Nameless Objects
 
-			//DRAW THE NAMELESS BUNCH! SAMURAI SENTAI SHINKENGER MAIRU!
-			s_nn = (db)SpaceMap._nebulaWidth * GetMapScale();
-			s_na = (db)SpaceMap._asteroidWidth * GetMapScale(); s_na = (s_na < 7 ? 7 : s_na);
-			s_nm = 9;
-			s_nm2 = 3;
-			//n
-			Brush nebulaBrush = Settings.Current.GetBrush(MapColors.Nebula);
-			Brush nebulaBrushBG = Settings.Current.GetBrush(MapColors.NebulaBG);
-			Pen nebulaPen = new Pen(nebulaBrush, 1);
-			//a
-			Brush asteroidBrush = (s_na > 12.5) ? Settings.Current.GetBrush(MapColors.AsteroidBright) : Settings.Current.GetBrush(MapColors.Asteroid);
-			Brush asteroidBrushBG = Settings.Current.GetBrush(MapColors.AsteroidBG);
-			Pen asteroidPen = new Pen(asteroidBrush, __r(s_na / 5));
-			Pen asteroidPenBG = new Pen(asteroidBrushBG, __r(s_na / 5));
-			//m
-			Brush mineBrush = Settings.Current.GetBrush(MapColors.Mine);
-			Brush mineBrushDark = Settings.Current.GetBrush(MapColors.MineDark);
-			Brush mineBrushBG = Settings.Current.GetBrush(MapColors.MineBG);
-			Pen minePen = new Pen(mineBrush, 1);
-			Pen minePenDark = new Pen(mineBrushDark, 1);
-			Pen minePenBG = new Pen(mineBrushBG, 1);
-			//h
-			Brush darkHeightBrush = Settings.Current.GetBrush(MapColors.MapNamelessHeightMarker);
-			Pen darkHeightPen = new Pen(darkHeightBrush, 1);
+			// calculate sizes
+			sizeNamelessNebula = SpaceMap._nebulaWidth * GetMapScale();
+            sizeNamelessAsteroid = SpaceMap._asteroidWidth * GetMapScale(); 
+            sizeNamelessAsteroid = (sizeNamelessAsteroid < 7.0 ? 7.0 : sizeNamelessAsteroid);
+			sizeNamelessMineBright = 9.0;
+			sizeNamelessMineDark = 3.0;
+            
+            // nebulas
+			Brush brushNebula = Settings.Current.GetBrush(MapColors.Nebula);
+            ListObjectsToDispose.Add(brushNebula);
+            Brush brushNebulaBG = Settings.Current.GetBrush(MapColors.NebulaBG);
+            ListObjectsToDispose.Add(brushNebulaBG); 
+			Pen penNebula = new Pen(brushNebula, 1);
+            ListObjectsToDispose.Add(penNebula);
+			
+            // astreoids
+			Brush brushAsteroid = (sizeNamelessAsteroid > 12.5) ? Settings.Current.GetBrush(MapColors.AsteroidBright) : Settings.Current.GetBrush(MapColors.Asteroid);
+            ListObjectsToDispose.Add(brushAsteroid);
+            Brush brushAsteroidBG = Settings.Current.GetBrush(MapColors.AsteroidBG);
+            ListObjectsToDispose.Add(brushAsteroidBG);
+            Pen penAsteroid = new Pen(brushAsteroid, (int)Math.Round(sizeNamelessAsteroid / 5));
+            ListObjectsToDispose.Add(penAsteroid);
+            Pen penAsteroidBG = new Pen(brushAsteroidBG, (int)Math.Round(sizeNamelessAsteroid / 5));
+            ListObjectsToDispose.Add(penAsteroidBG);
 
+            // mines
+			Brush brushMine = Settings.Current.GetBrush(MapColors.Mine);
+            ListObjectsToDispose.Add(brushMine);
+            Brush brushMineDark = Settings.Current.GetBrush(MapColors.MineDark);
+            ListObjectsToDispose.Add(brushMineDark);
+            Brush brushMineBG = Settings.Current.GetBrush(MapColors.MineBG);
+            ListObjectsToDispose.Add(brushMineBG);
+            Pen penMine = new Pen(brushMine, 1);
+            ListObjectsToDispose.Add(penMine);
+            Pen penMineDark = new Pen(brushMineDark, 1);
+            ListObjectsToDispose.Add(penMineDark);
+            Pen penMineBG = new Pen(brushMineBG, 1);
+            ListObjectsToDispose.Add(penMineBG);
+            
+            //height
+			Brush brushDarkHeight = Settings.Current.GetBrush(MapColors.MapNamelessHeightMarker);
+            ListObjectsToDispose.Add(brushDarkHeight);
+            Pen penDarkHeight = new Pen(brushDarkHeight, 1);
+            ListObjectsToDispose.Add(penDarkHeight);
+            
+            // Background objects
 			foreach (NamelessMapObject item in SpaceMap.bgNamelessObjects)
 			{
-				rt = item._type == NamelessMapObjectType.asteroids ? 6 : 2; //random_threshold
+				randomThreshold = item._type == NamelessMapObjectType.asteroids ? 6 : 2; //random_threshold
 				rnd = new Random(item.randomSeed);
-				a_s = item.A_Start_rad ?? 0.0;
-				a_e = (item.A_End_rad ?? Math.PI * 2.0);
-				if (a_s > a_e)
+				angleStart = item.A_Start_rad ?? 0.0;
+				angleEnd = (item.A_End_rad ?? Math.PI * 2.0);
+				if (angleStart > angleEnd)
 				{
-					double tmp = a_e;
-					a_e = a_s;
-					a_s = tmp;
+					double tmp = angleEnd;
+					angleEnd = angleStart;
+					angleStart = tmp;
 				}
 
 				for (i = 0; i < item.count; i++)
 				{
-					if (!DrawSpaceMap_private_GetPoint(screen_y_scale, rnd, item, i, a_s, a_e, out x, out zy, out z))
+					if (!DrawSpaceMap_GetPoint(screen_y_scale, rnd, item, i, angleStart, angleEnd, out x, out zy, out z))
 						continue;
 
 					if (!Settings.Current.UseYForNameless)
 						zy = z;
 
-					//if (zy < z - rt) { g.DrawLine(darkHeightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(darkHeightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
-					switch (item._type)
-					{
-						case NamelessMapObjectType.asteroids:
-							g.DrawEllipse(asteroidPenBG, new Rectangle(__r(x - s_na / 2), __r(zy - s_na / 2), __r(s_na), __r(s_na)));
-							break;
-						case NamelessMapObjectType.nebulas:
-							g.DrawEllipse(nebulaPen, new Rectangle(__r(x - s_nn / 2), __r(zy - s_nn / 2), __r(s_nn), __r(s_nn)));
-							g.FillEllipse(nebulaBrushBG, new Rectangle(__r(x - s_nn / 2), __r(zy - s_nn / 2), __r(s_nn), __r(s_nn)));
-							break;
+                    switch (item._type)
+                    {
+                        case NamelessMapObjectType.asteroids:
+                            g.DrawCircle(penAsteroidBG, x, zy, sizeNamelessAsteroid);
+                            break;
+                        case NamelessMapObjectType.nebulas:
+                            g.DrawCircle(penNebula, x, zy, sizeNamelessNebula);
+                            g.FillCircle(brushNebulaBG, x, zy, sizeNamelessNebula);
+                            break;
 						case NamelessMapObjectType.mines:
-							g.DrawEllipse(minePenBG, new Rectangle(__r(x - s_nm / 2), __r(zy - s_nm / 2), __r(s_nm), __r(s_nm)));
-							//g.DrawEllipse(minePenBG, new Rectangle(__r(x - s_nm2 / 2), __r(zy - s_nm2 / 2), __r(s_nm2), __r(s_nm2)));
+                            g.DrawCircle(penMineBG, x, zy, sizeNamelessMineBright);
 							break;
 					}
-					//if (zy > z + rt) { g.DrawLine(darkHeightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(darkHeightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
 				}
 			}
 
 			foreach (NamelessMapObject item in SpaceMap.namelessObjects)
 			{
-				rt = item._type == NamelessMapObjectType.asteroids ? 6 : 2; //random_threshold
+				randomThreshold = item._type == NamelessMapObjectType.asteroids ? 6 : 2; //random_threshold
 				rnd = new Random(item.randomSeed);
-				a_s = item.A_Start_rad ?? 0.0;
-				a_e = (item.A_End_rad ?? Math.PI * 2.0);
-				if (a_s > a_e)
+				angleStart = item.A_Start_rad ?? 0.0;
+				angleEnd = (item.A_End_rad ?? Math.PI * 2.0);
+				if (angleStart > angleEnd)
 				{
-					double tmp = a_e;
-					a_e = a_s;
-					a_s = tmp;
+					double tmp = angleEnd;
+					angleEnd = angleStart;
+					angleStart = tmp;
 				}
 
 				for (i = 0; i < item.count; i++)
 				{
-					if (!DrawSpaceMap_private_GetPoint(screen_y_scale, rnd, item, i, a_s, a_e, out x, out zy, out z))
+					if (!DrawSpaceMap_GetPoint(screen_y_scale, rnd, item, i, angleStart, angleEnd, out x, out zy, out z))
 						continue;
 
 					if (!Settings.Current.UseYForNameless)
 						zy = z;
 
-					if (zy < z - rt) { g.DrawLine(darkHeightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(darkHeightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
+                    if (zy < z - randomThreshold)
+                        DrawSpaceMap_DrawHeightLine(g, penDarkHeight, brushDarkHeight, x, zy, z);
+                    
 					switch (item._type)
 					{
 						case NamelessMapObjectType.asteroids:
-							g.DrawEllipse(asteroidPen, new Rectangle(__r(x - s_na / 2), __r(zy - s_na / 2), __r(s_na), __r(s_na)));
+                            g.DrawCircle(penAsteroid, x, zy, sizeNamelessAsteroid);
 							break;
 						case NamelessMapObjectType.nebulas:
-							g.FillEllipse(nebulaBrush, new Rectangle(__r(x - s_nn / 2), __r(zy - s_nn / 2), __r(s_nn), __r(s_nn)));
+                            g.FillCircle(brushNebula, x, zy, sizeNamelessNebula);
 							break;
 						case NamelessMapObjectType.mines:
-							g.DrawEllipse(minePen, new Rectangle(__r(x - s_nm / 2), __r(zy - s_nm / 2), __r(s_nm), __r(s_nm)));
-							g.DrawEllipse(minePenDark, new Rectangle(__r(x - s_nm2 / 2), __r(zy - s_nm2 / 2), __r(s_nm2), __r(s_nm2)));
+                            g.DrawCircle(penMine, x, zy, sizeNamelessMineBright);
+                            g.DrawCircle(penMineDark, x, zy, sizeNamelessMineDark);
 							break;
 					}
-					if (zy > z + rt) { g.DrawLine(darkHeightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(darkHeightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
+					if (zy > z + randomThreshold)
+                        DrawSpaceMap_DrawHeightLine(g, penDarkHeight, brushDarkHeight, x, zy, z);
 				}
 			}
 
@@ -652,28 +676,33 @@ namespace ArtemisMissionEditor
 
 			#region DRAW Grid and Quadrant captions
 
-			Pen gridPen = new Pen(Settings.Current.GetColor(MapColors.MapGridLine), 1);
-			for (i = 0; i < 6; i++)
-				g.DrawLine(gridPen,
+			Pen penGrid = new Pen(Settings.Current.GetColor(MapColors.MapGridLine), 1);
+            ListObjectsToDispose.Add(penGrid);
+            for (i = 0; i < 6; i++)
+				g.DrawLine(penGrid,
 					PointXToScreen(i * 20000),
 					PointZToScreen(0),
 					PointXToScreen(i * 20000),
 					PointZToScreen(SpaceMap._maxZ));
 			for (i = 0; i < 6; i++)
-				g.DrawLine(gridPen,
+				g.DrawLine(penGrid,
 					PointXToScreen(0),
 					PointZToScreen(i * 20000),
 					PointXToScreen(SpaceMap._maxX),
 					PointZToScreen(i * 20000));
 
 			//3. DRAW QUANDRANT CAPTIONS
-			Brush qBrush = Settings.Current.GetBrush(MapColors.MapGridLine);
-			Font qFont = Settings.Current.GetFont(MapFonts.QuadrantText);
-			if (qFont.Size > __r(2900 * GetMapScale()))
-				qFont = new Font(qFont.FontFamily, __r(2900 * GetMapScale()), qFont.Style);
+			Brush brushQuadrant = Settings.Current.GetBrush(MapColors.MapGridLine);
+            ListObjectsToDispose.Add(brushQuadrant);
+            Font fontQuadrant = Settings.Current.GetFont(MapFonts.QuadrantText);
+            if (fontQuadrant.Size > 2900.0 * GetMapScale())
+            {
+                fontQuadrant = new Font(fontQuadrant.FontFamily, (float)(2900.0 * GetMapScale()), fontQuadrant.Style);
+                ListObjectsToDispose.Add(fontQuadrant);
+            }
 			for (i = 0; i < 5; i++)
 				for (j = 0; j < 5; j++)
-					g.DrawString(Convert.ToChar(Convert.ToInt32('A') + j).ToString() + Convert.ToString(i + 1), qFont, qBrush,
+					g.DrawString(Convert.ToChar(Convert.ToInt32('A') + j).ToString() + Convert.ToString(i + 1), fontQuadrant, brushQuadrant,
 						PointXToScreen(i * 20000 + 90),
 						PointXToScreen(j * 20000 + 20));
 
@@ -681,95 +710,156 @@ namespace ArtemisMissionEditor
 
 			#region INIT Named objects
 
-			Brush heightBrush = Settings.Current.GetBrush(MapColors.MapHeightMarker);
-			Pen heightPen = new Pen(heightBrush, 1);
+			Brush brushHeight = Settings.Current.GetBrush(MapColors.MapHeightMarker);
+            ListObjectsToDispose.Add(brushHeight);
+            Pen penHeight = new Pen(brushHeight, 1);
+            ListObjectsToDispose.Add(penHeight);
 
 			//for all fonts that use center output
 			StringFormat drawFormat = new StringFormat();
+            ListObjectsToDispose.Add(drawFormat);
 			drawFormat.Alignment = StringAlignment.Center;
 			//for anomalies
-			Brush anomalyBrush = Settings.Current.GetBrush(MapColors.Anomaly);
-			s_a = 1 + 100 * GetMapScale();
+			Brush brushAnomaly = Settings.Current.GetBrush(MapColors.Anomaly);
+            ListObjectsToDispose.Add(brushAnomaly);
+            sizeAnomaly = 1 + 100 * GetMapScale();
 			//for vessels
-			s_v = 1 + 1500 * GetMapScale();
-			s_v = s_v > 30 ? 30 : s_v;
+			sizeVessel = 1 + 1500 * GetMapScale();
+			sizeVessel = sizeVessel > 30 ? 30 : sizeVessel;
 			Point vesselPoint0 = new Point(0, -70);
 			Point vesselPoint1 = new Point(50, 50);
 			Point vesselPoint2 = new Point(0, 05);
 			Point vesselPoint3 = new Point(-50, 50);
 			Point[] tp = new Point[4];
 			//for enemies
-			Brush enemyBrush = Settings.Current.GetBrush(MapColors.Enemy);
-            Pen enemyPenBG = new Pen(Settings.Current.GetBrush(MapColors.EnemyBG), 1);
-			Font enemyFont = Settings.Current.GetFont(MapFonts.ObjectText);
-			if (enemyFont.Size > s_v / 2)
-				enemyFont = new Font(enemyFont.FontFamily, s_v / 2 < 8 ? 8 : __r((db)s_v / 2), enemyFont.Style);
-			Font fleetFont = Settings.Current.GetFont(MapFonts.FleetText);
+			Brush brushEnemy = Settings.Current.GetBrush(MapColors.Enemy);
+            ListObjectsToDispose.Add(brushEnemy);
+            Brush brushEnemyBG = Settings.Current.GetBrush(MapColors.EnemyBG);
+            ListObjectsToDispose.Add(brushEnemyBG);
+            Pen penEnemyBG = new Pen(brushEnemyBG, 1);
+            ListObjectsToDispose.Add(penEnemyBG);
+			Font fontEnemy = Settings.Current.GetFont(MapFonts.ObjectText);
+            if (fontEnemy.Size > sizeVessel / 2)
+            {
+                fontEnemy = new Font(fontEnemy.FontFamily, sizeVessel / 2.0 < 8.0 ? 8.0f : (float)(sizeVessel / 2.0), fontEnemy.Style);
+                ListObjectsToDispose.Add(fontEnemy);
+            }
+			Font fontFleet = Settings.Current.GetFont(MapFonts.FleetText);
 			//for stations
-			Brush stationBrush = Settings.Current.GetBrush(MapColors.Station);
-			Pen stationPen = new Pen(stationBrush, __ro((db)s_v / 5));
-            Pen stationPenBG = new Pen(Settings.Current.GetBrush(MapColors.StationBG), 1);
-			Font stationFont = Settings.Current.GetFont(MapFonts.ObjectText);
-			if (stationFont.Size > s_v / 2)
-				stationFont = new Font(stationFont.FontFamily, s_v / 2 < 8 ? 8 : __r((db)s_v / 2), stationFont.Style);
+			Brush brushStation = Settings.Current.GetBrush(MapColors.Station);
+            ListObjectsToDispose.Add(brushStation);
+			Pen penStation = new Pen(brushStation, RoundToNearestOddInt(sizeVessel / 5.0));
+            ListObjectsToDispose.Add(penStation);
+            Pen penStationBG = new Pen(Settings.Current.GetBrush(MapColors.StationBG), 1);
+            ListObjectsToDispose.Add(penStationBG);
+			Font fontStation = Settings.Current.GetFont(MapFonts.ObjectText);
+            if (fontStation.Size > sizeVessel / 2)
+            {
+                fontStation = new Font(fontStation.FontFamily, sizeVessel / 2.0 < 8.0 ? 8.0f : (float)(sizeVessel / 2.0), fontStation.Style);
+                ListObjectsToDispose.Add(fontStation);
+            }
 			//for generics
-			Brush genericMeshBrush = Settings.Current.GetBrush(MapColors.GenericMesh);
-			Pen genericMeshPen1 = new Pen(genericMeshBrush, __ro((db)s_v / 5));
-			Pen genericMeshPen2 = new Pen(genericMeshBrush, __rn2((db)s_v / 10));
-			Brush genericMeshSolidBrush = new SolidBrush(Settings.Current.GetColor(MapColors.GenericMesh));
-			Brush genericMeshBrushCurrent;
-			Pen genericMeshPenCurrent1, genericMeshPenCurrent2, genericMeshPenCurrent3;
-			Font genericMeshFont = Settings.Current.GetFont(MapFonts.ObjectText);
-			if (genericMeshFont.Size > s_v / 2)
-				genericMeshFont = new Font(genericMeshFont.FontFamily, s_v / 2 < 8 ? 8 : __r((db)s_v / 2), genericMeshFont.Style);
-            Pen genericMeshPenBG = new Pen(Settings.Current.GetBrush(MapColors.GenericMeshBG), 1);
-			//for monsters
-			Brush monsterBrush = Settings.Current.GetBrush(MapColors.Monster);
-			Pen monsterPen = new Pen(monsterBrush, __ro((db)s_v / 10));
-			Font monsterFont = Settings.Current.GetFont(MapFonts.ObjectText);
-			if (monsterFont.Size > s_v / 2)
-				monsterFont = new Font(monsterFont.FontFamily, s_v / 2 < 8 ? 8 : __r((db)s_v / 2), monsterFont.Style);
-			//for neutrals
-			Brush neutralBrush = Settings.Current.GetBrush(MapColors.Neutral);
-			Font neutralFont = Settings.Current.GetFont(MapFonts.ObjectText);
-			if (neutralFont.Size > s_v / 2)
-				neutralFont = new Font(neutralFont.FontFamily, s_v / 2 < 8 ? 8 : __r((db)s_v / 2), neutralFont.Style);
-            Pen neutralPenBG = new Pen(Settings.Current.GetBrush(MapColors.NeutralBG), 1);
-			//for player(s????)
-			Brush playerBrush = Settings.Current.GetBrush(MapColors.Player);
-			Font playerFont = Settings.Current.GetFont(MapFonts.ObjectText);
-			if (playerFont.Size > s_v / 2)
-				playerFont = new Font(playerFont.FontFamily, s_v / 2 < 8 ? 8 : __r((db)s_v / 2), playerFont.Style);
-            Pen playerPenBG = new Pen(Settings.Current.GetBrush(MapColors.PlayerBG),1);
-			//for whale(s????)
-			Brush whaleBrush = Settings.Current.GetBrush(MapColors.Whale);
-			Font whaleFont = Settings.Current.GetFont(MapFonts.ObjectText);
-			if (whaleFont.Size > s_v / 2)
-				whaleFont = new Font(whaleFont.FontFamily, s_v / 2 < 8 ? 8 : __r((db)s_v / 2), whaleFont.Style);
-			Pen whalePenBG = new Pen(Settings.Current.GetBrush(MapColors.WhaleBG), 1);
-			//for BH
-			s_bh1 = 4750 * GetMapScale();
-			s_bh2 = 550 * GetMapScale();
-			Brush blackHoleBrush = Settings.Current.GetBrush(MapColors.BlackHole);
-			Pen blackHolePenOuter = new Pen(blackHoleBrush, __ro((db)s_bh1 / 8));
-			Pen blackHolePenInner = new Pen(blackHoleBrush, (s_bh1 < 275) ? __ro((db)s_bh1 / 55) : 5);
-			Font bhFont = Settings.Current.GetFont(MapFonts.ObjectText);
-			if (bhFont.Size > s_bh1 / 4)
-				bhFont = new Font(bhFont.FontFamily, s_bh1 / 4 < 8 ? 8 : __r((db)s_bh1 / 4), bhFont.Style);
-            Pen blackHolePenBG = new Pen(blackHoleBrush);
-			Font anomalyFont = Settings.Current.GetFont(MapFonts.ObjectText);
-			if (anomalyFont.Size > s_v / 2)
-				anomalyFont = new Font(anomalyFont.FontFamily, s_v / 2 < 8 ? 8 : __r((db)s_v / 2), anomalyFont.Style);
+			Brush brushGenericMesh = Settings.Current.GetBrush(MapColors.GenericMesh);
+            ListObjectsToDispose.Add(brushGenericMesh);
+			Pen penGenericMesh1 = new Pen(brushGenericMesh, RoundToNearestOddInt(sizeVessel / 5.0));
+            ListObjectsToDispose.Add(penGenericMesh1);
+			Pen penGenericMesh2 = new Pen(brushGenericMesh, FloorToIntNot2(sizeVessel / 10.0));
+            ListObjectsToDispose.Add(penGenericMesh2);
+			Brush brushGenericMeshSolid = new SolidBrush(Settings.Current.GetColor(MapColors.GenericMesh));
+            ListObjectsToDispose.Add(brushGenericMeshSolid);
+			Font fontGenericMesh = Settings.Current.GetFont(MapFonts.ObjectText);
+            if (fontGenericMesh.Size > sizeVessel / 2)
+            {
+                fontGenericMesh = new Font(fontGenericMesh.FontFamily, sizeVessel / 2.0 < 8.0 ? 8 : (float)(sizeVessel / 2.0), fontGenericMesh.Style);
+                ListObjectsToDispose.Add(fontGenericMesh);
+            }
+            Brush brushGenericMeshBG = Settings.Current.GetBrush(MapColors.GenericMeshBG);
+            ListObjectsToDispose.Add(brushGenericMeshBG); 
+            Pen penGenericMeshBG = new Pen(brushGenericMeshBG, 1);
+            ListObjectsToDispose.Add(penGenericMeshBG);
+            //for monsters
+            Brush brushMonster = Settings.Current.GetBrush(MapColors.Monster);
+            ListObjectsToDispose.Add(brushMonster); 
+            Pen penMonster = new Pen(brushMonster, RoundToNearestOddInt(sizeVessel / 10.0));
+            ListObjectsToDispose.Add(penMonster); 
+            Font fontMonster = Settings.Current.GetFont(MapFonts.ObjectText);
+            if (fontMonster.Size > sizeVessel / 2)
+            {
+                fontMonster = new Font(fontMonster.FontFamily, sizeVessel / 2.0 < 8.0 ? 8.0f : (float)(sizeVessel / 2.0), fontMonster.Style);
+                ListObjectsToDispose.Add(fontMonster);
+            }
+            //for neutrals
+            Brush brushNeutral = Settings.Current.GetBrush(MapColors.Neutral);
+            ListObjectsToDispose.Add(brushNeutral); 
+            Font fontNeutral = Settings.Current.GetFont(MapFonts.ObjectText);
+            if (fontNeutral.Size > sizeVessel / 2)
+            {
+                fontNeutral = new Font(fontNeutral.FontFamily, sizeVessel / 2.0 < 8.0 ? 8.0f: (float)(sizeVessel / 2.0), fontNeutral.Style);
+                ListObjectsToDispose.Add(fontNeutral);
+            }
+            Brush brushNeutralBG = Settings.Current.GetBrush(MapColors.NeutralBG);
+            ListObjectsToDispose.Add(brushNeutralBG); 
+            Pen penNeutralBG = new Pen(brushNeutralBG, 1);
+            ListObjectsToDispose.Add(penNeutralBG);
+            //for player(s????)
+            Brush brushPlayer = Settings.Current.GetBrush(MapColors.Player);
+            ListObjectsToDispose.Add(brushPlayer);
+            Font fontPlayer = Settings.Current.GetFont(MapFonts.ObjectText);
+            if (fontPlayer.Size > sizeVessel / 2)
+            {
+                fontPlayer = new Font(fontPlayer.FontFamily, sizeVessel / 2.0 < 8.0 ? 8.0f: (float)(sizeVessel / 2.0), fontPlayer.Style);
+                ListObjectsToDispose.Add(fontPlayer);
+            }
+            Brush brushPlayerBG = Settings.Current.GetBrush(MapColors.PlayerBG);
+            ListObjectsToDispose.Add(brushPlayerBG);
+            Pen penPlayerBG = new Pen(brushPlayerBG, 1);
+            ListObjectsToDispose.Add(penPlayerBG);
+            //for whale(s????)
+            Brush brushWhale = Settings.Current.GetBrush(MapColors.Whale);
+            ListObjectsToDispose.Add(brushWhale);
+            Font fontWhale = Settings.Current.GetFont(MapFonts.ObjectText);
+            if (fontWhale.Size > sizeVessel / 2)
+            {
+                fontWhale = new Font(fontWhale.FontFamily, sizeVessel / 2.0 < 8.0 ? 8.0f: (float)(sizeVessel / 2.0), fontWhale.Style);
+                ListObjectsToDispose.Add(fontWhale);
+            }
+            Brush brushWhaleBG = Settings.Current.GetBrush(MapColors.WhaleBG);
+            ListObjectsToDispose.Add(brushWhaleBG);
+            Pen penWhaleBG = new Pen(brushWhaleBG, 1);
+            ListObjectsToDispose.Add(penWhaleBG);
+            //for BH
+            sizeNamelessBlackholeOuter = 4750 * GetMapScale();
+            sizeNamelessBlackholeInner = 550 * GetMapScale();
+            Brush brushBlackHole = Settings.Current.GetBrush(MapColors.BlackHole);
+            ListObjectsToDispose.Add(brushBlackHole);
+            Pen penBlackHoleOuter = new Pen(brushBlackHole, RoundToNearestOddInt(sizeNamelessBlackholeOuter / 8.0));
+            ListObjectsToDispose.Add(penBlackHoleOuter);
+            Pen penBlackHoleInner = new Pen(brushBlackHole, (sizeNamelessBlackholeOuter < 275) ? RoundToNearestOddInt(sizeNamelessBlackholeOuter / 55.0) : 5);
+            ListObjectsToDispose.Add(penBlackHoleInner);
+            Font fontBlackHole = Settings.Current.GetFont(MapFonts.ObjectText);
+            if (fontBlackHole.Size > sizeNamelessBlackholeOuter / 4)
+            {
+                fontBlackHole = new Font(fontBlackHole.FontFamily, sizeNamelessBlackholeOuter / 4.0 < 8.0 ? 8.0f : (float)(sizeNamelessBlackholeOuter / 4.0), fontBlackHole.Style);
+                ListObjectsToDispose.Add(fontBlackHole);
+            }
+            Pen penBlackHoleBG = new Pen(brushBlackHole);
+            ListObjectsToDispose.Add(penBlackHoleBG);
+            Font fontAnomaly = Settings.Current.GetFont(MapFonts.ObjectText);
+            if (fontAnomaly.Size > sizeVessel / 2)
+            {
+                fontAnomaly = new Font(fontAnomaly.FontFamily, sizeVessel / 2.0 < 8.0 ? 8.0f : (float)(sizeVessel / 2.0), fontAnomaly.Style);
+                ListObjectsToDispose.Add(fontAnomaly);
+            }
 
-			#endregion
+            #endregion
 
 			#region DRAW Low priority Named Objects (black holes)
 
 			foreach (NamedMapObject mo in SpaceMap.namedObjects)
 			{
-				x = PointXToScreen((db)mo.Coordinates.X_Scr);
-				zy = PointZToScreen((db)mo.Coordinates.Z_Scr) - mo.Coordinates.Y_Scr * screen_y_scale;
-				z = PointZToScreen((db)mo.Coordinates.Z_Scr);
+				x = PointXToScreen(mo.Coordinates.X_Scr);
+				zy = PointZToScreen(mo.Coordinates.Z_Scr) - mo.Coordinates.Y_Scr * screen_y_scale;
+				z = PointZToScreen(mo.Coordinates.Z_Scr);
 
 				if (!Settings.Current.UseYForNamed)
 					zy = z;
@@ -777,21 +867,23 @@ namespace ArtemisMissionEditor
 				switch (mo.TypeToString)
 				{
 					case "blackHole":
-						if (zy < z) { g.DrawLine(heightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(heightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
-						g.DrawEllipse(blackHolePenOuter, new Rectangle(__r((db)x - s_bh1 * 15 / 32), __r((db)zy - s_bh1 * 15 / 32), __r((db)s_bh1 * 30 / 32), __r((db)s_bh1 * 30 / 32)));
-						g.DrawEllipse(blackHolePenInner, new Rectangle(__r((db)x - s_bh2 * 16 / 32), __r((db)zy - s_bh2 * 16 / 32), __r((db)s_bh2 * 32 / 32), __r((db)s_bh2 * 32 / 32)));
-						if (zy > z) { g.DrawLine(heightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(heightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
-						n = string.IsNullOrEmpty(mo.name) ? "" : (string.IsNullOrWhiteSpace(mo.name) && Settings.Current.MarkWhitespaceNamesOnSpaceMap ? "<" + mo.name + ">" : mo.name);
-						g.DrawString(n, bhFont, blackHoleBrush, new Point(__r((db)x), __r((db)zy - s_bh1 * 16 / 32 - bhFont.Size - __ro((db)s_bh1 / 8) - 2)), drawFormat);
+						if (zy < z)
+                            DrawSpaceMap_DrawHeightLine(g, penHeight, brushHeight, x, zy, z);
+						g.DrawCircle(penBlackHoleOuter, x , zy, sizeNamelessBlackholeOuter * 30.0 / 32);
+						g.DrawCircle(penBlackHoleInner, x , zy, sizeNamelessBlackholeInner * 32.0 / 32.0);
+						if (zy > z)
+                            DrawSpaceMap_DrawHeightLine(g, penHeight, brushHeight, x, zy, z);
+						name = string.IsNullOrEmpty(mo.name) ? "" : (string.IsNullOrWhiteSpace(mo.name) && Settings.Current.MarkWhitespaceNamesOnSpaceMap ? "<" + mo.name + ">" : mo.name);
+						g.DrawStringD(name, fontBlackHole, brushBlackHole, x, zy - sizeNamelessBlackholeOuter * 16.0 / 32.0 - fontBlackHole.Size - RoundToNearestOddInt(sizeNamelessBlackholeOuter / 8.0) - 2.0, drawFormat);
 						break;
 				}
 			}
 
             foreach (NamedMapObject mo in SpaceMap.bgNamedObjects)
             {
-                x = PointXToScreen((db)mo.Coordinates.X_Scr);
-                zy = PointZToScreen((db)mo.Coordinates.Z_Scr) - mo.Coordinates.Y_Scr * screen_y_scale;
-                z = PointZToScreen((db)mo.Coordinates.Z_Scr);
+                x = PointXToScreen(mo.Coordinates.X_Scr);
+                zy = PointZToScreen(mo.Coordinates.Z_Scr) - mo.Coordinates.Y_Scr * screen_y_scale;
+                z = PointZToScreen(mo.Coordinates.Z_Scr);
 
                 if (!Settings.Current.UseYForNamed)
                     zy = z;
@@ -799,7 +891,7 @@ namespace ArtemisMissionEditor
                 switch (mo.TypeToString)
                 {
                     case "blackHole":
-                        g.DrawEllipse(blackHolePenBG, new Rectangle(__r((db)x - s_bh1 * 15 / 32), __r((db)zy - s_bh1 * 15 / 32), __r((db)s_bh1 * 30 / 32), __r((db)s_bh1 * 30 / 32)));
+                        g.DrawCircle(penBlackHoleBG, x, zy, sizeNamelessBlackholeOuter * 30.0 / 32.0);
                         break;
                 }
             }
@@ -811,9 +903,9 @@ namespace ArtemisMissionEditor
 
 			foreach (NamedMapObject mo in SpaceMap.bgNamedObjects)
 			{
-				x = PointXToScreen((db)mo.Coordinates.X_Scr);
-				zy = PointZToScreen((db)mo.Coordinates.Z_Scr) - mo.Coordinates.Y_Scr * screen_y_scale;
-				z = PointZToScreen((db)mo.Coordinates.Z_Scr);
+				x = PointXToScreen(mo.Coordinates.X_Scr);
+				zy = PointZToScreen(mo.Coordinates.Z_Scr) - mo.Coordinates.Y_Scr * screen_y_scale;
+				z = PointZToScreen(mo.Coordinates.Z_Scr);
 
 				if (!Settings.Current.UseYForNamed)
 					zy = z;
@@ -821,47 +913,47 @@ namespace ArtemisMissionEditor
 				 switch (mo.TypeToString)
 				{
 					case "enemy":
-						a = ((NamedMapObjectA)mo).A_rad;
-						tp[0] = DrawSpaceMap_private_RotateScalePoint(vesselPoint0, x, zy, a, s_v);
-						tp[1] = DrawSpaceMap_private_RotateScalePoint(vesselPoint1, x, zy, a, s_v);
-						tp[2] = DrawSpaceMap_private_RotateScalePoint(vesselPoint2, x, zy, a, s_v);
-						tp[3] = DrawSpaceMap_private_RotateScalePoint(vesselPoint3, x, zy, a, s_v);
-						g.DrawPolygon(enemyPenBG, tp);
+						angle = ((NamedMapObjectA)mo).A_rad;
+						tp[0] = DrawSpaceMap_RotateScalePoint(vesselPoint0, x, zy, angle, sizeVessel);
+						tp[1] = DrawSpaceMap_RotateScalePoint(vesselPoint1, x, zy, angle, sizeVessel);
+						tp[2] = DrawSpaceMap_RotateScalePoint(vesselPoint2, x, zy, angle, sizeVessel);
+						tp[3] = DrawSpaceMap_RotateScalePoint(vesselPoint3, x, zy, angle, sizeVessel);
+						g.DrawPolygon(penEnemyBG, tp);
 						break;
 					case "player":
-						a = ((NamedMapObjectA)mo).A_rad;
-						tp[0] = DrawSpaceMap_private_RotateScalePoint(vesselPoint0, x, zy, a, s_v);
-						tp[1] = DrawSpaceMap_private_RotateScalePoint(vesselPoint1, x, zy, a, s_v);
-						tp[2] = DrawSpaceMap_private_RotateScalePoint(vesselPoint2, x, zy, a, s_v);
-						tp[3] = DrawSpaceMap_private_RotateScalePoint(vesselPoint3, x, zy, a, s_v);
-						g.DrawPolygon(playerPenBG, tp);
+						angle = ((NamedMapObjectA)mo).A_rad;
+						tp[0] = DrawSpaceMap_RotateScalePoint(vesselPoint0, x, zy, angle, sizeVessel);
+						tp[1] = DrawSpaceMap_RotateScalePoint(vesselPoint1, x, zy, angle, sizeVessel);
+						tp[2] = DrawSpaceMap_RotateScalePoint(vesselPoint2, x, zy, angle, sizeVessel);
+						tp[3] = DrawSpaceMap_RotateScalePoint(vesselPoint3, x, zy, angle, sizeVessel);
+						g.DrawPolygon(penPlayerBG, tp);
 						break;
 					case "whale":
-						a = ((NamedMapObjectA)mo).A_rad;
-						tp[0] = DrawSpaceMap_private_RotateScalePoint(vesselPoint0, x, zy, a, s_v * 0.8);
-						tp[1] = DrawSpaceMap_private_RotateScalePoint(vesselPoint1, x, zy, a, s_v * 0.8);
-						tp[2] = DrawSpaceMap_private_RotateScalePoint(vesselPoint2, x, zy, a, s_v * 0.8);
-						tp[3] = DrawSpaceMap_private_RotateScalePoint(vesselPoint3, x, zy, a, s_v * 0.8);
-						g.DrawPolygon(whalePenBG, tp);
+						angle = ((NamedMapObjectA)mo).A_rad;
+						tp[0] = DrawSpaceMap_RotateScalePoint(vesselPoint0, x, zy, angle, sizeVessel * 0.8);
+						tp[1] = DrawSpaceMap_RotateScalePoint(vesselPoint1, x, zy, angle, sizeVessel * 0.8);
+						tp[2] = DrawSpaceMap_RotateScalePoint(vesselPoint2, x, zy, angle, sizeVessel * 0.8);
+						tp[3] = DrawSpaceMap_RotateScalePoint(vesselPoint3, x, zy, angle, sizeVessel * 0.8);
+						g.DrawPolygon(penWhaleBG, tp);
 						break;
 					case "neutral":
-						a = ((NamedMapObjectA)mo).A_rad;
-						tp[0] = DrawSpaceMap_private_RotateScalePoint(vesselPoint0, x, zy, a, s_v);
-						tp[1] = DrawSpaceMap_private_RotateScalePoint(vesselPoint1, x, zy, a, s_v);
-						tp[2] = DrawSpaceMap_private_RotateScalePoint(vesselPoint2, x, zy, a, s_v);
-						tp[3] = DrawSpaceMap_private_RotateScalePoint(vesselPoint3, x, zy, a, s_v);
-						g.DrawPolygon(neutralPenBG, tp);
+						angle = ((NamedMapObjectA)mo).A_rad;
+						tp[0] = DrawSpaceMap_RotateScalePoint(vesselPoint0, x, zy, angle, sizeVessel);
+						tp[1] = DrawSpaceMap_RotateScalePoint(vesselPoint1, x, zy, angle, sizeVessel);
+						tp[2] = DrawSpaceMap_RotateScalePoint(vesselPoint2, x, zy, angle, sizeVessel);
+						tp[3] = DrawSpaceMap_RotateScalePoint(vesselPoint3, x, zy, angle, sizeVessel);
+						g.DrawPolygon(penNeutralBG, tp);
 						break;
 					case "station":
-						g.DrawEllipse(stationPenBG, new Rectangle(__r((db)x - s_v * 9 / 20), __r((db)zy - s_v * 9 / 20), __r((db)s_v * 18 / 20), __r((db)s_v * 18 / 20)));
+						g.DrawCircle(penStationBG, x, zy, sizeVessel * 18.0 / 20.0);
 						break;
 					case "genericMesh":
-						a = ((NamedMapObjectA)mo).A_rad;
-						tp[0] = DrawSpaceMap_private_RotateScalePoint(vesselPoint0, x, zy, a, __r(s_v * 8 / 10));
-						tp[1] = DrawSpaceMap_private_RotateScalePoint(vesselPoint1, x, zy, a, __r(s_v * 8 / 10));
-						tp[2] = DrawSpaceMap_private_RotateScalePoint(vesselPoint2, x, zy, a, __r(s_v * 8 / 10));
-						tp[3] = DrawSpaceMap_private_RotateScalePoint(vesselPoint3, x, zy, a, __r(s_v * 8 / 10));
-						g.DrawEllipse(genericMeshPenBG, new Rectangle(__r((db)x - s_v * 7 / 20), __r((db)zy - s_v * 7 / 20), __r((db)s_v * 14 / 20), __r((db)s_v * 14 / 20)));
+						angle = ((NamedMapObjectA)mo).A_rad;
+						tp[0] = DrawSpaceMap_RotateScalePoint(vesselPoint0, x, zy, angle, sizeVessel * 0.8);
+						tp[1] = DrawSpaceMap_RotateScalePoint(vesselPoint1, x, zy, angle, sizeVessel * 0.8);
+						tp[2] = DrawSpaceMap_RotateScalePoint(vesselPoint2, x, zy, angle, sizeVessel * 0.8);
+						tp[3] = DrawSpaceMap_RotateScalePoint(vesselPoint3, x, zy, angle, sizeVessel * 0.8);
+						g.DrawCircle(penGenericMeshBG, x, zy, sizeVessel * 14.0 / 20.0);
 						break;
 
 				}
@@ -873,9 +965,9 @@ namespace ArtemisMissionEditor
 
 			foreach (NamedMapObject mo in SpaceMap.namedObjects)
 			{
-				x = PointXToScreen((db)mo.Coordinates.X_Scr);
-				zy = PointZToScreen((db)mo.Coordinates.Z_Scr) - mo.Coordinates.Y_Scr * screen_y_scale;
-				z = PointZToScreen((db)mo.Coordinates.Z_Scr);
+				x = PointXToScreen(mo.Coordinates.X_Scr);
+				zy = PointZToScreen(mo.Coordinates.Z_Scr) - mo.Coordinates.Y_Scr * screen_y_scale;
+				z = PointZToScreen(mo.Coordinates.Z_Scr);
 
 				if (!Settings.Current.UseYForNamed)
 					zy = z;
@@ -883,78 +975,91 @@ namespace ArtemisMissionEditor
 				switch (mo.TypeToString)
 				{
 					case "enemy":
-						if (zy < z) { g.DrawLine(heightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(heightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
-						a = ((NamedMapObjectA)mo).A_rad;
-						tp[0] = DrawSpaceMap_private_RotateScalePoint(vesselPoint0, x, zy, a, s_v);
-						tp[1] = DrawSpaceMap_private_RotateScalePoint(vesselPoint1, x, zy, a, s_v);
-						tp[2] = DrawSpaceMap_private_RotateScalePoint(vesselPoint2, x, zy, a, s_v);
-						tp[3] = DrawSpaceMap_private_RotateScalePoint(vesselPoint3, x, zy, a, s_v);
-						g.FillPolygon(enemyBrush, tp);
-						if (zy > z) { g.DrawLine(heightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(heightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
-						n = string.IsNullOrEmpty(mo.name) ? "" : (string.IsNullOrWhiteSpace(mo.name) && Settings.Current.MarkWhitespaceNamesOnSpaceMap ? "<" + mo.name + ">" : mo.name);
-						g.DrawString(n, enemyFont, enemyBrush, new Point(__r((db)x), __r((db)zy - enemyFont.Size * 3 - 2)), drawFormat);
-						fn = ((NamedMapObject_enemy)mo).fleetnumber;
-						if (fn >= 0 && fn <= 99)
-							g.DrawString(fn.ToString(), fleetFont, enemyBrush, new Point(__r((db)x + s_v * 2 / 3) + 2, __r((db)zy + s_v * 2 / 3) + 2));
+						if (zy < z)
+                            DrawSpaceMap_DrawHeightLine(g, penHeight, brushHeight, x, zy, z);
+						angle = ((NamedMapObjectA)mo).A_rad;
+						tp[0] = DrawSpaceMap_RotateScalePoint(vesselPoint0, x, zy, angle, sizeVessel);
+						tp[1] = DrawSpaceMap_RotateScalePoint(vesselPoint1, x, zy, angle, sizeVessel);
+						tp[2] = DrawSpaceMap_RotateScalePoint(vesselPoint2, x, zy, angle, sizeVessel);
+						tp[3] = DrawSpaceMap_RotateScalePoint(vesselPoint3, x, zy, angle, sizeVessel);
+						g.FillPolygon(brushEnemy, tp);
+						if (zy > z)
+                            DrawSpaceMap_DrawHeightLine(g, penHeight, brushHeight, x, zy, z);
+						name = string.IsNullOrEmpty(mo.name) ? "" : (string.IsNullOrWhiteSpace(mo.name) && Settings.Current.MarkWhitespaceNamesOnSpaceMap ? "<" + mo.name + ">" : mo.name);
+                        g.DrawStringD(name, fontEnemy, brushEnemy, x, zy - fontEnemy.Size * 3.0 - 2.0, drawFormat);
+						bool fleetNumberNotInt = !Helper.IntTryParse(((NamedMapObject_enemy)mo).fleetnumber, out  fleetNumber);
+                        g.DrawStringD(fleetNumberNotInt  ? "x" : fleetNumber == -1 ? "" : fleetNumber >= 0 && fleetNumber <= 99 ? fleetNumber.ToString() : "<!>", fontFleet, brushEnemy, x + sizeVessel * 2.0 / 3.0 + 2.0, zy + sizeVessel * 2.0 / 3.0 + 2.0, StringFormat.GenericDefault);
 						break;
 					case "player":
-						if (zy < z) { g.DrawLine(heightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(heightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
-						a = ((NamedMapObjectA)mo).A_rad;
-						tp[0] = DrawSpaceMap_private_RotateScalePoint(vesselPoint0, x, zy, a, s_v);
-						tp[1] = DrawSpaceMap_private_RotateScalePoint(vesselPoint1, x, zy, a, s_v);
-						tp[2] = DrawSpaceMap_private_RotateScalePoint(vesselPoint2, x, zy, a, s_v);
-						tp[3] = DrawSpaceMap_private_RotateScalePoint(vesselPoint3, x, zy, a, s_v);
-						g.FillPolygon(playerBrush, tp);
-						if (zy > z) { g.DrawLine(heightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(heightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
-						n = string.IsNullOrEmpty(mo.name) ? "" : (string.IsNullOrWhiteSpace(mo.name) && Settings.Current.MarkWhitespaceNamesOnSpaceMap ? "<" + mo.name + ">" : mo.name);
-						g.DrawString(n, playerFont, playerBrush, new Point(__r((db)x), __r((db)zy - playerFont.Size * 3 - 2)), drawFormat);
+						if (zy < z)
+                            DrawSpaceMap_DrawHeightLine(g, penHeight, brushHeight, x, zy, z);
+						angle = ((NamedMapObjectA)mo).A_rad;
+						tp[0] = DrawSpaceMap_RotateScalePoint(vesselPoint0, x, zy, angle, sizeVessel);
+						tp[1] = DrawSpaceMap_RotateScalePoint(vesselPoint1, x, zy, angle, sizeVessel);
+						tp[2] = DrawSpaceMap_RotateScalePoint(vesselPoint2, x, zy, angle, sizeVessel);
+						tp[3] = DrawSpaceMap_RotateScalePoint(vesselPoint3, x, zy, angle, sizeVessel);
+						g.FillPolygon(brushPlayer, tp);
+						if (zy > z)
+                            DrawSpaceMap_DrawHeightLine(g, penHeight, brushHeight, x, zy, z);
+						name = string.IsNullOrEmpty(mo.name) ? "" : (string.IsNullOrWhiteSpace(mo.name) && Settings.Current.MarkWhitespaceNamesOnSpaceMap ? "<" + mo.name + ">" : mo.name);
+                        g.DrawStringD(name, fontPlayer, brushPlayer, x, zy - fontPlayer.Size * 3.0 - 2.0, drawFormat);
 						break;
 					case "whale":
-						if (zy < z) { g.DrawLine(heightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(heightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
-						a = ((NamedMapObjectA)mo).A_rad;
-						tp[0] = DrawSpaceMap_private_RotateScalePoint(vesselPoint0, x, zy, a, s_v * 0.80);
-						tp[1] = DrawSpaceMap_private_RotateScalePoint(vesselPoint1, x, zy, a, s_v * 0.80);
-						tp[2] = DrawSpaceMap_private_RotateScalePoint(vesselPoint2, x, zy, a, s_v * 0.80);
-						tp[3] = DrawSpaceMap_private_RotateScalePoint(vesselPoint3, x, zy, a, s_v * 0.80);
-						g.FillPolygon(whaleBrush, tp);
-						if (zy > z) { g.DrawLine(heightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(heightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
-						n = string.IsNullOrEmpty(mo.name) ? "" : (string.IsNullOrWhiteSpace(mo.name) && Settings.Current.MarkWhitespaceNamesOnSpaceMap ? "<" + mo.name + ">" : mo.name);
-						g.DrawString(n, whaleFont, whaleBrush, new Point(__r((db)x), __r((db)zy - whaleFont.Size * 3 - 2)), drawFormat);
-						pn = ((NamedMapObject_whale)mo).podnumber;
-						g.DrawString((pn >= 0 && pn <= 9) ? pn.ToString() : "<!>", fleetFont, whaleBrush, new Point(__r((db)x + s_v * 2 / 3) + 2, __r((db)zy + s_v * 2 / 3) + 2));
+						if (zy < z)
+                            DrawSpaceMap_DrawHeightLine(g, penHeight, brushHeight, x, zy, z);
+						angle = ((NamedMapObjectA)mo).A_rad;
+						tp[0] = DrawSpaceMap_RotateScalePoint(vesselPoint0, x, zy, angle, sizeVessel * 0.80);
+						tp[1] = DrawSpaceMap_RotateScalePoint(vesselPoint1, x, zy, angle, sizeVessel * 0.80);
+						tp[2] = DrawSpaceMap_RotateScalePoint(vesselPoint2, x, zy, angle, sizeVessel * 0.80);
+						tp[3] = DrawSpaceMap_RotateScalePoint(vesselPoint3, x, zy, angle, sizeVessel * 0.80);
+						g.FillPolygon(brushWhale, tp);
+						if (zy > z)
+                            DrawSpaceMap_DrawHeightLine(g, penHeight, brushHeight, x, zy, z);
+						name = string.IsNullOrEmpty(mo.name) ? "" : (string.IsNullOrWhiteSpace(mo.name) && Settings.Current.MarkWhitespaceNamesOnSpaceMap ? "<" + mo.name + ">" : mo.name);
+						g.DrawStringD(name, fontWhale, brushWhale, x, zy - fontWhale.Size * 3.0 - 2.0, drawFormat);
+                        bool podNumberNotInt = !Helper.IntTryParse(((NamedMapObject_whale)mo).podnumber, out podNumber);
+						g.DrawStringD(podNumberNotInt ? "x" : (podNumber >= 0 && podNumber <= 9) ? podNumber.ToString() : "<!>", fontFleet, brushWhale, x + sizeVessel * 2.0 / 3.0 + 2.0, zy + sizeVessel * 2.0 / 3.0 + 2.0, StringFormat.GenericDefault);
 						break;
 					case "neutral":
-						if (zy < z) { g.DrawLine(heightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(heightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
-						a = ((NamedMapObjectA)mo).A_rad;
-						tp[0] = DrawSpaceMap_private_RotateScalePoint(vesselPoint0, x, zy, a, s_v);
-						tp[1] = DrawSpaceMap_private_RotateScalePoint(vesselPoint1, x, zy, a, s_v);
-						tp[2] = DrawSpaceMap_private_RotateScalePoint(vesselPoint2, x, zy, a, s_v);
-						tp[3] = DrawSpaceMap_private_RotateScalePoint(vesselPoint3, x, zy, a, s_v);
-						g.FillPolygon(neutralBrush, tp);
-						if (zy > z) { g.DrawLine(heightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(heightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
-						n = string.IsNullOrEmpty(mo.name) ? "" : (string.IsNullOrWhiteSpace(mo.name) && Settings.Current.MarkWhitespaceNamesOnSpaceMap ? "<" + mo.name + ">" : mo.name);
-						g.DrawString(n, neutralFont, neutralBrush, new Point(__r((db)x), __r((db)zy - neutralFont.Size * 3 - 2)), drawFormat);
+						if (zy < z)
+                            DrawSpaceMap_DrawHeightLine(g, penHeight, brushHeight, x, zy, z);
+						angle = ((NamedMapObjectA)mo).A_rad;
+						tp[0] = DrawSpaceMap_RotateScalePoint(vesselPoint0, x, zy, angle, sizeVessel);
+						tp[1] = DrawSpaceMap_RotateScalePoint(vesselPoint1, x, zy, angle, sizeVessel);
+						tp[2] = DrawSpaceMap_RotateScalePoint(vesselPoint2, x, zy, angle, sizeVessel);
+						tp[3] = DrawSpaceMap_RotateScalePoint(vesselPoint3, x, zy, angle, sizeVessel);
+						g.FillPolygon(brushNeutral, tp);
+						if (zy > z)
+                            DrawSpaceMap_DrawHeightLine(g, penHeight, brushHeight, x, zy, z);
+						name = string.IsNullOrEmpty(mo.name) ? "" : (string.IsNullOrWhiteSpace(mo.name) && Settings.Current.MarkWhitespaceNamesOnSpaceMap ? "<" + mo.name + ">" : mo.name);
+						g.DrawStringD(name, fontNeutral, brushNeutral, x, zy - fontNeutral.Size * 3.0 - 2.0, drawFormat);
 						break;
 					case "station":
-						if (zy < z) { g.DrawLine(heightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(heightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
-						g.DrawEllipse(stationPen, new Rectangle(__r((db)x - s_v * 9 / 20), __r((db)zy - s_v * 9 / 20), __r((db)s_v * 18 / 20), __r((db)s_v * 18 / 20)));
-						n = string.IsNullOrEmpty(mo.name) ? "" : (string.IsNullOrWhiteSpace(mo.name) && Settings.Current.MarkWhitespaceNamesOnSpaceMap ? "<" + mo.name + ">" : mo.name);
-						g.DrawString(n, stationFont, stationBrush, new Point(__r((db)x), __r((db)zy - stationFont.Size * 3 - 2)), drawFormat);
+						if (zy < z)
+                            DrawSpaceMap_DrawHeightLine(g, penHeight, brushHeight, x, zy, z);
+						g.DrawCircle(penStation, x, zy, sizeVessel * 18.0 / 20.0);
+						if (zy > z)
+                            DrawSpaceMap_DrawHeightLine(g, penHeight, brushHeight, x, zy, z);
+                        name = string.IsNullOrEmpty(mo.name) ? "" : (string.IsNullOrWhiteSpace(mo.name) && Settings.Current.MarkWhitespaceNamesOnSpaceMap ? "<" + mo.name + ">" : mo.name);
+						g.DrawStringD(name, fontStation, brushStation, x, zy - fontStation.Size * 3.0 - 2.0, drawFormat);
 						break;
 					case "genericMesh":
-						if (zy < z) { g.DrawLine(heightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(heightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
-						a = ((NamedMapObjectA)mo).A_rad;
-						tp[0] = DrawSpaceMap_private_RotateScalePoint(vesselPoint0, x, zy, a, __r(s_v * 8 / 10));
-						tp[1] = DrawSpaceMap_private_RotateScalePoint(vesselPoint1, x, zy, a, __r(s_v * 8 / 10));
-						tp[2] = DrawSpaceMap_private_RotateScalePoint(vesselPoint2, x, zy, a, __r(s_v * 8 / 10));
-						tp[3] = DrawSpaceMap_private_RotateScalePoint(vesselPoint3, x, zy, a, __r(s_v * 8 / 10));
-						bool toodark = false;
+						Pen penGenericMeshCurrent1, penGenericMeshCurrent2, penGenericMeshCurrent3;
+			            Brush brushGenericMeshCurrent;
+			            if (zy < z)
+                            DrawSpaceMap_DrawHeightLine(g, penHeight, brushHeight, x, zy, z);
+						angle = ((NamedMapObjectA)mo).A_rad;
+						tp[0] = DrawSpaceMap_RotateScalePoint(vesselPoint0, x, zy, angle, sizeVessel * 0.80);
+						tp[1] = DrawSpaceMap_RotateScalePoint(vesselPoint1, x, zy, angle, sizeVessel * 0.80);
+						tp[2] = DrawSpaceMap_RotateScalePoint(vesselPoint2, x, zy, angle, sizeVessel * 0.80);
+						tp[3] = DrawSpaceMap_RotateScalePoint(vesselPoint3, x, zy, angle, sizeVessel * 0.80);
+						bool tooDark = false;
 						if (!Settings.Current.UseGenericMeshColor)
 						{
-							genericMeshBrushCurrent = genericMeshSolidBrush;
-							genericMeshPenCurrent1 = genericMeshPen1;
-							genericMeshPenCurrent2 = genericMeshPen2;
-							genericMeshPenCurrent3 = null;
+							brushGenericMeshCurrent = brushGenericMeshSolid;
+							penGenericMeshCurrent1 = penGenericMesh1;
+							penGenericMeshCurrent2 = penGenericMesh2;
+							penGenericMeshCurrent3 = null;
 						}
 						else if (((NamedMapObject_genericMesh)mo).Color_Blue * 0.0722 + ((NamedMapObject_genericMesh)mo).Color_Green * 0.7152 + ((NamedMapObject_genericMesh)mo).Color_Red * 0.2126 <= Settings.Current.MinimalLuminance)
 						{
@@ -965,32 +1070,38 @@ namespace ArtemisMissionEditor
 							//genericMeshPenCurrent3 = genericMeshPen1;
 							//genericMeshBrushCurrent = genericMeshSolidBrush;
 							//toodark = true;
-							genericMeshBrushCurrent = genericMeshSolidBrush;
-							genericMeshPenCurrent1 = genericMeshPen1;
-							genericMeshPenCurrent2 = genericMeshPen2;
-							genericMeshPenCurrent3 = null;
+							brushGenericMeshCurrent = brushGenericMeshSolid;
+							penGenericMeshCurrent1 = penGenericMesh1;
+							penGenericMeshCurrent2 = penGenericMesh2;
+							penGenericMeshCurrent3 = null;
 						}
 						else
 						{
-							genericMeshBrushCurrent = new SolidBrush(((NamedMapObject_genericMesh)mo).Color);
-							genericMeshPenCurrent1 = new Pen(genericMeshBrushCurrent, __ro((db)s_v / 5));
-							genericMeshPenCurrent2 = new Pen(genericMeshBrushCurrent, __rn2((db)s_v / 10));
-							genericMeshPenCurrent3 = null;
+							brushGenericMeshCurrent = new SolidBrush(((NamedMapObject_genericMesh)mo).Color);
+							penGenericMeshCurrent1 = new Pen(brushGenericMeshCurrent, RoundToNearestOddInt(sizeVessel / 5.0));
+							penGenericMeshCurrent2 = new Pen(brushGenericMeshCurrent, FloorToIntNot2(sizeVessel / 10.0));
+							penGenericMeshCurrent3 = null;
 						}
-						if (toodark)
-							g.DrawEllipse(genericMeshPenCurrent3, new Rectangle(__r((db)x - s_v * 9 / 20), __r((db)zy - s_v * 9 / 20), __r((db)s_v * 18 / 20), __r((db)s_v * 18 / 20)));
-						g.DrawEllipse(genericMeshPenCurrent1, new Rectangle(__r((db)x - s_v * 7 / 20), __r((db)zy - s_v * 7 / 20), __r((db)s_v * 14 / 20), __r((db)s_v * 14 / 20)));
-						g.DrawPolygon(genericMeshPenCurrent2, tp);
-						if (zy > z) { g.DrawLine(heightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(heightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
-						n = string.IsNullOrEmpty(mo.name) ? "" : (string.IsNullOrWhiteSpace(mo.name) && Settings.Current.MarkWhitespaceNamesOnSpaceMap ? "<" + mo.name + ">" : mo.name);
-						g.DrawString(n, genericMeshFont, genericMeshBrushCurrent, new Point(__r((db)x), __r((db)zy - genericMeshFont.Size * 3 - 2)), drawFormat);
-						break;
+						if (tooDark)
+							g.DrawCircle(penGenericMeshCurrent3, x, zy, sizeVessel * 18.0 / 20.0);
+						    g.DrawCircle(penGenericMeshCurrent1, x, zy, sizeVessel * 14.0 / 20.0);
+						g.DrawPolygon(penGenericMeshCurrent2, tp);
+						if (zy > z)
+                            DrawSpaceMap_DrawHeightLine(g, penHeight, brushHeight, x, zy, z);
+						name = string.IsNullOrEmpty(mo.name) ? "" : (string.IsNullOrWhiteSpace(mo.name) && Settings.Current.MarkWhitespaceNamesOnSpaceMap ? "<" + mo.name + ">" : mo.name);
+						g.DrawStringD(name, fontGenericMesh, brushGenericMeshCurrent, x, zy - fontGenericMesh.Size * 3.0 - 2.0, drawFormat);
+                        penGenericMeshCurrent1 = null;
+                        penGenericMeshCurrent2 = null;
+                        penGenericMeshCurrent3 = null;
+                        break;
 					case "monster":
-						if (zy < z) { g.DrawLine(heightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(heightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
-						g.DrawEllipse(monsterPen, new Rectangle(__r((db)x - s_v * 9 / 20), __r((db)zy - s_v * 9 / 20), __r((db)s_v * 18 / 20), __r((db)s_v * 18 / 20)));
-						if (zy > z) { g.DrawLine(heightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(heightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
-						n = string.IsNullOrEmpty(mo.name) ? "" : (string.IsNullOrWhiteSpace(mo.name) && Settings.Current.MarkWhitespaceNamesOnSpaceMap ? "<" + mo.name + ">" : mo.name);
-						g.DrawString(n, monsterFont, monsterBrush, new Point(__r((db)x), __r((db)zy - monsterFont.Size * 3 - 2)), drawFormat);
+						if (zy < z)
+                            DrawSpaceMap_DrawHeightLine(g, penHeight, brushHeight, x, zy, z);
+						g.DrawCircle(penMonster, x, zy, sizeVessel * 18.0 / 20.0);
+						if (zy > z)
+                            DrawSpaceMap_DrawHeightLine(g, penHeight, brushHeight, x, zy, z);
+						name = string.IsNullOrEmpty(mo.name) ? "" : (string.IsNullOrWhiteSpace(mo.name) && Settings.Current.MarkWhitespaceNamesOnSpaceMap ? "<" + mo.name + ">" : mo.name);
+						g.DrawStringD(name, fontMonster, brushMonster, x, zy - fontMonster.Size * 3.0 - 2.0, drawFormat);
 						break;
 				}
 			}
@@ -1001,9 +1112,9 @@ namespace ArtemisMissionEditor
 
 			foreach (NamedMapObject mo in SpaceMap.namedObjects)
 			{
-				x = PointXToScreen((db)mo.Coordinates.X_Scr);
-				zy = PointZToScreen((db)mo.Coordinates.Z_Scr) - mo.Coordinates.Y_Scr * screen_y_scale;
-				z = PointZToScreen((db)mo.Coordinates.Z_Scr);
+				x = PointXToScreen(mo.Coordinates.X_Scr);
+				zy = PointZToScreen(mo.Coordinates.Z_Scr) - mo.Coordinates.Y_Scr * screen_y_scale;
+				z = PointZToScreen(mo.Coordinates.Z_Scr);
 
 				if (!Settings.Current.UseYForNamed)
 					zy = z;
@@ -1011,11 +1122,13 @@ namespace ArtemisMissionEditor
 				switch (mo.TypeToString)
 				{
 					case "anomaly":
-						if (zy < z) { g.DrawLine(heightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(heightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
-						g.FillRectangle(anomalyBrush, __r((db)x - s_a / 2), __r((db)zy - s_a / 2), __r((db)s_a), __r((db)s_a));
-						if (zy > z) { g.DrawLine(heightPen, __r(x), __r(zy), __r(x), __r(z)); g.FillEllipse(heightBrush, new Rectangle(__r(x) - 3, __r(z) - 3, 6, 6)); }
-						n = string.IsNullOrEmpty(mo.name) ? "" : (string.IsNullOrWhiteSpace(mo.name) && Settings.Current.MarkWhitespaceNamesOnSpaceMap ? "<" + mo.name + ">" : mo.name);
-						g.DrawString(n, anomalyFont, anomalyBrush, new Point(__r((db)x), __r((db)zy - anomalyFont.Size * 3 - 2)), drawFormat);
+						if (zy < z)
+                            DrawSpaceMap_DrawHeightLine(g, penHeight, brushHeight, x, zy, z);
+						g.FillSquare(brushAnomaly, x, zy, sizeAnomaly);
+						if (zy > z)
+                            DrawSpaceMap_DrawHeightLine(g, penHeight, brushHeight, x, zy, z);
+						name = string.IsNullOrEmpty(mo.name) ? "" : (string.IsNullOrWhiteSpace(mo.name) && Settings.Current.MarkWhitespaceNamesOnSpaceMap ? "<" + mo.name + ">" : mo.name);
+						g.DrawStringD(name, fontAnomaly, brushAnomaly, x, zy - fontAnomaly.Size * 3.0 - 2.0, drawFormat);
 						break;
 				}
 			}
@@ -1024,33 +1137,35 @@ namespace ArtemisMissionEditor
 
 			#region DRAW Selection brackets
 
-			Pen selectionPen = new Pen(Settings.Current.GetColor(MapColors.MapSelection));
-			Pen selectionPenDark = new Pen(Settings.Current.GetColor(MapColors.MapSelectionDark));
-			s_sel = 10 + 1500 * GetMapScale();
-			s_sel = s_sel > 40 ? 40 : s_sel;
+			Pen penSelection = new Pen(Settings.Current.GetColor(MapColors.MapSelection));
+            ListObjectsToDispose.Add(penSelection);
+            Pen penSelectionDark = new Pen(Settings.Current.GetColor(MapColors.MapSelectionDark));
+            ListObjectsToDispose.Add(penSelectionDark);
+            sizeSelection = 10 + 1500 * GetMapScale();
+			sizeSelection = sizeSelection > 40 ? 40 : sizeSelection;
 
 			if (SpaceMap.SelectionNameless != null)
 			{
-				x = PointXToScreen((db)SpaceMap.SelectionNameless.CoordinatesStart.X_Scr);
-				zy = PointZToScreen((db)SpaceMap.SelectionNameless.CoordinatesStart.Z_Scr) - SpaceMap.SelectionNameless.CoordinatesStart.Y_Scr * screen_y_scale;
-				z = PointZToScreen((db)SpaceMap.SelectionNameless.CoordinatesStart.Z_Scr);
-				xe = PointXToScreen((db)SpaceMap.SelectionNameless.CoordinatesEnd.X_Scr);
-				zye = PointZToScreen((db)SpaceMap.SelectionNameless.CoordinatesEnd.Z_Scr) - SpaceMap.SelectionNameless.CoordinatesEnd.Y_Scr * screen_y_scale;
-				ze = PointZToScreen((db)SpaceMap.SelectionNameless.CoordinatesEnd.Z_Scr);
-				rad = (SpaceMap.SelectionNameless.radius + SpaceMap.SelectionNameless.randomRange) * GetMapScale();
-				rad2 = SpaceMap.SelectionNameless.radius * GetMapScale();
-				rad3 = rad2 * 2 - rad;
+                x = PointXToScreen(SpaceMap.SelectionNameless.CoordinatesStart.X_Scr);
+                zy = PointZToScreen(SpaceMap.SelectionNameless.CoordinatesStart.Z_Scr) - SpaceMap.SelectionNameless.CoordinatesStart.Y_Scr * screen_y_scale;
+                z = PointZToScreen(SpaceMap.SelectionNameless.CoordinatesStart.Z_Scr);
+                xe = PointXToScreen(SpaceMap.SelectionNameless.CoordinatesEnd.X_Scr);
+                zye = PointZToScreen(SpaceMap.SelectionNameless.CoordinatesEnd.Z_Scr) - SpaceMap.SelectionNameless.CoordinatesEnd.Y_Scr * screen_y_scale;
+                ze = PointZToScreen(SpaceMap.SelectionNameless.CoordinatesEnd.Z_Scr);
+				radius1 = (SpaceMap.SelectionNameless.radius + SpaceMap.SelectionNameless.randomRange) * GetMapScale();
+				radius2 = SpaceMap.SelectionNameless.radius * GetMapScale();
+				radius3 = radius2 * 2 - radius1;
 
-				a_s = SpaceMap.SelectionNameless.A_Start_deg ?? 0.0;
-				a_e = SpaceMap.SelectionNameless.A_End_deg ?? 360.0;
-				if (a_s > a_e)
+				angleStart = SpaceMap.SelectionNameless.A_Start_deg ?? 0.0;
+				angleEnd = SpaceMap.SelectionNameless.A_End_deg ?? 360.0;
+				if (angleStart > angleEnd)
 				{
-					double tmp = a_e;
-					a_e = a_s;
-					a_s = tmp;
+					double tmp = angleEnd;
+					angleEnd = angleStart;
+					angleStart = tmp;
 				}
-				a_e = a_e - a_s;
-				a_s = a_s - 90;
+				angleEnd = angleEnd - angleStart;
+				angleStart = angleStart - 90;
 
 				//if (!_use_y_for_nameless)
 				if (true)
@@ -1063,41 +1178,43 @@ namespace ArtemisMissionEditor
 				{
 					if (SpaceMap.SelectionNameless.A_Start_deg == null && SpaceMap.SelectionNameless.A_End_deg == null)
 					{
-						g.DrawEllipse(selectionPen, __r(x - rad2), __r(zy - rad2), __r(rad2 * 2), __r(rad2 * 2));
+						g.DrawCircle(penSelection, x, zy, radius2 * 2.0);
 					}
 					else
 					{
 						//Dark circle
-						g.DrawEllipse(selectionPenDark, __r(x - rad2), __r(zy - rad2), __r(rad2 * 2), __r(rad2 * 2));
+                        g.DrawCircle(penSelectionDark, x, zy, radius2 * 2.0);
 						//Bright arc
-						g.DrawArc(selectionPen, __r(x - rad2), __r(zy - rad2), __r(rad2 * 2), __r(rad2 * 2), (float)a_s, (float)a_e);
+						g.DrawCircleArc(penSelection, x, zy, radius2 * 2.0, angleStart, angleEnd);
 						//Lines that show the arc boundaries
-						g.DrawLine(selectionPen, __r(x), __r(zy), __r(x - (rad + s_sel * 1.5) * Math.Sin(Math.PI * 3.0 / 2.0 - a_s / 360.0 * Math.PI * 2.0)), __r(zy - (rad + s_sel * 1.5) * Math.Cos(Math.PI * 3.0 / 2.0 - a_s / 360.0 * Math.PI * 2.0)));
-						g.DrawLine(selectionPen, __r(x), __r(zy), __r(x - (rad + s_sel * 1.5) * Math.Sin(Math.PI * 3.0 / 2.0 - (a_s + a_e) / 360.0 * Math.PI * 2.0)), __r(zy - (rad + s_sel * 1.5) * Math.Cos(Math.PI * 3.0 / 2.0 - (a_s + a_e) / 360.0 * Math.PI * 2.0)));
+						g.DrawLineD(penSelection, x, zy, x - (radius1 + sizeSelection * 1.5) * Math.Sin(Math.PI * 3.0 / 2.0 - angleStart / 360.0 * Math.PI * 2.0), 
+                                                        zy - (radius1 + sizeSelection * 1.5) * Math.Cos(Math.PI * 3.0 / 2.0 - angleStart / 360.0 * Math.PI * 2.0));
+                        g.DrawLineD(penSelection, x, zy, x - (radius1 + sizeSelection * 1.5) * Math.Sin(Math.PI * 3.0 / 2.0 - (angleStart + angleEnd) / 360.0 * Math.PI * 2.0),
+                                                        zy - (radius1 + sizeSelection * 1.5) * Math.Cos(Math.PI * 3.0 / 2.0 - (angleStart + angleEnd) / 360.0 * Math.PI * 2.0));
 						//Angles on the end of the arc boundaries
-						g.DrawLine(selectionPen,
-							__r(x - (rad + s_sel * 1.5) * Math.Sin(Math.PI * 3.0 / 2.0 - a_s / 360.0 * Math.PI * 2.0)),
-							__r(zy - (rad + s_sel * 1.5) * Math.Cos(Math.PI * 3.0 / 2.0 - a_s / 360.0 * Math.PI * 2.0)),
-							__r(x - (rad + s_sel * 1.5) * Math.Sin(Math.PI * 3.0 / 2.0 - a_s / 360.0 * Math.PI * 2.0) + s_sel / 4.0 * Math.Sin(Math.PI * 4.0 / 2.0 - a_s / 360.0 * Math.PI * 2.0)),
-							__r(zy - (rad + s_sel * 1.5) * Math.Cos(Math.PI * 3.0 / 2.0 - a_s / 360.0 * Math.PI * 2.0) + s_sel / 4.0 * Math.Cos(Math.PI * 4.0 / 2.0 - a_s / 360.0 * Math.PI * 2.0)));
-						g.DrawLine(selectionPen,
-							__r(x - (rad + s_sel * 1.5) * Math.Sin(Math.PI * 3.0 / 2.0 - (a_s + a_e) / 360.0 * Math.PI * 2.0)),
-							__r(zy - (rad + s_sel * 1.5) * Math.Cos(Math.PI * 3.0 / 2.0 - (a_s + a_e) / 360.0 * Math.PI * 2.0)),
-							__r(x - (rad + s_sel * 1.5) * Math.Sin(Math.PI * 3.0 / 2.0 - (a_s + a_e) / 360.0 * Math.PI * 2.0) + s_sel / 4.0 * Math.Sin(Math.PI * 2.0 / 2.0 - (a_s + a_e) / 360.0 * Math.PI * 2.0)),
-							__r(zy - (rad + s_sel * 1.5) * Math.Cos(Math.PI * 3.0 / 2.0 - (a_s + a_e) / 360.0 * Math.PI * 2.0) + s_sel / 4.0 * Math.Cos(Math.PI * 2.0 / 2.0 - (a_s + a_e) / 360.0 * Math.PI * 2.0)));
+						g.DrawLineD(penSelection,
+							 x - (radius1 + sizeSelection * 1.5) * Math.Sin(Math.PI * 3.0 / 2.0 - angleStart / 360.0 * Math.PI * 2.0),
+							zy - (radius1 + sizeSelection * 1.5) * Math.Cos(Math.PI * 3.0 / 2.0 - angleStart / 360.0 * Math.PI * 2.0),
+							 x - (radius1 + sizeSelection * 1.5) * Math.Sin(Math.PI * 3.0 / 2.0 - angleStart / 360.0 * Math.PI * 2.0) + sizeSelection / 4.0 * Math.Sin(Math.PI * 4.0 / 2.0 - angleStart / 360.0 * Math.PI * 2.0),
+							zy - (radius1 + sizeSelection * 1.5) * Math.Cos(Math.PI * 3.0 / 2.0 - angleStart / 360.0 * Math.PI * 2.0) + sizeSelection / 4.0 * Math.Cos(Math.PI * 4.0 / 2.0 - angleStart / 360.0 * Math.PI * 2.0));
+						g.DrawLineD(penSelection,
+							 x - (radius1 + sizeSelection * 1.5) * Math.Sin(Math.PI * 3.0 / 2.0 - (angleStart + angleEnd) / 360.0 * Math.PI * 2.0),
+							zy - (radius1 + sizeSelection * 1.5) * Math.Cos(Math.PI * 3.0 / 2.0 - (angleStart + angleEnd) / 360.0 * Math.PI * 2.0),
+							 x - (radius1 + sizeSelection * 1.5) * Math.Sin(Math.PI * 3.0 / 2.0 - (angleStart + angleEnd) / 360.0 * Math.PI * 2.0) + sizeSelection / 4.0 * Math.Sin(Math.PI * 2.0 / 2.0 - (angleStart + angleEnd) / 360.0 * Math.PI * 2.0),
+							zy - (radius1 + sizeSelection * 1.5) * Math.Cos(Math.PI * 3.0 / 2.0 - (angleStart + angleEnd) / 360.0 * Math.PI * 2.0) + sizeSelection / 4.0 * Math.Cos(Math.PI * 2.0 / 2.0 - (angleStart + angleEnd) / 360.0 * Math.PI * 2.0));
 					}
 
 					if (SpaceMap.SelectionNameless.randomRange > 0)
 					{
-						g.DrawEllipse(selectionPenDark, __r(x - rad), __r(zy - rad), __r(rad * 2), __r(rad * 2));
-						if (rad3 > 0)
-							g.DrawEllipse(selectionPenDark, __r(x - rad3), __r(zy - rad3), __r(rad3 * 2), __r(rad3 * 2));
+						g.DrawCircle(penSelectionDark, x, zy, radius1 * 2.0);
+						if (radius3 > 0)
+                            g.DrawCircle(penSelectionDark, x, zy, radius3 * 2.0);
 					}
 					//Crosshair on the rad2 of the circle
-                    g.DrawLine(selectionPen, __r(x), __r(zy - rad2), __r(x), __r(zy - rad2 - s_sel / 2));
-					g.DrawLine(selectionPen, __r(x), __r(zy + rad2), __r(x), __r(zy + rad2 + s_sel / 2));
-					g.DrawLine(selectionPen, __r(x - rad2), __r(zy), __r(x - rad2 - s_sel / 2), __r(zy));
-					g.DrawLine(selectionPen, __r(x + rad2), __r(zy), __r(x + rad2 + s_sel / 2), __r(zy));
+                    g.DrawLineD(penSelection, x, zy - radius2, x, zy - radius2 - sizeSelection / 2.0);
+                    g.DrawLineD(penSelection, x, zy + radius2, x, zy + radius2 + sizeSelection / 2.0);
+                    g.DrawLineD(penSelection, x - radius2, zy, x - radius2 - sizeSelection / 2.0, zy);
+                    g.DrawLineD(penSelection, x + radius2, zy, x + radius2 + sizeSelection / 2.0, zy);
 				}
 				else
 				{
@@ -1105,63 +1222,73 @@ namespace ArtemisMissionEditor
 					// Negate X and Y values
 					double pxRes = x - xe;
 					double pyRes = zy - zye;
-					double angle = 0.0;
+					double angleSpan = 0.0;
 					// Calculate the angle
 					if (pxRes == 0.0)
 					{
-						if (pyRes == 0.0) angle = 0.0;
+						if (pyRes == 0.0) angleSpan = 0.0;
 						else
-							if (pyRes > 0.0) angle = System.Math.PI / 2.0;
-							else angle = System.Math.PI * 3.0 / 2.0;
+							if (pyRes > 0.0) angleSpan = System.Math.PI / 2.0;
+							else angleSpan = System.Math.PI * 3.0 / 2.0;
 					}
 					else if (pyRes == 0.0)
 					{
-						if (pxRes > 0.0) angle = 0.0;
-						else angle = System.Math.PI;
+						if (pxRes > 0.0) angleSpan = 0.0;
+						else angleSpan = System.Math.PI;
 					}
 					else
 					{
 						if (pxRes < 0.0)
-							angle = System.Math.Atan(pyRes / pxRes) + System.Math.PI;
+							angleSpan = System.Math.Atan(pyRes / pxRes) + System.Math.PI;
 						else
-							if (pyRes < 0.0) angle = System.Math.Atan(pyRes / pxRes) + (2 * System.Math.PI);
-							else angle = System.Math.Atan(pyRes / pxRes);
+							if (pyRes < 0.0) angleSpan = System.Math.Atan(pyRes / pxRes) + (2 * System.Math.PI);
+							else angleSpan = System.Math.Atan(pyRes / pxRes);
 					}
 
-					float a_l = (float)((angle - Math.PI / 2) / 2 / Math.PI * 360);
-					float a_r = (float)((angle + Math.PI / 2) / 2 / Math.PI * 360);
-					while (a_l < 0) a_l += 360; while (a_r < 0) a_r += 360; while (a_l >= 360) a_l -= 360; while (a_r > 360) a_r -= 360;
+                    double angleLeft = (angleSpan - Math.PI / 2.0) * 360.0 / 2.0 / Math.PI;
+                    double angleRight = (angleSpan + Math.PI / 2.0) * 360.0 / 2.0 / Math.PI;
+					while (angleLeft < 0.0) angleLeft += 360.0; 
+                    while (angleRight < 0.0) angleRight += 360.0; 
+                    while (angleLeft >= 360.0) angleLeft -= 360.0; 
+                    while (angleRight > 360.0) angleRight -= 360.0;
 
-
-					g.DrawLine(selectionPen, __r(x), __r(zy), __r(xe), __r(zye));
+					g.DrawLineD(penSelection, x, zy, xe, zye);
 					if (SpaceMap.SelectionNameless.randomRange > 0)
 					{
-						g.DrawLine(selectionPenDark, __r(x + rad * Math.Cos(angle + Math.PI / 2)), __r(zy + rad * Math.Sin(angle + Math.PI / 2)), __r(xe + rad * Math.Cos(angle + Math.PI / 2)), __r(zye + rad * Math.Sin(angle + Math.PI / 2)));
-						g.DrawLine(selectionPenDark, __r(x - rad * Math.Cos(angle + Math.PI / 2)), __r(zy - rad * Math.Sin(angle + Math.PI / 2)), __r(xe - rad * Math.Cos(angle + Math.PI / 2)), __r(zye - rad * Math.Sin(angle + Math.PI / 2)));
-						if (__r(rad) >= 1)
+						g.DrawLineD(penSelectionDark,
+                              x + radius1 * Math.Cos(angleSpan + Math.PI / 2.0),
+                             zy + radius1 * Math.Sin(angleSpan + Math.PI / 2.0),
+                             xe + radius1 * Math.Cos(angleSpan + Math.PI / 2.0),
+                            zye + radius1 * Math.Sin(angleSpan + Math.PI / 2.0));
+						g.DrawLineD(penSelectionDark,
+                              x - radius1 * Math.Cos(angleSpan + Math.PI / 2.0),
+                             zy - radius1 * Math.Sin(angleSpan + Math.PI / 2.0),
+                             xe - radius1 * Math.Cos(angleSpan + Math.PI / 2.0),
+                            zye - radius1 * Math.Sin(angleSpan + Math.PI / 2.0));
+						if (radius1 >= 1.0)
 						{
-							g.DrawArc(selectionPenDark, new Rectangle(__r(x - rad), __r(zy - rad), __r(rad * 2), __r(rad * 2)), a_l, 180);
-							g.DrawArc(selectionPenDark, new Rectangle(__r(xe - rad), __r(zye - rad), __r(rad * 2), __r(rad * 2)), a_r, 180);
+							g.DrawCircleArc(penSelectionDark, x, zy, radius1 * 2.0, angleLeft, 180.0);
+							g.DrawCircleArc(penSelectionDark, xe, zye, radius1 * 2.0, angleRight, 180.0);
 						}
 					}
 
-					g.DrawLine(selectionPen, __r(x), __r(zy - rad2), __r(x), __r(zy - rad2 - s_sel / 2));
-					g.DrawLine(selectionPen, __r(x), __r(zy + rad2), __r(x), __r(zy + rad2 + s_sel / 2));
-					g.DrawLine(selectionPen, __r(x - rad2), __r(zy), __r(x - rad2 - s_sel / 2), __r(zy));
-					g.DrawLine(selectionPen, __r(x + rad2), __r(zy), __r(x + rad2 + s_sel / 2), __r(zy));
-					g.DrawLine(selectionPenDark, __r(xe), __r(zye - rad2), __r(xe), __r(zye - rad2 - s_sel / 2));
-					g.DrawLine(selectionPenDark, __r(xe), __r(zye + rad2), __r(xe), __r(zye + rad2 + s_sel / 2));
-					g.DrawLine(selectionPenDark, __r(xe - rad2), __r(zye), __r(xe - rad2 - s_sel / 2), __r(zye));
-					g.DrawLine(selectionPenDark, __r(xe + rad2), __r(zye), __r(xe + rad2 + s_sel / 2), __r(zye));
+					g.DrawLineD(penSelection, x, zy - radius2, x, zy - radius2 - sizeSelection / 2.0);
+					g.DrawLineD(penSelection, x, zy + radius2, x, zy + radius2 + sizeSelection / 2.0);
+					g.DrawLineD(penSelection, x - radius2, zy, x - radius2 - sizeSelection / 2.0, zy);
+					g.DrawLineD(penSelection, x + radius2, zy, x + radius2 + sizeSelection / 2.0, zy);
+					g.DrawLineD(penSelectionDark, xe, zye - radius2, xe, zye - radius2 - sizeSelection / 2.0);
+					g.DrawLineD(penSelectionDark, xe, zye + radius2, xe, zye + radius2 + sizeSelection / 2.0);
+					g.DrawLineD(penSelectionDark, xe - radius2, zye, xe - radius2 - sizeSelection / 2.0, zye);
+					g.DrawLineD(penSelectionDark, xe + radius2, zye, xe + radius2 + sizeSelection / 2.0, zye);
 				}
 			}
 			else
 			{
 				foreach (NamedMapObject mo in SpaceMap.SelectionNamed)
 				{
-					x = PointXToScreen((db)mo.Coordinates.X_Scr);
-					zy = PointZToScreen((db)mo.Coordinates.Z_Scr) - mo.Coordinates.Y_Scr * screen_y_scale;
-					z = PointZToScreen((db)mo.Coordinates.Z_Scr);
+					x = PointXToScreen(mo.Coordinates.X_Scr);
+					zy = PointZToScreen(mo.Coordinates.Z_Scr) - mo.Coordinates.Y_Scr * screen_y_scale;
+					z = PointZToScreen(mo.Coordinates.Z_Scr);
 
 					if (!Settings.Current.UseYForNamed)
 						zy = z;
@@ -1169,13 +1296,13 @@ namespace ArtemisMissionEditor
 					switch (mo.TypeToString)
 					{
 						case "anomaly":
-							g.DrawRectangle(selectionPen, __r((db)x - 10 - s_a / 2), __r((db)zy - 10 - s_a / 2), __r((db)20 + s_a), __r((db)20 + s_a));
+							g.DrawSquare(penSelection, x, zy, 20 + sizeAnomaly);
 							break;
 						case "blackHole":
-							g.DrawRectangle(selectionPen, __r((db)x - s_bh1 * 18 / 32), __r((db)zy - s_bh1 * 18 / 32), __r((db)s_bh1 * 36 / 32), __r((db)s_bh1 * 36 / 32));
+							g.DrawSquare(penSelection, x, zy, sizeNamelessBlackholeOuter * 36.0 / 32);
 							break;
 						default:
-							g.DrawRectangle(selectionPen, __r((db)x - s_sel / 2), __r((db)zy - s_sel / 2), __r((db)s_sel), __r((db)s_sel));
+							g.DrawSquare(penSelection, x, zy, sizeSelection);
 							break;
 					}
 				}
@@ -1188,16 +1315,19 @@ namespace ArtemisMissionEditor
 			int vecx, vecy, vecz;
 			if (SpaceMap.Selection_GetCenterOfMass(out vecx, out vecy, out vecz))
 			{
-				x = PointXToScreen((db)vecx);
-				zy = PointZToScreen((db)vecz) - vecy * screen_y_scale;
-				z = PointZToScreen((db)vecz);
+				x = PointXToScreen(vecx);
+				zy = PointZToScreen(vecz) - vecy * screen_y_scale;
+				z = PointZToScreen(vecz);
 
-				g.DrawLine(selectionPenDark, __r(x), __r(z - s_sel / 2), __r(x), __r(z + s_sel / 2));
-				g.DrawLine(selectionPenDark, __r(x - s_sel / 2), __r(z), __r(x + s_sel / 2), __r(z));
+                g.DrawLineD(penSelectionDark, x, z - sizeSelection / 2.0, x, z + sizeSelection / 2.0);
+                g.DrawLineD(penSelectionDark, x - sizeSelection / 2.0, z, x + sizeSelection / 2.0, z);
 			}
 
 			//7. Draw selection rectangle when mass-selecting
-			Pen selectionPenRectangle = new Pen(Settings.Current.GetBrush(MapColors.MapSelectionRectangle));
+            Brush brushSelectionRectangle = Settings.Current.GetBrush(MapColors.MapSelectionRectangle);
+            ListObjectsToDispose.Add(brushSelectionRectangle);
+            Pen penSelectionRectangle = new Pen(brushSelectionRectangle);
+            ListObjectsToDispose.Add(penSelectionRectangle);
 
 			if (GetFocused() && _beingSelected && (_curPointX != _selectPointX || _curPointY != _selectPointY))
 			{
@@ -1206,7 +1336,7 @@ namespace ArtemisMissionEditor
 				x = Math.Min(_curPointX, _selectPointX);
 				z = Math.Min(_curPointY, _selectPointY);
 
-				g.DrawRectangle(selectionPenRectangle, new Rectangle(__r(x), __r(z), __r(xe - x), __r(ze - z)));
+				g.DrawRectangleD(penSelectionRectangle, x, z, xe - x, ze - z);
 			}
 
 			#endregion
@@ -1216,148 +1346,162 @@ namespace ArtemisMissionEditor
             if (SpaceMap.SelectionSpecial is SpecialMapObject_DestroyCircle)
             {
                 SpecialMapObject_DestroyCircle item = (SpecialMapObject_DestroyCircle)SpaceMap.SelectionSpecial;
-				Pen heightSpecialPen = new Pen(new HatchBrush(HatchStyle.WideDownwardDiagonal, heightPen.Color));
+                Brush brushHeightSpecial = new HatchBrush(HatchStyle.WideDownwardDiagonal, penHeight.Color);
+                ListObjectsToDispose.Add(brushHeightSpecial);
+                Pen penHeightSpecial = new Pen(brushHeightSpecial);
+                ListObjectsToDispose.Add(penHeightSpecial);
 
-                x = PointXToScreen((db)item.Coordinates.X_Scr);
-				zy = PointZToScreen((db)item.Coordinates.Z_Scr) - item.Coordinates.Y_Scr * screen_y_scale;
-				z = PointZToScreen((db)item.Coordinates.Z_Scr);
-				rad2 = item.Radius * GetMapScale();
+                x = PointXToScreen(item.Coordinates.X_Scr);
+				zy = PointZToScreen(item.Coordinates.Z_Scr) - item.Coordinates.Y_Scr * screen_y_scale;
+				z = PointZToScreen(item.Coordinates.Z_Scr);
+				radius2 = item.Radius * GetMapScale();
 
 				if (!Settings.Current.UseYForSelection)
 					zy = z;
 
 				if (zy < z)
 				{
-					g.DrawLine(heightSpecialPen, __r(x - rad2), __r(zy), __r(x - rad2), __r(z));
-					g.DrawLine(heightSpecialPen, __r(x + rad2), __r(zy), __r(x + rad2), __r(z));
+					g.DrawLineD(penHeightSpecial, x - radius2, zy, x - radius2, z);
+					g.DrawLineD(penHeightSpecial, x + radius2, zy, x + radius2, z);
 				}
 				//Crosshair at the middle of the bg circle
-				g.DrawLine(darkHeightPen, __r(x), __r(z - s_sel / 4), __r(x), __r(z + s_sel / 4));
-				g.DrawLine(darkHeightPen, __r(x - s_sel / 4), __r(z), __r(x + s_sel / 4), __r(z));
+                g.DrawLineD(penDarkHeight, x, z - sizeSelection / 4.0, x, z + sizeSelection / 4.0);
+                g.DrawLineD(penDarkHeight, x - sizeSelection / 4.0, z, x + sizeSelection / 4.0, z);
 				//Line from the middle of zy to the middle of the z
-				g.DrawLine(heightSpecialPen, __r(x), __r(zy), __r(x), __r(z));
+				g.DrawLineD(penHeightSpecial, x, zy, x, z);
                 //Circle
-				g.DrawEllipse(selectionPen, __r(x - rad2), __r(zy - rad2), __r(rad2 * 2), __r(rad2 * 2));
+                g.DrawCircle(penSelection, x, zy, radius2 * 2.0);
                 //Crosshair around the radius
-				g.DrawLine(selectionPen, __r(x), __r(zy - rad2), __r(x), __r(zy - rad2 - s_sel / 2));
-                g.DrawLine(selectionPen, __r(x), __r(zy + rad2), __r(x), __r(zy + rad2 + s_sel / 2));
-                g.DrawLine(selectionPen, __r(x - rad2), __r(zy), __r(x - rad2 - s_sel / 2), __r(zy));
-                g.DrawLine(selectionPen, __r(x + rad2), __r(zy), __r(x + rad2 + s_sel / 2), __r(zy));
-				//Crosshair at the middle of the circle
-				g.DrawLine(selectionPen, __r(x), __r(zy - s_sel / 4), __r(x), __r(zy + s_sel / 4));
-				g.DrawLine(selectionPen, __r(x - s_sel / 4), __r(zy), __r(x + s_sel / 4), __r(zy));
+                g.DrawLineD(penSelection, x, zy - radius2, x, zy - radius2 - sizeSelection / 2.0);
+                g.DrawLineD(penSelection, x, zy + radius2, x, zy + radius2 + sizeSelection / 2.0);
+                g.DrawLineD(penSelection, x - radius2, zy, x - radius2 - sizeSelection / 2.0, zy);
+                g.DrawLineD(penSelection, x + radius2, zy, x + radius2 + sizeSelection / 2.0, zy);
+				//Crosshair at the middle of the circle                                      
+                g.DrawLineD(penSelection, x, zy - sizeSelection / 4.0, x, zy + sizeSelection / 4.0);
+                g.DrawLineD(penSelection, x - sizeSelection / 4.0, zy, x + sizeSelection / 4.0, zy);
 				if (zy > z)
 				{
-					g.DrawLine(heightSpecialPen, __r(x - rad2), __r(zy), __r(x - rad2), __r(z));
-					g.DrawLine(heightSpecialPen, __r(x + rad2), __r(zy), __r(x + rad2), __r(z));
+                    g.DrawLineD(penHeightSpecial, x - radius2, zy, x - radius2, z);
+                    g.DrawLineD(penHeightSpecial, x + radius2, zy, x + radius2, z);
 				}
 				//y circle
-				if (Settings.Current.UseYForSelection && __r(rad2)>=1)
+				if (Settings.Current.UseYForSelection && radius2 >= 1.0)
 				{
 					int num = 36;
 					for (i = 0; i < num; i++)
-						 g.DrawArc(heightPen, __r(x - rad2), __r(z - rad2), __r(rad2 * 2), __r(rad2 * 2), i * 360 / num, 360 / num / 4);
+                        g.DrawCircleArc(penHeight, x, z, radius2 * 2.0, i * 360.0 / num, 360.0 / num / 4.0); 
 				}
             }
 
 			if (SpaceMap.SelectionSpecial is SpecialMapObject_PointTarget)
 			{
 				SpecialMapObject_PointTarget item = (SpecialMapObject_PointTarget)SpaceMap.SelectionSpecial;
-				Pen heightSpecialPen = new Pen(new HatchBrush(HatchStyle.WideDownwardDiagonal, heightPen.Color));
+				Brush brushHeightSpecial = new HatchBrush(HatchStyle.WideDownwardDiagonal, penHeight.Color);
+                ListObjectsToDispose.Add(brushHeightSpecial);
+                Pen penHeightSpecial = new Pen(brushHeightSpecial);
+                ListObjectsToDispose.Add(penHeightSpecial);
 
-				x = PointXToScreen((db)item.Coordinates.X_Scr);
-				zy = PointZToScreen((db)item.Coordinates.Z_Scr) - item.Coordinates.Y_Scr * screen_y_scale;
-				z = PointZToScreen((db)item.Coordinates.Z_Scr);
+				x = PointXToScreen(item.Coordinates.X_Scr);
+				zy = PointZToScreen(item.Coordinates.Z_Scr) - item.Coordinates.Y_Scr * screen_y_scale;
+				z = PointZToScreen(item.Coordinates.Z_Scr);
 				
 				if (!Settings.Current.UseYForSelection)
 					zy = z;
 
 				//Crosshair at the middle of the bg circle
-				g.DrawLine(darkHeightPen, __r(x), __r(z - s_sel / 4), __r(x), __r(z + s_sel / 4));
-				g.DrawLine(darkHeightPen, __r(x - s_sel / 4), __r(z), __r(x + s_sel / 4), __r(z));
+                g.DrawLineD(penDarkHeight, x, z - sizeSelection / 4.0, x, z + sizeSelection / 4.0);
+                g.DrawLineD(penDarkHeight, x - sizeSelection / 4.0, z, x + sizeSelection / 4.0, z);
 				//Line from the middle of zy to the middle of the z
-				g.DrawLine(heightSpecialPen, __r(x), __r(zy), __r(x), __r(z));
+				g.DrawLineD(penHeightSpecial, x, zy, x, z);
 				//Crosshair at the middle of the circle
-				g.DrawLine(selectionPen, __r(x), __r(zy - s_sel / 4), __r(x), __r(zy + s_sel / 4));
-				g.DrawLine(selectionPen, __r(x - s_sel / 4), __r(zy), __r(x + s_sel / 4), __r(zy));
+                g.DrawLineD(penSelection, x, zy - sizeSelection / 4.0, x, zy + sizeSelection / 4.0);
+                g.DrawLineD(penSelection, x - sizeSelection / 4.0, zy, x + sizeSelection / 4.0, zy);
 			}
 
             if (SpaceMap.SelectionSpecial is SpecialMapObject_BoxSphere)
             {
                 SpecialMapObject_BoxSphere item = (SpecialMapObject_BoxSphere)SpaceMap.SelectionSpecial;
-                Pen heightSpecialPen = new Pen(new HatchBrush(HatchStyle.WideDownwardDiagonal, heightPen.Color));
+                Brush brushHeightSpecial = new HatchBrush(HatchStyle.WideDownwardDiagonal, penHeight.Color);
+                ListObjectsToDispose.Add(brushHeightSpecial);
+                Pen penHeightSpecial = new Pen(brushHeightSpecial);
+                ListObjectsToDispose.Add(penHeightSpecial);
 
                 if (item.SphereBox == SpecialMapObjectSphereBox.Sphere)
                 {
-                    x = PointXToScreen((db)item.CoordinatesStart.X_Scr);
-                    zy = PointZToScreen((db)item.CoordinatesStart.Z_Scr) - item.CoordinatesStart.Y_Scr * screen_y_scale;
-                    z = PointZToScreen((db)item.CoordinatesStart.Z_Scr);
-                    rad2 = item.Radius * GetMapScale();
-                    rad3 = s_sel / 2 > rad2 / 2 && item.InOut == SpecialMapObjectInOut.Outside ? rad2 / 2 : s_sel / 2;
-                    rad3 = item.InOut == SpecialMapObjectInOut.Inside ? rad3 : -rad3;
+                    x = PointXToScreen(item.CoordinatesStart.X_Scr);
+                    zy = PointZToScreen(item.CoordinatesStart.Z_Scr) - item.CoordinatesStart.Y_Scr * screen_y_scale;
+                    z = PointZToScreen(item.CoordinatesStart.Z_Scr);
+                    radius2 = item.Radius * GetMapScale();
+                    radius3 = sizeSelection / 2 > radius2 / 2 && item.InOut == SpecialMapObjectInOut.Outside ? radius2 / 2 : sizeSelection / 2;
+                    radius3 = item.InOut == SpecialMapObjectInOut.Inside ? radius3 : -radius3;
 
                     if (!Settings.Current.UseYForSelection)
                         zy = z;
 
                     if (zy < z)
                     {
-                        g.DrawLine(heightSpecialPen, __r(x - rad2), __r(zy), __r(x - rad2), __r(z));
-                        g.DrawLine(heightSpecialPen, __r(x + rad2), __r(zy), __r(x + rad2), __r(z));
+                        g.DrawLineD(penHeightSpecial, x - radius2, zy, x - radius2, z);
+                        g.DrawLineD(penHeightSpecial, x + radius2, zy, x + radius2, z);
                     }
                     //Crosshair at the middle of the bg circle
-                    g.DrawLine(darkHeightPen, __r(x), __r(z - s_sel / 4), __r(x), __r(z + s_sel / 4));
-                    g.DrawLine(darkHeightPen, __r(x - s_sel / 4), __r(z), __r(x + s_sel / 4), __r(z));
-                    //Line from the middle of zy to the middle of the z
-                    g.DrawLine(heightSpecialPen, __r(x), __r(zy), __r(x), __r(z));
+                    g.DrawLineD(penDarkHeight, x, z - sizeSelection / 4.0, x, z + sizeSelection / 4.0);
+                    g.DrawLineD(penDarkHeight, x - sizeSelection / 4.0, z, x + sizeSelection / 4.0, z);
+                    //Line froDm the middle of zy to the middle of the z
+                    g.DrawLineD(penHeightSpecial, x, zy, x, z);
                     //Circle
-                    g.DrawEllipse(selectionPen, __r(x - rad2), __r(zy - rad2), __r(rad2 * 2), __r(rad2 * 2));
+                    g.DrawCircle(penSelection, x, zy, radius2 * 2.0);
                     //Crosshair around the radius
-                    g.DrawLine(selectionPen, __r(x), __r(zy - rad2), __r(x), __r(zy - rad2 - rad3));
-                    g.DrawLine(selectionPen, __r(x), __r(zy + rad2), __r(x), __r(zy + rad2 + rad3));
-                    g.DrawLine(selectionPen, __r(x - rad2), __r(zy), __r(x - rad2 - rad3), __r(zy));
-                    g.DrawLine(selectionPen, __r(x + rad2), __r(zy), __r(x + rad2 + rad3), __r(zy));
+                    g.DrawLineD(penSelection, x, zy - radius2, x, zy - radius2 - radius3);
+                    g.DrawLineD(penSelection, x, zy + radius2, x, zy + radius2 + radius3);
+                    g.DrawLineD(penSelection, x - radius2, zy, x - radius2 - radius3, zy);
+                    g.DrawLineD(penSelection, x + radius2, zy, x + radius2 + radius3, zy);
                     //Crosshair at the middle of the circle
-                    g.DrawLine(selectionPen, __r(x), __r(zy - s_sel / 4), __r(x), __r(zy + s_sel / 4));
-                    g.DrawLine(selectionPen, __r(x - s_sel / 4), __r(zy), __r(x + s_sel / 4), __r(zy));
+                    g.DrawLineD(penSelection, x, zy - sizeSelection / 4.0, x, zy + sizeSelection / 4.0);
+                    g.DrawLineD(penSelection, x - sizeSelection / 4.0, zy, x + sizeSelection / 4.0, zy);
                     if (zy > z)
                     {
-                        g.DrawLine(heightSpecialPen, __r(x - rad2), __r(zy), __r(x - rad2), __r(z));
-                        g.DrawLine(heightSpecialPen, __r(x + rad2), __r(zy), __r(x + rad2), __r(z));
+                        g.DrawLineD(penHeightSpecial, x - radius2, zy, x - radius2, z);
+                        g.DrawLineD(penHeightSpecial, x + radius2, zy, x + radius2, z);
                     }
                     //y circle
-                    if (Settings.Current.UseYForSelection && __r(rad2) >= 1)
+                    if (Settings.Current.UseYForSelection && radius2 >= 1.0)
                     {
                         int num = 36;
                         for (i = 0; i < num; i++)
-                            g.DrawArc(heightPen, __r(x - rad2), __r(z - rad2), __r(rad2 * 2), __r(rad2 * 2), i * 360 / num, 360 / num / 4);
+                            g.DrawCircleArc(penHeight, x, z, radius2 * 2.0, i * 360.0 / num, 360.0 / num / 4.0);
                     }
                 }
                 else
                 {
-                    x = PointXToScreen((db)Math.Min(item.CoordinatesStart.X_Scr,item.CoordinatesEnd.X_Scr));
-                    z = PointZToScreen((db)Math.Min(item.CoordinatesStart.Z_Scr, item.CoordinatesEnd.Z_Scr));
-                    xe = PointXToScreen((db)Math.Max(item.CoordinatesStart.X_Scr, item.CoordinatesEnd.X_Scr));
-                    ze = PointZToScreen((db)Math.Max(item.CoordinatesStart.Z_Scr, item.CoordinatesEnd.Z_Scr));
-                    rad2 = 3.5;
-                    rad3 = s_sel / 2 > Math.Min(xe - x, ze - z) / 2 && item.InOut == SpecialMapObjectInOut.Outside ? Math.Min(xe - x, ze - z) / 2 : s_sel / 2;
-                    rad3 = item.InOut == SpecialMapObjectInOut.Inside ? rad3 : -rad3;
+                    x = PointXToScreen(Math.Min(item.CoordinatesStart.X_Scr, item.CoordinatesEnd.X_Scr));
+                    z = PointZToScreen(Math.Min(item.CoordinatesStart.Z_Scr, item.CoordinatesEnd.Z_Scr));
+                    xe = PointXToScreen(Math.Max(item.CoordinatesStart.X_Scr, item.CoordinatesEnd.X_Scr));
+                    ze = PointZToScreen(Math.Max(item.CoordinatesStart.Z_Scr, item.CoordinatesEnd.Z_Scr));
+                    radius2 = 3.5;
+                    radius3 = sizeSelection / 2 > Math.Min(xe - x, ze - z) / 2 && item.InOut == SpecialMapObjectInOut.Outside ? Math.Min(xe - x, ze - z) / 2 : sizeSelection / 2;
+                    radius3 = item.InOut == SpecialMapObjectInOut.Inside ? radius3 : -radius3;
 
-                    g.DrawRectangle(selectionPen, __r(x), __r(z), __r(xe - x), __r(ze - z));
+                    g.DrawRectangleD(penSelection, x, z, xe - x, ze - z);
 
-                    g.DrawLine(selectionPen, __r(x), __r(z/2+ze/2), __r(x-rad3), __r(z/2+ze/2));
-                    g.DrawLine(selectionPen, __r(x/2+xe/2), __r(z), __r(x/2+xe/2), __r(z-rad3));
-                    g.DrawLine(selectionPen, __r(xe), __r(z/2+ze/2), __r(xe+rad3), __r(z/2+ze/2));
-                    g.DrawLine(selectionPen, __r(x/2+xe/2), __r(ze), __r(x/2+xe/2), __r(ze+rad3));
+                    g.DrawLineD(penSelection, x, z / 2.0 + ze / 2.0, x - radius3, z / 2.0 + ze / 2.0);
+                    g.DrawLineD(penSelection, x / 2.0 + xe / 2.0, z, x / 2.0 + xe / 2.0, z - radius3);
+                    g.DrawLineD(penSelection, xe, z / 2 + ze / 2.0, xe + radius3, z / 2.0 + ze / 2.0);
+                    g.DrawLineD(penSelection, x / 2.0 + xe / 2.0, ze, x / 2.0 + xe / 2.0, ze + radius3);
                     
-                    x = PointXToScreen((db)item.CoordinatesStart.X_Scr);
-                    z = PointZToScreen((db)item.CoordinatesStart.Z_Scr);
-                    xe = PointXToScreen((db)item.CoordinatesEnd.X_Scr);
-                    ze = PointZToScreen((db)item.CoordinatesEnd.Z_Scr);
+                    x = PointXToScreen(item.CoordinatesStart.X_Scr);
+                    z = PointZToScreen(item.CoordinatesStart.Z_Scr);
+                    xe = PointXToScreen(item.CoordinatesEnd.X_Scr);
+                    ze = PointZToScreen(item.CoordinatesEnd.Z_Scr);
 
-                    g.DrawEllipse(selectionPen, __r(x - rad2), __r(z - rad2), __r(rad2 * 2), __r(rad2 * 2));
-                    g.DrawRectangle(selectionPen, __r(xe - rad2), __r(ze - rad2), __r(rad2 * 2), __r(rad2 * 2));
+                    g.DrawCircle(penSelection, x, z, radius2 * 2.0);
+                    g.DrawSquare(penSelection, xe, ze, radius2 * 2.0);
                 }
             }
+            #endregion
+
+            #region Dispose
+            foreach (IDisposable objectToDispose in ListObjectsToDispose)
+                objectToDispose.Dispose();
             #endregion
         }
 
@@ -1457,7 +1601,7 @@ namespace ArtemisMissionEditor
 				{
 					//_namedObjectsLB.Items.Add("< nothing >");
 				}
-				_namedObjectsLB.ColumnWidth = __r(_namedObjectsLB.CreateGraphics().MeasureString(max, _namedObjectsLB.Font).Width);
+                _namedObjectsLB.ColumnWidth = (int)Math.Round(_namedObjectsLB.CreateGraphics().MeasureString(max, _namedObjectsLB.Font).Width);
 				
 				___STATIC_E_FSM_SuppressSelectionEvents = false;
 			}
@@ -1480,7 +1624,7 @@ namespace ArtemisMissionEditor
 				{
 					//_namelessObjectsLB.Items.Add("< nothing >");
 				}
-				_namelessObjectsLB.ColumnWidth = __r(_namelessObjectsLB.CreateGraphics().MeasureString(max, _namelessObjectsLB.Font).Width);
+                _namelessObjectsLB.ColumnWidth = (int)Math.Round(_namelessObjectsLB.CreateGraphics().MeasureString(max, _namelessObjectsLB.Font).Width);
 
 				___STATIC_E_FSM_SuppressSelectionEvents = false;
 			}
@@ -1655,12 +1799,16 @@ namespace ArtemisMissionEditor
 			//find smaller side of the container
 			double coeff;
 			if (Settings.Current.DefaultSpaceMapScalePadded)
-				coeff = (((db)_PSM_p_mapContainer.Width / SpaceMap._maxX) < ((db)_PSM_p_mapContainer.Height / SpaceMap._maxZ)) ? ((db)_PSM_p_mapContainer.Width / SpaceMap._maxX) : ((db)_PSM_p_mapContainer.Height / SpaceMap._maxZ);
+                coeff = (((double)_PSM_p_mapContainer.Width / SpaceMap._maxX) < ((double)_PSM_p_mapContainer.Height /SpaceMap._maxZ)) 
+                    ? ((double)_PSM_p_mapContainer.Width / SpaceMap._maxX) 
+                    : ((double)_PSM_p_mapContainer.Height /SpaceMap._maxZ);
 			else
-				coeff = (((db)_PSM_p_mapContainer.Width / (SpaceMap._maxX + SpaceMap._paddingX * 2)) < ((db)_PSM_p_mapContainer.Height / (SpaceMap._maxZ + SpaceMap._paddingZ * 2)) ? ((db)_PSM_p_mapContainer.Width / (SpaceMap._maxX + SpaceMap._paddingX * 2)) : ((db)_PSM_p_mapContainer.Height / (SpaceMap._maxZ + SpaceMap._paddingZ * 2)));
+                coeff = (((double)_PSM_p_mapContainer.Width / (SpaceMap._maxX + SpaceMap._paddingX * 2)) < ((double)_PSM_p_mapContainer.Height / (SpaceMap._maxZ + SpaceMap._paddingZ * 2))
+                    ? ((double)_PSM_p_mapContainer.Width / (SpaceMap._maxX + SpaceMap._paddingX * 2)) 
+                    : ((double)_PSM_p_mapContainer.Height / (SpaceMap._maxZ + SpaceMap._paddingZ * 2)));
 
-			_PSM_p_mapSurface.Width = __r((SpaceMap._maxX + SpaceMap._paddingX * 2) * coeff);
-			_PSM_p_mapSurface.Height = __r((SpaceMap._maxZ + SpaceMap._paddingZ * 2) * coeff);
+			_PSM_p_mapSurface.Width = (int)Math.Round((SpaceMap._maxX + SpaceMap._paddingX * 2.0) * coeff);
+            _PSM_p_mapSurface.Height = (int)Math.Round((SpaceMap._maxZ + SpaceMap._paddingZ * 2.0) * coeff);
 			_PSM_p_mapSurface.Left = (_PSM_p_mapContainer.Width - _PSM_p_mapSurface.Width) / 2;
 			_PSM_p_mapSurface.Top = (_PSM_p_mapContainer.Height - _PSM_p_mapSurface.Height) / 2;
 			_beingDragged = false;
@@ -1822,13 +1970,23 @@ namespace ArtemisMissionEditor
 				|| _PSM_p_mapSurface.Width != _Width
 				|| _PSM_p_mapSurface.Height != _Height)
 			{
-				_PSM_p_mapSurface.Left = _Left;
-				_PSM_p_mapSurface.Top = _Top;
-				_PSM_p_mapSurface.Width = _Width;
-				_PSM_p_mapSurface.Height = _Height;
+                try
+                {
+                    _PSM_p_mapSurface.SuspendLayout();
+                
+                    _PSM_p_mapSurface.Left = _Left;
+                    _PSM_p_mapSurface.Top = _Top;
+                    _PSM_p_mapSurface.Width = _Width;
+                    _PSM_p_mapSurface.Height = _Height;
 
-				//Require repaint
-				Redraw();
+                    //Repaint immediately so we don't see a "blink"
+                    DrawSpaceMap(_PSM_p_mapSurface.CreateGraphics());
+                }
+                finally
+                {
+                    _PSM_p_mapSurface.ResumeLayout();
+                }
+                
 			}
 		}
 
@@ -1916,7 +2074,7 @@ namespace ArtemisMissionEditor
 
             if (Mode == PanelSpaceMapMode.SingleSpecial)
             {
-                if (SpaceMap.ExecuteCommand(command, Mode, Control.ModifierKeys, PointXToSpaceMap(_curPointX), PointZToSpaceMap(_curPointY), __r(1 / GetMapScale())))
+                if (SpaceMap.ExecuteCommand(command, Mode, Control.ModifierKeys, PointXToSpaceMap(_curPointX), PointZToSpaceMap(_curPointY), (int)Math.Round(1.0 / GetMapScale())))
                     RegisterChange("Executed command "+command);
                 return;
             }
@@ -2142,7 +2300,7 @@ namespace ArtemisMissionEditor
 
 			if (Mode != PanelSpaceMapMode.Normal)
 			{
-				if (SpaceMap.ExecuteWheelAction(e.Delta, Mode, ModifierKeys, PointXToSpaceMap(_curPointX), PointZToSpaceMap(_curPointY), __r(1 / GetMapScale())))
+				if (SpaceMap.ExecuteWheelAction(e.Delta, Mode, ModifierKeys, PointXToSpaceMap(_curPointX), PointZToSpaceMap(_curPointY), (int)Math.Round(1.0 / GetMapScale())))
 					RegisterChange("Executed mouse wheel action");
 			}
 			
@@ -2159,7 +2317,7 @@ namespace ArtemisMissionEditor
 
 		private void _E_PSM_p_mapSurface_Paint(object sender, PaintEventArgs e)
 		{
-			DrawSpaceMap(e.Graphics);
+            DrawSpaceMap(e.Graphics);
 		}
 
 		private void _E_PSM_p_mapSurface_MouseDown(object sender, MouseEventArgs e)
@@ -2238,15 +2396,15 @@ namespace ArtemisMissionEditor
 			{
 				bool additive = Control.ModifierKeys == Keys.Shift;
 				bool removative = Control.ModifierKeys == Keys.Control;
-				if (SpaceMap.Select_AtPoint(PointXToSpaceMap(_curPointX), PointZToSpaceMap(_curPointY), __r(1 / GetMapScale()), Settings.Current.YScale, additive, removative))
+				if (SpaceMap.Select_AtPoint(PointXToSpaceMap(_curPointX), PointZToSpaceMap(_curPointY), (int)Math.Round(1.0 / GetMapScale()), Settings.Current.YScale, additive, removative))
 					RegisterChange("Changed selection by single-selection");
 			}
 
 			//object rotation mechanism
-            if (Mode == PanelSpaceMapMode.Normal && (e.Button == MouseButtons.Left) && ((Control.ModifierKeys == Keys.Alt)) || (Control.ModifierKeys == (Keys.Alt | Keys.Shift)) || (Control.ModifierKeys == (Keys.Alt | Keys.Control)))
-			{
-				bool shift = Control.ModifierKeys == (Keys.Shift | Keys.Alt);
-				bool control = Control.ModifierKeys == (Keys.Control | Keys.Alt);
+            if (Mode == PanelSpaceMapMode.Normal && (e.Button == MouseButtons.Left) && ((Control.ModifierKeys == Keys.Alt)) || (Control.ModifierKeys == (Keys.Alt | Keys.Shift)) || (Control.ModifierKeys == (Keys.Alt | Keys.Control)) || (Control.ModifierKeys == (Keys.Alt | Keys.Control | Keys.Shift)))
+            {
+                bool shift = Control.ModifierKeys == (Keys.Shift | Keys.Alt) || Control.ModifierKeys == (Keys.Shift | Keys.Control | Keys.Alt);
+                bool control = Control.ModifierKeys == (Keys.Control | Keys.Alt) || Control.ModifierKeys == (Keys.Shift | Keys.Control | Keys.Alt);
 				if (SpaceMap.Selection_Turn_or_SetRadius(PointXToSpaceMap(_curPointX), PointZToSpaceMap(_curPointY), shift, control))
 					RegisterChange(SpaceMap.SelectionNameless == null  ? "Rotated selected object(s)" : "Changed radius/end point");
 			}
@@ -2262,7 +2420,7 @@ namespace ArtemisMissionEditor
 					PointZToSpaceMap(_selectPointY),
 					PointXToSpaceMap(_curPointX),
 					PointZToSpaceMap(_curPointY),
-					__r(1 / GetMapScale()), Settings.Current.YScale, additive, removative))
+					(int)Math.Round(1.0 / GetMapScale()), Settings.Current.YScale, additive, removative))
 					RegisterChange("Changed selection by mass-selection");
 			}
 
@@ -2276,7 +2434,7 @@ namespace ArtemisMissionEditor
             //special mode
             if (Mode != PanelSpaceMapMode.Normal)
             {
-                if (SpaceMap.ExecuteMouseAction(e.Button, Mode, ModifierKeys, PointXToSpaceMap(_curPointX), PointZToSpaceMap(_curPointY), __r(1 / GetMapScale())))
+                if (SpaceMap.ExecuteMouseAction(e.Button, Mode, ModifierKeys, PointXToSpaceMap(_curPointX), PointZToSpaceMap(_curPointY), (int)Math.Round(1.0 / GetMapScale())))
 					RegisterChange("Executed mouse action");
             }
 
@@ -3391,8 +3549,8 @@ namespace ArtemisMissionEditor
 
 			foreach (XmlNode childNode in root)
 			{
-				NamedMapObject mo = NamedMapObject.NewFromXML(childNode);
-				NamelessMapObject nmo = NamelessMapObject.NewFromXML(childNode);
+				NamedMapObject mo = NamedMapObject.NewFromXml(childNode);
+				NamelessMapObject nmo = NamelessMapObject.NewFromXml(childNode);
 
 				if (mo != null)
 					namedObjects.Add(mo);

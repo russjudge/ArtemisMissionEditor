@@ -302,7 +302,6 @@ namespace ArtemisMissionEditor
 			if (editor._cms == null || editor._lastUser!=container.Member.ValueDescription)
 			{
 				editor._cms = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
-
 				editor._cms.Items.Clear();
 				editor._cms.Tag = false;
 
@@ -319,6 +318,36 @@ namespace ArtemisMissionEditor
 			AssignCMSContainer(editor._cms, container,value);return editor._cms;
 		}
 
+        private static ContextMenuStrip PrepareCMS_DefaultListWithFirstSeparated(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
+        {
+            string value = container.GetValue();
+
+            if (editor._cms == null || editor._lastUser != container.Member.ValueDescription)
+            {
+                editor._cms = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
+                editor._cms.Items.Clear();
+                editor._cms.Tag = false;
+
+                bool doOnce = true;
+                foreach (string item in editor._valueToXml.Keys)
+                {
+                    ToolStripItem tsi = editor._cms.Items.Add(item);
+                    tsi.Tag = container;
+                    tsi.Click += ContextMenuClick_Choose;
+
+                    if (doOnce)
+                    {
+                        doOnce = false;
+                        editor._cms.Items.Add(new ToolStripSeparator());
+                    }
+                }
+
+                editor.ShowHideCMS();
+            }
+
+            AssignCMSContainer(editor._cms, container, value); return editor._cms;
+        }
+
 		private static ContextMenuStrip PrepareCMS_DefaultListPlusGUI(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
 		{
 			if (mode == EditorActivationMode.ForceGUI)
@@ -327,8 +356,6 @@ namespace ArtemisMissionEditor
 			if (editor._cms == null || editor._lastUser!=container.Member.ValueDescription)
 			{
 				editor._cms = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
-
-				
 				editor._cms.Items.Clear();
 				editor._cms.Tag = true;
 
@@ -349,6 +376,42 @@ namespace ArtemisMissionEditor
 
 			AssignCMSContainer(editor._cms, container, "", true);return editor._cms;
 		}
+
+        private static ContextMenuStrip PrepareCMS_DefaultListPlusGUIWithFirstSepearted(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
+        {
+            if (mode == EditorActivationMode.ForceGUI)
+                return null;
+
+            if (editor._cms == null || editor._lastUser != container.Member.ValueDescription)
+            {
+                editor._cms = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
+                editor._cms.Items.Clear();
+                editor._cms.Tag = true;
+
+                bool doOnce = true;
+                foreach (string item in editor._valueToXml.Keys)
+                {
+                    ToolStripItem tsi = editor._cms.Items.Add(item);
+                    tsi.Tag = container;
+                    tsi.Click += ContextMenuClick_Choose;
+
+                    if (doOnce)
+                    {
+                        doOnce = false;
+                        editor._cms.Items.Add(new ToolStripSeparator());
+                    }
+                }
+
+                editor._cms.Items.Add(new ToolStripSeparator());
+                ToolStripItem tsl = editor._cms.Items.Add("Input value...");
+                tsl.Tag = container;
+                tsl.Click += ContextMenuClick_Show_GUI;
+
+                editor.ShowHideCMS();
+            }
+
+            AssignCMSContainer(editor._cms, container, "", true); return editor._cms;
+        }
 
 		private static ContextMenuStrip PrepareCMS_NestedList(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
 		{
@@ -624,10 +687,15 @@ namespace ArtemisMissionEditor
 			if (editor._cms == null || editor._lastUser != container.Member.ValueDescription)
 			{
 				editor._cms = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
-
-				editor._cms.Items.Clear();
+                editor._cms.Items.Clear();
 				editor._cms.Tag = false;
 
+                ToolStripItem tsn1 = editor._cms.Items.Add("NULL");
+                tsn1.Tag = container;
+                tsn1.Click += new EventHandler(ContextMenuClick_Choose);
+                
+                editor._cms.Items.Add(new ToolStripSeparator());
+				
 				foreach (string item in Settings.VesselData.vesselList.Keys)
 				{
 					ToolStripItem tsi = editor._cms.Items.Add(Settings.VesselData.VesselToString(item));
@@ -635,13 +703,17 @@ namespace ArtemisMissionEditor
 					tsi.Click += new EventHandler(ContextMenuClick_Choose);
 				}
 
-				editor._cms.Items.Add(new ToolStripSeparator());
+                if (Settings.VesselData.vesselList.Keys.Count > 0)
+                {
+                    editor._cms.Items.Add(new ToolStripSeparator());
 
-				ToolStripItem tsn = editor._cms.Items.Add("NULL");
-				tsn.Tag = container;
-				tsn.Click += new EventHandler(ContextMenuClick_Choose);
+                    ToolStripItem tsn2 = editor._cms.Items.Add("NULL");
+                    tsn2.Tag = container;
+                    tsn2.Click += new EventHandler(ContextMenuClick_Choose);
+                    
+                    editor._cms.Items.Add(new ToolStripSeparator());
+                }
 
-				editor._cms.Items.Add(new ToolStripSeparator());
 				ToolStripItem tsl = editor._cms.Items.Add("Input value...");
 				tsl.Tag = container;
 				tsl.Click += new EventHandler(ContextMenuClick_Show_GUI);
@@ -951,30 +1023,31 @@ namespace ArtemisMissionEditor
 			TeamAmountF._prepareCMS = PrepareCMS_DefaultListPlusGUI;
 
             SpecialShipType = new EMVE();
-            SpecialShipType.AddToDictionary(null, "<>");
-            SpecialShipType.AddToDictionary("-1", "nothing");
-            SpecialShipType.AddToDictionary("0",  "dilapidated");
-            SpecialShipType.AddToDictionary("1",  "upgraded");
-            SpecialShipType.AddToDictionary("2",  "overpowered");
-            SpecialShipType.AddToDictionary("3",  "underpowered");
-            SpecialShipType._prepareCMS = PrepareCMS_DefaultList;
+            SpecialShipType.AddToDictionary(null, "Unspecified");
+            SpecialShipType.AddToDictionary("-1", "Nothing");
+            SpecialShipType.AddToDictionary("0",  "Dilapidated");
+            SpecialShipType.AddToDictionary("1",  "Upgraded");
+            SpecialShipType.AddToDictionary("2",  "Overpowered");
+            SpecialShipType.AddToDictionary("3",  "Underpowered");
+            SpecialShipType._prepareCMS = PrepareCMS_DefaultListWithFirstSeparated;
 
             SpecialCapitainType = new EMVE();
-            SpecialCapitainType.AddToDictionary(null, "<>");
-            SpecialCapitainType.AddToDictionary("-1","nothing");
-            SpecialCapitainType.AddToDictionary("0", "cowardly");
-            SpecialCapitainType.AddToDictionary("1", "brave");
-            SpecialCapitainType.AddToDictionary("2", "bombastic");
-            SpecialCapitainType.AddToDictionary("3", "seething");
-            SpecialCapitainType.AddToDictionary("4", "duplicitous");
-            SpecialCapitainType.AddToDictionary("5", "exceptional");
-            SpecialCapitainType._prepareCMS = PrepareCMS_DefaultList;
+            SpecialCapitainType.AddToDictionary(null, "Unspecified");
+            SpecialCapitainType.AddToDictionary("-1","Nothing");
+            SpecialCapitainType.AddToDictionary("0", "Cowardly");
+            SpecialCapitainType.AddToDictionary("1", "Brave");
+            SpecialCapitainType.AddToDictionary("2", "Bombastic");
+            SpecialCapitainType.AddToDictionary("3", "Seething");
+            SpecialCapitainType.AddToDictionary("4", "Duplicitous");
+            SpecialCapitainType.AddToDictionary("5", "Exceptional");
+            SpecialCapitainType._prepareCMS = PrepareCMS_DefaultListWithFirstSeparated;
 
             Side = new EMVE();
-            Side.AddToDictionary("0", "0 (no side)");
-            Side.AddToDictionary("1", "1 (enemy)");
-            Side.AddToDictionary("2", "2 (player)");
-            Side._prepareCMS = PrepareCMS_DefaultListPlusGUI;
+            Side.AddToDictionary(null, "Default");
+            Side.AddToDictionary("0", "0 (No side)");
+            Side.AddToDictionary("1", "1 (Enemy)");
+            Side.AddToDictionary("2", "2 (Player)");
+            Side._prepareCMS = PrepareCMS_DefaultListPlusGUIWithFirstSepearted;
 
 			Comparator = new EMVE();
 			Comparator.AddToDictionary("GREATER", ">");

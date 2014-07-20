@@ -51,93 +51,97 @@ namespace ArtemisMissionEditor
 
 		public static KeyValuePair<bool, string> Show(string name, ExpressionMemberValueType type, string initialValue, bool mandatory, string def, object min, object max, bool pathEditor = false)
 		{
-			DialogSimple form = new DialogSimple();
-
-			string caption = "";
-			caption += type == ExpressionMemberValueType.VarDouble ? "Float " : "";
-			caption += type == ExpressionMemberValueType.VarString ? "String " : "";
-			caption += type == ExpressionMemberValueType.Body ? "Node body " : "";
-			caption += type == ExpressionMemberValueType.VarInteger ? "Integer " : "";
-			caption += type == ExpressionMemberValueType.VarBool ? "Boolean " : "";
-			caption += name;
-			if (min != null || max != null)
-			{
-				if (type == ExpressionMemberValueType.VarBool)
-				{
-					//Dunno what to do for bools yet
-					//caption += ": ";
-					//caption += min.ToString();
-					//caption += "/";
-					//caption += max.ToString();
-				}
-				else if (type == ExpressionMemberValueType.VarString)
-				{
-
-				}
-				else
-				{
-					caption += ": ";
-					caption += min == null ? "-INF" : min.ToString();
-					caption += " ... ";
-					caption += max == null ? "+INF" : max.ToString();
-				}
-			}
-
-			if (pathEditor)
-			{
-				form.OpenFileExtensions = (string)min;
-				form.OpenFileHeader = (string)max; 
-				form._min = null;
-				form._max = null;
-				form.openFileButton.Visible = true;
-			}
-			else
-			{
-				form._min = min;
-				form._max = max;
-				form.openFileButton.Visible = false;
-			}
-
-			form.Text = caption;
-			form.input.Text = initialValue;
-			form._type = type;
-			form._def = def;
-			form.NullMode = initialValue == null;
-			form.nullButton.Text = def == null ? "Null" : "Default";
-			form.Width = type == ExpressionMemberValueType.VarString ? 390 : 212;
-			form.Height = 103;
-
-			if (type == ExpressionMemberValueType.Body)
-			{
-				form.Height = 300;
-				form.Width = 900;
-				form.input.Multiline = true;
-			}
-
 			
-			if (form.ShowDialog() == DialogResult.Cancel)
-				return new KeyValuePair<bool, string>(false, null);
-			string result = form.NullMode ? def : form.input.Text;
-            //R. Judge: Changes Jan 16, 2013, to band-aid up to 1.7
-            if (result != null && type == ExpressionMemberValueType.VarDouble)
+            using (DialogSimple form = new DialogSimple())
             {
-                double resd = 0;
 
-                if (double.TryParse(result, NumberStyles.Float, NumberFormatInfo.CurrentInfo, out resd))
+                string caption = "";
+                caption += type == ExpressionMemberValueType.VarDouble ? "Float " : "";
+                caption += type == ExpressionMemberValueType.VarString ? "String " : "";
+                caption += type == ExpressionMemberValueType.Body ? "Node body " : "";
+                caption += type == ExpressionMemberValueType.VarInteger ? "Integer " : "";
+                caption += type == ExpressionMemberValueType.VarBool ? "Boolean " : "";
+                caption += name;
+                if (min != null || max != null)
                 {
-                    result = Helper.DoubleToString(resd);
+                    if (type == ExpressionMemberValueType.VarBool)
+                    {
+                        //Dunno what to do for bools yet
+                        //caption += ": ";
+                        //caption += min.ToString();
+                        //caption += "/";
+                        //caption += max.ToString();
+                    }
+                    else if (type == ExpressionMemberValueType.VarString)
+                    {
+
+                    }
+                    else
+                    {
+                        caption += ": ";
+                        caption += min == null ? "-INF" : min.ToString();
+                        caption += " ... ";
+                        caption += max == null ? "+INF" : max.ToString();
+                    }
                 }
-            }
-            if (result != null && type == ExpressionMemberValueType.VarInteger)
-            {
-                int resi = 0;
-                if (int.TryParse(result, NumberStyles.Float, NumberFormatInfo.CurrentInfo, out resi))
+
+                if (pathEditor)
                 {
-                    result = resi.ToString();
+                    form.OpenFileExtensions = (string)min;
+                    form.OpenFileHeader = (string)max;
+                    form._min = null;
+                    form._max = null;
+                    form.openFileButton.Visible = true;
                 }
+                else
+                {
+                    form._min = min;
+                    form._max = max;
+                    form.openFileButton.Visible = false;
+                }
+
+                form.Text = caption;
+                form.input.Text = initialValue;
+                form._type = type;
+                form._def = def;
+                form.NullMode = initialValue == null;
+                form.nullButton.Text = def == null ? "Null" : "Default";
+                form.Width = type == ExpressionMemberValueType.VarString ? 390 : 212;
+                form.Height = 103;
+
+                if (type == ExpressionMemberValueType.Body)
+                {
+                    form.Height = 300;
+                    form.Width = 900;
+                    form.input.Multiline = true;
+                }
+
+
+                if (form.ShowDialog() == DialogResult.Cancel)
+                    return new KeyValuePair<bool, string>(false, null);
+
+                string result = form.NullMode ? def : form.input.Text;
+                //R. Judge: Changes Jan 16, 2013, to band-aid up to 1.7
+                if (result != null && type == ExpressionMemberValueType.VarDouble)
+                {
+                    double resd = 0;
+
+                    if (double.TryParse(result, NumberStyles.Float, NumberFormatInfo.CurrentInfo, out resd))
+                    {
+                        result = Helper.DoubleToString(resd);
+                    }
+                }
+                if (result != null && type == ExpressionMemberValueType.VarInteger)
+                {
+                    int resi = 0;
+                    if (int.TryParse(result, NumberStyles.Float, NumberFormatInfo.CurrentInfo, out resi))
+                    {
+                        result = resi.ToString();
+                    }
+                }
+                //R. Judge: End changes Jan 16, 2013.
+                return new KeyValuePair<bool, string>(true, result);
             }
-            //R. Judge: End changes Jan 16, 2013.
-			return new KeyValuePair<bool, string>(true, result);
 		}
 
 		private void input_KeyDown(object sender, KeyEventArgs e)

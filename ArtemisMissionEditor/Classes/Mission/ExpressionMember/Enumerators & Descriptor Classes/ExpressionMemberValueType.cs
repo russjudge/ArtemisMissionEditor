@@ -18,7 +18,6 @@ namespace ArtemisMissionEditor
 		/// <summary>
 		/// Means its a multiline string
 		/// </summary>
-		Body,
-		MAX
+		Body
 	}
 }

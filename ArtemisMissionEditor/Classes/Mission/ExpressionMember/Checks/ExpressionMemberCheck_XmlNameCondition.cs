@@ -19,7 +19,7 @@ namespace ArtemisMissionEditor
 	{
 		public override string Decide(ExpressionMemberContainer container)
 		{
-			switch (container.Statement.Name)
+			switch (container.ParentStatement.Name)
 			{
 				case "if_variable":				
 				case "if_difficulty":			
@@ -32,7 +32,7 @@ namespace ArtemisMissionEditor
                 case "if_gm_key":
                 case "if_client_key":
                 case "if_distance":
-                    return container.Statement.Name;
+                    return container.ParentStatement.Name;
                 case "if_exists":
                 case "if_not_exists":
                     return "<existance>";
@@ -53,18 +53,18 @@ namespace ArtemisMissionEditor
 			{
 				//Only set the node name if this is a straight 1 to 1 check value, otherwise the name would be modified by other checks that follow
 				if (value != "" && !value.Contains(' ') && !value.Contains('>') && !value.Contains('<'))
-					container.Statement.Name = value;
+					container.ParentStatement.Name = value;
 				//For custom one-to-one
 				//if (value == "<DIRECT_DETECTED>")
 				//{
 				//}
 				//For all many-to-one
 				if (value == "<existance>")
-				    if (container.Statement.Name != "if_exists" && container.Statement.Name != "if_not_exists")
-				        container.Statement.Name = "if_exists";
+				    if (container.ParentStatement.Name != "if_exists" && container.ParentStatement.Name != "if_not_exists")
+				        container.ParentStatement.Name = "if_exists";
 				if (value == "<location>")
-					if (container.Statement.Name != "if_inside_sphere" && container.Statement.Name != "if_outside_sphere" && container.Statement.Name != "if_inside_box" && container.Statement.Name != "if_outside_box")
-						container.Statement.Name = "if_inside_sphere";
+					if (container.ParentStatement.Name != "if_inside_sphere" && container.ParentStatement.Name != "if_outside_sphere" && container.ParentStatement.Name != "if_inside_box" && container.ParentStatement.Name != "if_outside_box")
+						container.ParentStatement.Name = "if_inside_sphere";
 
 				base.SetValueInternal(container, value);
 			}

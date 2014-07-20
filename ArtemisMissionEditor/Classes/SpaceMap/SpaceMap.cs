@@ -653,7 +653,7 @@ namespace ArtemisMissionEditor
             return tmp > 0;
         }
                 
-        public  bool Selection_Turn_or_SetRadius(int x, int z, bool shiftPressed=false, bool controlPressed = false)
+        public bool Selection_Turn_or_SetRadius(int x, int z, bool shiftPressed=false, bool controlPressed = false)
         {
             if (SelectionNameless != null)
             {
@@ -703,7 +703,7 @@ namespace ArtemisMissionEditor
                 {
                     if (!item.IsPropertyAvailable("angle"))
                         continue;
-                    ((NamedMapObjectA)item).A_rad = angle +  Math.PI / 2;
+                    ((NamedMapObjectA)item).A_rad = angle + (controlPressed ? -Math.PI / 2 : Math.PI / 2);
                 }
                 return true;
             }
@@ -975,14 +975,8 @@ namespace ArtemisMissionEditor
 
             return false;
         }
-        //R. Judge: Changes Jan 16, 2013, to band-aid up to 1.7
-         
-        public Dictionary<int, XmlNode> UnMappableStorage { get; set; }
-        //R. Judge: End changes Jan 16, 2013.
         public  void FromXml(string text)
         {
-
-            
             XmlDocument xDoc = new XmlDocument();
 
             try
@@ -1017,48 +1011,25 @@ namespace ArtemisMissionEditor
 
                 if (!bg)
                     Clear();
-                int pointer = 0;
                 foreach (XmlNode item in root.ChildNodes)
                 {
-                    //R. Judge: Changes Jan 16, 2013, to band-aid up to 1.7
-                    NamedMapObject mo = null;
-                    NamelessMapObject nmo = null;
-                    try
-                    {
-                        mo = NamedMapObject.NewFromXML(item);
-                        nmo = NamelessMapObject.NewFromXML(item);
-                        if (bg)
-                        {
-                            if (mo != null)
-                                bgNamedObjects.Add(mo);
-                            if (nmo != null)
-                                bgNamelessObjects.Add(nmo);
-                        }
-                        else
-                        {
-                            if (mo != null)
-                                namedObjects.Add(mo);
-                            if (nmo != null)
-                                namelessObjects.Add(nmo);
-                        }
-                    }
-                    catch (FormatException)
-                    {
-                        //propably not a number. Oh well.
+                    NamedMapObject mo =  NamedMapObject.NewFromXml(item);
+                    NamelessMapObject nmo = NamelessMapObject.NewFromXml(item);
 
-                        if (item != null)
-                        {
-                            if (UnMappableStorage == null)
-                            {
-                                UnMappableStorage = new Dictionary<int, XmlNode>();
-                            }
-                            UnMappableStorage.Add(pointer, item);
-                        
-                        }
-                        
+                    if (bg)
+                    {
+                        if (mo != null)
+                            bgNamedObjects.Add(mo);
+                        if (nmo != null)
+                            bgNamelessObjects.Add(nmo);
                     }
-                    pointer++;
-                    //R. Judge: End changes Jan 16, 2013.
+                    else
+                    {
+                        if (mo != null)
+                            namedObjects.Add(mo);
+                        if (nmo != null)
+                            namelessObjects.Add(nmo);
+                    }
                 }
             }
 
@@ -1267,10 +1238,6 @@ namespace ArtemisMissionEditor
 
             _undoStack = new Stack<SpaceMapSavedState>();
             _redoStack = new Stack<SpaceMapSavedState>();
-            //R. Judge: Changes Jan 16, 2013, to band-aid up to 1.7
-            UnMappableStorage = new Dictionary<int, XmlNode>();
-
-            //R. Judge: End changes Jan 16, 2013.
         }
     }
 }
