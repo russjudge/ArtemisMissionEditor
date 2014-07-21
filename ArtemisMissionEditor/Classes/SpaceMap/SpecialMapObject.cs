@@ -71,7 +71,7 @@ namespace ArtemisMissionEditor
 
         //COORDINATES
         public Coordinates3D _coordinates;
-        [DisplayName("Coordinates"), Description("The coordinates of the point's abscissa, height, ordinate on the space map"), Category("\t\t\tPosition")]
+        [DisplayName("Coordinates"), Description("The coordinates of the point on the space map"), Category("\t\t\tPosition")]
         public Coordinates3D Coordinates { get { return _coordinates; } set { _coordinates = value; } }
 
         private int _radius;
@@ -259,7 +259,7 @@ namespace ArtemisMissionEditor
 
 		//COORDINATES
 		public Coordinates3D _coordinates;
-        [DisplayName("Coordinates"), Description("The coordinates of the object center's abscissa, height, ordinate on the space map"), Category("\t\t\tPosition")]
+        [DisplayName("Coordinates"), Description("The coordinates of the object's center on the space map"), Category("\t\t\tPosition")]
 		public Coordinates3D Coordinates { get { return _coordinates; } set { _coordinates = value; } }
 
 		public override bool ExecuteWheelAction(int delta, Keys modifierKeys, int x, int y, int pixelsInOne)
@@ -432,11 +432,11 @@ namespace ArtemisMissionEditor
 
         //COORDINATES
         public Coordinates3D _coordinatesStart;
-        [DisplayName("\t\tStart Coordinates"), Description("The coordinates of the sphere's center or rectangle's first edge point's abscissa, height, ordinate on the space map)"), Category("\t\t\tPosition")]
+        [DisplayName("\t\tStart Coordinates"), Description("The coordinates of the sphere's center or rectangle's first edge point on the space map)"), Category("\t\t\tPosition")]
         public Coordinates3D CoordinatesStart { get { return _coordinatesStart; } set { _coordinatesStart = value; if (_radius > 0) _coordinatesEnd = value; } }
 
         public Coordinates3D _coordinatesEnd;
-        [DisplayName("\tEnd Coordinates"), Description("The coordinates of the rectangle's second edge point's abscissa, height, ordinate on the space map"), Category("\t\t\tPosition")]
+        [DisplayName("\tEnd Coordinates"), Description("The coordinates of the rectangle's second edge point on the space map"), Category("\t\t\tPosition")]
         public Coordinates3D CoordinatesEnd { get { return _coordinatesEnd; } set { _coordinatesEnd = value; if (_coordinatesEnd != _coordinatesStart) _radius = 0; } }
         private bool ShouldSerializeCoordinatesEnd()
         {

@@ -38,7 +38,7 @@ namespace ArtemisMissionEditor
         
         //COORDINATES
         public Coordinates3D _coordinates;
-        [DisplayName("Coordinates"), Description("The coordinates of the object center's abscissa, height, ordinate on the space map"), Category("\t\t\tPosition")]
+        [DisplayName("Coordinates"), Description("The coordinates of the object's center on the space map"), Category("\t\t\tPosition")]
         public virtual Coordinates3D Coordinates { get { return _coordinates; } set { _coordinates = value; } }
 
 		//NAME
@@ -75,7 +75,7 @@ namespace ArtemisMissionEditor
             missingProperties.Add(pName);
         }
 
-        public static NamedMapObject NewFromXML(XmlNode item)
+        public static NamedMapObject NewFromXml(XmlNode item)
         {
 			if (!(item is XmlElement))
 				return null;
@@ -373,6 +373,109 @@ namespace ArtemisMissionEditor
         #endregion
     }
 
+    public class NamedMapObjectAS : NamedMapObjectA
+    {
+        //Side
+        private int? _sideValue;
+        [DisplayName("Side"), Description("Side the entity is allied with (0 = none, 1 = enemy, 2+ = player)")]
+        public int? sideValue { get { return _sideValue; } set { _sideValue = value; } }
+
+        #region INHERITANCE
+
+        //SELECTION
+        public override bool _selectionAbsolute { get { return base._selectionAbsolute; } }
+        public override int _selectionSize { get { return base._selectionSize; } }
+
+        //PROPERTIES
+        public override bool IsPropertyAvailable(string pName)
+        {
+            if (pName == "sideValue") return true;
+            return base.IsPropertyAvailable(pName);
+        }
+        public override bool IsPropertyMandatory(string pName) { return base.IsPropertyMandatory(pName); }
+
+        //TYPE
+        public override string TypeToString { get { return base.TypeToString; } }
+        public override string TypeToStringShort { get { return base.TypeToString; } }
+
+        //COPIER
+        public override void Copy(bool excludeCoordinates, params NamedMapObject[] source)
+        {
+            bool same, found;
+            if (source.Count() == 0)
+                return;
+
+            //Side
+            int tmp1 = 0;
+            same = true; found = false;
+            foreach (NamedMapObject item in source)
+            {
+                if (item.IsPropertyAvailable("sideValue"))
+                {
+                    if (!found)
+                    {
+                        if (item as NamedMapObjectAS != null && ((NamedMapObjectAS)item).sideValue.HasValue)
+                        {
+                            found = true;
+                            tmp1 = ((NamedMapObjectAS)item).sideValue.Value;
+                        }
+                        if (item as NamedMapObjectArhK != null && ((NamedMapObjectArhKS)item).sideValue.HasValue)
+                        {
+                            found = true;
+                            tmp1 = ((NamedMapObjectArhKS)item).sideValue.Value;
+                        }
+                    }
+                    else
+                    {
+                        int tmp2 = 0;
+                        if (item as NamedMapObjectAS != null && ((NamedMapObjectAS)item).sideValue.HasValue)
+                            tmp2 = ((NamedMapObjectAS)item).sideValue.Value;
+                        if (item as NamedMapObjectArhK != null && ((NamedMapObjectArhKS)item).sideValue.HasValue)
+                            tmp2 = ((NamedMapObjectArhKS)item).sideValue.Value;
+
+                        same = same && (tmp2 != tmp1);
+                    }
+                }
+            }
+            if (found && same)
+                this.sideValue = tmp1;
+
+            base.Copy(excludeCoordinates, source);
+        }
+
+        //TO XML
+        public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
+        {
+            if (type == "") type = TypeToString;//If this was the first called ToXml - set this object's type
+            XmlElement create = base.ToXml(xDoc, missingProperties, type);
+
+            if (sideValue.HasValue)
+                __AddNewAttribute(xDoc, create, "sideValue", sideValue.ToString());
+
+            return create;
+        }
+
+        //FROM XML
+        public override void FromXml(XmlNode item)
+        {
+            base.FromXml(item);
+            foreach (XmlAttribute att in item.Attributes)
+                switch (att.Name)
+                {
+                    case "sideValue":
+                        sideValue = Helper.StringToInt(att.Value);
+                        break;
+                }
+        }
+
+        //CONSTRUCTOR
+        public NamedMapObjectAS(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int angle = 0, string name = "", int? _sideValue = null)
+            : base(posX, posY, posZ, makeSelected, angle, name)
+        { sideValue = _sideValue; }
+        
+        #endregion
+    }
+
     public class NamedMapObjectArhK : NamedMapObjectA
     {
         //RACE KEYS && HULL KEYS
@@ -537,10 +640,8 @@ namespace ArtemisMissionEditor
                 _hullID = _hullID.Substring(0,_hullID.IndexOf("]"));
                 if (Helper.IntTryParse(_hullID, out tmp)) return;
                 _hullID = "";
-
             }
         }
-
 
         #region INHERITANCE
 
@@ -706,6 +807,111 @@ namespace ArtemisMissionEditor
         #endregion
     }
 
+    public class NamedMapObjectArhKS : NamedMapObjectArhK
+    {
+        //Side
+        private int? _sideValue;
+        [DisplayName("Side"), Description("Side the entity is allied with (0 = none, 1 = enemy, 2+ = player)")]
+        public int? sideValue { get { return _sideValue; } set { _sideValue = value; } }
+
+        #region INHERITANCE
+
+        //SELECTION
+        public override bool _selectionAbsolute { get { return base._selectionAbsolute; } }
+        public override int _selectionSize { get { return base._selectionSize; } }
+
+        //PROPERTIES
+        public override bool IsPropertyAvailable(string pName)
+        {
+            if (pName == "sideValue") return true;
+            return base.IsPropertyAvailable(pName);
+        }
+        public override bool IsPropertyMandatory(string pName) { return base.IsPropertyMandatory(pName); }
+
+        //TYPE
+        public override string TypeToString { get { return base.TypeToString; } }
+        public override string TypeToStringShort { get { return base.TypeToString; } }
+
+        //COPIER
+        public override void Copy(bool excludeCoordinates, params NamedMapObject[] source)
+        {
+            bool same, found;
+            if (source.Count() == 0)
+                return;
+
+            //Side
+            int tmp1 = 0;
+            same = true; found = false;
+            foreach (NamedMapObject item in source)
+            {
+                if (item.IsPropertyAvailable("sideValue"))
+                {
+                    if (!found)
+                    {
+                        if (item as NamedMapObjectAS != null && ((NamedMapObjectAS)item).sideValue.HasValue)
+                        {
+                            found = true;
+                            tmp1 = ((NamedMapObjectAS)item).sideValue.Value;
+                        }
+                        if (item as NamedMapObjectArhK != null && ((NamedMapObjectArhKS)item).sideValue.HasValue)
+                        {
+                            found = true;
+                            tmp1 = ((NamedMapObjectArhKS)item).sideValue.Value;
+                        }
+                    }
+                    else
+                    {
+                        int tmp2 = 0;
+                        if (item as NamedMapObjectAS != null && ((NamedMapObjectAS)item).sideValue.HasValue)
+                            tmp2 = ((NamedMapObjectAS)item).sideValue.Value;
+                        if (item as NamedMapObjectArhK != null && ((NamedMapObjectArhKS)item).sideValue.HasValue)
+                            tmp2 = ((NamedMapObjectArhKS)item).sideValue.Value;
+
+                        same = same && (tmp2 != tmp1);
+                    }
+                }
+            }
+            if (found && same)
+                this.sideValue = tmp1;
+
+            base.Copy(excludeCoordinates, source);
+        }
+
+        //TO XML
+        public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
+        {
+            if (type == "") type = TypeToString;//If this was the first called ToXml - set this object's type
+            XmlElement create = base.ToXml(xDoc, missingProperties, type);
+
+            if (sideValue.HasValue)
+                __AddNewAttribute(xDoc, create, "sideValue", sideValue.ToString());
+
+            return create;
+        }
+
+        //FROM XML
+        public override void FromXml(XmlNode item)
+        {
+            base.FromXml(item);
+            foreach (XmlAttribute att in item.Attributes)
+                switch (att.Name)
+                {
+                    case "sideValue":
+                        sideValue = Helper.StringToInt(att.Value);
+                        break;
+                }
+        }
+
+        //CONSTRUCTOR
+        public NamedMapObjectArhKS(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int angle = 0, string name = "", string _race_Keys = "", string _race_Names = "", string _vessel_ClassNames = "", string _vessel_BroadTypes = "", int? _sideValue = null)
+            : base(posX, posY, posZ, makeSelected, angle, name, _race_Keys, _race_Names, _vessel_ClassNames, _vessel_BroadTypes)
+        {
+            sideValue = _sideValue;
+        }
+        
+        #endregion
+    }
+
     public sealed class NamedMapObject_anomaly : NamedMapObject
     {
         #region INHERITANCE
@@ -755,7 +961,6 @@ namespace ArtemisMissionEditor
 
     public sealed class NamedMapObject_blackHole : NamedMapObject
     {
-
         #region INHERITANCE
 
         //SELECTION
@@ -803,7 +1008,6 @@ namespace ArtemisMissionEditor
 
     public sealed class NamedMapObject_monster : NamedMapObjectA
     {
-
         #region INHERITANCE
 
         //SELECTION
@@ -849,10 +1053,8 @@ namespace ArtemisMissionEditor
         #endregion
     }
 
-    public sealed class NamedMapObject_player : NamedMapObjectA
+    public sealed class NamedMapObject_player : NamedMapObjectAS
     {
-
-
         #region INHERITANCE
         
         //SELECTION
@@ -901,10 +1103,9 @@ namespace ArtemisMissionEditor
 	public sealed class NamedMapObject_whale : NamedMapObjectA
 	{
 		//POD NUMBER
-		private int _podnumber;
+		private string _podnumber;
 		[DisplayName("Pod Number"), Description("Whale pod number, identifies packs of whales that travel together")]
-		public int podnumber { get { return _podnumber; } set { _podnumber = value; } }
-        
+        public string podnumber { get { return _podnumber; } set { _podnumber = value; } }
 
 		#region INHERITANCE
 
@@ -946,23 +1147,21 @@ namespace ArtemisMissionEditor
 				switch (att.Name)
 				{
 					case "podnumber":
-						_podnumber = Helper.StringToInt(att.Value);
+						_podnumber = att.Value;
 						break;
 				}
 		}
 
 		//CONSTRUCTOR
-		public NamedMapObject_whale(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int angle = 0, string name = "", int podnumber = 0)
+		public NamedMapObject_whale(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int angle = 0, string name = "", string podnumber = "0")
 			: base(posX, posY, posZ, makeSelected, angle, name)
 		{ _podnumber = podnumber; }
 
 		#endregion
 	}
 
-    public sealed class NamedMapObject_station : NamedMapObjectArhK
+    public sealed class NamedMapObject_station : NamedMapObjectArhKS
     {
-        
-        
         #region INHERITANCE
         
         //SELECTION
@@ -1005,16 +1204,14 @@ namespace ArtemisMissionEditor
 
         //CONSTRUCTOR
         public NamedMapObject_station(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int angle = 0, string name = "", string _race_Keys = "", string _race_Names = "", string _vessel_ClassNames = "", string _vessel_BroadTypes = "")
-            : base(posX, posY, posZ, makeSelected, angle, name)
+            : base(posX, posY, posZ, makeSelected, angle, name, _race_Keys, _race_Names, _vessel_ClassNames, _vessel_BroadTypes)
         { }
 
         #endregion
     }
 
-    public sealed class NamedMapObject_neutral : NamedMapObjectArhK
+    public sealed class NamedMapObject_neutral : NamedMapObjectArhKS
     {
-
-
         #region INHERITANCE
         
         //SELECTION
@@ -1058,19 +1255,18 @@ namespace ArtemisMissionEditor
 
         //CONSTRUCTOR
         public NamedMapObject_neutral(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int angle = 0, string name = "", string _race_Keys = "", string _race_Names = "", string _vessel_ClassNames = "", string _vessel_BroadTypes = "")
-            : base(posX, posY, posZ, makeSelected, angle, name)
+            : base(posX, posY, posZ, makeSelected, angle, name, _race_Keys, _race_Names, _vessel_ClassNames, _vessel_BroadTypes)
         { }
 
         #endregion
     }
 
-    public sealed class NamedMapObject_enemy : NamedMapObjectArhK
+    public sealed class NamedMapObject_enemy : NamedMapObjectArhKS
     {
         //FLEET NUMBER
-        private int _fleetnumber;
+        private string _fleetnumber;
         [DisplayName("Fleet Number"), Description("Enemy fleet number, identifies packs of ships that travel together, following fleet leader")]
-        public int fleetnumber { get { return _fleetnumber; } set {_fleetnumber = value; } }
-                
+        public string fleetnumber { get { return _fleetnumber; } set {_fleetnumber = value; } }
 
         #region INHERITANCE
         
@@ -1101,7 +1297,7 @@ namespace ArtemisMissionEditor
                 return;
 
             //fleetnumber
-            int tmp1 = 0;
+            string tmp1 = "";
             same = true; found = false;
             foreach (NamedMapObject item in source)
                 if (item.IsPropertyAvailable("fleetnumber"))
@@ -1138,14 +1334,14 @@ namespace ArtemisMissionEditor
                 switch (att.Name)
                 {
                     case "fleetnumber":
-                        _fleetnumber = Helper.StringToInt(att.Value);
+                        _fleetnumber = att.Value;
                         break;
                 }
         }
 
         //CONSTRUCTOR
-        public NamedMapObject_enemy(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int angle = 0, string name = "", string _race_Keys = "", string _race_Names = "", string _vessel_ClassNames = "", string _vessel_BroadTypes = "", int fleetnumber = -1)
-            : base(posX, posY, posZ, makeSelected, angle, name)
+        public NamedMapObject_enemy(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int angle = 0, string name = "", string _race_Keys = "", string _race_Names = "", string _vessel_ClassNames = "", string _vessel_BroadTypes = "", string fleetnumber = "-1")
+            : base(posX, posY, posZ, makeSelected, angle, name, _race_Keys, _race_Names, _vessel_ClassNames, _vessel_BroadTypes)
         { _fleetnumber = fleetnumber; }
 
         #endregion

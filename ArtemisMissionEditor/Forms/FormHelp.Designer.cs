@@ -60,10 +60,11 @@
             // textBox1
             // 
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.textBox1.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox1.Location = new System.Drawing.Point(3, 3);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox1.Size = new System.Drawing.Size(831, 554);
             this.textBox1.TabIndex = 0;
             this.textBox1.Text = resources.GetString("textBox1.Text");
@@ -76,7 +77,7 @@
             this.Name = "_FormHelp";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.Text = "Help Information";
+            this.Text = "Help window";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormHelp_FormClosing);
             this.Load += new System.EventHandler(this.FormHelp_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this._FormHelp_KeyDown);

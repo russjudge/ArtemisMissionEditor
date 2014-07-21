@@ -21,11 +21,7 @@ namespace ArtemisMissionEditor
 		/// <summary>
 		/// The value is stored as is - but only if its filled (nonMin / nonempty / nonfalse)
 		/// </summary>
-		AsIsWhenFilled,
-		/// <summary>
-		/// Sainity check
-		/// </summary>
-		MAX
+		AsIsWhenFilled
 	}
 
 }

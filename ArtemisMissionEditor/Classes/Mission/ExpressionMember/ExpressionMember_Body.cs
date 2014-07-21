@@ -26,12 +26,12 @@ namespace ArtemisMissionEditor
 		/// <returns></returns>
 		public override string GetValue(ExpressionMemberContainer container)
 		{
-			return container.Statement.Body.Replace("\r\n", "").Replace("^", "\r\n");
+			return container.ParentStatement.Body.Replace("\r\n", "").Replace("^", "\r\n");
 		}
 
 		public override string GetValueText(ExpressionMemberContainer container)
 		{
-			string result = container.Statement.Body.Replace("\r\n", "");
+			string result = container.ParentStatement.Body.Replace("\r\n", "");
 
 			while (result.Length > 0 && !Char.IsLetterOrDigit(result[0]))
 				result = result.Remove(0, 1);
@@ -64,7 +64,7 @@ namespace ArtemisMissionEditor
 				value = value.Remove(0, 1);
 
 			if (!value.Contains('>') && !value.Contains('<'))
-				container.Statement.Body = value;
+				container.ParentStatement.Body = value;
 			else
 				Log.Add("Invalid xml node body!");
 		}

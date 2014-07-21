@@ -25,7 +25,7 @@ namespace ArtemisMissionEditor
 		protected override void SetValueInternal(ExpressionMemberContainer container, string value)
 		{
 			if (Mission.Current.Loading && value == "!ok")
-				Log.Add("Warning! Unknown  fleet property " + container.GetAttribute("property_f") + " detected in event: " + container.Statement.Parent.Name + "!");
+				Log.Add("Warning! Unknown  fleet property " + container.GetAttribute("property_f") + " detected in event: " + container.ParentStatement.Parent.Name + "!");
 			
 			base.SetValueInternal(container, value);
 		}

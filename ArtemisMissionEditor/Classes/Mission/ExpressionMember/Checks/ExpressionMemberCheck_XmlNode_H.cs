@@ -19,9 +19,9 @@ namespace ArtemisMissionEditor
 	{
 		public override string Decide(ExpressionMemberContainer container)
 		{
-			if (container.Statement.Kind == MissionStatementKind.Commentary)
+			if (container.ParentStatement.Kind == MissionStatementKind.Commentary)
 				return "Commentary";
-			if (container.Statement.Kind == MissionStatementKind.Condition)
+			if (container.ParentStatement.Kind == MissionStatementKind.Condition)
 				return "Condition";
 			if (true)
 				return "Action";

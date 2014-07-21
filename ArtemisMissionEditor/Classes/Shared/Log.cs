@@ -7,6 +7,7 @@ using System.Windows.Forms;
 
 namespace ArtemisMissionEditor
 {
+    // Microsoft.Design wants to have object sender, who cares if it's useless in a static class?
     public delegate void NewLogEntryEventHandler();
 
     public static class Log
@@ -40,11 +41,11 @@ namespace ArtemisMissionEditor
 
                 ostream.Close();
             }
-            catch (Exception e)
+            catch
             {
                 if (ostream != null)
                     ostream.Close();
-                throw e;
+                throw;
             }
         }
 

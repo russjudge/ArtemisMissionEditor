@@ -557,6 +557,9 @@ namespace ArtemisMissionEditor
                 case "1.7":
                     _Load_From_Xml_Version_1_66(xDoc);
                     break;
+                case "2.1":
+                    _Load_From_Xml_Version_1_66(xDoc);
+                    break;
                 default:
                     parserLog.Add("Attempting to parse unknown version: \""+version+"\", will use oldest loading method possible.");
                     _Load_From_Xml_Version_1_66(xDoc); //Using oldest method

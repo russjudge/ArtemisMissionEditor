@@ -12,7 +12,7 @@ namespace ArtemisMissionEditor
 	public class NormalLabel : DoubleBufferedPanel
 	{
 		/// <summary>
-        /// ITS TIME FOR BUSTER!!!!
+        /// Was probably used before, not anymore?
 		/// </summary>
 		public bool SpecialMode;
 

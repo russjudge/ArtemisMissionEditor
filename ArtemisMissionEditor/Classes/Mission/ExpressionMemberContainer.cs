@@ -13,7 +13,7 @@ namespace ArtemisMissionEditor
 	{
 		public ExpressionMember Member { get; set; }
 
-		public MissionStatement Statement { get; set; }
+		public MissionStatement ParentStatement { get; set; }
 
 		public string PreviousCheckValue { get; set; }
 		private string _checkValue;
@@ -28,11 +28,12 @@ namespace ArtemisMissionEditor
             {
 				if (!Member.ValueDescription.IsSerialized || !Member.ValueDescription.IsDisplayed)
 					return false;
-				return  !Helper.Validate(GetValue(), Member.ValueDescription) || Member.Mandatory && String.IsNullOrEmpty(GetValue());
+				return  !Helper.Validate(GetValue(), Member.ValueDescription).Valid || Member.Mandatory && String.IsNullOrEmpty(GetValue());
             }
         }
 
-		public string Decide()													{ Member.SetValue(this, Member.Decide(this)); return CheckValue; }
+		/// <summary> Should only be called for containers that contain checks</summary>
+        public string Decide()													{ Member.SetValue(this, ((ExpressionMemberCheck)Member).Decide(this)); return CheckValue; }
 		public string GetValue()												{ return Member.GetValue(this); }
 		public string GetValueDisplay()											{ return Member.GetValueDisplay(this); }
 		public string GetValueText()											{ return Member.GetValueText(this); }
@@ -40,13 +41,13 @@ namespace ArtemisMissionEditor
 		public string ValueToXml(string value)									{ return Member.ValueToXml(value);}
 		public string ValueToDisplay(string value)								{ return Member.ValueToDisplay(value); }
 
-		public void SetAttribute(string value)									{ Statement.SetAttribute(Member.Name, value); }
-		public void SetAttribute(string name, string value)						{ Statement.SetAttribute(name, value); }
-		public void SetAttributeIfNull(string value)							{ Statement.SetAttributeIfNull(Member.Name, value); }
-		public void SetAttributeIfNull(string name, string value)				{ Statement.SetAttributeIfNull(name, value); }
-		public string GetAttribute()											{ return Statement.GetAttribute(Member.Name, Member.ValueDescription.DefaultIfNull); }
-		public string GetAttribute(string name)									{ return Statement.GetAttribute(name); }
-		public string GetAttribute(string name, string valueIfNull)				{ return Statement.GetAttribute(name, valueIfNull); }
+		public void SetAttribute(string value)									{ ParentStatement.SetAttribute(Member.Name, value); }
+		public void SetAttribute(string name, string value)						{ ParentStatement.SetAttribute(name, value); }
+		public void SetAttributeIfNull(string value)							{ ParentStatement.SetAttributeIfNull(Member.Name, value); }
+		public void SetAttributeIfNull(string name, string value)				{ ParentStatement.SetAttributeIfNull(name, value); }
+		public string GetAttribute()											{ return ParentStatement.GetAttribute(Member.Name, Member.ValueDescription.DefaultIfNull); }
+		public string GetAttribute(string name)									{ return ParentStatement.GetAttribute(name); }
+		public string GetAttribute(string name, string valueIfNull)				{ return ParentStatement.GetAttribute(name, valueIfNull); }
 		//public string GetAttribute(object useMe, string valueIfNull)			{ return Statement.GetAttribute(Member.Name, valueIfNull); }
 
 		public void OnClick(NormalLabel l, Point curPos, EditorActivationMode mode) { Member.OnClick(this, l, curPos, mode); }
@@ -54,7 +55,7 @@ namespace ArtemisMissionEditor
 		public ExpressionMemberContainer(ExpressionMember member, MissionStatement statement)
 		{
 			Member = member;
-			Statement = statement;
+			ParentStatement = statement;
 		}
 	}
 }

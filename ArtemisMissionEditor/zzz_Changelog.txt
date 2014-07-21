@@ -1,4 +1,40 @@
 ﻿----------------------
+Version 2.1.1.5 [7-22-2014] (Alexey Andronov)
+* Added handling of expressions: they are now parsed, with common problems identified and hinted to the user
+
+----------------------
+Version 2.1.1.4 [7-21-2014] (Alexey Andronov)
+* CODE: Rewritten ExceptionMember/ExceptionMemberCheck code a bit
+* CODE: Reworked DrawSpaceMap code a bit to make it more readable
+* CODE: Fixed and improved code here and there for the sake of it...
+* CODE: Introduced better way of checking for wether a statement should be edited on space map
+* Small fix to information form
+* Removed log warning for opening vesselData file with version 2.1 (which is parsed quite fine)
+* Fixed side appearing for create statements that cannot have a side (like anomaly)
+* Fixed side of create statement being reset when editing via space map
+* Fixed a stack overflow (if an object is open for edit on space map with a value of type "int" containing an expression or incorrect string value)
+* Fixed a bug where if a BG node would contain a space map statement that contains expression or incorrect string value in its field, it would "spill" into the currently edited node
+* Fixed display when zooming in/out space map (before it would sometimes blink with a wrong image right after zoom)
+* Added marks for statement icon in the right tree view for the cases when: 
+  - Blank white circle:   a statement is a "create" statement and contains no errors/expressions
+  - Crossed white circle: a statement can be edited on space map individually (is a statement like "destroy in sphere") and contains no errors/expressions
+  - Red circle:			  a statement can be edited on space map one way or another, but contains errors or expressions
+
+----------------------
+Version 2.1.1.3 [7-19-2014] (Alexey Andronov)
+* Fixed "set_side_value" and "set_special"
+* Added custom menues for set_side_value and set_special
+* Fixed limits and editing form for elite ability bits
+* Improved "set_ship_text" and "start/end_getting_keypresses_from" statement texts
+* In many cases with these commands added dropdown for names (to select object name from a list of objects created somewhere in the script)
+* Added additional hotkeys to checklist (consoles and ability bits) forms: tilde for all and numbers for exact items
+* Allowed up to 29 skyboxes and manual input of any number
+
+----------------------
+Version 2.1.1.2 [7-19-2014] (Alexey Andronov)
+* Fixed Destroy command to process whales, drones and all correctly
+
+----------------------
 Version 2.1.1.1 [6-28-2014] (Russ Judge)
 * Added sideValue to Create.
 

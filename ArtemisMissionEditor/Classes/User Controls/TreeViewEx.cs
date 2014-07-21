@@ -9,14 +9,12 @@ using System.Drawing.Drawing2D;
 
 namespace ArtemisMissionEditor
 {
-    
-
     public sealed class TreeViewEx : TreeView
     {
         private TreeNode _dragNode = null;
 		public bool DraggingInProgress { get { return _dragNode != null; } }
         private TreeNode _dropNode = null;
-        private int _dropNodeLocation = 0; //1 = over, 2 = mid, 3 = under
+        private NodeRelationship _dropNodeLocation = NodeRelationship.Null; //1 = over, 2 = mid, 3 = under
 
         private Color _selectedNodeFocusedColor;
         private Brush _selectedNodeFocusedTreeBrush;
@@ -68,7 +66,7 @@ namespace ArtemisMissionEditor
         /// <param name="child">The node that is being dragged, the one that "proposes" the relationship</param>
         /// <param name="relation">1 = Insert child above, 2 = Add child into, 3 = Insert child under</param>
         /// <returns></returns>
-        public delegate bool IsAllowedToHaveRelationFunction(TreeNode parent, TreeNode child, int relation);
+        public delegate bool IsAllowedToHaveRelationFunction(TreeNode parent, TreeNode child, NodeRelationship relation);
         /// <summary>
         /// Checks if the parent node is allowed to accept the child node with the specified form of relationship; 
         /// Params: Parent, Child, Relationship;
@@ -76,19 +74,19 @@ namespace ArtemisMissionEditor
         /// </summary>
         public IsAllowedToHaveRelationFunction IsAllowedToHaveRelation;
 		public void IsAllowedToHaveRelation_Reset() {IsAllowedToHaveRelation = IsAllowedToHaveRelationDefault;}
-        private static bool IsAllowedToHaveRelationDefault(TreeNode parent, TreeNode child, int relation) { return true; }
+        private static bool IsAllowedToHaveRelationDefault(TreeNode parent, TreeNode child, NodeRelationship relation) { return true; }
 
-		private void PaintDragDestinationGraphics(int _prevDNL=-1, TreeNode _prevDN=null)
+        private void PaintDragDestinationGraphics(NodeRelationship _prevDNL = NodeRelationship.Null, TreeNode _prevDN = null)
         {
-			if ((_prevDN == null || _prevDNL == -1) && (_dropNode == null || _dropNodeLocation == -1))
+            if ((_prevDN == null || _prevDNL == NodeRelationship.Null) && (_dropNode == null || _dropNodeLocation == NodeRelationship.Null))
 				return;
 
 			Color DrawColor;
 			Color SelectColor;
 			TreeNode node;
-			int location;
+            NodeRelationship location;
 			bool removal;
-			if (_prevDN != null & _prevDNL != -1)
+            if (_prevDN != null & _prevDNL != NodeRelationship.Null)
 			{
 				DrawColor = SystemColors.Window;
 				SelectColor = SystemColors.Window;
@@ -113,35 +111,38 @@ namespace ArtemisMissionEditor
             LeftPos = node.Bounds.Left - dropNodeImageWidth;
             RightPos = Width;
 
-            Pen linePen = new System.Drawing.Pen(DrawColor, 2);
-
             switch (location)
             {
-                case 1:
+                case NodeRelationship.ChildGoesAbove:
                     VertPos = node.Bounds.Top;
                     break;
-                case 2:
+                case NodeRelationship.ChildGoesInside:
                     VertPos = node.Bounds.Bottom - node.Bounds.Height / 2;
                     LeftPos = node.Bounds.Right + 6;
 					if (removal)
 					{
-						g.FillRectangle(new System.Drawing.SolidBrush(SelectColor), new Rectangle(node.Bounds.Location, node.Bounds.Size));
+						using (Brush brush = new System.Drawing.SolidBrush(SelectColor))
+                            g.FillRectangle(brush, new Rectangle(node.Bounds.Location, node.Bounds.Size));
 						if (node.TreeView != null)
 							OnDrawNode(new DrawTreeNodeEventArgs(g, node, Helper.MakeDrawNodeRectangle(node.Bounds), TreeNodeStates.Default));
 					}
 					else
 					{
-						g.FillRectangle(new System.Drawing.SolidBrush(Color.FromArgb(64, SelectColor)), new Rectangle(node.Bounds.Location, node.Bounds.Size));
+						using (Brush brush = new System.Drawing.SolidBrush(Color.FromArgb(64, SelectColor)))
+                            g.FillRectangle(brush, new Rectangle(node.Bounds.Location, node.Bounds.Size));
 					}	
-                    g.DrawRectangle(new System.Drawing.Pen(DrawColor, 1), new Rectangle(node.Bounds.Location, node.Bounds.Size));
+                    using (Pen pen = new System.Drawing.Pen(DrawColor, 1))
+                        g.DrawRectangle(pen, new Rectangle(node.Bounds.Location, node.Bounds.Size));
                     Point[] triangle = new Point[4] { new Point(LeftPos, VertPos-1), new Point(LeftPos, VertPos), new Point(LeftPos + 11, VertPos + 4), new Point(LeftPos + 11, VertPos - 5) };
-                    g.FillPolygon(new System.Drawing.SolidBrush(DrawColor), triangle);
+                    using (Brush brush = new System.Drawing.SolidBrush(DrawColor))
+                        g.FillPolygon(brush, triangle);
                     break;
-                case 3:
+                case NodeRelationship.ChildGoesUnder:
                     VertPos = node.Bounds.Bottom;
                     break;
             }
-            g.DrawLine(linePen, new Point(LeftPos, VertPos), new Point(RightPos, VertPos));
+            using (Pen pen = new System.Drawing.Pen(DrawColor, 2))
+                g.DrawLine(pen, new Point(LeftPos, VertPos), new Point(RightPos, VertPos));
         }
 
         protected override void OnItemDrag(ItemDragEventArgs e)
@@ -167,7 +168,7 @@ namespace ArtemisMissionEditor
             drgevent.Effect = DragDropEffects.Move;
 
             TreeNode prevDN = _dropNode;
-            int prevDNL = _dropNodeLocation;
+            NodeRelationship prevDNL = _dropNodeLocation;
 
             // Get actual drop node
             _dropNode = GetNodeAt(PointToClient(new Point(drgevent.X, drgevent.Y)));
@@ -179,31 +180,31 @@ namespace ArtemisMissionEditor
                 if (IsFolder(_dropNode))
                 {
                     if (OffsetY < (_dropNode.Bounds.Height / 3))
-                        _dropNodeLocation = 1;
+                        _dropNodeLocation = NodeRelationship.ChildGoesAbove;
                     else if (OffsetY > (_dropNode.Bounds.Height * 2 / 3))
-                        _dropNodeLocation = 3;
+                        _dropNodeLocation = NodeRelationship.ChildGoesUnder;
                     else
-                        _dropNodeLocation = 2;
+                        _dropNodeLocation = NodeRelationship.ChildGoesInside;
                 }
                 else
                 {
                     if (OffsetY < (_dropNode.Bounds.Height / 2))
-                        _dropNodeLocation = 1;
+                        _dropNodeLocation = NodeRelationship.ChildGoesAbove;
                     else
-                        _dropNodeLocation = 3;
+                        _dropNodeLocation = NodeRelationship.ChildGoesUnder;
                 }
 
                 //Check if we are allowed to put this into that
                 if (!IsAllowedToHaveRelation(_dropNode, _dragNode, _dropNodeLocation))
                 {
                     drgevent.Effect = DragDropEffects.None;
-                    _dropNodeLocation = -1;
+                    _dropNodeLocation = NodeRelationship.Null;
                 }
 
-				if (_dropNode == _dragNode && _dropNodeLocation == 2)
+                if (_dropNode == _dragNode && _dropNodeLocation == NodeRelationship.ChildGoesInside)
 				{
 					drgevent.Effect = DragDropEffects.None;
-					_dropNodeLocation = -1;
+					_dropNodeLocation = NodeRelationship.Null;
 				}
 
                 // Avoid that drop node is child of drag node 
@@ -213,7 +214,7 @@ namespace ArtemisMissionEditor
 					if (tmpNode.Parent == this._dragNode)
 					{
 						drgevent.Effect = DragDropEffects.None;
-						_dropNodeLocation = -1;
+						_dropNodeLocation = NodeRelationship.Null;
 					}
                     tmpNode = tmpNode.Parent;
                 }
@@ -268,7 +269,7 @@ namespace ArtemisMissionEditor
 
             if (prevDNL != _dropNodeLocation || prevDN != _dropNode)
             {
-				PaintDragDestinationGraphics(prevDNL,prevDN);
+				PaintDragDestinationGraphics(prevDNL, prevDN);
                 PaintDragDestinationGraphics();
             }
 
@@ -277,7 +278,7 @@ namespace ArtemisMissionEditor
         
         protected override void OnDragDrop(DragEventArgs drgevent)
         {
-            if (_dragNode != null && _dropNode!=null&& _dropNodeLocation!=-1)
+            if (_dragNode != null && _dropNode!=null&& _dropNodeLocation != NodeRelationship.Null)
                 MoveNode(_dragNode, _dropNode, _dropNodeLocation);
 
             base.OnDragDrop(drgevent);
@@ -361,13 +362,13 @@ namespace ArtemisMissionEditor
             SelectedNode.BeginEdit();
         }
 
-        public void MoveNode(TreeNode what, TreeNode where, int relation, int subRelation = -1, bool suspendUpdate = false)
+        public void MoveNode(TreeNode what, TreeNode where, NodeRelationship relation, NodeRelationship subRelation = NodeRelationship.Null, bool suspendUpdate = false)
         {
             if (!IsAllowedToHaveRelation(where,what,relation))
                 return;
 
-			if (subRelation == -1)
-                subRelation = Settings.Current.DragIntoFolderToLastPosition ? 3 : 1;
+            if (subRelation == NodeRelationship.Null)
+                subRelation = Settings.Current.DragIntoFolderToLastPosition ? NodeRelationship.ChildGoesUnder : NodeRelationship.ChildGoesAbove;
             
             TreeNode result = null;
             
@@ -384,7 +385,7 @@ namespace ArtemisMissionEditor
 				if (what != where)
 					switch (relation)
 					{
-						case 1:
+                        case NodeRelationship.ChildGoesAbove:
 							what.Remove();
 							if (where.Parent != null)
 								where.Parent.Nodes.Insert(where.Index, what);
@@ -392,15 +393,15 @@ namespace ArtemisMissionEditor
 								Nodes.Insert(where.Index, what);
 							result = what;
 							break;
-						case 2:
+                        case NodeRelationship.ChildGoesInside:
 							what.Remove();
-							if (subRelation == 3)
+                            if (subRelation == NodeRelationship.ChildGoesUnder)
 								where.Nodes.Add(what);
-							if (subRelation == 1)
+                            if (subRelation == NodeRelationship.ChildGoesAbove)
 								where.Nodes.Insert(0, what);
 							result = what;
 							break;
-						case 3:
+                        case NodeRelationship.ChildGoesUnder:
 							what.Remove();
 							if (where.Parent != null)
 								where.Parent.Nodes.Insert(where.Index + 1, what);

@@ -118,24 +118,52 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="textBox1.Text" xml:space="preserve">
-    <value>This form contains all sorts of useful information about editing.
+    <value>This tab contains some useful information about mission editing.
+
 
 ==========================================
 Video Tutorials
 ==========================================
 There are videos available at YouTube, describing the functionality of the editor and showing how to use it:
- 
- Introduction - www.youtube.com/watch?v=lX69QaoZyRA
-Interface and Basic Editing - www.youtube.com/watch?v=M14GG6WI5m8 - 01
-Space Map - www.youtube.com/watch?v=4nL6tBnoISY - 02
-Advanced Editing - www.youtube.com/watch?v=RaW-gu0H33Q - 03
-Dependencies - www.youtube.com/watch?v=wVcHsntVdk4 - 04
+
+Introduction:                         www.youtube.com/watch?v=lX69QaoZyRA
+01 - Interface and basic editing:     www.youtube.com/watch?v=M14GG6WI5m8
+02 - Space map:                       www.youtube.com/watch?v=4nL6tBnoISY
+03 - Advanced editing:                www.youtube.com/watch?v=RaW-gu0H33Q
+04 - Dependencies:                    www.youtube.com/watch?v=wVcHsntVdk4
+
 
 ==========================================
 Angles
 ==========================================
- - Angles in most mission statements are in degrees, where 0 is looking up and + is clockwise and - is counter-clockwise
- - Angles in set/add property statement are in radians, where 0 is looking down and + is clockwise and - is counter-clockwise
+ - Angles in most mission statements are in degrees, where 0 is looking up, clockwise being positive direction while counter-clockwise is negative. 
+For example, 270 is looking to the left.
+ - Angles in set/add property statements are in radians, where 0 is looking down, clockwise being positive direction while counter-clockwise is negative. 
+For example, 1.57 is looking to the left.
+
+
+==========================================
+Audio
+==========================================
+ - incoming_message:   you need a mono OGG Vorbis file for this command
+ - play_sound_now:     you need an uncompressed Wav file for this command
+
+
+==========================================
+Pathing
+==========================================
+1. Paths for the artwork are relative to the Artemis.exe. 
+So, it should look like" \dat\Missions\MISS_XYZ\file.123" if you want to have custom artwork in your mission
+2. Paths for audio files are relative to the script folder.
+So, if you are using a file in your mission folder, you can just type the filename like "sound.wav"
+
+==========================================
+Most frequent mistakes in mission scripts
+==========================================
+ 1. Unless you want your event to repeat endlessly, make sure that something is changed in the event's body that invalidates the event's condition. You can use a new variable name and compare it to 0, then set it to 1 in the event (undefined variables are considered to have a value of 0).
+ 2. "Timer expired" condition does not "fire" once when the timer expires: it is true at any moment after the moment when the timer expres. So, if you have an event that has no other condition except the timer_expires one, the event will repeat endlessly once the timer runs out. 
+ 3. Do not attempt to set or add to object's properties in the same event in which it was created. You can only do so for objects that are already created by the time the event happens. If you want to set an object's properties, do it in another event that follows logically right after the event where the object is created.
+
 
 ==========================================
 More Information

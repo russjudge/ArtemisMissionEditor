@@ -79,7 +79,6 @@
             this._FSM_ss_Main_ObjectsTotal = new System.Windows.Forms.ToolStripStatusLabel();
             this._FSM_ss_Main_s_2 = new System.Windows.Forms.ToolStripStatusLabel();
             this._FSM_ss_Main_NamelessObjectsTotal = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statusUnmappable = new System.Windows.Forms.ToolStripStatusLabel();
             this._FSM_ss_Main_s_3 = new System.Windows.Forms.ToolStripStatusLabel();
             this._FSM_ss_Main_ObjectsSelected = new System.Windows.Forms.ToolStripStatusLabel();
             this._FSM_tsc_Main = new System.Windows.Forms.ToolStripContainer();
@@ -144,7 +143,6 @@
             spaceMap1.ChangesPending = false;
             spaceMap1.SelectionNameless = null;
             spaceMap1.SelectionSpecial = null;
-            spaceMap1.UnMappableStorage = null;
             this.pSpaceMap.SpaceMap = spaceMap1;
             this.pSpaceMap.TabIndex = 0;
             // 
@@ -574,7 +572,6 @@
             this._FSM_ss_Main_ObjectsTotal,
             this._FSM_ss_Main_s_2,
             this._FSM_ss_Main_NamelessObjectsTotal,
-            this.statusUnmappable,
             this._FSM_ss_Main_s_3,
             this._FSM_ss_Main_ObjectsSelected});
             this._FSM_ss_Main.Location = new System.Drawing.Point(0, 0);
@@ -621,17 +618,10 @@
             this._FSM_ss_Main_NamelessObjectsTotal.Tag = "NamelessObjectsTotal";
             this._FSM_ss_Main_NamelessObjectsTotal.Text = "X nameless objects";
             // 
-            // statusUnmappable
-            // 
-            this.statusUnmappable.Name = "statusUnmappable";
-            this.statusUnmappable.Size = new System.Drawing.Size(126, 17);
-            this.statusUnmappable.Tag = "Unmappable";
-            this.statusUnmappable.Text = "X Unmappable objects";
-            // 
             // _FSM_ss_Main_s_3
             // 
             this._FSM_ss_Main_s_3.Name = "_FSM_ss_Main_s_3";
-            this._FSM_ss_Main_s_3.Size = new System.Drawing.Size(707, 17);
+            this._FSM_ss_Main_s_3.Size = new System.Drawing.Size(802, 17);
             this._FSM_ss_Main_s_3.Spring = true;
             this._FSM_ss_Main_s_3.Text = "  ";
             // 
@@ -769,7 +759,6 @@
 		private System.Windows.Forms.ToolStripMenuItem _FSM_ms_Main_Edit_RedoList;
 		private System.Windows.Forms.ToolStripMenuItem _FSM_ms_Main_Edit_UndoList;
         private System.Windows.Forms.ToolStripStatusLabel _FSM_ss_Main_Coordinates;
-        private System.Windows.Forms.ToolStripStatusLabel statusUnmappable;
     }
 }
 

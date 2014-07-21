@@ -14,8 +14,15 @@ namespace ArtemisMissionEditor
 	/// <summary>
 	/// Static class containing all the expressions and the expression constructor
 	/// </summary>
-	public static partial class Expressions //Everything except constructor
+    /// <remarks>
+    /// This class contains the "schematic" for the expression parsing. 
+    /// In the Root member exists the sole check. Every statement is parsed by that check and decided into one of the three.
+    /// Then it gets decided further and further (Expression -> Action -> Destroy -> Destroy Nameless -> ...) until everything is parsed
+    /// </remarks>
+	public static class Expressions 
 	{
+        static Expressions() { Root = new List<ExpressionMember>(); Root.Add(new ExpressionMemberCheck_XmlNode_H()); }
+
 		/// <summary>
 		/// Root of all evil :) Contains all of the possible expressions
 		/// </summary>
@@ -28,11 +35,11 @@ namespace ArtemisMissionEditor
 		/// <returns></returns>
 		public static List<ExpressionMemberContainer> ConstructExpression(MissionStatement statement)
 		{
-			List<ExpressionMemberContainer> newExp = new List<ExpressionMemberContainer>();
+			List<ExpressionMemberContainer> newExpression = new List<ExpressionMemberContainer>();
 
-			Append(statement, Root, newExp);
+			Append(statement, Root, newExpression);
 
-			return newExp;
+			return newExpression;
 		}
 
 		/// <summary>
@@ -47,16 +54,11 @@ namespace ArtemisMissionEditor
 				ExpressionMemberContainer nEMC = new ExpressionMemberContainer(item, statement);
 				where.Add(nEMC);
 
-				if (!item.IsCheck)
+				if (item as ExpressionMemberCheck == null)
 					continue;
 
-				Append(statement, item.PossibleExpressions[nEMC.Decide()], where);
+				Append(statement, ((ExpressionMemberCheck)item).PossibleExpressions[nEMC.Decide()], where);
 			}
 		}
-	}
-
-	public static partial class Expressions 
-	{
-		static Expressions() { Root = new List<ExpressionMember>(); Root.Add(new ExpressionMemberCheck_XmlNode_H()); }
 	}
 }

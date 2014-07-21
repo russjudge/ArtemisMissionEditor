@@ -45,26 +45,9 @@ namespace ArtemisMissionEditor
 		public string Name;
 
 		/// <summary>
-		/// Behave as check or not
-		/// </summary>
-		public virtual bool IsCheck { get { return false; } }
-
-		/// <summary>
 		/// Require line break
 		/// </summary>
 		public virtual bool RequiresLinebreak { get { return false; } }
-
-		/// <summary>
-		/// Expressions nested within a Check
-		/// </summary>
-		public Dictionary<string, List<ExpressionMember>> PossibleExpressions;
-
-		/// <summary>
-		/// Decide which state should the check be in, and store the result
-		/// </summary>
-		/// <param name="container"></param>
-		/// <returns></returns>
-		public virtual string Decide(ExpressionMemberContainer container) { throw new Exception("FAIL! Calling Decide on a noncheck member"); }
 
 		/// <summary>
 		/// Get value of current member (internal value, as is in XML)
@@ -73,7 +56,7 @@ namespace ArtemisMissionEditor
 		/// <returns></returns>
 		public virtual string GetValue(ExpressionMemberContainer container)
 		{
-			return IsCheck ? container.CheckValue : container.GetAttribute();
+			return container.GetAttribute();
 		}
 
 		/// <summary>
@@ -97,7 +80,7 @@ namespace ArtemisMissionEditor
 		/// <param name="value"></param>
 		protected virtual void SetValueInternal(ExpressionMemberContainer container, string value) { container.SetAttribute(value); }
 
-		public void SetValue(ExpressionMemberContainer container, string value) { SetValueInternal(container, value); container.Statement.Update(); }
+		public void SetValue(ExpressionMemberContainer container, string value) { SetValueInternal(container, value); container.ParentStatement.Update(); }
 
 		/// <summary>
 		/// Occurs when control assigned to this member is clicked
@@ -129,10 +112,9 @@ namespace ArtemisMissionEditor
 		public ExpressionMember(string text, ExpressionMemberValueDescription valueDescription, string nameXml = "", bool mandatory = false)
 		{
 			Text = text;
-			ValueDescription = valueDescription;
+			_valueDescription = valueDescription;
 			Name = nameXml;
 			Mandatory = mandatory;
-            PossibleExpressions = new Dictionary<string, List<ExpressionMember>>();
 		}
 
 		/// <summary>

@@ -19,42 +19,42 @@ namespace ArtemisMissionEditor
 	{
 		public override string Decide(ExpressionMemberContainer container)
 		{
-			//All one-to-one connections
-			switch (container.Statement.Name)
+			switch (container.ParentStatement.Name)
 			{
-				case "create":					return container.Statement.Name;
-				case "add_ai":					return container.Statement.Name;
-				case "clear_ai":				return container.Statement.Name;
-				case "log":						return container.Statement.Name;
-				case "set_variable":			return container.Statement.Name;
-				case "set_timer":				return container.Statement.Name;
-				case "incoming_message":		return container.Statement.Name;
-				case "big_message":				return container.Statement.Name;
-				case "end_mission":				return container.Statement.Name;
-				case "incoming_comms_text":		return container.Statement.Name;
-				case "set_object_property":		return container.Statement.Name;
-				case "set_fleet_property":		return container.Statement.Name;
-				case "addto_object_property":	return container.Statement.Name;
-				case "copy_object_property":	return container.Statement.Name;
-				case "set_relative_position":	return container.Statement.Name;
-				case "set_to_gm_position":		return container.Statement.Name;
-				case "set_skybox_index":		return container.Statement.Name;
-				case "warning_popup_message":	return container.Statement.Name;
-				case "set_difficulty_level":	return container.Statement.Name;
-				case "set_player_grid_damage":	return container.Statement.Name;
-				case "play_sound_now":			return container.Statement.Name;
-				case "set_damcon_members":		return container.Statement.Name;
-				case "direct":					return container.Statement.Name;
+				case "create":					
+				case "add_ai":					
+				case "clear_ai":				
+				case "log":						
+				case "set_variable":			
+				case "set_timer":				
+				case "incoming_message":		
+				case "big_message":				
+				case "end_mission":				
+				case "incoming_comms_text":		
+				case "set_object_property":		
+				case "set_fleet_property":		
+				case "addto_object_property":	
+				case "copy_object_property":	
+				case "set_relative_position":	
+				case "set_to_gm_position":		
+				case "set_skybox_index":		
+				case "warning_popup_message":	
+				case "set_difficulty_level":	
+				case "set_player_grid_damage":	
+				case "play_sound_now":			
+				case "set_damcon_members":		
+				case "direct":					
 				case "start_getting_keypresses_from":   
 				case "end_getting_keypresses_from": 
 				case "set_ship_text":
-					return container.Statement.Name;
+                case "set_special":
+                case "set_side_value":
+					return container.ParentStatement.Name;
+                case "destroy":
+                case "destroy_near":
+                    return "<destroy>";
 				//...
 			}
-
-			//If blocks for all many-to-one connections
-			if (container.Statement.Name == "destroy" || container.Statement.Name == "destroy_near")
-				return "<destroy>";
 
 			//fallback option
 			return "";
@@ -64,17 +64,19 @@ namespace ArtemisMissionEditor
 		{
 			if (value != null)
 			{
-				//Only set the node name if this is a straight 1 to 1 check value, otherwise the name would be modified by other checks that follow
+				//Only set the node name if this is a straight 1 to 1 check value, otherwise the name would be modified by other code that will follow
 				if (value != "" && !value.Contains(' ') && !value.Contains('>') && !value.Contains('<'))
-					container.Statement.Name = value;
-				//For custom one-to-one
+					container.ParentStatement.Name = value;
+				
+                //For custom one-to-one
 				//if (value == "<DIRECT_DETECTED>")
 				
 				//}
-				//For all many-to-one
+				
+                //For all many-to-one
 				if (value == "<destroy>")
-					if (container.Statement.Name != "destroy" && container.Statement.Name != "destroy_near")
-						container.Statement.Name = "destroy";
+					if (container.ParentStatement.Name != "destroy" && container.ParentStatement.Name != "destroy_near")
+						container.ParentStatement.Name = "destroy";
 
 				base.SetValueInternal(container, value);
 			}
@@ -89,8 +91,6 @@ namespace ArtemisMissionEditor
 
 			eML = this.Add("create");
 			eML.Add(new ExpressionMemberCheck_CreateType_H());
-            eML.Add(new ExpressionMember("on side "));
-            eML.Add(new ExpressionMember("<>", EMVD.GetItem("sideValue"), "sideValue"));
 			#endregion
 
 			#region destroy + destroy_near
@@ -99,30 +99,8 @@ namespace ArtemisMissionEditor
 			eML.Add(new ExpressionMemberCheck_Named_x_Nameless());
 
 			#endregion
-			#region set_ship_text
-			eML = this.Add("set_ship_text");
 			
-			
-			eML.Add(new ExpressionMember("with "));
-			eML.Add(new ExpressionMember("name "));
-
-			eML.Add(new ExpressionMember("<>", EMVD.GetItem("name"), "name", true));
-
-			eML.Add(new ExpressionMember("change name to "));
-			eML.Add(new ExpressionMember("<>", EMVD.GetItem("name"), "newname"));
-			eML.Add(new ExpressionMember("change race to "));
-			eML.Add(new ExpressionMember("<>", EMVD.GetItem("name"), "race"));
-			eML.Add(new ExpressionMember("change class to "));
-			eML.Add(new ExpressionMember("<>", EMVD.GetItem("name"), "class"));
-			eML.Add(new ExpressionMember("change desc to "));
-			eML.Add(new ExpressionMember("<>", EMVD.GetItem("name"), "desc"));
-			eML.Add(new ExpressionMember("on 2nd SCI scan, show "));
-			eML.Add(new ExpressionMember("<>", EMVD.GetItem("name"), "scan_desc"));
-			eML.Add(new ExpressionMember("when hailed, reply with "));
-			eML.Add(new ExpressionMember("<>", EMVD.GetItem("name"), "hailtext"));
-
-			#endregion
-			AddSeparator();
+            AddSeparator();
 
 			#region set_object_property
 
@@ -252,30 +230,8 @@ namespace ArtemisMissionEditor
 			eML.Add(new ExpressionMemberCheck_SetVariable());
 
 			#endregion
-			#region set_special
-			eML = this.Add("set_special");
-			eML.Add(new ExpressionMember("with "));
-			eML.Add(new ExpressionMember("name "));
-
-			eML.Add(new ExpressionMember("<>", EMVD.GetItem("name"), "name", true));
-
-			eML.Add(new ExpressionMember("set ship state to "));
-			eML.Add(new ExpressionMember("<>", EMVD.GetItem("shipState"), "ship"));
-			eML.Add(new ExpressionMember("and set captain state to "));
-			eML.Add(new ExpressionMember("<>", EMVD.GetItem("captainState"), "captain"));
-
-			#endregion
-
-			#region Set_side_value
-            eML = this.Add("set_side_value");
-            eML.Add(new ExpressionMember("with "));
-            eML.Add(new ExpressionMember("name "));
-
-            eML.Add(new ExpressionMember("<>", EMVD.GetItem("name"), "name", true));
-            eML.Add(new ExpressionMember("and set side-value to "));
-            //eML.Add(new ExpressionMember("<>", EMVD.GetItem("sideValue"), "sideValue"));
-			#endregion
-			#region set_timer
+			            
+            #region set_timer
 
 			eML = this.Add("set_timer");
 			eML.Add(new ExpressionMember("<>", EMVD.GetItem("name_timer"), "name",true));
@@ -285,7 +241,63 @@ namespace ArtemisMissionEditor
 
 			#endregion
 
-			AddSeparator();
+            #region set_ship_text
+            eML = this.Add("set_ship_text");
+
+            eML.Add(new ExpressionMember("for "));
+            eML.Add(new ExpressionMember("object "));
+            eML.Add(new ExpressionMember("with "));
+            eML.Add(new ExpressionMember("name "));
+
+            eML.Add(new ExpressionMember("<>", EMVD.GetItem("name_all_with_colon"), "name", true));
+            eML.Add(new ExpressionMember("change name to "));
+            eML.Add(new ExpressionMember("<>", EMVD.GetItem("name_with_comma"), "newname"));
+            eML.Add(new ExpressionMember("change race to "));
+            eML.Add(new ExpressionMember("<>", EMVD.GetItem("name_with_comma"), "race"));
+            eML.Add(new ExpressionMember("change class to "));
+            eML.Add(new ExpressionMember("<>", EMVD.GetItem("name_with_comma"), "class"));
+            eML.Add(new ExpressionMember("change desc to "));
+            eML.Add(new ExpressionMember("<>", EMVD.GetItem("name_with_comma"), "desc"));
+            eML.Add(new ExpressionMember("on 2nd SCI scan, show "));
+            eML.Add(new ExpressionMember("<>", EMVD.GetItem("name_with_comma"), "scan_desc"));
+            eML.Add(new ExpressionMember("when hailed, reply with "));
+            eML.Add(new ExpressionMember("<>", EMVD.GetItem("name"), "hailtext"));
+
+            #endregion
+
+            #region Set_side_value
+            eML = this.Add("set_side_value");
+            eML.Add(new ExpressionMember("to "));
+            eML.Add(new ExpressionMember("<>", EMVD.GetItem("sideValue"), "sideValue", true));
+            eML.Add(new ExpressionMember("for "));
+            eML.Add(new ExpressionMember("object "));
+            eML.Add(new ExpressionMember("with "));
+            eML.Add(new ExpressionMember("name "));
+            eML.Add(new ExpressionMember("<>", EMVD.GetItem("name_all"), "name", true));
+            #endregion
+
+            #region set_special
+            eML = this.Add("set_special");
+            eML.Add(new ExpressionMember("ship's "));
+            eML.Add(new ExpressionMember("special "));
+            eML.Add(new ExpressionMember("type "));
+            eML.Add(new ExpressionMember("to "));
+            eML.Add(new ExpressionMember("<unspecified>", EMVD.GetItem("shipState"), "ship"));
+            eML.Add(new ExpressionMember("and "));
+            eML.Add(new ExpressionMember("captain's "));
+            eML.Add(new ExpressionMember("special "));
+            eML.Add(new ExpressionMember("type "));
+            eML.Add(new ExpressionMember("to "));
+            eML.Add(new ExpressionMember("<unspecified>", EMVD.GetItem("captainState"), "captain"));
+            eML.Add(new ExpressionMember("for "));
+            eML.Add(new ExpressionMember("AI ship "));
+            eML.Add(new ExpressionMember("with "));
+            eML.Add(new ExpressionMember("name "));
+            eML.Add(new ExpressionMember("<>", EMVD.GetItem("name_all"), "name", true));
+
+            #endregion
+
+            AddSeparator();
 
 			#region incoming_message
 
@@ -326,26 +338,24 @@ namespace ArtemisMissionEditor
 			
 			
 			#endregion
+
 			#region start_getting_keypresses_from
 
 			eML = this.Add("start_getting_keypresses_from");
 			
-			eML.Add(new ExpressionMember("consoles: "));
-			eML.Add(new ExpressionMember("<>", EMVD.GetItem("consoles"), "consoles"));
-			
+            eML.Add(new ExpressionMember("<>", EMVD.GetItem("consoles"), "consoles"));
 			
 			#endregion
+
 			#region end_getting_keypresses_from
 
 			eML = this.Add("end_getting_keypresses_from");
 
-			eML.Add(new ExpressionMember("consoles: "));
-			eML.Add(new ExpressionMember("<>", EMVD.GetItem("consoles"), "consoles"));
+            eML.Add(new ExpressionMember("<>", EMVD.GetItem("consoles"), "consoles"));
 
 
 			#endregion
-
-
+            
 			#region big_message
 
 			eML = this.Add("big_message");
