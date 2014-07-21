@@ -355,6 +355,8 @@
     <None Include="Images\icon_monitor_pc.gif" />
     <None Include="Images\move_cross.png" />
     <Content Include="Classes\Mission\zzz_Documentation on parsing system.txt" />
+    <None Include="Images\SmallUpArrow.png" />
+    <None Include="Images\Underscore.png" />
     <Content Include="Maps-Earth.ico" />
     <None Include="Resources\artemis_logo_vert.png" />
     <Content Include="zzz_Changelog.txt" />

@@ -462,7 +462,7 @@ namespace ArtemisMissionEditor
 
 		public void ShowEditingGUI(ExpressionMemberContainer container)
 		{
-			Editor.ShowEditingGUI(container, Type, Min, Max, DefaultIfNull);
+			Editor.ShowEditingGUI(container, this, DefaultIfNull);
 		}
 		
 		public ExpressionMemberValueDescription(EMVT type, EMVB behavior, EMVE editor, object min = null, object max = null, string quoteLeft = "", string quoteRight = " ", string defaultIfNull = null)
