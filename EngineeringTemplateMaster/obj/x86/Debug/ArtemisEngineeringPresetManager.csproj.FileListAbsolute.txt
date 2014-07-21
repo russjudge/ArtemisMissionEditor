@@ -1,0 +1,12 @@
+E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\EngineeringTemplateMaster\bin\Debug\ArtemisEngineeringPresetManager.exe
+E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\EngineeringTemplateMaster\bin\Debug\ArtemisEngineeringPresetManager.pdb
+E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\EngineeringTemplateMaster\obj\x86\Debug\ArtemisEngineeringPresetManager.csprojResolveAssemblyReference.cache
+E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\EngineeringTemplateMaster\obj\x86\Debug\EngineeringTemplateMaster.FormEngineering.resources
+E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\EngineeringTemplateMaster\obj\x86\Debug\EngineeringTemplateMaster.PresetControl.resources
+E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\EngineeringTemplateMaster\obj\x86\Debug\EngineeringTemplateMaster.FormStoreDialog.resources
+E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\EngineeringTemplateMaster\obj\x86\Debug\EngineeringTemplateMaster.Properties.Resources.resources
+E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\EngineeringTemplateMaster\obj\x86\Debug\EngineeringTemplateMaster.SettingsControl.resources
+E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\EngineeringTemplateMaster\obj\x86\Debug\EngineeringTemplateMaster.ShipSystemControl.resources
+E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\EngineeringTemplateMaster\obj\x86\Debug\ArtemisEngineeringPresetManager.csproj.GenerateResource.Cache
+E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\EngineeringTemplateMaster\obj\x86\Debug\ArtemisEngineeringPresetManager.exe
+E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\EngineeringTemplateMaster\obj\x86\Debug\ArtemisEngineeringPresetManager.pdb
