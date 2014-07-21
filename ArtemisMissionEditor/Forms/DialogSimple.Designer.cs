@@ -33,6 +33,8 @@
             this.input = new System.Windows.Forms.TextBox();
             this.nullButton = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.warningLabel = new System.Windows.Forms.LinkLabel();
+            this.panelHighlighter = new System.Windows.Forms.Panel();
             this.openFileButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -41,10 +43,10 @@
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.okButton.AutoSize = true;
             this.okButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.okButton.Location = new System.Drawing.Point(88, 44);
+            this.okButton.Location = new System.Drawing.Point(451, 44);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(53, 25);
-            this.okButton.TabIndex = 0;
+            this.okButton.TabIndex = 1;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.ckButton_Click);
@@ -55,10 +57,10 @@
             this.cancelButton.AutoSize = true;
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.cancelButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.cancelButton.Location = new System.Drawing.Point(142, 44);
+            this.cancelButton.Location = new System.Drawing.Point(505, 44);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(53, 25);
-            this.cancelButton.TabIndex = 1;
+            this.cancelButton.TabIndex = 2;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             // 
@@ -67,10 +69,10 @@
             this.input.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.input.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.input.Font = new System.Drawing.Font("Lucida Console", 10F);
             this.input.Location = new System.Drawing.Point(12, 13);
             this.input.Name = "input";
-            this.input.Size = new System.Drawing.Size(182, 23);
+            this.input.Size = new System.Drawing.Size(545, 21);
             this.input.TabIndex = 0;
             this.input.TextChanged += new System.EventHandler(this.input_TextChanged);
             this.input.KeyDown += new System.Windows.Forms.KeyEventHandler(this.input_KeyDown);
@@ -79,10 +81,10 @@
             // 
             this.nullButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.nullButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.nullButton.Location = new System.Drawing.Point(34, 44);
+            this.nullButton.Location = new System.Drawing.Point(397, 44);
             this.nullButton.Name = "nullButton";
             this.nullButton.Size = new System.Drawing.Size(53, 25);
-            this.nullButton.TabIndex = 2;
+            this.nullButton.TabIndex = 3;
             this.nullButton.Text = "Default";
             this.nullButton.UseVisualStyleBackColor = true;
             this.nullButton.Click += new System.EventHandler(this.nullButton_Click);
@@ -92,7 +94,7 @@
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.AutoSize = true;
             this.button1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button1.Location = new System.Drawing.Point(11, 44);
+            this.button1.Location = new System.Drawing.Point(374, 44);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(22, 25);
             this.button1.TabIndex = 10;
@@ -101,12 +103,37 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // warningLabel
+            // 
+            this.warningLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.warningLabel.AutoEllipsis = true;
+            this.warningLabel.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.warningLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.warningLabel.LinkColor = System.Drawing.Color.Black;
+            this.warningLabel.Location = new System.Drawing.Point(12, 49);
+            this.warningLabel.Name = "warningLabel";
+            this.warningLabel.Size = new System.Drawing.Size(273, 18);
+            this.warningLabel.TabIndex = 12;
+            this.warningLabel.VisitedLinkColor = System.Drawing.Color.Black;
+            this.warningLabel.Click += new System.EventHandler(this.warningLabel_Click);
+            // 
+            // panelHighlighter
+            // 
+            this.panelHighlighter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelHighlighter.Location = new System.Drawing.Point(12, 35);
+            this.panelHighlighter.Name = "panelHighlighter";
+            this.panelHighlighter.Size = new System.Drawing.Size(545, 9);
+            this.panelHighlighter.TabIndex = 13;
+            this.panelHighlighter.Paint += new System.Windows.Forms.PaintEventHandler(this.panelHighlighter_Paint);
+            // 
             // openFileButton
             // 
             this.openFileButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.openFileButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.openFileButton.Image = global::ArtemisMissionEditor.Properties.Resources.action_save;
-            this.openFileButton.Location = new System.Drawing.Point(-72, 44);
+            this.openFileButton.Location = new System.Drawing.Point(291, 44);
             this.openFileButton.Name = "openFileButton";
             this.openFileButton.Size = new System.Drawing.Size(82, 25);
             this.openFileButton.TabIndex = 11;
@@ -120,8 +147,10 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.CancelButton = this.cancelButton;
-            this.ClientSize = new System.Drawing.Size(206, 79);
+            this.ClientSize = new System.Drawing.Size(569, 79);
             this.ControlBox = false;
+            this.Controls.Add(this.panelHighlighter);
+            this.Controls.Add(this.warningLabel);
             this.Controls.Add(this.openFileButton);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.nullButton);
@@ -149,6 +178,8 @@
 		private System.Windows.Forms.TextBox input;
 		private System.Windows.Forms.Button nullButton;
 		private System.Windows.Forms.Button button1;
-		public System.Windows.Forms.Button openFileButton;
+        public System.Windows.Forms.Button openFileButton;
+        private System.Windows.Forms.LinkLabel warningLabel;
+        private System.Windows.Forms.Panel panelHighlighter;
 	}
 }

@@ -1053,7 +1053,7 @@ namespace ArtemisMissionEditor
 						tp[1] = DrawSpaceMap_RotateScalePoint(vesselPoint1, x, zy, angle, sizeVessel * 0.80);
 						tp[2] = DrawSpaceMap_RotateScalePoint(vesselPoint2, x, zy, angle, sizeVessel * 0.80);
 						tp[3] = DrawSpaceMap_RotateScalePoint(vesselPoint3, x, zy, angle, sizeVessel * 0.80);
-						bool tooDark = false;
+						    bool tooDark = false;
 						if (!Settings.Current.UseGenericMeshColor)
 						{
 							brushGenericMeshCurrent = brushGenericMeshSolid;

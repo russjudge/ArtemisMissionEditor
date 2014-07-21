@@ -176,9 +176,9 @@ namespace ArtemisMissionEditor
 		/// Shows a gui form to edit the container's expression member
 		/// </summary>
 		/// <param name="container"></param>
-		public virtual void ShowEditingGUI(ExpressionMemberContainer container, EMVT type, object min, object max, string def)
+		public virtual void ShowEditingGUI(ExpressionMemberContainer container, EMVD description, string def)
 		{
-			KeyValuePair<bool, string> result = DialogSimple.Show(container.Member.Name, type, container.GetValue(), container.Member.Mandatory, def, min, max);
+			KeyValuePair<bool, string> result = DialogSimple.Show(container.Member.Name, description, container.GetValue(), container.Member.Mandatory, def);
 			if (result.Key)
 				ValueChosen(container, result.Value);
 		}
@@ -1231,7 +1231,7 @@ namespace ArtemisMissionEditor
 		/// Shows a gui form to edit the container's expression member
 		/// </summary>
 		/// <param name="container"></param>
-		public override void ShowEditingGUI(ExpressionMemberContainer container, EMVT type, object min, object max, string def)
+		public override void ShowEditingGUI(ExpressionMemberContainer container, EMVD description, string def)
 		{
 			KeyValuePair<bool, string> result = DialogConsoleList.Show(container.Member.Name, container.GetValue());
 			if (result.Key)
@@ -1280,7 +1280,7 @@ namespace ArtemisMissionEditor
 		/// Shows a gui form to edit the container's expression member
 		/// </summary>
 		/// <param name="container"></param>
-		public override void ShowEditingGUI(ExpressionMemberContainer container, EMVT type, object min, object max, string def)
+        public override void ShowEditingGUI(ExpressionMemberContainer container, EMVD description, string def)
 		{
 			KeyValuePair<bool, string> result = DialogAbilityBits.Show(container.Member.Name, container.GetValue());
 			if (result.Key)
@@ -1294,9 +1294,9 @@ namespace ArtemisMissionEditor
 		/// Shows a gui form to edit the container's expression member
 		/// </summary>
 		/// <param name="container"></param>
-		public override void ShowEditingGUI(ExpressionMemberContainer container, EMVT type, object min, object max, string def)
+		public override void ShowEditingGUI(ExpressionMemberContainer container, EMVD description, string def)
 		{
-			KeyValuePair<bool, string> result = DialogSimple.Show(container.Member.Name, type, container.GetValue(), container.Member.Mandatory, def, min, max, true);
+			KeyValuePair<bool, string> result = DialogSimple.Show(container.Member.Name, description, container.GetValue(), container.Member.Mandatory, def, true);
 			if (result.Key)
 				ValueChosen(container, result.Value);
 		}
@@ -1347,7 +1347,7 @@ namespace ArtemisMissionEditor
 		/// Shows a gui form to edit the container's expression member
 		/// </summary>
 		/// <param name="container"></param>
-		public override void ShowEditingGUI(ExpressionMemberContainer container, EMVT type, object min, object max, string def)
+        public override void ShowEditingGUI(ExpressionMemberContainer container, EMVD description, string def)
 		{
 			KeyValuePair<bool, string> result = DialogRHKeys.Show(container.Member.Name, container.GetValue(), DialogRHKeysMode.RaceNamesKeys);
 			if (result.Key)
@@ -1364,7 +1364,7 @@ namespace ArtemisMissionEditor
 		/// Shows a gui form to edit the container's expression member
 		/// </summary>
 		/// <param name="container"></param>
-		public override void ShowEditingGUI(ExpressionMemberContainer container, EMVT type, object min, object max, string def)
+        public override void ShowEditingGUI(ExpressionMemberContainer container, EMVD description, string def)
 		{
 			KeyValuePair<bool, string> result = DialogRHKeys.Show(container.Member.Name, container.GetValue(), DialogRHKeysMode.HullBroadTypesClassNames);
 			if (result.Key)

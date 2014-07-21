@@ -28,7 +28,7 @@ namespace ArtemisMissionEditor
             {
 				if (!Member.ValueDescription.IsSerialized || !Member.ValueDescription.IsDisplayed)
 					return false;
-				return  !Helper.Validate(GetValue(), Member.ValueDescription) || Member.Mandatory && String.IsNullOrEmpty(GetValue());
+				return  !Helper.Validate(GetValue(), Member.ValueDescription).Valid || Member.Mandatory && String.IsNullOrEmpty(GetValue());
             }
         }
 

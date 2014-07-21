@@ -150,6 +150,14 @@ Audio
 
 
 ==========================================
+Pathing
+==========================================
+1. Paths for the artwork are relative to the Artemis.exe. 
+So, it should look like" \dat\Missions\MISS_XYZ\file.123" if you want to have custom artwork in your mission
+2. Paths for audio files are relative to the script folder.
+So, if you are using a file in your mission folder, you can just type the filename like "sound.wav"
+
+==========================================
 Most frequent mistakes in mission scripts
 ==========================================
  1. Unless you want your event to repeat endlessly, make sure that something is changed in the event's body that invalidates the event's condition. You can use a new variable name and compare it to 0, then set it to 1 in the event (undefined variables are considered to have a value of 0).

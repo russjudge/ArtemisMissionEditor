@@ -1,4 +1,8 @@
 ﻿----------------------
+Version 2.1.1.5 [7-22-2014] (Alexey Andronov)
+* Added handling of expressions: they are now parsed, with common problems identified and hinted to the user
+
+----------------------
 Version 2.1.1.4 [7-21-2014] (Alexey Andronov)
 * CODE: Rewritten ExceptionMember/ExceptionMemberCheck code a bit
 * CODE: Reworked DrawSpaceMap code a bit to make it more readable
