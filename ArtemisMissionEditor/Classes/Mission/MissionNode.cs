@@ -8,7 +8,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ArtemisMissionEditor
 {
-	[Serializable]
+	/// <summary> Contains data about one mission node (Start, Event, Folder or Comment)</summary>
+    [Serializable]
     public abstract class MissionNode : ICloneable
     {
         public Guid? ID { get; set; }
@@ -429,6 +430,7 @@ namespace ArtemisMissionEditor
 	[Serializable]
 	public sealed class MissionNode_Unknown : MissionNode
     {
+        [NonSerialized]
         private XmlNode _node;
 
         #region INHERITANCE

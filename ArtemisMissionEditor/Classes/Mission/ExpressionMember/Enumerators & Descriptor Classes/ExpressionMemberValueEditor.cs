@@ -44,6 +44,9 @@ namespace ArtemisMissionEditor
 		public static EMVE TeamIndex;
 		public static EMVE TeamAmount;
 		public static EMVE TeamAmountF;
+        public static EMVE SpecialShipType;
+        public static EMVE SpecialCapitainType;
+        public static EMVE Side;
 		public static EMVE Comparator;
 		public static EMVE DistanceNebulaCheck;
 		public static EMVE ConvertDirectCheck;
@@ -90,8 +93,9 @@ namespace ArtemisMissionEditor
 		private Dictionary<string, string> _valueToXml;
 		private void AddToDictionary(string xml, string display)
 		{
-			_valueToDisplay.Add(xml,display);
-			_valueToXml.Add(display,xml);
+			if (xml!=null)
+                _valueToDisplay.Add(xml, display);
+			_valueToXml.Add(display, xml);
 			_menuItems.Add(display);
 		}
 
@@ -298,7 +302,6 @@ namespace ArtemisMissionEditor
 			if (editor._cms == null || editor._lastUser!=container.Member.ValueDescription)
 			{
 				editor._cms = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
-
 				editor._cms.Items.Clear();
 				editor._cms.Tag = false;
 
@@ -315,6 +318,36 @@ namespace ArtemisMissionEditor
 			AssignCMSContainer(editor._cms, container,value);return editor._cms;
 		}
 
+        private static ContextMenuStrip PrepareCMS_DefaultListWithFirstSeparated(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
+        {
+            string value = container.GetValue();
+
+            if (editor._cms == null || editor._lastUser != container.Member.ValueDescription)
+            {
+                editor._cms = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
+                editor._cms.Items.Clear();
+                editor._cms.Tag = false;
+
+                bool doOnce = true;
+                foreach (string item in editor._valueToXml.Keys)
+                {
+                    ToolStripItem tsi = editor._cms.Items.Add(item);
+                    tsi.Tag = container;
+                    tsi.Click += ContextMenuClick_Choose;
+
+                    if (doOnce)
+                    {
+                        doOnce = false;
+                        editor._cms.Items.Add(new ToolStripSeparator());
+                    }
+                }
+
+                editor.ShowHideCMS();
+            }
+
+            AssignCMSContainer(editor._cms, container, value); return editor._cms;
+        }
+
 		private static ContextMenuStrip PrepareCMS_DefaultListPlusGUI(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
 		{
 			if (mode == EditorActivationMode.ForceGUI)
@@ -323,8 +356,6 @@ namespace ArtemisMissionEditor
 			if (editor._cms == null || editor._lastUser!=container.Member.ValueDescription)
 			{
 				editor._cms = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
-
-				
 				editor._cms.Items.Clear();
 				editor._cms.Tag = true;
 
@@ -345,6 +376,42 @@ namespace ArtemisMissionEditor
 
 			AssignCMSContainer(editor._cms, container, "", true);return editor._cms;
 		}
+
+        private static ContextMenuStrip PrepareCMS_DefaultListPlusGUIWithFirstSepearted(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
+        {
+            if (mode == EditorActivationMode.ForceGUI)
+                return null;
+
+            if (editor._cms == null || editor._lastUser != container.Member.ValueDescription)
+            {
+                editor._cms = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
+                editor._cms.Items.Clear();
+                editor._cms.Tag = true;
+
+                bool doOnce = true;
+                foreach (string item in editor._valueToXml.Keys)
+                {
+                    ToolStripItem tsi = editor._cms.Items.Add(item);
+                    tsi.Tag = container;
+                    tsi.Click += ContextMenuClick_Choose;
+
+                    if (doOnce)
+                    {
+                        doOnce = false;
+                        editor._cms.Items.Add(new ToolStripSeparator());
+                    }
+                }
+
+                editor._cms.Items.Add(new ToolStripSeparator());
+                ToolStripItem tsl = editor._cms.Items.Add("Input value...");
+                tsl.Tag = container;
+                tsl.Click += ContextMenuClick_Show_GUI;
+
+                editor.ShowHideCMS();
+            }
+
+            AssignCMSContainer(editor._cms, container, "", true); return editor._cms;
+        }
 
 		private static ContextMenuStrip PrepareCMS_NestedList(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
 		{
@@ -620,10 +687,15 @@ namespace ArtemisMissionEditor
 			if (editor._cms == null || editor._lastUser != container.Member.ValueDescription)
 			{
 				editor._cms = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
-
-				editor._cms.Items.Clear();
+                editor._cms.Items.Clear();
 				editor._cms.Tag = false;
 
+                ToolStripItem tsn1 = editor._cms.Items.Add("NULL");
+                tsn1.Tag = container;
+                tsn1.Click += new EventHandler(ContextMenuClick_Choose);
+                
+                editor._cms.Items.Add(new ToolStripSeparator());
+				
 				foreach (string item in Settings.VesselData.vesselList.Keys)
 				{
 					ToolStripItem tsi = editor._cms.Items.Add(Settings.VesselData.VesselToString(item));
@@ -631,13 +703,17 @@ namespace ArtemisMissionEditor
 					tsi.Click += new EventHandler(ContextMenuClick_Choose);
 				}
 
-				editor._cms.Items.Add(new ToolStripSeparator());
+                if (Settings.VesselData.vesselList.Keys.Count > 0)
+                {
+                    editor._cms.Items.Add(new ToolStripSeparator());
 
-				ToolStripItem tsn = editor._cms.Items.Add("NULL");
-				tsn.Tag = container;
-				tsn.Click += new EventHandler(ContextMenuClick_Choose);
+                    ToolStripItem tsn2 = editor._cms.Items.Add("NULL");
+                    tsn2.Tag = container;
+                    tsn2.Click += new EventHandler(ContextMenuClick_Choose);
+                    
+                    editor._cms.Items.Add(new ToolStripSeparator());
+                }
 
-				editor._cms.Items.Add(new ToolStripSeparator());
 				ToolStripItem tsl = editor._cms.Items.Add("Input value...");
 				tsl.Tag = container;
 				tsl.Click += new EventHandler(ContextMenuClick_Show_GUI);
@@ -692,7 +768,12 @@ namespace ArtemisMissionEditor
 			DefaultCheckSorted._prepareCMS = PrepareCMS_DefaultCheckSorted;
 
 			XmlNameActionCheck = new ExpressionMemberValueEditor_XmlName();
-			XmlNameActionCheck.AddToDictionary("<destroy>", "Destroy");
+            XmlNameActionCheck.AddToDictionary("start_getting_keypresses_from", "Start getting keypresses from consoles: ");
+            XmlNameActionCheck.AddToDictionary("end_getting_keypresses_from", "End getting keypresses from consoles: ");
+            XmlNameActionCheck.AddToDictionary("set_special", "Set");
+            XmlNameActionCheck.AddToDictionary("set_side_value", "Set side");
+            XmlNameActionCheck.AddToDictionary("set_ship_text", "Set text strings");
+            XmlNameActionCheck.AddToDictionary("<destroy>", "Destroy");
 			XmlNameActionCheck.AddToDictionary("clear_ai", "Clear AI command stack");
 			XmlNameActionCheck.AddToDictionary("add_ai", "Add an AI command");
 			XmlNameActionCheck.AddToDictionary("set_object_property", "Set property");
@@ -707,14 +788,16 @@ namespace ArtemisMissionEditor
 			XmlNameActionCheck.AddToDictionary("play_sound_now", "Play sound on main screen");
 			XmlNameActionCheck.AddToDictionary("set_damcon_members", "Set DamCon members");
 			XmlNameActionCheck.AddToDictionary("log", "Log new entry");
-
-
 			
 
 			//We need to display both as same, so we have to go around using AddToDictionary, otherwise _valueToXml will have same key exception!
 			XmlNameActionCheck._valueToDisplay.Add("set_fleet_property", "Set property");
 			XmlNameActionCheck._valueToDisplay.Add("set_to_gm_position", "Set position");
-			XmlNameActionCheck.AddToMenuDictionary("set_ship_text", "Set ship text");
+            XmlNameActionCheck.AddToMenuDictionary("start_getting_keypresses_from", "Start getting keypresses from consoles");
+            XmlNameActionCheck.AddToMenuDictionary("end_getting_keypresses_from", "End getting keypresses from consoles");
+            XmlNameActionCheck.AddToMenuDictionary("set_special", "Set ship's special values");
+            XmlNameActionCheck.AddToMenuDictionary("set_side_value", "Set object's side");
+            XmlNameActionCheck.AddToMenuDictionary("set_ship_text", "Set object's text");
 			XmlNameActionCheck.AddToMenuDictionary("set_object_property", "Set property of object");
 			XmlNameActionCheck.AddToMenuDictionary("copy_object_property", "Copy property of object");
 			XmlNameActionCheck.AddToMenuDictionary("addto_object_property", "Add to property of object");
@@ -873,17 +956,16 @@ namespace ArtemisMissionEditor
 
 			SkyboxIndex = new EMVE();
 
-            for (int i = 0; i <= 20; i++)
+            for (int i = 0; i <= 29; i++)
             {
                 SkyboxIndex.AddToDictionary(i.ToString(), i.ToString());
             }
 			
-			SkyboxIndex._prepareCMS = PrepareCMS_DefaultList;
+			SkyboxIndex._prepareCMS = PrepareCMS_DefaultListPlusGUI;
 
 			Difficulty = new EMVE();
             for (int i = 0; i <= 11; i++)
             {
-
                 Difficulty.AddToDictionary(i.ToString(), i.ToString());
             }
 			
@@ -939,6 +1021,33 @@ namespace ArtemisMissionEditor
 			TeamAmountF.AddToDictionary("5", "5");
 			TeamAmountF.AddToDictionary("6", "6");
 			TeamAmountF._prepareCMS = PrepareCMS_DefaultListPlusGUI;
+
+            SpecialShipType = new EMVE();
+            SpecialShipType.AddToDictionary(null, "Unspecified");
+            SpecialShipType.AddToDictionary("-1", "Nothing");
+            SpecialShipType.AddToDictionary("0",  "Dilapidated");
+            SpecialShipType.AddToDictionary("1",  "Upgraded");
+            SpecialShipType.AddToDictionary("2",  "Overpowered");
+            SpecialShipType.AddToDictionary("3",  "Underpowered");
+            SpecialShipType._prepareCMS = PrepareCMS_DefaultListWithFirstSeparated;
+
+            SpecialCapitainType = new EMVE();
+            SpecialCapitainType.AddToDictionary(null, "Unspecified");
+            SpecialCapitainType.AddToDictionary("-1","Nothing");
+            SpecialCapitainType.AddToDictionary("0", "Cowardly");
+            SpecialCapitainType.AddToDictionary("1", "Brave");
+            SpecialCapitainType.AddToDictionary("2", "Bombastic");
+            SpecialCapitainType.AddToDictionary("3", "Seething");
+            SpecialCapitainType.AddToDictionary("4", "Duplicitous");
+            SpecialCapitainType.AddToDictionary("5", "Exceptional");
+            SpecialCapitainType._prepareCMS = PrepareCMS_DefaultListWithFirstSeparated;
+
+            Side = new EMVE();
+            Side.AddToDictionary(null, "Default");
+            Side.AddToDictionary("0", "0 (No side)");
+            Side.AddToDictionary("1", "1 (Enemy)");
+            Side.AddToDictionary("2", "2 (Player)");
+            Side._prepareCMS = PrepareCMS_DefaultListPlusGUIWithFirstSepearted;
 
 			Comparator = new EMVE();
 			Comparator.AddToDictionary("GREATER", ">");
@@ -1013,6 +1122,8 @@ namespace ArtemisMissionEditor
 			RaceKeys = new ExpressionMemberValueEditor_RaceKeys();
 
 			HullKeys = new ExpressionMemberValueEditor_HullKeys();
+
+
 		}
 	}
 
@@ -1091,9 +1202,9 @@ namespace ArtemisMissionEditor
 			value = value.ToLower();
 
 			if (value.Contains('m'))
-				result += "Main ";
+				result += "Msc ";
 			if (value.Contains('h'))
-				result += "Helm ";
+				result += "Hlm ";
 			if (value.Contains('w'))
 				result += "Wep ";
 			if (value.Contains('e'))
@@ -1138,22 +1249,26 @@ namespace ArtemisMissionEditor
 			string result = "";
 
 			if (value == null || !Helper.IntTryParse(value))
-				return "[No]";
+				return "[NO]";
 
 			int bits = Helper.StringToInt(value);
 
-			if ((bits & 1) == 1)    result += "[INV-MS] ";
-			if ((bits & 2) == 2)    result += "[INV-SCI] ";
-			if ((bits & 4) == 4)    result += "[INV-LRS] ";
-			if ((bits & 8) == 8)    result += "[CLOAK] ";
-			if ((bits & 16) == 16)  result += "[HET] ";
-			if ((bits & 32) == 32)  result += "[WARP] ";
-			if ((bits & 64) == 64)  result += "[TELEPORT] ";
+			if ((bits & 1) == 1)        result += "[INV-MS] ";
+			if ((bits & 2) == 2)        result += "[INV-LRS/TAC] ";
+			if ((bits & 4) == 4)        result += "[CLOAK] ";
+			if ((bits & 8) == 8)        result += "[HET] ";
+			if ((bits & 16) == 16)      result += "[WARP] ";
+			if ((bits & 32) == 32)      result += "[TELEPORT] ";
+            if ((bits & 64) == 64)      result += "[TRACTOR] ";
+            if ((bits & 128) == 128)    result += "[DRONE] ";
+            if ((bits & 256) == 256)    result += "[ANTI-MINE] ";
+            if ((bits & 512) == 512)    result += "[ANTI-TORP] ";
+            if ((bits & 1024) == 1024)  result += "[ANTI-SHLD] ";
 
 			if (result.Length > 0)
 				return result.Substring(0, result.Length - 1);
 			else
-				return "[No]";
+				return "[NO]";
 		}
 
 		public override string ValueToXml(string value, EMVT type, object min, object max)

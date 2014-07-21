@@ -25,16 +25,16 @@ namespace ArtemisMissionEditor
 		public override string GetValue(ExpressionMemberContainer container)
 		{
 			XmlDocument xDoc = new XmlDocument();
-			XmlElement eResult = xDoc.CreateElement(container.Statement.Name);
+			XmlElement eResult = xDoc.CreateElement(container.ParentStatement.Name);
 			
-			foreach (KeyValuePair<string, string> kvp in container.Statement.GetAttributes())
+			foreach (KeyValuePair<string, string> kvp in container.ParentStatement.GetAttributes())
 			{
 				XmlAttribute cAtt = xDoc.CreateAttribute(kvp.Key);
 				cAtt.Value = kvp.Value;
 				eResult.Attributes.Append(cAtt);
 			}
-			if (container.Statement.Body != "")
-				eResult.InnerText = container.Statement.Body;
+			if (container.ParentStatement.Body != "")
+				eResult.InnerText = container.ParentStatement.Body;
 			return eResult.OuterXml;
 		}
 
@@ -49,7 +49,7 @@ namespace ArtemisMissionEditor
 			try
 			{
 				xDoc.LoadXml(value);
-				container.Statement.FromXml(xDoc.ChildNodes[0]);
+				container.ParentStatement.FromXml(xDoc.ChildNodes[0]);
 			}
 			catch (Exception e)
 			{

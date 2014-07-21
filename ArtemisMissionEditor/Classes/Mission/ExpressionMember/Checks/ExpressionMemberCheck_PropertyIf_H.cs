@@ -108,7 +108,7 @@ namespace ArtemisMissionEditor
 			//    container.SetAttribute("property", "positionX");
 			//}
 			if (Mission.Current.Loading && value == "<UNKNOWN_PROPERTY>")
-				Log.Add("Warning! Unknown property " + container.GetAttribute("property") + " detected in event: " + container.Statement.Parent.Name + "!");
+				Log.Add("Warning! Unknown property " + container.GetAttribute("property") + " detected in event: " + container.ParentStatement.Parent.Name + "!");
 
 			base.SetValueInternal(container, value);
 		}

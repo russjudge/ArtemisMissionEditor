@@ -15,9 +15,28 @@ namespace ArtemisMissionEditor
 	/// <summary>
 	/// Base class to be inherited by all checks
 	/// </summary>
-	public class ExpressionMemberCheck : ExpressionMember
+	public abstract class ExpressionMemberCheck : ExpressionMember
 	{
-		/// <summary> List of choices available at the check if its a GUI check </summary>
+        /// <summary>
+        /// Get value of current member (internal value, as is in XML)
+        /// </summary>
+        /// <param name="container"></param>
+        /// <returns></returns>
+        public override string GetValue(ExpressionMemberContainer container)
+        {
+            return container.CheckValue;
+        }
+
+        public string PreviousCheckValue { get; set; }
+        private string _checkValue;
+        public string CheckValue { get { return _checkValue; } set { PreviousCheckValue = _checkValue; _checkValue = value; } }
+
+        /// <summary>
+        /// Expressions nested within a Check
+        /// </summary>
+        public Dictionary<string, List<ExpressionMember>> PossibleExpressions;
+                
+        /// <summary> List of choices available at the check if its a GUI check </summary>
 		protected List<string> _choices;
 
 		/// <summary> List of choices available at the check if its a GUI check </summary>
@@ -38,15 +57,12 @@ namespace ArtemisMissionEditor
 			_separators.Add(_choices.Count-1);
 		}
 		
-
 		protected override void OnValueDescriptionChange()
 		{
 			if (_valueDescription != null && _valueDescription.IsSerialized)
 				throw new Exception("FAIL! A check member has been assigned a serialized xml value!");
 		}
 		
-		public override bool IsCheck { get { return true; } }
-
 		/// <summary>
 		/// Adds new possible expression to the list of check possibilities
 		/// </summary>
@@ -67,7 +83,7 @@ namespace ArtemisMissionEditor
 		/// <example>If input is wrong, decide will choose something, and then the input will be corrected in SetValue function</example>
 		/// <param name="container"></param>
 		/// <returns></returns>
-		public override string Decide(ExpressionMemberContainer container) { throw new Exception("FAIL! Decide was on-overriden in check class"); }
+        public abstract string Decide(ExpressionMemberContainer container);
 
 		/// <summary>
 		/// Called after Decide has made its choice, or, as usual for ExpressionMembers, after user edited the value through GUI.
@@ -83,15 +99,11 @@ namespace ArtemisMissionEditor
 		{
 			_separators = new List<int>();
 			_choices = new List<string>();
-			_autoFillChoices = valueDescription.IsDisplayed; 
+			_autoFillChoices = valueDescription.IsDisplayed;
+
+            PossibleExpressions = new Dictionary<string, List<ExpressionMember>>();
 		}
 
-		public ExpressionMemberCheck()
-			: base()
-		{
-			_separators = new List<int>();
-			_choices = new List<string>();
-			_autoFillChoices = false;
-		}
+        public ExpressionMemberCheck() : this("", EMVD.GetItem("<blank>")) { }
 	}
 }

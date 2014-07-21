@@ -182,9 +182,10 @@ namespace ArtemisMissionEditor
 
         private void _E_FFR_Load_private_RecursivelyFindAttributeValues(ExpressionMember item, List<string> list)
         {
-            foreach (KeyValuePair<string, List<ExpressionMember>> kvp in item.PossibleExpressions)
-                foreach (ExpressionMember child in kvp.Value)
-                    _E_FFR_Load_private_RecursivelyFindAttributeValues(child, list);
+            if (item as ExpressionMemberCheck != null)
+                foreach (KeyValuePair<string, List<ExpressionMember>> kvp in ((ExpressionMemberCheck)item).PossibleExpressions)
+                    foreach (ExpressionMember child in kvp.Value)
+                        _E_FFR_Load_private_RecursivelyFindAttributeValues(child, list);
 
             if (!string.IsNullOrWhiteSpace(item.Name) && !list.Contains(item.Name))
                 list.Add(item.Name);

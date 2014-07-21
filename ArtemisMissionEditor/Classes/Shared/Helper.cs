@@ -151,7 +151,7 @@ namespace ArtemisMissionEditor
 			if (int.TryParse(input,  out result))
 				return result;
 
-			return Helper.StringToInt(input.Replace(",0", "").Replace(".0", ""));
+			return int.Parse(input.Replace(",0", "").Replace(".0", ""));
 		}
 
 		public static bool Validate(string value, EMVD description)

@@ -16,7 +16,7 @@ namespace ArtemisMissionEditor
 	{
 		public override string Decide(ExpressionMemberContainer container)
 		{
-			if (container.Statement.Name == "if_outside_box" || container.Statement.Name == "if_inside_box")
+			if (container.ParentStatement.Name == "if_outside_box" || container.ParentStatement.Name == "if_inside_box")
 				return _choices[0]; // box
 			else
 				return _choices[1]; // sphere
@@ -25,9 +25,9 @@ namespace ArtemisMissionEditor
 		protected override void SetValueInternal(ExpressionMemberContainer container, string value)
 		{
 			if (value == _choices[0])
-				container.Statement.Name = container.Statement.Name.Replace("sphere","box");
+				container.ParentStatement.Name = container.ParentStatement.Name.Replace("sphere","box");
 			else
-				container.Statement.Name = container.Statement.Name.Replace("box", "sphere");
+				container.ParentStatement.Name = container.ParentStatement.Name.Replace("box", "sphere");
 
 			base.SetValueInternal(container, value);
 		}

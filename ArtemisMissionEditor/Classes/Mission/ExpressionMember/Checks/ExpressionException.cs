@@ -12,6 +12,5 @@ namespace ArtemisMissionEditor.Classes.Mission.ExpressionMember.Checks
     {
         public ExpressionException() : base() { }
         public ExpressionException(string message) : base(message) { }
-
     }
 }

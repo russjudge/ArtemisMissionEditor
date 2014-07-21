@@ -76,7 +76,6 @@
             spaceMap1.ChangesPending = false;
             spaceMap1.SelectionNameless = null;
             spaceMap1.SelectionSpecial = null;
-            spaceMap1.UnMappableStorage = ((System.Collections.Generic.Dictionary<int, System.Xml.XmlNode>)(resources.GetObject("spaceMap1.UnMappableStorage")));
             this.pSpaceMap.SpaceMap = spaceMap1;
             this.pSpaceMap.TabIndex = 0;
             // 

@@ -9,19 +9,18 @@ namespace ArtemisMissionEditor
 	public enum MissionStatementType
 	{
 		Commentary,
-		Statement,
-		MAX
+		Statement
 	}
 
 	public enum MissionStatementKind
 	{
-		Condition,
-		Action,
-		Commentary,
-		MAX
+		Condition = 0,
+		Action = 1,
+		Commentary = 2
 	}
 
-	[Serializable]
+	/// <summary> Contains data about one statement (Condition / Action / Comment) </summary>
+    [Serializable]
 	public sealed class MissionStatement
     {
 		public string SourceXML { get; set; }
@@ -59,10 +58,10 @@ namespace ArtemisMissionEditor
 		public MissionStatementType Type { get; set; }
 
         /// <summary> What kind of icon should this statement show in the treeview</summary>
-        public int ImageIndex { get {  return IsGreen() ? ImageIndexOK : ImageIndexBad; } }
+        public int ImageIndex { get { return IsGreen() ? ImageIndexOK : ImageIndexBad; } }
 
-        private int ImageIndexOK { get { return 4 + (int)Kind * 2; } }
-        private int ImageIndexBad { get { return 4 + (int)Kind * 2 + 1; } }
+        private int ImageIndexOK { get { return 4 + (int)Kind * 8 + (CanBeSomeKindOfCreateStatement() || CanBeSpaceMapEditableStatement() ? 1 : 0) + (IsSomeKindOfCreateStatement() ? 1 : 0) + (IsSpaceMapEditableStatement() ? 2 : 0); } }
+        private int ImageIndexBad { get { return 4 + (int)Kind * 8 + (CanBeSomeKindOfCreateStatement() || CanBeSpaceMapEditableStatement() ? 1 : 0) + (IsSomeKindOfCreateStatement() ? 1 : 0) + (IsSpaceMapEditableStatement() ? 2 : 0) + 4; } }
 
 		/// <summary> If the item is all valid (all changeable expression members are green, not red) </summary>
 		public bool IsGreen()
@@ -103,7 +102,12 @@ namespace ArtemisMissionEditor
 			}
 		}
 
-        public bool IsCreateStatement()
+        public bool CanBeSomeKindOfCreateStatement()
+        {
+            return CanBeCreateNamedStatement() || CanBeCreateNamelessStatement();
+        }
+
+        public bool IsSomeKindOfCreateStatement()
         {
             return IsCreateNamedStatement() || IsCreateNamelessStatement();
         }
@@ -111,25 +115,87 @@ namespace ArtemisMissionEditor
         private string[] _listNamedTypes = new string[9] { "anomaly", "blackHole", "neutral", "enemy", "monster", "player", "station", "genericMesh", "whale" };
         private string[] _listNamelessTypes = new string[3] { "asteroids", "nebulas", "mines" };
 
+        public bool CanBeCreateNamedStatement()
+        {
+            return (Name == "create") && _listNamedTypes.Contains(GetAttribute("type")) && GetAttribute("use_gm_position") == null;
+        }
+
         public bool IsCreateNamedStatement()
         {
-			return (Name == "create") && _listNamedTypes.Contains(GetAttribute("type")) && GetAttribute("use_gm_position") == null;
+            if (CanBeCreateNamedStatement())
+            {
+                try
+                {
+                    NamedMapObject nmo = NamedMapObject.NewFromXml(ToXml(new XmlDocument(), true));
+                    if (nmo == null)
+                        throw new FormatException();
+                }
+                catch (FormatException)
+                {
+                    // The object contains expressions and cannot be edited on space map
+                    return false;
+                }
+                return true;
+            }
+            else
+                return false;
+        }
+
+        public bool CanBeCreateNamelessStatement()
+        {
+            return (Name == "create") && _listNamelessTypes.Contains(GetAttribute("type")) && GetAttribute("use_gm_position") == null;
         }
 
         public bool IsCreateNamelessStatement()
         {
-			return (Name == "create") && _listNamelessTypes.Contains(GetAttribute("type")) && GetAttribute("use_gm_position") == null;
+            if (CanBeCreateNamelessStatement())
+            {
+                try
+                {
+                    NamelessMapObject nmo = NamelessMapObject.NewFromXml(ToXml(new XmlDocument(), true));
+                    if (nmo == null)
+                        throw new FormatException();
+                }
+                catch (FormatException)
+                {
+                    // The object contains expressions and cannot be edited on space map
+                    return false;
+                }
+                return true;
+            }
+            else
+                return false;
         }
 
-        public bool IsSpaceMapEditableStatement()
+        public bool CanBeSpaceMapEditableStatement()
         {
-			return ((Name == "destroy_near") && GetAttribute("name") == null && GetAttribute("use_gm_position") == null)
-				|| ((Name == "add_ai") && GetAttribute("type") == "POINT_THROTTLE")
-				|| ((Name == "direct")  && GetAttribute("targetName") == null)
+            return ((Name == "destroy_near") && GetAttribute("name") == null && GetAttribute("use_gm_position") == null)
+                || ((Name == "add_ai") && GetAttribute("type") == "POINT_THROTTLE")
+                || ((Name == "direct") && GetAttribute("targetName") == null)
                 || ((Name == "if_inside_box"))
                 || ((Name == "if_inside_sphere"))
                 || ((Name == "if_outside_box"))
                 || ((Name == "if_outside_sphere"));
+        }
+
+        public bool IsSpaceMapEditableStatement()
+        {
+            if (CanBeSpaceMapEditableStatement())
+            {
+                try
+                {
+                    SpecialMapObject smo = SpecialMapObject.NewFromXml(ToXml(new XmlDocument(), true));
+                    if (smo == null)
+                        throw new FormatException();
+                }
+                catch (FormatException)
+                {
+                    // The object contains expressions and cannot be edited on space map
+                    return false;
+                }
+                return true;
+            }
+            return false;
         }
 
 		/// <summary> Attributes of this statement (contains single one named "text" in case of comment) </summary>
@@ -361,7 +427,7 @@ namespace ArtemisMissionEditor
 			if (expressionChanged)
 				Expression = newExpr;
 
-			//TODO: Correctly update string representation <-- WTF does it mean?
+			//TODO: Correctly update string representation [Forgot what this means, maybe already done?] <-- WTF does it mean?
 			_text = "";
 
 			foreach (ExpressionMemberContainer item in Expression)

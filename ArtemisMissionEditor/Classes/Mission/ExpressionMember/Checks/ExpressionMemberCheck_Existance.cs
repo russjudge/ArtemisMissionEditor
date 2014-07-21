@@ -16,7 +16,7 @@ namespace ArtemisMissionEditor
 	{
 		public override string Decide(ExpressionMemberContainer container)
 		{
-			if (container.Statement.Name == "if_exists")
+			if (container.ParentStatement.Name == "if_exists")
 				return _choices[0]; // if object exists
 			else
 				return _choices[1]; // if object doesnt exist
@@ -25,9 +25,9 @@ namespace ArtemisMissionEditor
 		protected override void SetValueInternal(ExpressionMemberContainer container, string value)
 		{
 			if (value == _choices[0]) 
-				container.Statement.Name = "if_exists";
+				container.ParentStatement.Name = "if_exists";
 			else 
-				container.Statement.Name = "if_not_exists";
+				container.ParentStatement.Name = "if_not_exists";
 
 			base.SetValueInternal(container, value);
 		}

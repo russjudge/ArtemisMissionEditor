@@ -74,9 +74,11 @@
     <Compile Include="Classes\DependencyGraph\DependencyEvent.cs" />
     <Compile Include="Classes\DependencyGraph\DependencyGraph.cs" />
     <Compile Include="Classes\DependencyGraph\DependencyPrecursor.cs" />
+    <Compile Include="Classes\Mission\Enumerations\NodeRelationship.cs" />
     <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionException.cs" />
     <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_BadShipSystem.cs" />
     <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_PropertyIf_H.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_Side.cs" />
     <Compile Include="Classes\Mission\MissionSearchStructure.cs" />
     <Compile Include="Classes\Mission\MissionSearchResult.cs" />
     <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_BadFleetProp.cs" />
@@ -109,6 +111,7 @@
     <Compile Include="Classes\Mission\ExpressionMember\Enumerators &amp; Descriptor Classes\ExpressionMemberValueEditor.cs" />
     <Compile Include="Classes\Mission\ExpressionMember\Enumerators &amp; Descriptor Classes\ExpressionMemberValueType.cs" />
     <Compile Include="Classes\Mission\ExpressionMember\ExpressionMember_Commentary.cs" />
+    <Compile Include="Classes\Shared\GrahpicsExtention.cs" />
     <Compile Include="Classes\SpaceMap\ExpressionMember_Unknown.cs" />
     <Compile Include="Classes\Mission\ExpressionMember\ExpressionMember.cs" />
     <Compile Include="Classes\Mission\ExpressionMemberContainer.cs" />
@@ -275,6 +278,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DialogSpaceMap.resx">
       <DependentUpon>DialogSpaceMap.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormDependency.resx">
       <DependentUpon>FormDependency.cs</DependentUpon>
@@ -350,6 +354,7 @@
     <None Include="Images\page_text_delete.gif" />
     <None Include="Images\icon_monitor_pc.gif" />
     <None Include="Images\move_cross.png" />
+    <Content Include="Classes\Mission\zzz_Documentation on parsing system.txt" />
     <Content Include="Maps-Earth.ico" />
     <None Include="Resources\artemis_logo_vert.png" />
     <Content Include="zzz_Changelog.txt" />

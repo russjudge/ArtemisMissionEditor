@@ -19,28 +19,29 @@ namespace ArtemisMissionEditor
 	{
 		public override string Decide(ExpressionMemberContainer container)
 		{
-			//All one-to-one connections
-			switch (container.Statement.Name)
+			switch (container.ParentStatement.Name)
 			{
-				case "if_variable":				return container.Statement.Name;
-				case "if_difficulty":			return container.Statement.Name;
-				case "if_damcon_members":		return container.Statement.Name;
-				case "if_fleet_count":			return container.Statement.Name;
-				case "if_docked":				return container.Statement.Name;
-                case "if_player_is_targeting": return container.Statement.Name;
-				case "if_timer_finished":		return container.Statement.Name;
-				case "if_object_property":		return container.Statement.Name;
-				case "if_gm_key":				return container.Statement.Name;
+				case "if_variable":				
+				case "if_difficulty":			
+				case "if_damcon_members":		
+				case "if_fleet_count":			
+				case "if_docked":				
+                case "if_player_is_targeting":
+                case "if_timer_finished":
+                case "if_object_property":
+                case "if_gm_key":
                 case "if_client_key":
-                case "if_distance":             return container.Statement.Name;
-				//...
+                case "if_distance":
+                    return container.ParentStatement.Name;
+                case "if_exists":
+                case "if_not_exists":
+                    return "<existance>";
+                case "if_inside_sphere":
+                case "if_outside_sphere":
+                case "if_inside_box":
+                case "if_outside_box":
+                    return "<location>";
 			}
-
-			//If blocks for all many-to-one connections
-			if (container.Statement.Name == "if_exists" || container.Statement.Name == "if_not_exists")
-				return "<existance>";
-			if (container.Statement.Name == "if_inside_sphere" || container.Statement.Name == "if_outside_sphere" || container.Statement.Name == "if_inside_box" || container.Statement.Name == "if_outside_box")
-				return "<location>";
 
 			//fallback option
 			return "";
@@ -52,18 +53,18 @@ namespace ArtemisMissionEditor
 			{
 				//Only set the node name if this is a straight 1 to 1 check value, otherwise the name would be modified by other checks that follow
 				if (value != "" && !value.Contains(' ') && !value.Contains('>') && !value.Contains('<'))
-					container.Statement.Name = value;
+					container.ParentStatement.Name = value;
 				//For custom one-to-one
 				//if (value == "<DIRECT_DETECTED>")
 				//{
 				//}
 				//For all many-to-one
 				if (value == "<existance>")
-				    if (container.Statement.Name != "if_exists" && container.Statement.Name != "if_not_exists")
-				        container.Statement.Name = "if_exists";
+				    if (container.ParentStatement.Name != "if_exists" && container.ParentStatement.Name != "if_not_exists")
+				        container.ParentStatement.Name = "if_exists";
 				if (value == "<location>")
-					if (container.Statement.Name != "if_inside_sphere" && container.Statement.Name != "if_outside_sphere" && container.Statement.Name != "if_inside_box" && container.Statement.Name != "if_outside_box")
-						container.Statement.Name = "if_inside_sphere";
+					if (container.ParentStatement.Name != "if_inside_sphere" && container.ParentStatement.Name != "if_outside_sphere" && container.ParentStatement.Name != "if_inside_box" && container.ParentStatement.Name != "if_outside_box")
+						container.ParentStatement.Name = "if_inside_sphere";
 
 				base.SetValueInternal(container, value);
 			}
@@ -191,7 +192,6 @@ namespace ArtemisMissionEditor
 			eML.Add(new ExpressionMemberCheck_Letter_x_ID());
 
 			#endregion
-            AddSeparator();
 
             #region if_client_key
 
@@ -200,6 +200,7 @@ namespace ArtemisMissionEditor
             eML.Add(new ExpressionMemberCheck_Letter_x_ID());
 
             #endregion
+
 			//Finally, add the unknown option
 			eML = this.Add("");
 			eML.Add(new ExpressionMember_Unknown());

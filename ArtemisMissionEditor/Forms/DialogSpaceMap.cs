@@ -41,12 +41,13 @@ namespace ArtemisMissionEditor
 
         public static SpaceMap EditStatementOnSpaceMap(string statementXml, string editXml, string bgXml)
         {
-            DialogSpaceMap form = CreateSpaceMapDialog("Edit statement", statementXml, editXml, bgXml);
-
-            if (form.ShowDialog() != DialogResult.Yes)
-                return null;
-            else
-                return form.pSpaceMap.SpaceMap;
+            using (DialogSpaceMap form = CreateSpaceMapDialog("Edit statement", statementXml, editXml, bgXml))
+            {
+                if (form.ShowDialog() != DialogResult.Yes)
+                    return null;
+                else
+                    return form.pSpaceMap.SpaceMap;
+            }
         }
 
         private void DialogSpaceMap_Load(object sender, EventArgs e)
