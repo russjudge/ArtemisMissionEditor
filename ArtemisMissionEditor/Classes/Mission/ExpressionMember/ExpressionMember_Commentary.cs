@@ -24,7 +24,7 @@ namespace ArtemisMissionEditor
 		/// <returns></returns>
 		public override string GetValue(ExpressionMemberContainer container)
 		{
-			return container.Statement.Body;
+			return container.ParentStatement.Body;
 		}
 
 		/// <summary>
@@ -34,20 +34,20 @@ namespace ArtemisMissionEditor
 		/// <param name="value"></param>
 		protected override void SetValueInternal(ExpressionMemberContainer container, string value)
 		{
-			string old = container.Statement.Body;
+			string old = container.ParentStatement.Body;
 			if (value != null)
-				container.Statement.Body = value;
+				container.ParentStatement.Body = value;
 			else
-				container.Statement.Body = "";
-			if (old != container.Statement.Body)
+				container.ParentStatement.Body = "";
+			if (old != container.ParentStatement.Body)
 			{
 				try
 				{
-					string tmp = container.Statement.ToXml(new XmlDocument()).OuterXml;
+					string tmp = container.ParentStatement.ToXml(new XmlDocument()).OuterXml;
 				}
 				catch
 				{
-					container.Statement.Body = old;
+					container.ParentStatement.Body = old;
 				}
 			}
 

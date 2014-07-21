@@ -16,7 +16,7 @@ namespace ArtemisMissionEditor
 	{
 		public override string Decide(ExpressionMemberContainer container)
 		{
-			if (container.Statement.Name == "destroy")
+			if (container.ParentStatement.Name == "destroy")
 				return _choices[0]; // destroy (named object)
 			if (container.GetAttribute("type") == "asteroids")
 				return _choices[1]; // destroy_near asteroids
@@ -35,9 +35,9 @@ namespace ArtemisMissionEditor
 		protected override void SetValueInternal(ExpressionMemberContainer container, string value)
 		{
 			if (value == _choices[0]) //destroy named object
-				container.Statement.Name = "destroy";
+				container.ParentStatement.Name = "destroy";
 			else // destroy_near
-				container.Statement.Name = "destroy_near";
+				container.ParentStatement.Name = "destroy_near";
 
 			if (value == _choices[1]) // destroy asteroids
 				container.SetAttribute("type", "asteroids");

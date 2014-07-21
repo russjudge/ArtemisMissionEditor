@@ -81,7 +81,7 @@ namespace ArtemisMissionEditor
 
         private double _x, _y, _z;
 
-        [DisplayName("X"), Description("Abscissa, location on the axis going from right to left on the plane"), DefaultValue(0)]
+        [DisplayName("X"), Description("X axis goes Right to Left on the plane"), DefaultValue(0)]
         public double X
         {
             get { return _x; }
@@ -94,7 +94,7 @@ namespace ArtemisMissionEditor
                 _x = value;
             }
         }
-        [DisplayName("Y"), Description("Height, location on the axis going from under the plane to over the plane"), DefaultValue(0)]
+        [DisplayName("Y"), Description("Y axis (height) goes from Under the plane towards Above the plane"), DefaultValue(0)]
         public double Y
         {
             get { return _y; }
@@ -108,7 +108,7 @@ namespace ArtemisMissionEditor
             }
         }
 
-        [DisplayName("Z"), Description("Ordinate, location on the axis going from top to botton on the plane"), DefaultValue(0)]
+        [DisplayName("Z"), Description("Z axis goes from Top to Bottom on the plane"), DefaultValue(0)]
         public double Z
         {
             get { return _z; }
@@ -234,13 +234,13 @@ namespace ArtemisMissionEditor
     {
         private double _x, _y, _z;
 
-        [DisplayName("X"), Description("Abscissa, location on the axis going from right to left on the plane"), DefaultValue(0)]
+        [DisplayName("X"), Description("X axis goes Right to Left on the plane"), DefaultValue(0)]
         public double X { get { return _x; } set { _x = value; } }
 
-        [DisplayName("Y"), Description("Height, location on the axis going from under the plane to over the plane"), DefaultValue(0)]
+        [DisplayName("Y"), Description("Y axis (height) goes from Under the plane towards Above the plane"), DefaultValue(0)]
         public double Y { get { return _y; } set { _y = value; } }
 
-        [DisplayName("Z"), Description("Ordinate, location on the axis going from top to botton on the plane"), DefaultValue(0)]
+        [DisplayName("Z"), Description("Z axis goes from Top to Bottom on the plane"), DefaultValue(0)]
         public double Z { get { return _z; } set { _z = value; } }
 
         [Browsable(false)]

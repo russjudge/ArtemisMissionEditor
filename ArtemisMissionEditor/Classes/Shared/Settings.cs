@@ -213,27 +213,23 @@ namespace ArtemisMissionEditor
         public static bool Load()
         {
             string fileName = Environment.ExpandEnvironmentVariables(_programDataFolder + _fileName);
-            FileStream istream = null;
             try
             {
                 BinaryFormatter iser = new BinaryFormatter();
-                istream = new FileStream(fileName, FileMode.Open);
-                Settings.Current = (Settings)(iser.Deserialize(istream));
-                istream.Close();
-
-                if (Settings.Current._version != Settings.LastVersion)
+                using (FileStream istream = new FileStream(fileName, FileMode.Open))
                 {
-                    Settings.Current.UpdateSettings();
-                    Settings.Save();
+                    Settings.Current = (Settings)(iser.Deserialize(istream));
+                    
+                    if (Settings.Current._version != Settings.LastVersion)
+                    {
+                        Settings.Current.UpdateSettings();
+                        Settings.Save();
+                    }
+                    return true;
                 }
-                
-                return true;
             }
             catch (Exception e)
             {
-                if (istream!=null)
-                    istream.Close();
-                
                 Log.Add("Loading settings file has failed with the following exception:");
                 Log.Add(e.Message);
 
@@ -443,8 +439,9 @@ namespace ArtemisMissionEditor
         {
             if (_bindsFont.ContainsKey(mf))
                 return _bindsFont[mf];
-            return new Font(FontFamily.GenericMonospace, 24);
+            return _defaultFont;
         }
+        private static Font _defaultFont = new Font(FontFamily.GenericMonospace, 24);
 
         static Settings()
         {

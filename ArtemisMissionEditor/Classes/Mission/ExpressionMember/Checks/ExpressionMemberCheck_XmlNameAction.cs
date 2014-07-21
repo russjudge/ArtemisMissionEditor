@@ -19,7 +19,7 @@ namespace ArtemisMissionEditor
 	{
 		public override string Decide(ExpressionMemberContainer container)
 		{
-			switch (container.Statement.Name)
+			switch (container.ParentStatement.Name)
 			{
 				case "create":					
 				case "add_ai":					
@@ -49,7 +49,7 @@ namespace ArtemisMissionEditor
 				case "set_ship_text":
                 case "set_special":
                 case "set_side_value":
-					return container.Statement.Name;
+					return container.ParentStatement.Name;
                 case "destroy":
                 case "destroy_near":
                     return "<destroy>";
@@ -64,17 +64,19 @@ namespace ArtemisMissionEditor
 		{
 			if (value != null)
 			{
-				//Only set the node name if this is a straight 1 to 1 check value, otherwise the name would be modified by other checks that follow
+				//Only set the node name if this is a straight 1 to 1 check value, otherwise the name would be modified by other code that will follow
 				if (value != "" && !value.Contains(' ') && !value.Contains('>') && !value.Contains('<'))
-					container.Statement.Name = value;
-				//For custom one-to-one
+					container.ParentStatement.Name = value;
+				
+                //For custom one-to-one
 				//if (value == "<DIRECT_DETECTED>")
 				
 				//}
-				//For all many-to-one
+				
+                //For all many-to-one
 				if (value == "<destroy>")
-					if (container.Statement.Name != "destroy" && container.Statement.Name != "destroy_near")
-						container.Statement.Name = "destroy";
+					if (container.ParentStatement.Name != "destroy" && container.ParentStatement.Name != "destroy_near")
+						container.ParentStatement.Name = "destroy";
 
 				base.SetValueInternal(container, value);
 			}
@@ -89,8 +91,6 @@ namespace ArtemisMissionEditor
 
 			eML = this.Add("create");
 			eML.Add(new ExpressionMemberCheck_CreateType_H());
-            eML.Add(new ExpressionMember("on side "));
-            eML.Add(new ExpressionMember("<>", EMVD.GetItem("sideValue"), "sideValue"));
 			#endregion
 
 			#region destroy + destroy_near
@@ -268,7 +268,7 @@ namespace ArtemisMissionEditor
             #region Set_side_value
             eML = this.Add("set_side_value");
             eML.Add(new ExpressionMember("to "));
-            eML.Add(new ExpressionMember("<>", EMVD.GetItem("sideValue"), "sideValue"));
+            eML.Add(new ExpressionMember("<>", EMVD.GetItem("sideValue"), "sideValue", true));
             eML.Add(new ExpressionMember("for "));
             eML.Add(new ExpressionMember("object "));
             eML.Add(new ExpressionMember("with "));
@@ -282,13 +282,13 @@ namespace ArtemisMissionEditor
             eML.Add(new ExpressionMember("special "));
             eML.Add(new ExpressionMember("type "));
             eML.Add(new ExpressionMember("to "));
-            eML.Add(new ExpressionMember("<>", EMVD.GetItem("shipState"), "ship"));
+            eML.Add(new ExpressionMember("<unspecified>", EMVD.GetItem("shipState"), "ship"));
             eML.Add(new ExpressionMember("and "));
             eML.Add(new ExpressionMember("captain's "));
             eML.Add(new ExpressionMember("special "));
             eML.Add(new ExpressionMember("type "));
             eML.Add(new ExpressionMember("to "));
-            eML.Add(new ExpressionMember("<>", EMVD.GetItem("captainState"), "captain"));
+            eML.Add(new ExpressionMember("<unspecified>", EMVD.GetItem("captainState"), "captain"));
             eML.Add(new ExpressionMember("for "));
             eML.Add(new ExpressionMember("AI ship "));
             eML.Add(new ExpressionMember("with "));

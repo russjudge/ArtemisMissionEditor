@@ -73,22 +73,24 @@ namespace ArtemisMissionEditor
 
         public static SpaceMap AddViaSpaceMap(string bgXml)
         {
-            FormSpaceMap form = CreateSpaceMapForm("Add new objects", new List<int>(), new List<int>(), "<input></input>", bgXml);
-
-            if (form.ShowDialog() != DialogResult.Yes)
-                return null;
-            else
-                return form.pSpaceMap.SpaceMap;
+            using (FormSpaceMap form = CreateSpaceMapForm("Add new objects", new List<int>(), new List<int>(), "<input></input>", bgXml))
+            {
+                if (form.ShowDialog() != DialogResult.Yes)
+                    return null;
+                else
+                    return form.pSpaceMap.SpaceMap;
+            }
         }
 
         public static SpaceMap EditOnSpaceMap(List<int> namedList, List<int> namelessList, string editXml, string bgXml)
         {
-            FormSpaceMap form = CreateSpaceMapForm("Edit or add objects", namedList, namelessList, editXml, bgXml);
-            
-            if (form.ShowDialog() != DialogResult.Yes)
-                return null;
-            else
-                return form.pSpaceMap.SpaceMap;
+            using (FormSpaceMap form = CreateSpaceMapForm("Edit or add objects", namedList, namelessList, editXml, bgXml))
+            {
+                if (form.ShowDialog() != DialogResult.Yes)
+                    return null;
+                else
+                    return form.pSpaceMap.SpaceMap;
+            }
         }
 
         private static FormSpaceMap CreateSpaceMapForm(string caption, List<int> namedList, List<int> namelessList, string editXml, string bgXml)

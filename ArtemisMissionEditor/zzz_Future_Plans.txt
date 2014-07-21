@@ -1,24 +1,36 @@
-﻿Convert to comment/from comment for statements
+﻿* [MAIN TODO] Acknowledge expressions as valid values:
+  - at first, at least decide wether it's a numeric value or not, and if it's a numeric value, suggest if there's an error (like, out of range or decimal point in integer value)
+  - then, learn to actually parse expressions and check them for errors (like, invalid symbols) 
+   (NOTE: variable names CAN start with numbers, and variable name has a priority over a constant, so if variable "123" is defined as 7, setting a var to 123 will set it to 7)
+  - then, learn to distinguish variable names, and suggest where variable with such a name does not exist
 
-BUG! Convert comms/etc
+
+
+* Check for common mistake of NOT changing at least one variable that is in the condition list. Suggest this somehow to the user (this is still allowed)
+
+* BUG! Convert comms/etc [Is this bug there anymore? Was it fixed long time ago?...]
+* Somehow show how many spaces there are in names consisting only of them [David: Dosen't 1.7 disallow this now?]
+* Text description for all properties on space map [Is this done already?]
+* Convert to comment/from comment for statements [Is this done already?]
+
+
+
+TODO's for the DISTANT FUTURE
+
+1. Selection:
 * Multiselect with one click (ctrl_click)
+* Drag and drop whole selection?
 
-* Somehow show how many spaces there are in names consisting only of them
-[David] Dosen't 1.7 disallow this now?
+2. Add MANDATORY wherever it is needed by the game
 
-2) Edit set_property also on the map
+3. [Forgot what this means] Icons for actions? 
 
-*) Text description for all properties on space map
-
-LONG TODO's
-
-*) Add MANDATORY wherever it is needed!
-
-*) Icons for actions?
-
-*) Drag and drop whole selection?
+4. [Probably pointless] Allow editing set_property statements also on the space map,
+The way mission scripting parsing works, you should not set object properties in the statement where you create an object.
+Therefore, allowing this would not be worth it.
 
 
-These are links about graphs:
+
+PS: In case I want to go for graphical display of the dependencies, these are links about graphs:
 http://code.google.com/p/diagramnet/
 http://code.google.com/p/nshape/

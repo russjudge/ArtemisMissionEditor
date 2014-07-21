@@ -1174,7 +1174,7 @@
             this._FM_cms_MissionStatementTree_s_4,
             this._FM_cms_MissionStatementTree_XML});
             this._FM_cms_MissionStatementTree.Name = "_FM_cms_MissionStatementTree";
-            this._FM_cms_MissionStatementTree.Size = new System.Drawing.Size(283, 386);
+            this._FM_cms_MissionStatementTree.Size = new System.Drawing.Size(283, 364);
             this._FM_cms_MissionStatementTree.Opening += new System.ComponentModel.CancelEventHandler(this._E_FM_cms_MissionStatementTree_Opening);
             // 
             // _FM_cms_MissionStatementTree_Copy
@@ -1368,11 +1368,29 @@
             this._FM_il_Right.Images.SetKeyName(2, "commentary2.png");
             this._FM_il_Right.Images.SetKeyName(3, "folder.gif");
             this._FM_il_Right.Images.SetKeyName(4, "Flag-blue-icon.png");
-            this._FM_il_Right.Images.SetKeyName(5, "Flag-red-icon.png");
-            this._FM_il_Right.Images.SetKeyName(6, "sys-command-icon.png");
-            this._FM_il_Right.Images.SetKeyName(7, "flag_red.gif");
-            this._FM_il_Right.Images.SetKeyName(8, "commentary2.png");
-            this._FM_il_Right.Images.SetKeyName(9, "commentary2.png");
+            this._FM_il_Right.Images.SetKeyName(5, "Flag-blue-icon_space_error.png");
+            this._FM_il_Right.Images.SetKeyName(6, "Flag-blue-icon_space.png");
+            this._FM_il_Right.Images.SetKeyName(7, "Flag-blue-icon_space_special.png");
+            this._FM_il_Right.Images.SetKeyName(8, "Flag-red-icon.png");
+            this._FM_il_Right.Images.SetKeyName(9, "Flag-red-icon_space_error.png");
+            this._FM_il_Right.Images.SetKeyName(10, "Flag-red-icon_space.png");
+            this._FM_il_Right.Images.SetKeyName(11, "Flag-red-icon_space_special.png");
+            this._FM_il_Right.Images.SetKeyName(12, "sys-command-icon.png");
+            this._FM_il_Right.Images.SetKeyName(13, "sys-command-icon_space_error.png");
+            this._FM_il_Right.Images.SetKeyName(14, "sys-command-icon_space.png");
+            this._FM_il_Right.Images.SetKeyName(15, "sys-command-icon_space_special.png");
+            this._FM_il_Right.Images.SetKeyName(16, "flag_red.gif");
+            this._FM_il_Right.Images.SetKeyName(17, "flag_red_space_error.png");
+            this._FM_il_Right.Images.SetKeyName(18, "flag_red_space.png");
+            this._FM_il_Right.Images.SetKeyName(19, "flag_red_space_special.png");
+            this._FM_il_Right.Images.SetKeyName(20, "commentary2.png");
+            this._FM_il_Right.Images.SetKeyName(21, "commentary2.png");
+            this._FM_il_Right.Images.SetKeyName(22, "commentary2.png");
+            this._FM_il_Right.Images.SetKeyName(23, "commentary2.png");
+            this._FM_il_Right.Images.SetKeyName(24, "commentary2.png");
+            this._FM_il_Right.Images.SetKeyName(25, "commentary2.png");
+            this._FM_il_Right.Images.SetKeyName(26, "commentary2.png");
+            this._FM_il_Right.Images.SetKeyName(27, "commentary2.png");
             // 
             // _FM_flp_Bottom_Right
             // 

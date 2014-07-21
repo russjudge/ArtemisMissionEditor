@@ -50,7 +50,7 @@ namespace ArtemisMissionEditor
 			}
 			if (value == "<INVALID_TYPE>")
 			{
-				Log.Add("Warning! Unknown create type " + container.GetAttribute("type") + " detected in event: " + container.Statement.Parent.Name + "!");
+				Log.Add("Warning! Unknown create type " + container.GetAttribute("type") + " detected in event: " + container.ParentStatement.Parent.Name + "!");
 			}
 
 			base.SetValueInternal(container, value);
@@ -133,6 +133,7 @@ namespace ArtemisMissionEditor
 			____Add_Point_x_GMPos(eML);
 			____Add_Angle(eML);
 			____Add_Name(eML, false, "name_createplayer");
+            eML.Add(new ExpressionMemberCheck_Side());
 
 			eML = this.Add("whale");
 			____Add_Type(eML);
@@ -154,6 +155,7 @@ namespace ArtemisMissionEditor
 			____Add_Angle(eML);
 			____Add_Name(eML);
 			____Add_HullID_x_HullRaceKeys(eML);
+            eML.Add(new ExpressionMemberCheck_Side());
 
 			#endregion
 
@@ -165,6 +167,7 @@ namespace ArtemisMissionEditor
 			____Add_Angle(eML);
 			____Add_Name(eML,true);
 			____Add_HullID_x_HullRaceKeys(eML, false);
+            eML.Add(new ExpressionMemberCheck_Side());
 
 			#endregion
 
@@ -176,11 +179,12 @@ namespace ArtemisMissionEditor
 			____Add_Angle(eML);
 			____Add_Name(eML);
 			____Add_HullID_x_HullRaceKeys(eML);
-			eML.Add(new ExpressionMember("with "));
+            eML.Add(new ExpressionMemberCheck_Side());
+            eML.Add(new ExpressionMember("with "));
 			eML.Add(new ExpressionMember("fleet "));
 			eML.Add(new ExpressionMember("number "));
 			eML.Add(new ExpressionMember("<>", EMVD.GetItem("fleetnumber"), "fleetnumber"));
-
+            
 			#endregion
 
 			#region genericMesh			(Generic Mesh)

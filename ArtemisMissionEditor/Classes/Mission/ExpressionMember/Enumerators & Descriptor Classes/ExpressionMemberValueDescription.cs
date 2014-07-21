@@ -4,295 +4,32 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
-
+using ArtemisMissionEditor.Classes.Mission.ExpressionMember.Checks;
+	
 namespace ArtemisMissionEditor
 {
 	using EMVD = ExpressionMemberValueDescription;
 	using EMVB = ExpressionMemberValueBehaviorInXml;
 	using EMVT = ExpressionMemberValueType;
     using EMVE = ExpressionMemberValueEditor;
-    using ArtemisMissionEditor.Classes.Mission.ExpressionMember.Checks;
-	
+    
     /// <summary>
-    /// Defines everything about the value of the expression member, examples: Coordinate XZ, Coordinate Y, Ship name, ...
+    /// Defines everything about the value of the expression member
     /// </summary>
-    public partial class ExpressionMemberValueDescription //define nonstatic members
-    {
-		/// <summary>
-		/// If this member is quoted on the sides
-		/// </summary>
-		private string QuoteLeft;
-		private string QuoteRight;
-
-		/// <summary>
-        /// Type of this member's value (like int, string, double...)
-        /// </summary>
-        public ExpressionMemberValueType Type; //TODO do i even need this???
-
-		/// <summary>
-		/// Behavior of this value when stored in XML
-		/// </summary>
-		public ExpressionMemberValueBehaviorInXml BehaviorInXml;
-		
-		/// <summary>
-        /// Editor used for this value (usually defines what values to offer for picking, like, available hullid, property, variable, timer,...)
-        /// </summary>
-        public ExpressionMemberValueEditor Editor;
-		
-        /// <summary>
-        /// Minimal inclusive boundary, null if value has no minimal boundary, used as displayed false value for bool type
-        /// </summary>
-        public object Min;
-
-        /// <summary>
-		/// Maximal inclusive boundary, null if value has no maximal boundary, used as displayed true value for bool type
-        /// </summary>
-        public object Max;
-
-		/// <summary>
-		/// Default value, to be substituted in case the value of the attribute is null
-		/// </summary>
-		public string DefaultIfNull;
-
-		/// <summary>
-		/// This value is displayed in GUI
-		/// </summary>
-		/// <returns></returns>
-		public bool IsDisplayed { get { return Editor.IsDisplayed; } }
-
-		/// <summary>
-		/// This value is interactive (can be focused and clicked and does something)
-		/// </summary>
-		/// <returns></returns>
-		public bool IsInteractive { get { return Editor.IsInteractive; } }
-
-		/// <summary>
-		/// This value is serialized (saved to xml)
-		/// </summary>
-		/// <returns></returns>
-		public bool IsSerialized { get { return BehaviorInXml != EMVB.Ignored; } }
-
-		/// <summary>
-		/// Convert display value to xml value
-		/// </summary>
-		/// <param name="value"></param>
-		/// <returns></returns>
-		public string ValueToXml(string value) { return Editor.ValueToXml(value, Type, Min, Max); }
-
-		/// <summary>
-		/// Convert xml value to display value
-		/// </summary>
-		/// <param name="value"></param>
-		/// <returns></returns>
-		public string ValueToDisplay(string value) { return Editor.ValueToDisplay(value, Type, Min, Max); }
-
-		/// <summary>
-		/// Takes value from XML (GetValue), returns value fit for displaying on-screen
-		/// </summary>
-		/// <param name="value"></param>
-		/// <returns></returns>
-		public string GetValueDisplay(ExpressionMemberContainer container)
-		{
-			if (Editor == EMVE.Nothing)
-				return null;
-
-			string result = Editor == EMVE.Label ? container.Member.Text : container.GetValue();
-
-			result = ValueToDisplay(result);
-
-			//TODO: Change into something else sometimes! <-- WTF does this mean?
-			if (String.IsNullOrEmpty(result))
-				result = container.Member.Text;
-
-			result = QuoteLeft + result + QuoteRight;
-
-			return result;
-		}
-
-		private bool OnClick_private_RecursivelyActivate(ToolStripItem item, ref bool next, bool forward)
-		{
-			if (!(item is ToolStripMenuItem))
-				return false;
-
-			if (((ToolStripMenuItem)item).DropDownItems.Count > 0)
-			{
-				for (int i = 0; i <((ToolStripMenuItem)item).DropDownItems.Count;i++)
-
-					if (OnClick_private_RecursivelyActivate(((ToolStripMenuItem)item).DropDownItems[forward ? i : ((ToolStripMenuItem)item).DropDownItems.Count-1-i], ref next, forward))
-						return true;
-			}
-			else
-			{
-				if (next)
-				{
-					item.PerformClick();
-					return true;
-				}
-				next = item.Selected || next;
-			}
-			return false;
-
-		}
-
-		/// <summary>
-		/// Expression member that's using our descriptor was clicked
-		/// </summary>
-		/// <param name="container"></param>
-		public void OnClick(ExpressionMemberContainer container, NormalLabel l, Point curPos, EditorActivationMode mode)
-		{
-			if (   mode == EditorActivationMode.Plus01
-				|| mode == EditorActivationMode.Plus
-				|| mode == EditorActivationMode.Plus10
-				|| mode == EditorActivationMode.Plus100
-				|| mode == EditorActivationMode.Plus1000
-				|| mode == EditorActivationMode.Minus01
-				|| mode == EditorActivationMode.Minus
-				|| mode == EditorActivationMode.Minus10
-				|| mode == EditorActivationMode.Minus100
-				|| mode == EditorActivationMode.Minus1000)
-			{
-				if ((!container.Member.IsCheck)&&(Type == EMVT.VarDouble || Type == EMVT.VarInteger || Type == EMVT.VarBool))
-				{
-					bool changed = false;
-					double delta = 0.0;
-					delta = mode == EditorActivationMode.Plus01		? 0.1	: delta;
-					delta = mode == EditorActivationMode.Plus		? 1		: delta;
-					delta = mode == EditorActivationMode.Plus10		? 10	: delta;
-					delta = mode == EditorActivationMode.Plus100	? 100	: delta;
-					delta = mode == EditorActivationMode.Plus1000	? 1000	: delta;
-					delta = mode == EditorActivationMode.Minus01	? -0.1	: delta;
-					delta = mode == EditorActivationMode.Minus		? -1	: delta;
-					delta = mode == EditorActivationMode.Minus10	? -10	: delta;
-					delta = mode == EditorActivationMode.Minus100	? -100	: delta;
-					delta = mode == EditorActivationMode.Minus1000	? -1000	: delta;
-
-					switch (Type)
-					{
-						case EMVT.VarBool:
-							int tmpBool;
-							if (Helper.IntTryParse(container.GetValue(), out tmpBool))
-							{
-								if (tmpBool == 0)
-									tmpBool = 1;
-								else
-									tmpBool = 0;
-								container.SetValue(tmpBool.ToString());
-								changed = true;
-							}
-							break;
-						case EMVT.VarDouble:
-							double tmpDouble;
-							if (Helper.DoubleTryParse(container.GetValue(), out tmpDouble))
-							{
-								tmpDouble+=delta;
-								if (Min != null && tmpDouble < (double)Min)
-										tmpDouble = Max != null ? (double)Max : (double)Min;
-								if (Max != null && tmpDouble > (double)Max)
-									tmpDouble = Min != null ? (double)Min : (double)Max;
-								container.SetValue(Helper.DoubleToString(tmpDouble));
-								changed = true;
-							}
-							break;
-						case EMVT.VarInteger:
-							int tmpInt;
-							if (Helper.IntTryParse(container.GetValue(), out tmpInt))
-							{
-								tmpInt += (int)Math.Round(delta);
-								if (Min != null && tmpInt < (int)Min)
-										tmpInt = Max != null ? (int)Max : (int)Min;
-								if (Max != null && tmpInt > (int)Max)
-									tmpInt = Min != null ? (int)Min : (int)Max;
-								container.SetValue(tmpInt.ToString());
-								changed = true;
-							}
-							break;
-					}
-
-					if (changed)
-					{
-						Mission.Current.UpdateStatementTree();
-						Mission.Current.RegisterChange("Expression member value changed");
-					}
-					return;
-				}
-				else
-				{
-					return;
-				}
-			}
-			
-			ContextMenuStrip curCMS;
-			if ((curCMS = Editor.PrepareCMS(container, mode))!=null)
-			{
-				if (mode == EditorActivationMode.NextMenuItem)
-				{
-					if ((bool)curCMS.Tag)
-					{
-						ShowEditingGUI(container);
-						return;
-					}
-
-					bool next = false;
-					foreach (ToolStripItem item in curCMS.Items)
-						if (OnClick_private_RecursivelyActivate(item, ref next, true))
-						{
-							curCMS.Close();
-							return;
-						}
-					if (curCMS.Items[0] is ToolStripMenuItem && ((ToolStripMenuItem)curCMS.Items[0]).DropDownItems.Count > 0)
-						((ToolStripMenuItem)curCMS.Items[0]).DropDownItems[0].PerformClick();
-					else
-						curCMS.Items[0].PerformClick();
-					curCMS.Close();
-					return;
-				}
-				if (mode == EditorActivationMode.PreviousMenuItem)
-				{
-					if ((bool)curCMS.Tag)
-					{
-						ShowEditingGUI(container);
-						return;
-					}
-
-					bool next = false;
-					for(int i=curCMS.Items.Count-1;i>=0;i--)
-						if (OnClick_private_RecursivelyActivate(curCMS.Items[i], ref next, false))
-						{
-							curCMS.Close();
-							return;
-						}
-					if (curCMS.Items[curCMS.Items.Count - 1] is ToolStripMenuItem && ((ToolStripMenuItem)curCMS.Items[curCMS.Items.Count - 1]).DropDownItems.Count > 0)
-						((ToolStripMenuItem)curCMS.Items[curCMS.Items.Count - 1]).DropDownItems[((ToolStripMenuItem)curCMS.Items[curCMS.Items.Count - 1]).DropDownItems.Count - 1].PerformClick();
-					else
-						curCMS.Items[curCMS.Items.Count - 1].PerformClick();
-					curCMS.Close();
-					return;
-				}
-				curCMS.Show(curPos);
-			}
-			else
-				ShowEditingGUI(container);
-		}
-
-		public void ShowEditingGUI(ExpressionMemberContainer container)
-		{
-			Editor.ShowEditingGUI(container, Type, Min, Max, DefaultIfNull);
-		}
-		
-		public ExpressionMemberValueDescription(EMVT type, EMVB behavior, EMVE editor, object min = null, object max = null, string quoteLeft = "", string quoteRight = " ", string defaultIfNull = null)
-		{
-			Type			= type;
-			BehaviorInXml	= behavior;
-			Editor			= editor;
-			Min				= min;
-			Max				= max;
-			QuoteLeft		= quoteLeft;
-			QuoteRight		= quoteRight;
-			DefaultIfNull	= defaultIfNull;
-		}
-    }
-
-    public partial class ExpressionMemberValueDescription //define static members
+    /// <remarks>
+    /// This class defines everything about an expression member's value:
+    /// - what data type is it?
+    /// - is this value saved into mission XML file or not
+    /// - how is this value saved (always or only when filled)
+    /// - what editor is used for the value (like, damcon count, consoles list, generic integer input?)
+    /// 
+    /// We need to create another EMVD if we need to add another different kind of value (like, "capitainType"), 
+    /// or we need to have a value that works a bit differently (for example, have a colon after it when put in the expresion, 
+    /// or offer dropdown menu of some kind).
+    /// 
+    /// All the different EMVDs are added into the static list in this class, and then they are got via GetItem
+    /// </remarks>
+    public class ExpressionMemberValueDescription
     {
         private static Dictionary<string,EMVD> Items;
 
@@ -359,7 +96,7 @@ namespace ArtemisMissionEditor
 			Items.Add("colorB",			    new EMVD(EMVT.VarDouble,	EMVB.AsIsWhenFilled,	EMVE.DefaultDouble,0.0,1.0,"",") "));			//  Color R/G/B					from [create]
 			
 			Items.Add("count",			    new EMVD(EMVT.VarInteger,	EMVB.AsIsWhenFilled,	EMVE.DefaultInteger, 0, null,""," ","0"));		// [count]						from [create]
-            Items.Add("angle_unbound",      new EMVD(EMVT.VarDouble,   EMVB.AsIs,              EMVE.DefaultDouble));	        				//  startAngle/endAngle			from [create] (nameless)
+            Items.Add("angle_unbound",      new EMVD(EMVT.VarDouble,    EMVB.AsIs,              EMVE.DefaultDouble));	        				//  startAngle/endAngle			from [create] (nameless)
             Items.Add("randomRange",	    new EMVD(EMVT.VarInteger,	EMVB.AsIsWhenFilled,	EMVE.DefaultInteger, 0, 100000));				// [randomRange]				from [create]
 			Items.Add("randomSeed",		    new EMVD(EMVT.VarInteger,	EMVB.AsIsWhenFilled,	EMVE.DefaultInteger, 0));						// [randomSeed]					from [create]
 
@@ -465,8 +202,279 @@ namespace ArtemisMissionEditor
             //Items.Add("class", new EMVD(EMVT.VarString, EMVB.AsIs, EMVE.DefaultString, null, null, "\"", "\" "));		// [class]					from [set_ship_text]
             //Items.Add("desc", new EMVD(EMVT.VarString, EMVB.AsIs, EMVE.DefaultString, null, null, "\"", "\" "));		// [desc]					from [set_ship_text]
             //Items.Add("scan_desc", new EMVD(EMVT.VarString, EMVB.AsIs, EMVE.DefaultString, null, null, "\"", "\" "));		// [scan_desc]					from [set_ship_text]
-            
+		}
+
+		/// <summary>
+		/// If this member is quoted on the sides
+		/// </summary>
+		private string QuoteLeft;
+		private string QuoteRight;
+
+		/// <summary>
+        /// Type of this member's value (like int, string, double...)
+        /// </summary>
+        public ExpressionMemberValueType Type; //TODO do i even need this???
+
+		/// <summary>
+		/// Behavior of this value when stored in XML
+		/// </summary>
+		public ExpressionMemberValueBehaviorInXml BehaviorInXml;
+		
+		/// <summary>
+        /// Editor used for this value (usually defines what values to offer for picking, like, available hullid, property, variable, timer,...)
+        /// </summary>
+        public ExpressionMemberValueEditor Editor;
+		
+        /// <summary>
+        /// Minimal inclusive boundary, null if value has no minimal boundary, used as displayed false value for bool type
+        /// </summary>
+        public object Min;
+
+        /// <summary>
+		/// Maximal inclusive boundary, null if value has no maximal boundary, used as displayed true value for bool type
+        /// </summary>
+        public object Max;
+
+		/// <summary>
+		/// Default value, to be substituted in case the value of the attribute is null
+		/// </summary>
+		public string DefaultIfNull;
+
+		/// <summary>
+		/// This value is displayed in GUI
+		/// </summary>
+		/// <returns></returns>
+		public bool IsDisplayed { get { return Editor.IsDisplayed; } }
+
+		/// <summary>
+		/// This value is interactive (can be focused and clicked and does something)
+		/// </summary>
+		/// <returns></returns>
+		public bool IsInteractive { get { return Editor.IsInteractive; } }
+
+		/// <summary>
+		/// This value is serialized (saved to xml)
+		/// </summary>
+		/// <returns></returns>
+		public bool IsSerialized { get { return BehaviorInXml != EMVB.Ignored; } }
+
+		/// <summary>
+		/// Convert display value to xml value
+		/// </summary>
+		/// <param name="value"></param>
+		/// <returns></returns>
+		public string ValueToXml(string value) { return Editor.ValueToXml(value, Type, Min, Max); }
+
+		/// <summary>
+		/// Convert xml value to display value
+		/// </summary>
+		/// <param name="value"></param>
+		/// <returns></returns>
+		public string ValueToDisplay(string value) { return Editor.ValueToDisplay(value, Type, Min, Max); }
+
+		/// <summary>
+		/// Takes value from XML (GetValue), returns value fit for displaying on-screen
+		/// </summary>
+		/// <param name="value"></param>
+		/// <returns></returns>
+		public string GetValueDisplay(ExpressionMemberContainer container)
+		{
+			if (Editor == EMVE.Nothing)
+				return null;
+
+			string result = Editor == EMVE.Label ? container.Member.Text : container.GetValue();
+
+			result = ValueToDisplay(result);
+
+			//TODO: Maybe some values need to be displayed differently when null or empty?
+			if (String.IsNullOrEmpty(result))
+				result = container.Member.Text;
+
+			result = QuoteLeft + result + QuoteRight;
+
+			return result;
+		}
+
+		private bool OnClick_private_RecursivelyActivate(ToolStripItem item, ref bool next, bool forward)
+		{
+			if (!(item is ToolStripMenuItem))
+				return false;
+
+			if (((ToolStripMenuItem)item).DropDownItems.Count > 0)
+			{
+				for (int i = 0; i <((ToolStripMenuItem)item).DropDownItems.Count;i++)
+
+					if (OnClick_private_RecursivelyActivate(((ToolStripMenuItem)item).DropDownItems[forward ? i : ((ToolStripMenuItem)item).DropDownItems.Count-1-i], ref next, forward))
+						return true;
+			}
+			else
+			{
+				if (next)
+				{
+					item.PerformClick();
+					return true;
+				}
+				next = item.Selected || next;
+			}
+			return false;
+
+		}
+
+		/// <summary>
+		/// Expression member that's using our descriptor was clicked
+		/// </summary>
+		/// <param name="container"></param>
+		public void OnClick(ExpressionMemberContainer container, NormalLabel l, Point curPos, EditorActivationMode mode)
+		{
+			if (   mode == EditorActivationMode.Plus01
+				|| mode == EditorActivationMode.Plus
+				|| mode == EditorActivationMode.Plus10
+				|| mode == EditorActivationMode.Plus100
+				|| mode == EditorActivationMode.Plus1000
+				|| mode == EditorActivationMode.Minus01
+				|| mode == EditorActivationMode.Minus
+				|| mode == EditorActivationMode.Minus10
+				|| mode == EditorActivationMode.Minus100
+				|| mode == EditorActivationMode.Minus1000)
+			{
+				if ((container.Member as ExpressionMemberCheck != null)&&(Type == EMVT.VarDouble || Type == EMVT.VarInteger || Type == EMVT.VarBool))
+				{
+					bool changed = false;
+					double delta = 0.0;
+					delta = mode == EditorActivationMode.Plus01		? 0.1	: delta;
+					delta = mode == EditorActivationMode.Plus		? 1		: delta;
+					delta = mode == EditorActivationMode.Plus10		? 10	: delta;
+					delta = mode == EditorActivationMode.Plus100	? 100	: delta;
+					delta = mode == EditorActivationMode.Plus1000	? 1000	: delta;
+					delta = mode == EditorActivationMode.Minus01	? -0.1	: delta;
+					delta = mode == EditorActivationMode.Minus		? -1	: delta;
+					delta = mode == EditorActivationMode.Minus10	? -10	: delta;
+					delta = mode == EditorActivationMode.Minus100	? -100	: delta;
+					delta = mode == EditorActivationMode.Minus1000	? -1000	: delta;
+
+					switch (Type)
+					{
+						case EMVT.VarBool:
+							int tmpBool;
+							if (Helper.IntTryParse(container.GetValue(), out tmpBool))
+							{
+								if (tmpBool == 0)
+									tmpBool = 1;
+								else
+									tmpBool = 0;
+								container.SetValue(tmpBool.ToString());
+								changed = true;
+							}
+							break;
+						case EMVT.VarDouble:
+							double tmpDouble;
+							if (Helper.DoubleTryParse(container.GetValue(), out tmpDouble))
+							{
+								tmpDouble+=delta;
+								if (Min != null && tmpDouble < (double)Min)
+										tmpDouble = Max != null ? (double)Max : (double)Min;
+								if (Max != null && tmpDouble > (double)Max)
+									tmpDouble = Min != null ? (double)Min : (double)Max;
+								container.SetValue(Helper.DoubleToString(tmpDouble));
+								changed = true;
+							}
+							break;
+						case EMVT.VarInteger:
+							int tmpInt;
+							if (Helper.IntTryParse(container.GetValue(), out tmpInt))
+							{
+								tmpInt += (int)Math.Round(delta);
+								if (Min != null && tmpInt < (int)Min)
+										tmpInt = Max != null ? (int)Max : (int)Min;
+								if (Max != null && tmpInt > (int)Max)
+									tmpInt = Min != null ? (int)Min : (int)Max;
+								container.SetValue(tmpInt.ToString());
+								changed = true;
+							}
+							break;
+					}
+
+					if (changed)
+					{
+						Mission.Current.UpdateStatementTree();
+						Mission.Current.RegisterChange("Expression member value changed");
+					}
+					return;
+				}
+				else
+				{
+					return;
+				}
+			}
 			
+			ContextMenuStrip curCMS;
+			if ((curCMS = Editor.PrepareCMS(container, mode)) != null)
+			{
+				if (mode == EditorActivationMode.NextMenuItem)
+				{
+					if ((bool)curCMS.Tag)
+					{
+						ShowEditingGUI(container);
+						return;
+					}
+
+					bool next = false;
+					foreach (ToolStripItem item in curCMS.Items)
+						if (OnClick_private_RecursivelyActivate(item, ref next, true))
+						{
+							curCMS.Close();
+							return;
+						}
+					if (curCMS.Items[0] is ToolStripMenuItem && ((ToolStripMenuItem)curCMS.Items[0]).DropDownItems.Count > 0)
+						((ToolStripMenuItem)curCMS.Items[0]).DropDownItems[0].PerformClick();
+					else
+						curCMS.Items[0].PerformClick();
+					curCMS.Close();
+					return;
+				}
+				if (mode == EditorActivationMode.PreviousMenuItem)
+				{
+					if ((bool)curCMS.Tag)
+					{
+						ShowEditingGUI(container);
+						return;
+					}
+
+					bool next = false;
+					for(int i=curCMS.Items.Count-1;i>=0;i--)
+						if (OnClick_private_RecursivelyActivate(curCMS.Items[i], ref next, false))
+						{
+							curCMS.Close();
+							return;
+						}
+					if (curCMS.Items[curCMS.Items.Count - 1] is ToolStripMenuItem && ((ToolStripMenuItem)curCMS.Items[curCMS.Items.Count - 1]).DropDownItems.Count > 0)
+						((ToolStripMenuItem)curCMS.Items[curCMS.Items.Count - 1]).DropDownItems[((ToolStripMenuItem)curCMS.Items[curCMS.Items.Count - 1]).DropDownItems.Count - 1].PerformClick();
+					else
+						curCMS.Items[curCMS.Items.Count - 1].PerformClick();
+					curCMS.Close();
+					return;
+				}
+				curCMS.Show(curPos);
+			}
+			else
+				ShowEditingGUI(container);
+		}
+
+		public void ShowEditingGUI(ExpressionMemberContainer container)
+		{
+			Editor.ShowEditingGUI(container, Type, Min, Max, DefaultIfNull);
+		}
+		
+		public ExpressionMemberValueDescription(EMVT type, EMVB behavior, EMVE editor, object min = null, object max = null, string quoteLeft = "", string quoteRight = " ", string defaultIfNull = null)
+		{
+			Type			= type;
+			BehaviorInXml	= behavior;
+			Editor			= editor;
+			Min				= min;
+			Max				= max;
+			QuoteLeft		= quoteLeft;
+			QuoteRight		= quoteRight;
+			DefaultIfNull	= defaultIfNull;
 		}
     }
 

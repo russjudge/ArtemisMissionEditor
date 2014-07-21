@@ -26,7 +26,7 @@ namespace ArtemisMissionEditor
 				string msg = "Direct statement (name: \"" + (container.GetAttribute("name") ?? "<null>") + "\" ";
 
 				value = "add_ai";
-				container.Statement.Name = value;
+				container.ParentStatement.Name = value;
 				if (!String.IsNullOrEmpty(container.GetAttribute("targetName")))
 				{
 					//ATTACK
