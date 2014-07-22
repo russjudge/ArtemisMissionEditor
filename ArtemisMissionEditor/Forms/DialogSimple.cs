@@ -9,16 +9,19 @@ using System.Windows.Forms;
 using System.Xml;
 using System.IO;
 using System.Globalization;
+using System.Resources;
 
 namespace ArtemisMissionEditor
 {
 	public partial class DialogSimple : Form
 	{
-		private object _min;
-		private object _max;
 		private string _def;
-		private ExpressionMemberValueType _type;
-		public string OpenFileExtensions { get; set; }
+		private ExpressionMemberValueDescription _description;
+        private List<int> _errorPosList;
+        private List<int> _warningPosList;
+        private Brush _errorBrush;
+        private Brush _warningBrush;
+        public string OpenFileExtensions { get; set; }
 		public string OpenFileHeader { get; set; }
 
 		/// <summary>
@@ -47,24 +50,25 @@ namespace ArtemisMissionEditor
 			OpenFileHeader = "";
             Screen myScreen = Screen.FromControl(this);
             this.MaximumSize = new Size(myScreen.WorkingArea.Width, myScreen.WorkingArea.Height);
+
+            _errorBrush = new SolidBrush(Color.DarkRed);
+            _warningBrush = new SolidBrush(Color.DarkBlue);
 		}
 
-		public static KeyValuePair<bool, string> Show(string name, ExpressionMemberValueType type, string initialValue, bool mandatory, string def, object min, object max, bool pathEditor = false)
+		public static KeyValuePair<bool, string> Show(string name, ExpressionMemberValueDescription description, string initialValue, bool mandatory, string def, bool pathEditor = false)
 		{
-			
             using (DialogSimple form = new DialogSimple())
             {
-
                 string caption = "";
-                caption += type == ExpressionMemberValueType.VarDouble ? "Float " : "";
-                caption += type == ExpressionMemberValueType.VarString ? "String " : "";
-                caption += type == ExpressionMemberValueType.Body ? "Node body " : "";
-                caption += type == ExpressionMemberValueType.VarInteger ? "Integer " : "";
-                caption += type == ExpressionMemberValueType.VarBool ? "Boolean " : "";
+                caption += description.Type == ExpressionMemberValueType.VarDouble ? "[float] " : "";
+                caption += description.Type == ExpressionMemberValueType.VarString ? "[string] " : "";
+                caption += description.Type == ExpressionMemberValueType.Body ? "Element contents" : "";
+                caption += description.Type == ExpressionMemberValueType.VarInteger ? "[integer] " : "";
+                caption += description.Type == ExpressionMemberValueType.VarBool ? "[boolean] " : "";
                 caption += name;
-                if (min != null || max != null)
+                if (description.Min != null || description.Max != null)
                 {
-                    if (type == ExpressionMemberValueType.VarBool)
+                    if (description.Type == ExpressionMemberValueType.VarBool)
                     {
                         //Dunno what to do for bools yet
                         //caption += ": ";
@@ -72,57 +76,56 @@ namespace ArtemisMissionEditor
                         //caption += "/";
                         //caption += max.ToString();
                     }
-                    else if (type == ExpressionMemberValueType.VarString)
+                    else if (description.Type == ExpressionMemberValueType.VarString)
                     {
 
                     }
                     else
                     {
-                        caption += ": ";
-                        caption += min == null ? "-INF" : min.ToString();
+                        caption += " [";
+                        caption += description.Min == null ? "-INF" : description.Min.ToString();
                         caption += " ... ";
-                        caption += max == null ? "+INF" : max.ToString();
+                        caption += description.Max == null ? "+INF" : description.Max.ToString();
+                        caption += "]";
                     }
                 }
 
                 if (pathEditor)
                 {
-                    form.OpenFileExtensions = (string)min;
-                    form.OpenFileHeader = (string)max;
-                    form._min = null;
-                    form._max = null;
+                    form.OpenFileExtensions = (string)description.Min;
+                    form.OpenFileHeader = (string)description.Max;
                     form.openFileButton.Visible = true;
                 }
                 else
                 {
-                    form._min = min;
-                    form._max = max;
                     form.openFileButton.Visible = false;
                 }
 
                 form.Text = caption;
+                form._description = description;
                 form.input.Text = initialValue;
-                form._type = type;
                 form._def = def;
                 form.NullMode = initialValue == null;
                 form.nullButton.Text = def == null ? "Null" : "Default";
-                form.Width = type == ExpressionMemberValueType.VarString ? 390 : 212;
-                form.Height = 103;
+                //form.Width = type == ExpressionMemberValueType.VarString ? 390 : 212;
+                //TODO: Type in exact values
+                //form.Width = 390;
+                //form.Height = 103;
 
-                if (type == ExpressionMemberValueType.Body)
+                if (description.Type == ExpressionMemberValueType.Body)
                 {
                     form.Height = 300;
                     form.Width = 900;
                     form.input.Multiline = true;
                 }
-
+                form.warningLabel.Width = form.button1.Left - form.warningLabel.Left - 2;
 
                 if (form.ShowDialog() == DialogResult.Cancel)
                     return new KeyValuePair<bool, string>(false, null);
 
                 string result = form.NullMode ? def : form.input.Text;
                 //R. Judge: Changes Jan 16, 2013, to band-aid up to 1.7
-                if (result != null && type == ExpressionMemberValueType.VarDouble)
+                if (result != null && description.Type == ExpressionMemberValueType.VarDouble)
                 {
                     double resd = 0;
 
@@ -131,7 +134,7 @@ namespace ArtemisMissionEditor
                         result = Helper.DoubleToString(resd);
                     }
                 }
-                if (result != null && type == ExpressionMemberValueType.VarInteger)
+                if (result != null && description.Type == ExpressionMemberValueType.VarInteger)
                 {
                     int resi = 0;
                     if (int.TryParse(result, NumberStyles.Float, NumberFormatInfo.CurrentInfo, out resi))
@@ -158,14 +161,14 @@ namespace ArtemisMissionEditor
 
 			if (e.KeyCode == Keys.Home && Control.ModifierKeys == Keys.Alt)
 			{
-				if (_min != null)
-					input.Text = _min.ToString();
+				if (_description.Min != null)
+                    input.Text = _description.Min.ToString();
 			}
 
 			if (e.KeyCode == Keys.End && Control.ModifierKeys == Keys.Alt)
 			{
-				if (_max != null)
-					input.Text = _max.ToString();
+                if (_description.Max != null)
+                    input.Text = _description.Max.ToString();
 			}
 
 			if (e.KeyCode == Keys.Delete && Control.ModifierKeys == Keys.Alt)
@@ -179,6 +182,7 @@ namespace ArtemisMissionEditor
 			_preventTextBoxEvents = true;
 			input.Text = _def;
 			NullMode = _def == null;
+            ValidateInput();
 			_preventTextBoxEvents = false;
 		}
 
@@ -200,26 +204,20 @@ namespace ArtemisMissionEditor
 		/// </summary>
 		private void ValidateInput()
 		{
-			//Check
-			switch (_type)
-			{
-				case ExpressionMemberValueType.VarDouble:
-					double d; 
-					Valid = Helper.DoubleTryParse(input.Text,out d);
-					Valid = Valid && (_min == null || d >= (double)_min);
-					Valid = Valid && (_max == null || d <= (double)_max);
-					break;
-				case ExpressionMemberValueType.VarInteger:
-					int i; 
-					Valid = Helper.IntTryParse(input.Text,out i);
-					Valid = Valid && (_min == null || i >= (int)_min);
-					Valid = Valid && (_max == null || i <= (int)_max);
-					break;
-				case ExpressionMemberValueType.VarBool:
-					break;
-				default:
-					break;
-			}
+            if (NullMode)
+            {
+                warningLabel.Text = "";
+                _errorPosList = null;
+                _warningPosList = null;
+                panelHighlighter.Invalidate();
+                return;
+            }
+            ValidateResult vr =  Helper.Validate(input.Text, _description);
+            Valid = vr.Valid;
+            warningLabel.Text = vr.WarningText;
+            _errorPosList = vr.ErrorList;
+            _warningPosList = vr.WarningList;
+            panelHighlighter.Invalidate();
 		}
 
 		/// <summary>
@@ -314,5 +312,82 @@ namespace ArtemisMissionEditor
 			else
 				input.Text = filename;
 		}
+
+        private void warningLabel_Click(object sender, EventArgs e)
+        {
+            if (!String.IsNullOrWhiteSpace(warningLabel.Text))
+                MessageBox.Show(warningLabel.Text, "All warning and error messages");
+        }
+
+        private void panelHighlighter_Paint(object sender, PaintEventArgs e)
+        {
+            try
+            {
+                string measureString = input.Text.Length > 1 ? input.Text : "XX";
+                if (_errorPosList != null)
+                {
+                    foreach (int pos in _errorPosList)
+                    {
+                        while (measureString.Length < pos + 1) measureString += "X";
+                        Font font = input.Font;
+                        Graphics g = e.Graphics;
+
+                        int left = pos == 0 ? 
+                            2 * TextRenderer.MeasureText(measureString.Substring(0, 1), font).Width - TextRenderer.MeasureText(measureString.Substring(0, 2), font).Width :
+                            TextRenderer.MeasureText(measureString.Substring(0, pos), font).Width;
+                        int right = TextRenderer.MeasureText(measureString.Substring(0, pos + 1), font).Width;
+                        int x = (left + right) / 2 - 4;
+                        int y = 0;
+
+                        //Point[] triangle = new Point[] { 
+                        //    new Point(x - 1, y),
+                        //    new Point(x + 1, y),
+                        //    new Point(x + 3, y + 7), 
+                        //    new Point(x + 1, y + 7), 
+                        //    new Point(x + 1, y + 10), 
+                        //    new Point(x - 1 , y + 10), 
+                        //    new Point(x - 1, y + 7), 
+                        //    new Point(x - 4, y + 7) };
+                        Point[] underscore = new Point[] { 
+                            new Point(x - 4, y),
+                            new Point(x + 3, y),
+                            new Point(x + 3, y + 3), 
+                            new Point(x - 4, y + 3), 
+                            };
+                        g.FillPolygon(_errorBrush, underscore);
+                        //g.DrawImage(_upArrow, x - 5, y);
+                    }
+                }
+                if (_warningPosList != null)
+                {
+                    foreach (int pos in _warningPosList)
+                    {
+                        if (_errorPosList != null && _errorPosList.Contains(pos))
+                            continue;
+                        while (measureString.Length < pos + 1) measureString += "X";
+                        Font font = input.Font;
+                        Graphics g = e.Graphics;
+
+                        int left = pos == 0 ?
+                            2 * TextRenderer.MeasureText(measureString.Substring(0, 1), font).Width - TextRenderer.MeasureText(measureString.Substring(0, 2), font).Width :
+                            TextRenderer.MeasureText(measureString.Substring(0, pos), font).Width;
+                        int right = TextRenderer.MeasureText(measureString.Substring(0, pos + 1), font).Width;
+                        int x = (left + right) / 2 - 4;
+                        int y = 0;
+
+                        Point[] underscore = new Point[] { 
+                            new Point(x - 4, y),
+                            new Point(x + 3, y),
+                            new Point(x + 3, y + 2), 
+                            new Point(x - 4, y + 2), 
+                            };
+                        g.FillPolygon(_warningBrush, underscore);
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
 	}
 }

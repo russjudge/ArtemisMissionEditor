@@ -12,7 +12,37 @@ namespace ArtemisMissionEditor
 	using EMVB = ExpressionMemberValueBehaviorInXml;
 	using EMVT = ExpressionMemberValueType;
 	using EMVE = ExpressionMemberValueEditor;
-	
+
+    public struct ValidateResult
+    {
+        public bool Valid;
+        public bool IsExpression;
+        public string WarningText;
+        public List<int> ErrorList;
+        public List<int> WarningList;
+
+        /// <summary> A ValidateResult with "true" result, everything else unset.</summary>
+        public static ValidateResult True { get; private set; }
+        /// <summary> A ValidateResult with "false" result, everything else unset.</summary>
+        public static ValidateResult False { get; private set; }
+        public static ValidateResult FromBool(bool valid) { return valid ? True : False; }
+
+        static ValidateResult()
+        {
+            True = new ValidateResult(true);
+            False = new ValidateResult(false);
+        }
+
+        public ValidateResult(bool valid, bool isExpression = false, string warningText = "", List<int> errorList = null, List<int> warningList = null)
+        {
+            Valid = valid;
+            IsExpression = isExpression;
+            WarningText = warningText;
+            ErrorList = errorList;
+            WarningList = warningList;
+        }
+    }
+
 	public static class Helper
     {
         private static NumberFormatInfo nfi;
@@ -154,47 +184,214 @@ namespace ArtemisMissionEditor
 			return int.Parse(input.Replace(",0", "").Replace(".0", ""));
 		}
 
-		public static bool Validate(string value, EMVD description)
+        public static ValidateResult Validate(string value, EMVD description)
 		{
 			if (value == null)
-				return true;
-			bool valid;
+				return ValidateResult.True;
+			bool valid = true;
+            string warning = "";
 			switch (description.Type)
 			{
 				case EMVT.VarBool:
 					if (value == "")
-						return false;
-					return true;
+					    return ValidateResult.False;
+                    return ValidateResult.True;
 				case EMVT.VarInteger:
-					int x;
-					valid = Helper.IntTryParse(value, out x);
-					valid = valid && (description.Min == null || x >= (int)description.Min);
-					valid = valid && (description.Max == null || x <= (int)description.Max);
-					return valid;
+					int i;
+                    if (!Helper.IntTryParse(value, out i))
+                        return ValidateExpression(value, description);
+                    if (Mission.Current.VariableNamesList.Key.Contains(value))
+                        warning = "Warning: variable named \"" + value + "\" is set in the mission script. While this is technically allowed, you should avoid doing this, because variable names take precedence to literals during expression evalutation. For example, an expression \"" + value + "+1\" will not evaluate to " + (StringToDouble(value) + 1.0).ToString() + ", but rather to the current " + value + "'s value plus 1";
+                    valid = valid && (description.Min == null || i >= (int)description.Min);
+					valid = valid && (description.Max == null || i <= (int)description.Max);
+					return new ValidateResult(valid, false, warning);
 				case EMVT.VarDouble:
-					double y;
-					valid = DoubleTryParse(value, out y);
-					valid = valid && (description.Min == null || y >= (double)description.Min);
-					valid = valid && (description.Max == null || y <= (double)description.Max);
-					return valid;
+					double d;
+					if (!DoubleTryParse(value, out d))
+                        return ValidateExpression(value, description);
+                    if (Mission.Current.VariableNamesList.Key.Contains(value))
+                        warning = "Warning: variable named \"" + value + "\" is set in the mission script. While this is technically allowed, you should avoid doing this, because variable names take precedence to literals during expression evalutation. For example, an expression \"" + value + "+1\" will not evaluate to " + (StringToDouble(value) + 1.0).ToString() + ", but rather to the current " + value + "'s value plus 1";
+                    valid = valid && (description.Min == null || d >= (double)description.Min);
+					valid = valid && (description.Max == null || d <= (double)description.Max);
+                    return new ValidateResult(valid, false, warning);
 				case EMVT.VarString:
-					return true;
+                    return ValidateResult.True;
 				case EMVT.Body:
-					return true;
+                    return ValidateResult.True;
 				case EMVT.Nothing:
-					return true;
+                    return ValidateResult.True;
 				default:
-					throw new Exception("FAIL! Attempting to validate something unknown!");
+					throw new NotImplementedException("FAIL! Attempting to validate something unknown!");
 			}
 		}
 
-		public static bool AreEqual(string value1, string value2, EMVD description)
+        private static int GetOperatorPrecedence(char value)
+        {
+            if (value == '*' || value == '/')
+                return 2;
+            if (value == '+' || value == '-')
+                return 1;
+            return 0;
+        }
+
+        private static ValidateResult ValidateExpression(string value, EMVD description)
+        {
+            bool isValid = true;
+            string warnings = "";
+            List<int> warningList = new List<int>();
+            List<int> errorList = new List<int>();
+            bool nextMustBeOperator = false;
+            Tuple<int, string> curItem = null;
+            Stack<Tuple<int, string>> operatorStack = new Stack<Tuple<int, string>>();
+            List<Tuple<int, string>> parsedExpression = new List<Tuple<int, string>>();
+            
+            Action<int, string> AddError = (int i, string text) => {
+                errorList.Add(i);
+                warnings += "ERROR at " + i.ToString("000") + ": " + text + "\r\n";
+            };
+            Action<int, string> AddWarning = (int i, string text) =>{
+                warningList.Add(i);
+                warnings += "WARNING at " + i.ToString("000") + ": " + text + "\r\n";
+            };
+
+            for (int i = 0; i < value.Length; i++)
+            {
+                char curChar = value[i];
+                
+                // If it's a space - add previous item to stack
+                if (curChar == ' ')
+                {
+                    if (curItem != null)
+                    {
+                        nextMustBeOperator = true;
+                        parsedExpression.Add(curItem);
+                        curItem = null;
+                    }
+                    continue;
+                }
+
+                // If it's an operator
+                int precedence = GetOperatorPrecedence(curChar);
+                if (precedence != 0)
+                {
+                    if (curItem != null)
+                    {
+                        nextMustBeOperator = true;
+                        parsedExpression.Add(curItem);
+                        curItem = null;
+                    }
+                    if (!nextMustBeOperator)
+                    {
+                        isValid = false;
+                        AddError(i, "Unexpected operator (expected literal or variable)");
+                    }
+                    nextMustBeOperator = false;
+                    while (operatorStack.Count > 0 && GetOperatorPrecedence(operatorStack.Peek().Item2[0]) > GetOperatorPrecedence(curChar))
+                        parsedExpression.Add(operatorStack.Pop());
+                    operatorStack.Push(new Tuple<int, string>(i, curChar.ToString()));
+                    continue;
+                }
+
+                // If it's a bracket
+                if (curChar == '(' || curChar == ')')
+                {
+                    if (curItem != null)
+                    {
+                        nextMustBeOperator = true;
+                        parsedExpression.Add(curItem);
+                        curItem = null;
+                    }
+
+                    if (curChar == '(')
+                    {
+                        if (nextMustBeOperator)
+                        {
+                            isValid = false;
+                            AddError(i, "Unexpected opening bracket (expected operator)");
+                            nextMustBeOperator = false;
+                        }
+                        operatorStack.Push(new Tuple<int, string>(i, curChar.ToString()));
+                    }
+                    else
+                    {
+                        if (!nextMustBeOperator)
+                        {
+                            isValid = false;
+                            AddError(i, "Unexpected closing bracket (expected literal or variable)");
+                            nextMustBeOperator = true;
+                        }
+                        while (operatorStack.Count > 0 && operatorStack.Peek().Item2[0] != '(')
+                            parsedExpression.Add(operatorStack.Pop());
+                        if (operatorStack.Count == 0)
+                        {
+                            isValid = false;
+                            AddError(i, "Unexpected closing bracket (no matching opening bracket exists)");
+                        }
+                        else
+                            operatorStack.Pop();
+                    }
+                    continue;
+                }
+
+                //If we reached here, it's a letter or a number
+                {
+                    if (curItem == null)
+                    {
+                        if (nextMustBeOperator)
+                        {
+                            nextMustBeOperator = false;
+                            isValid = false;
+                            AddError(i, "Unexpected symbol (expected operator)");
+                        }
+                        curItem = new Tuple<int, string>(i, curChar.ToString());
+                    }
+                    else
+                        curItem = new Tuple<int, string>(curItem.Item1, curItem.Item2 + curChar.ToString()); 
+                }
+            }
+
+            if (curItem != null)
+            {
+                nextMustBeOperator = true;
+                parsedExpression.Add(curItem);
+                curItem = null;
+            }
+            while (operatorStack.Count > 0)
+            {
+                if (operatorStack.Peek().Item2[0] == '(')
+                {
+                    isValid = false; 
+                    AddError(value.Length, "Matching closing bracket not found");
+                    operatorStack.Pop();
+                }
+                else
+                    parsedExpression.Add(operatorStack.Pop());
+            }
+
+            List<string> variableNames = Mission.Current.VariableNamesList.Key;
+            foreach (Tuple<int, string> token in parsedExpression)
+            {
+                if (token.Item2.Length == 1 && GetOperatorPrecedence(token.Item2[0]) > 0)
+                    continue;
+                if (description.Type == EMVT.VarInteger)
+                    if (!IntTryParse(token.Item2) && DoubleTryParse(token.Item2))
+                        AddWarning(token.Item1, "Float literal used inside an integer value");
+                if ((IntTryParse(token.Item2) || DoubleTryParse(token.Item2)) && variableNames.Contains(token.Item2))
+                    AddWarning(token.Item1, "Variable named \"" + token.Item2 + "\" is set in the mission script. While this is technically allowed, you should avoid doing this, because variable names take precedence to literals during expression evalutation. For example, an expression \""+token.Item2+"+1\" will not evaluate to " + (StringToDouble(token.Item2)+1.0).ToString()+", but rather to the current "+token.Item2+"'s value plus 1");
+                if (!IntTryParse(token.Item2) && !DoubleTryParse(token.Item2) && !variableNames.Contains(token.Item2))
+                    AddWarning(token.Item1, "Variable named \"" + token.Item2 + "\" is never set in the mission script (possible typo?)");
+            }
+
+            return new ValidateResult(isValid, true, warnings.Length == 0 ? warnings : warnings.Substring(0, warnings.Length - 2), errorList, warningList);
+        }
+
+        public static bool AreEqual(string value1, string value2, EMVD description)
 		{
 			if (value1 == null && value2 == null)
 				return true;
 			if (value1 == null || value2 == null)
 				return false;
-			if (!Validate(value1, description) || !Validate(value2, description))
+			if (!Validate(value1, description).Valid || !Validate(value2, description).Valid)
 				return false;
 			switch (description.Type)
 			{
