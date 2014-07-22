@@ -28,10 +28,10 @@ namespace ArtemisMissionEditor
             set
             {
                 _current = value;
-                if (Program.FS != null)
+                if (Program.FormSettingsInstance != null)
                 {
-                    Program.FS.pgMisc.SelectedObject = Current;
-                    Program.FS.pgColor.SelectedObject = new DictionaryPropertyGridAdapter(Settings.Current._bindsBrushColor);
+                    Program.FormSettingsInstance.pgMisc.SelectedObject = Current;
+                    Program.FormSettingsInstance.pgColor.SelectedObject = new DictionaryPropertyGridAdapter(Settings.Current._bindsBrushColor);
                 }
             }
         }
@@ -177,10 +177,10 @@ namespace ArtemisMissionEditor
 			{
 				value = value >= 0 ? value : 0;
 				_autoSaveInterval = value;
-				if (Program.FM != null)
+				if (Program.FormMainInstance != null)
 				{
-					Program.FM._FM_t_AutoUpdateTimer.Enabled = _autoSaveInterval != 0;
-					Program.FM._FM_t_AutoUpdateTimer.Interval = 1 + _autoSaveInterval * 60 * 1000;
+					Program.FormMainInstance._FM_t_AutoUpdateTimer.Enabled = _autoSaveInterval != 0;
+					Program.FormMainInstance._FM_t_AutoUpdateTimer.Interval = 1 + _autoSaveInterval * 60 * 1000;
 				}
 			}
 		}
@@ -487,8 +487,8 @@ namespace ArtemisMissionEditor
 
 			NewMissionStartBlock = "<create type=\"player\" name = \"Artemis\" x=\"50000\" y=\"0\" z=\"50000\"/>\r\n<set_difficulty_level value=\"5\"/>\r\n<set_skybox_index index=\"9\"/><big_message title=\"Unnamed mission\" subtitle1=\"by Unknown Author\" subtitle2=\"adventure for Artemis 2.1\"/>\r\n<set_timer name=\"start_mission_timer_1\" seconds=\"10\"/>\r\n<set_variable name=\"chapter_1\" value=\"1\"/>";
 
-			if (Program.FM!=null)
-				Program.FM.SubscribeToVesselDataUpdates(VesselData);
+			if (Program.FormMainInstance!=null)
+				Program.FormMainInstance.SubscribeToVesselDataUpdates(VesselData);
         }
 
         public void UpdateSettings()

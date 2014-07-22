@@ -9,9 +9,9 @@ using System.Media;
 
 namespace ArtemisMissionEditor
 {
-	public partial class _FormFindReplace : FormSerializeableToRegistry
+	public partial class FormFindReplace : FormSerializeableToRegistry
 	{
-		public _FormFindReplace()
+		public FormFindReplace()
 		{
 			InitializeComponent();
 
@@ -68,8 +68,8 @@ namespace ArtemisMissionEditor
 			MissionSearchStructure mss = new MissionSearchStructure(_FFR_tb_Input.Text, null, _FFR_cb_XmlNames.Checked, _FFR_cb_XmlValuesFind.Checked, _FFR_cob_AttNameFind.Text, _FFR_cb_NodeNamesFind.Checked, _FFR_cb_CommentariesFind.Checked, _FFR_cb_DisplayedText.Checked, _FFR_cb_CaseFind.Checked, _FFR_cb_ExactFind.Checked, _FFR_cb_SelectedNodeFind.Checked);
 			List<MissionSearchResult> result = Mission.Current.FindAll(mss);
 
-			Program.FSR.SetSubtitle(mss);
-			Program.FSR.SetList(result);
+			Program.FormSearchResultsInstance.SetSubtitle(mss);
+			Program.FormSearchResultsInstance.SetList(result);
 
             ShowSearchResultsForm();
         }
@@ -150,8 +150,8 @@ namespace ArtemisMissionEditor
 
 			if (result > 0)
 			{
-				Program.FSR.SetSubtitle(mss);
-				Program.FSR.SetList(list);
+				Program.FormSearchResultsInstance.SetSubtitle(mss);
+				Program.FormSearchResultsInstance.SetList(list);
 
 				ShowSearchResultsForm();
 
@@ -163,21 +163,21 @@ namespace ArtemisMissionEditor
 
         private void ShowSearchResultsForm()
         {
-            if (!Program.FSR.Empty)
+            if (!Program.FormSearchResultsInstance.Empty)
             {
-                Program.FSR.Show();
-                Program.FSR.BringToFront();
+                Program.FormSearchResultsInstance.Show();
+                Program.FormSearchResultsInstance.BringToFront();
             }
         }
 
         private bool FindMode()
         {
-            return _FFR_tc_Main.SelectedTab == Program.FFR._FFR_tc_Main.TabPages[0];
+            return _FFR_tc_Main.SelectedTab == Program.FormFindReplaceInstance._FFR_tc_Main.TabPages[0];
         }
 
         private bool ReplaceMode()
         {
-            return _FFR_tc_Main.SelectedTab == Program.FFR._FFR_tc_Main.TabPages[1];
+            return _FFR_tc_Main.SelectedTab == Program.FormFindReplaceInstance._FFR_tc_Main.TabPages[1];
         }
 
         private void _E_FFR_Load_private_RecursivelyFindAttributeValues(ExpressionMember item, List<string> list)
@@ -226,7 +226,7 @@ namespace ArtemisMissionEditor
             {
                 e.Cancel = true;
                 this.Hide();
-                Program.FSR.Hide();
+                Program.FormSearchResultsInstance.Hide();
             }
 
             SaveToRegistry();
@@ -285,13 +285,13 @@ namespace ArtemisMissionEditor
             if (e.KeyCode == Keys.F && Control.ModifierKeys == Keys.Control)
             {
                 e.SuppressKeyPress = true;
-                _FFR_tc_Main.SelectedTab = Program.FFR._FFR_tc_Main.TabPages[0];
+                _FFR_tc_Main.SelectedTab = Program.FormFindReplaceInstance._FFR_tc_Main.TabPages[0];
             }
 
             if (e.KeyCode == Keys.H && Control.ModifierKeys == Keys.Control)
             {
                 e.SuppressKeyPress = true;
-                _FFR_tc_Main.SelectedTab = Program.FFR._FFR_tc_Main.TabPages[1];
+                _FFR_tc_Main.SelectedTab = Program.FormFindReplaceInstance._FFR_tc_Main.TabPages[1];
             }
         }
 

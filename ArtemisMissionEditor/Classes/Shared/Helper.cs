@@ -8,8 +8,8 @@ using System.Drawing;
 	
 namespace ArtemisMissionEditor
 {
-	using EMVD = ExpressionMemberValueDescription;
-	using EMVB = ExpressionMemberValueBehaviorInXml;
+	
+	
 	using EMVT = ExpressionMemberValueType;
 	using EMVE = ExpressionMemberValueEditor;
 
@@ -184,7 +184,7 @@ namespace ArtemisMissionEditor
 			return int.Parse(input.Replace(",0", "").Replace(".0", ""));
 		}
 
-        public static ValidateResult Validate(string value, EMVD description)
+        public static ValidateResult Validate(string value, ExpressionMemberValueDescription description)
 		{
 			if (value == null)
 				return ValidateResult.True;
@@ -234,7 +234,7 @@ namespace ArtemisMissionEditor
             return 0;
         }
 
-        private static ValidateResult ValidateExpression(string value, EMVD description)
+        private static ValidateResult ValidateExpression(string value, ExpressionMemberValueDescription description)
         {
             bool isValid = true;
             string warnings = "";
@@ -356,13 +356,21 @@ namespace ArtemisMissionEditor
                 parsedExpression.Add(curItem);
                 curItem = null;
             }
+            else
+            {
+                if (!nextMustBeOperator && (parsedExpression.Count > 0 || operatorStack.Count > 0))
+                {
+                    isValid = false;
+                    AddError(value.Length, "Unexpected end of expression (expected literal or variable)");
+                }
+            }
             while (operatorStack.Count > 0)
             {
                 if (operatorStack.Peek().Item2[0] == '(')
                 {
                     isValid = false; 
-                    AddError(value.Length, "Matching closing bracket not found");
-                    operatorStack.Pop();
+                    AddError(operatorStack.Pop().Item1, "Matching closing bracket not found");
+                    
                 }
                 else
                     parsedExpression.Add(operatorStack.Pop());
@@ -377,15 +385,15 @@ namespace ArtemisMissionEditor
                     if (!IntTryParse(token.Item2) && DoubleTryParse(token.Item2))
                         AddWarning(token.Item1, "Float literal used inside an integer value");
                 if ((IntTryParse(token.Item2) || DoubleTryParse(token.Item2)) && variableNames.Contains(token.Item2))
-                    AddWarning(token.Item1, "Variable named \"" + token.Item2 + "\" is set in the mission script. While this is technically allowed, you should avoid doing this, because variable names take precedence to literals during expression evalutation. For example, an expression \""+token.Item2+"+1\" will not evaluate to " + (StringToDouble(token.Item2)+1.0).ToString()+", but rather to the current "+token.Item2+"'s value plus 1");
+                    AddWarning(token.Item1, "Variable named \"" + token.Item2 + "\" is set in the mission script. While this is technically allowed by the Artemis script parser, you should avoid doing this, because variable names take precedence to literals during expression evalutation. For example, an expression \""+token.Item2+"+1\" will not evaluate to " + (StringToDouble(token.Item2)+1.0).ToString()+", but rather to the current "+token.Item2+"'s value plus 1");
                 if (!IntTryParse(token.Item2) && !DoubleTryParse(token.Item2) && !variableNames.Contains(token.Item2))
-                    AddWarning(token.Item1, "Variable named \"" + token.Item2 + "\" is never set in the mission script (possible typo?)");
+                    AddWarning(token.Item1, "Variable named \"" + token.Item2 + "\" is never set in the mission script (a typo?)");
             }
 
             return new ValidateResult(isValid, true, warnings.Length == 0 ? warnings : warnings.Substring(0, warnings.Length - 2), errorList, warningList);
         }
 
-        public static bool AreEqual(string value1, string value2, EMVD description)
+        public static bool AreEqual(string value1, string value2, ExpressionMemberValueDescription description)
 		{
 			if (value1 == null && value2 == null)
 				return true;

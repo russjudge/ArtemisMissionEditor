@@ -9,9 +9,9 @@ using System.Xml;
 
 namespace ArtemisMissionEditor
 {
-	public partial class _FormMissionProperties : ArtemisMissionEditor.FormSerializeableToRegistry
+	public partial class FormMissionProperties : ArtemisMissionEditor.FormSerializeableToRegistry
 	{
-		public _FormMissionProperties()
+		public FormMissionProperties()
 		{
 			InitializeComponent();
 		}
@@ -40,7 +40,7 @@ namespace ArtemisMissionEditor
 			try
 			{
 				string x;
-				foreach (string item in Program.FMP._FMP_tb_Before.Text.Split(new string[1] { "\r\n" }, StringSplitOptions.None))
+				foreach (string item in Program.FormMissionPropertiesInstance._FMP_tb_Before.Text.Split(new string[1] { "\r\n" }, StringSplitOptions.None))
 					x = new XmlDocument().CreateComment(item).OuterXml;
 
 			}
@@ -53,7 +53,7 @@ namespace ArtemisMissionEditor
 			try
 			{
 				string x;
-				foreach (string item in Program.FMP._FMP_tb_After.Text.Split(new string[1] { "\r\n" }, StringSplitOptions.None))
+				foreach (string item in Program.FormMissionPropertiesInstance._FMP_tb_After.Text.Split(new string[1] { "\r\n" }, StringSplitOptions.None))
 					x = new XmlDocument().CreateComment(item).OuterXml;
 			}
 			catch (Exception ee)
@@ -62,8 +62,8 @@ namespace ArtemisMissionEditor
 				return;
 			}
 
-			Mission.Current._commentsBefore = Program.FMP._FMP_tb_Before.Text;
-			Mission.Current._commentsAfter = Program.FMP._FMP_tb_After.Text;
+			Mission.Current._commentsBefore = Program.FormMissionPropertiesInstance._FMP_tb_Before.Text;
+			Mission.Current._commentsAfter = Program.FormMissionPropertiesInstance._FMP_tb_After.Text;
 			Mission.Current.BgNode = (TreeNode)_FMP_tb_Node.Tag;
 			Mission.Current.RegisterChange("Changed mission properties");
 			Close();

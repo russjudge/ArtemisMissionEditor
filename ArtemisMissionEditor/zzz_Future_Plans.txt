@@ -5,7 +5,7 @@
   - maybe show error/warning text differently?
   - maybe add autocomplete or such stuff for var names?
 
-* Foolproof check:
+* Foolproof check
   Have an option to highlight problematic events in the mission. Probably as an option "Scan mission for errors" or maybe change event icons and add tooltips? Maybe as an option?
   Check for common mistakes such as:
   - NOT changing at least one variable that is also in the condition list. 

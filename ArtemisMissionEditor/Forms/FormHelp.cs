@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace ArtemisMissionEditor
 {
-	public partial class _FormHelp : ArtemisMissionEditor.FormSerializeableToRegistry
+	public partial class FormHelp : ArtemisMissionEditor.FormSerializeableToRegistry
 	{
-		public _FormHelp()
+		public FormHelp()
 		{
 			InitializeComponent();
 		}

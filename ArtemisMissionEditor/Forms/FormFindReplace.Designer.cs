@@ -1,6 +1,6 @@
 ﻿namespace ArtemisMissionEditor
 {
-	partial class _FormFindReplace
+	partial class FormFindReplace
 	{
 		/// <summary>
 		/// Required designer variable.

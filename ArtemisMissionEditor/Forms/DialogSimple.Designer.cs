@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+            this.components = new System.ComponentModel.Container();
             this.okButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.input = new System.Windows.Forms.TextBox();
@@ -36,6 +37,7 @@
             this.warningLabel = new System.Windows.Forms.LinkLabel();
             this.panelHighlighter = new System.Windows.Forms.Panel();
             this.openFileButton = new System.Windows.Forms.Button();
+            this.timerValidate = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // okButton
@@ -116,6 +118,7 @@
             this.warningLabel.Size = new System.Drawing.Size(273, 18);
             this.warningLabel.TabIndex = 12;
             this.warningLabel.VisitedLinkColor = System.Drawing.Color.Black;
+            this.warningLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.warningLabel_LinkClicked);
             this.warningLabel.Click += new System.EventHandler(this.warningLabel_Click);
             // 
             // panelHighlighter
@@ -142,6 +145,11 @@
             this.openFileButton.UseVisualStyleBackColor = true;
             this.openFileButton.Visible = false;
             this.openFileButton.Click += new System.EventHandler(this.openFileButton_Click);
+            // 
+            // timerValidate
+            // 
+            this.timerValidate.Interval = 500;
+            this.timerValidate.Tick += new System.EventHandler(this.timerValidate_Tick);
             // 
             // DialogSimple
             // 
@@ -181,5 +189,6 @@
         public System.Windows.Forms.Button openFileButton;
         private System.Windows.Forms.LinkLabel warningLabel;
         private System.Windows.Forms.Panel panelHighlighter;
+        private System.Windows.Forms.Timer timerValidate;
 	}
 }

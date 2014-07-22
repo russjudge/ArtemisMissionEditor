@@ -81,7 +81,7 @@ namespace ArtemisMissionEditor
         /// <summary> TreeView control that displays a tree of statements for this Node </summary>
 		private TreeViewEx TreeViewStatements;
 		private FlowLayoutPanel FlowLayoutPanelMain;
-		private _FormMain FormMain;
+		private FormMain FormMain;
 		private TabControl TabControlMain;
 		private StatusStrip StatusStripMain;
 		private ToolStripStatusLabel ToolStripObjectsTotal;
@@ -212,7 +212,7 @@ namespace ArtemisMissionEditor
 			FlowLayoutPanelMain.Resize += _E_flowLP_Resize;
 		}
 
-		public void AssignForm(_FormMain value = null)
+		public void AssignForm(FormMain value = null)
 		{
 			if (FormMain != null)
 			{
@@ -569,12 +569,12 @@ namespace ArtemisMissionEditor
 
             _eventCount = 0;
 
-			if (Program.FSR != null)
-				Program.FSR.ClearList();
+			if (Program.FormSearchResultsInstance != null)
+				Program.FormSearchResultsInstance.ClearList();
 
-			if (Program.FMP != null)
-				if (Program.FMP.Visible)
-					Program.FMP.Close();
+			if (Program.FormMissionPropertiesInstance != null)
+				if (Program.FormMissionPropertiesInstance.Visible)
+					Program.FormMissionPropertiesInstance.Close();
         }
 
         public void FromFile(string fileName)
@@ -2319,42 +2319,42 @@ namespace ArtemisMissionEditor
 
         public void ShowFindForm()
         {
-			Program.FFR._FFR_tc_Main.SelectedTab = Program.FFR._FFR_tc_Main.TabPages[0];
-			Program.FFR.Show();
+			Program.FormFindReplaceInstance._FFR_tc_Main.SelectedTab = Program.FormFindReplaceInstance._FFR_tc_Main.TabPages[0];
+			Program.FormFindReplaceInstance.Show();
 
-			if (Program.FSR.Visible)
-				Program.FSR.BringToFront();
+			if (Program.FormSearchResultsInstance.Visible)
+				Program.FormSearchResultsInstance.BringToFront();
 
-			Program.FFR.BringToFront();
+			Program.FormFindReplaceInstance.BringToFront();
 		}
 
         public void ShowReplaceForm()
         {
-			Program.FFR._FFR_tc_Main.SelectedTab = Program.FFR._FFR_tc_Main.TabPages[1];
-			Program.FFR.Show();
+			Program.FormFindReplaceInstance._FFR_tc_Main.SelectedTab = Program.FormFindReplaceInstance._FFR_tc_Main.TabPages[1];
+			Program.FormFindReplaceInstance.Show();
             
-			if (Program.FSR.Visible)
-				Program.FSR.BringToFront();
+			if (Program.FormSearchResultsInstance.Visible)
+				Program.FormSearchResultsInstance.BringToFront();
 				
-			Program.FFR.BringToFront();
+			Program.FormFindReplaceInstance.BringToFront();
         }
 
 		public void ShowEventDependencyForm(bool recalculate = false)
 		{
 			if (recalculate)
-				Program.FD.OpenEventDependency(TreeViewNodes.SelectedNode);
+				Program.FormDependencyInstance.OpenEventDependency(TreeViewNodes.SelectedNode);
 			else
-				Program.FD.OpenEventDependency(null);
+				Program.FormDependencyInstance.OpenEventDependency(null);
 		}
 
 		public void ShowMissionPropertiesForm()
 		{
-			if (Program.FMP.Visible)
-				Program.FMP.BringToFront();
+			if (Program.FormMissionPropertiesInstance.Visible)
+				Program.FormMissionPropertiesInstance.BringToFront();
 			else
 			{
-				Program.FMP.ReadDataFromMission();
-				Program.FMP.Show();
+				Program.FormMissionPropertiesInstance.ReadDataFromMission();
+				Program.FormMissionPropertiesInstance.Show();
 			}
 		}
 
@@ -3608,12 +3608,12 @@ namespace ArtemisMissionEditor
             if (e.KeyData == Keys.F3 )
             {
                 e.SuppressKeyPress = true;
-                Program.FFR.FindNext();
+                Program.FormFindReplaceInstance.FindNext();
             }
             if (e.KeyData == (Keys.F3 | Keys.Shift))
             {
                 e.SuppressKeyPress = true;
-                Program.FFR.FindPrevious();
+                Program.FormFindReplaceInstance.FindPrevious();
             }
             if (e.KeyData == Keys.F4)
             {

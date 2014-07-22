@@ -1,4 +1,12 @@
 ﻿----------------------
+Version 2.1.1.6 [7-23-2014] (Alexey Andronov)
+* CODE: began reorganizing code
+* Fixed a bug in expression parser (expression ending with an operator was not detected as erroneous)
+* Fixed a bug introduced in 2.1.1.4 that prevented +/- key commands that (de)increment values from working completely
+* Introduced a delay to value checking in dialog box, so that when user is typing, he does not get errors and warning immediately in process of typing
+* Improved the way warnings are displayed in a label in dialog box
+
+----------------------
 Version 2.1.1.5 [7-22-2014] (Alexey Andronov)
 * Added handling of expressions: they are now parsed, with common problems identified and hinted to the user
 
