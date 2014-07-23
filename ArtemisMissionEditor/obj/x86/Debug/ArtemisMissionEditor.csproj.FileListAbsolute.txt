@@ -2,7 +2,6 @@ E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3
 E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\bin\Debug\ArtemisMissionEditor.pdb
 E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\bin\Debug\ArtemisMissionEditor.exe.CodeAnalysisLog.xml
 E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\bin\Debug\ArtemisMissionEditor.exe.lastcodeanalysissucceeded
-E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.csprojResolveAssemblyReference.cache
 E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor._PanelSpaceMap.resources
 E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.TreeViewEx.resources
 E:\Users\Russ\Documents\Visual Studio 2012\Projects\Artemis Mission Editor 1.7.3.2 Source\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.AboutBox.resources
