@@ -490,7 +490,7 @@ namespace ArtemisMissionEditor
 			}
 			
 			ContextMenuStrip curCMS;
-			if ((curCMS = Editor.PrepareCMS(container, mode)) != null)
+			if ((curCMS = Editor.PrepareContextMenuStrip(container, mode)) != null)
 			{
 				if (mode == EditorActivationMode.NextMenuItem)
 				{

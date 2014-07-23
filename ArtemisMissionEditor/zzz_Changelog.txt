@@ -1,4 +1,12 @@
 ﻿----------------------
+Version 2.1.1.7 [7-24-2014] (Alexey Andronov)
+* Fixed a bug: exception when opening context menu that offers a choice of preset options (like side) for any numeric value that contains an expression
+* HullID context menu should now be nested to prevent insanely tall menu that is clunky and hard to navigate
+* Chosen value should now be selected by default when opening a context menu that offers "input value" option as well as preset choice of options
+  NOTE: This was for some reason manually disabled, and I do not know for what purpose. It looks like it's better when it's enabled.
+  If someone finds out why this is actually a bad change for some reason, please contact me (starsabre@gmail.com) and I'll revert it.
+
+----------------------
 Version 2.1.1.6 [7-23-2014] (Alexey Andronov)
 * CODE: began reorganizing code
 * Fixed a bug in expression parser (expression ending with an operator was not detected as erroneous)

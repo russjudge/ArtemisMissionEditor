@@ -1,4 +1,5 @@
-﻿* BUG: Path does not consider the differnce for meshes and audio files
+﻿* CODE rework ~ Work-work!
+* BUG: Path does not consider the differnce for meshes and audio files
 
 * Improve expression parsing:
   - highlight whole warning item if it's a long one
@@ -8,11 +9,11 @@
 * Foolproof check
   Have an option to highlight problematic events in the mission. Probably as an option "Scan mission for errors" or maybe change event icons and add tooltips? Maybe as an option?
   Check for common mistakes such as:
-  - NOT changing at least one variable that is also in the condition list. 
+  - not changing at least one variable that is also in the condition list. 
   - trying to set properties of an object created in the same event
   - wrong paths to files (absolute for sounds, relative for graphics)
   - something else?
-
+  - NOTE: we already have error highlighting. Maybe warning highlighting should be somehow incorporated there
 
 OLD TODOs:
 

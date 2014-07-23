@@ -399,7 +399,10 @@ namespace ArtemisMissionEditor
 				return true;
 			if (value1 == null || value2 == null)
 				return false;
-			if (!Validate(value1, description).Valid || !Validate(value2, description).Valid)
+			if (!Validate(value1, description).Valid 
+                || Validate(value1, description).IsExpression
+                || !Validate(value2, description).Valid
+                || Validate(value2, description).IsExpression)
 				return false;
 			switch (description.Type)
 			{
