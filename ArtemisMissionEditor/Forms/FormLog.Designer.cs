@@ -1,6 +1,6 @@
 ﻿namespace ArtemisMissionEditor
 {
-	partial class _FormLog
+	partial class FormLog
 	{
 		/// <summary>
 		/// Required designer variable.

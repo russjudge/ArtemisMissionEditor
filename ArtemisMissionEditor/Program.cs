@@ -10,14 +10,14 @@ namespace ArtemisMissionEditor
 {
     static class Program
     {
-        public static _FormSettings				FS;
-		public static _FormLog					FL;
-        public static _FormMain					FM;
-		public static _FormFindReplace			FFR;
-        public static _FormSearchResults		FSR;
-        public static _FormDependency			FD;
-		public static _FormHelp					FH;
-		public static _FormMissionProperties	FMP;
+        public static FormSettings				FormSettingsInstance;
+		public static FormLog					FormLogInstance;
+        public static FormMain					FormMainInstance;
+		public static FormFindReplace			FormFindReplaceInstance;
+        public static FormSearchResults		    FormSearchResultsInstance;
+        public static FormDependency			FormDependencyInstance;
+		public static FormHelp					FormHelpInstance;
+		public static FormMissionProperties	    FormMissionPropertiesInstance;
 
         public static bool IsClosing { get; set; }
 
@@ -48,14 +48,14 @@ namespace ArtemisMissionEditor
             if (argList.Length > 1 && argList[1] != "-v")
                 missionFileName = argList[1];
 
-            FL  = new   _FormLog();
-            FS  = new   _FormSettings();
-            FM  = new   _FormMain();
-			FFR = new   _FormFindReplace();
-            FSR = new   _FormSearchResults();
-            FD  = new   _FormDependency();
-			FH	= new	_FormHelp();
-			FMP	= new	_FormMissionProperties();
+            FormLogInstance  = new   FormLog();
+            FormSettingsInstance  = new   FormSettings();
+            FormMainInstance  = new   FormMain();
+			FormFindReplaceInstance = new   FormFindReplace();
+            FormSearchResultsInstance = new   FormSearchResults();
+            FormDependencyInstance  = new   FormDependency();
+			FormHelpInstance	= new	FormHelp();
+			FormMissionPropertiesInstance	= new	FormMissionProperties();
 
             string currentVesselDataPathToLoad = customVesselDataFileName ?? Settings.Current.DefaultVesselDataPath;
             if (File.Exists(currentVesselDataPathToLoad))
@@ -67,24 +67,24 @@ namespace ArtemisMissionEditor
                 Mission.Current.FromFile(missionFileName);
 
             //Start
-            Application.Run(FM);
+            Application.Run(FormMainInstance);
 
 			//End
 			Program.IsClosing = true;
-			Program.FL.SaveToRegistry();
-			Program.FL.Close();
-			Program.FS.SaveToRegistry();
-			Program.FS.Close();
-			Program.FFR.SaveToRegistry();
-			Program.FFR.Close();
-			Program.FSR.SaveToRegistry();
-			Program.FSR.Close();
-            Program.FD.SaveToRegistry();
-            Program.FD.Close();
-			Program.FH.SaveToRegistry();
-			Program.FH.Close();
-			Program.FMP.SaveToRegistry();
-			Program.FMP.Close();
+			Program.FormLogInstance.SaveToRegistry();
+			Program.FormLogInstance.Close();
+			Program.FormSettingsInstance.SaveToRegistry();
+			Program.FormSettingsInstance.Close();
+			Program.FormFindReplaceInstance.SaveToRegistry();
+			Program.FormFindReplaceInstance.Close();
+			Program.FormSearchResultsInstance.SaveToRegistry();
+			Program.FormSearchResultsInstance.Close();
+            Program.FormDependencyInstance.SaveToRegistry();
+            Program.FormDependencyInstance.Close();
+			Program.FormHelpInstance.SaveToRegistry();
+			Program.FormHelpInstance.Close();
+			Program.FormMissionPropertiesInstance.SaveToRegistry();
+			Program.FormMissionPropertiesInstance.Close();
         }
     }
 }

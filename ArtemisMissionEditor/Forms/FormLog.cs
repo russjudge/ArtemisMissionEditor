@@ -9,9 +9,9 @@ using System.Windows.Forms;
 
 namespace ArtemisMissionEditor
 {
-	public partial class _FormLog : FormSerializeableToRegistry
+	public partial class FormLog : FormSerializeableToRegistry
 	{
-		public _FormLog()
+		public FormLog()
 		{
 			InitializeComponent();
 

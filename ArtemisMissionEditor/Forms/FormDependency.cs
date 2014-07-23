@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace ArtemisMissionEditor
 {
-    public partial class _FormDependency : FormSerializeableToRegistry
+    public partial class FormDependency : FormSerializeableToRegistry
     {
-        public _FormDependency()
+        public FormDependency()
         {
             InitializeComponent();
 
@@ -187,8 +187,8 @@ namespace ArtemisMissionEditor
 			_FD_lb_Left.SelectedItem = null;
 			_FD_lb_Right.SelectedItem = null;
             ((MissionSearchResult)((Button)sender).Tag).Activate();
-			Program.FM.BringToFront();
-			Program.FD.BringToFront();
+			Program.FormMainInstance.BringToFront();
+			Program.FormDependencyInstance.BringToFront();
         }
 
         private void _E_FD_lb_Left_Click(object sender, EventArgs e)
@@ -197,8 +197,8 @@ namespace ArtemisMissionEditor
 			{
 				_FD_lb_Right.SelectedItem = null;
 				((MissionSearchResult)_FD_lb_Left.SelectedItem).Activate(((MissionSearchResult)_FD_b_Event.Tag).Event, true);
-				Program.FM.BringToFront();
-				Program.FD.BringToFront();
+				Program.FormMainInstance.BringToFront();
+				Program.FormDependencyInstance.BringToFront();
 			}
         }
 
@@ -208,8 +208,8 @@ namespace ArtemisMissionEditor
 			{
 				_FD_lb_Left.SelectedItem = null;
 				((MissionSearchResult)_FD_lb_Right.SelectedItem).Activate(((MissionSearchResult)_FD_b_Event.Tag).Event, false);
-				Program.FM.BringToFront();
-				Program.FD.BringToFront();
+				Program.FormMainInstance.BringToFront();
+				Program.FormDependencyInstance.BringToFront();
 			}
         }
 
