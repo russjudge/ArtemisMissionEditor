@@ -1,0 +1,441 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B1C9D1F2-8487-4E8B-BA69-518C040593BF}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ArtemisMissionEditor</RootNamespace>
+    <AssemblyName>ArtemisMissionEditor</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationVersion>1.7.3.2</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Maps-Earth.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classes\DependencyGraph\DependencyCondition.cs" />
+    <Compile Include="Classes\DependencyGraph\DependencyAction.cs" />
+    <Compile Include="Classes\DependencyGraph\DependencyEvent.cs" />
+    <Compile Include="Classes\DependencyGraph\DependencyGraph.cs" />
+    <Compile Include="Classes\DependencyGraph\DependencyPrecursor.cs" />
+    <Compile Include="Classes\Mission\Enumerations\NodeRelationship.cs" />
+<<<<<<< HEAD
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionException.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_BadShipSystem.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_PropertyIf_H.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_Side.cs" />
+    <Compile Include="Classes\Mission\MissionSearchStructure.cs" />
+    <Compile Include="Classes\Mission\MissionSearchResult.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_BadFleetProp.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_Point_x_TargetName.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_DirectConversion.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_DistanceNebula.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_Box_x_Sphere.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_Inside_x_Outside.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_Existance.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_Letter_x_ID.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_AllShips_x_FleetNumber.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_XmlNameCondition.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_PropertyCopy_H.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_PropertyAdd_H.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_PropertySet_H.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_AIType_H.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_SetVariable.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_Point_x_Name_x_GMPos.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_Named_x_Nameless.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_Name_x_GMSel.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_Line_x_Circle.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_FakeShields.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_HullID_x_HullRaceKeys.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_Point_x_GMPos.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_CreateType_H.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_XmlNameAction.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_XmlNode_H.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_Template.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\ExpressionMember_Body.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Enumerators &amp; Descriptor Classes\ExpressionMemberValueEditor.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\Enumerators &amp; Descriptor Classes\ExpressionMemberValueType.cs" />
+    <Compile Include="Classes\Mission\ExpressionMember\ExpressionMember_Commentary.cs" />
+=======
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_BadShipSystem.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_PropertyIf_H.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Side.cs" />
+    <Compile Include="Classes\Mission\MissionSearchStructure.cs" />
+    <Compile Include="Classes\Mission\MissionSearchResult.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_BadFleetProp.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Point_x_TargetName.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_DirectConversion.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_DistanceNebula.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Box_x_Sphere.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Inside_x_Outside.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Existance.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Letter_x_ID.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_AllShips_x_FleetNumber.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_XmlNameCondition.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_PropertyCopy_H.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_PropertyAdd_H.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_PropertySet_H.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_AIType_H.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_SetVariable.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Point_x_Name_x_GMPos.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Named_x_Nameless.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Name_x_GMSel.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Line_x_Circle.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_FakeShields.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_HullID_x_HullRaceKeys.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Point_x_GMPos.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_CreateType_H.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_XmlNameAction.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_XmlNode_H.cs" />
+    <Content Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Template.txt" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\ExpressionMember_Body.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMemberValue\ExpressionMemberValueEditor.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMemberValue\ExpressionMemberValueType.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\ExpressionMember_Commentary.cs" />
+>>>>>>> b15bafdb633ff459060c667dddb8d7cb666ba824
+    <Compile Include="Classes\Shared\GrahpicsExtention.cs" />
+    <Compile Include="Classes\SpaceMap\ExpressionMember_Unknown.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\ExpressionMember.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMemberContainer.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMemberValue\ExpressionMemberValueDescription.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMemberValue\ExpressionMemberValueBehaviorInXml.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck.cs" />
+    <Compile Include="Classes\Mission\Expression Handling\Expressions.cs" />
+    <Compile Include="Classes\Mission\Mission.cs" />
+    <Compile Include="Classes\Mission\MissionNode.cs" />
+    <Compile Include="Classes\Mission\MissionStatement.cs" />
+    <Compile Include="Classes\Mission\MissionSavedState.cs" />
+    <Compile Include="Classes\Mission\Enumerations\EditorActivationMode.cs" />
+    <Compile Include="Classes\Shared\Enumerators\PanelSpaceMapMode.cs" />
+    <Compile Include="Classes\Shared\Generic Adaptors, Descriptors\DictionaryPropertyDescriptor.cs" />
+    <Compile Include="Classes\Shared\Generic Adaptors, Descriptors\DictionaryPropertyGridAdapter.cs" />
+    <Compile Include="Classes\Shared\Enumerators\MapColors.cs" />
+    <Compile Include="Classes\Shared\Enumerators\MapFonts.cs" />
+    <Compile Include="Classes\Shared\Helper.cs" />
+    <Compile Include="Classes\Shared\Log.cs" />
+    <Compile Include="Classes\User Controls\NormalLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\User Controls\TreeViewEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\SpaceMap\Coordinates3D.cs" />
+    <Compile Include="Classes\SpaceMap\FakeShields.cs" />
+    <Compile Include="Classes\Shared\Enumerators\KeyCommands.cs" />
+    <Compile Include="Classes\SpaceMap\SpaceMapSavedState.cs" />
+    <Compile Include="Classes\SpaceMap\NamelessMapObject.cs" />
+    <Compile Include="Classes\User Controls\DoubleBufferedPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\User Controls\PanelSpaceMap.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Classes\Shared\Settings.cs" />
+    <Compile Include="Classes\SpaceMap\SpaceMap.cs" />
+    <Compile Include="Classes\SpaceMap\NamedMapObject_UIEditorscs.cs" />
+    <Compile Include="Classes\Shared\VesselData.cs" />
+    <Compile Include="Classes\SpaceMap\SpecialMapObject.cs" />
+    <Compile Include="Forms\AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DialogRHKeys.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DialogRHKeys.Designer.cs">
+      <DependentUpon>DialogRHKeys.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DialogAbilityBits.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DialogAbilityBits.Designer.cs">
+      <DependentUpon>DialogAbilityBits.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DialogConsoleList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DialogConsoleList.Designer.cs">
+      <DependentUpon>DialogConsoleList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DialogSimple.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DialogSimple.Designer.cs">
+      <DependentUpon>DialogSimple.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DialogSpaceMap.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DialogSpaceMap.Designer.cs">
+      <DependentUpon>DialogSpaceMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormDependency.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormDependency.Designer.cs">
+      <DependentUpon>FormDependency.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormFindReplace.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormFindReplace.Designer.cs">
+      <DependentUpon>FormFindReplace.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormHelp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormHelp.Designer.cs">
+      <DependentUpon>FormHelp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormMissionProperties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormMissionProperties.Designer.cs">
+      <DependentUpon>FormMissionProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormSearchResults.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormSearchResults.Designer.cs">
+      <DependentUpon>FormSearchResults.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormLog.Designer.cs">
+      <DependentUpon>FormLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormMain.Designer.cs">
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormSpaceMap.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormSpaceMap.Designer.cs">
+      <DependentUpon>FormSpaceMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\SpaceMap\NamedMapObject.cs" />
+    <Compile Include="Forms\FormSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormSettings.Designer.cs">
+      <DependentUpon>FormSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormSerializeableToRegistry.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Classes\User Controls\PanelSpaceMap.resx">
+      <DependentUpon>PanelSpaceMap.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Classes\User Controls\TreeViewEx.resx">
+      <DependentUpon>TreeViewEx.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DialogRHKeys.resx">
+      <DependentUpon>DialogRHKeys.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DialogAbilityBits.resx">
+      <DependentUpon>DialogAbilityBits.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DialogConsoleList.resx">
+      <DependentUpon>DialogConsoleList.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DialogSimple.resx">
+      <DependentUpon>DialogSimple.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DialogSpaceMap.resx">
+      <DependentUpon>DialogSpaceMap.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormDependency.resx">
+      <DependentUpon>FormDependency.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormFindReplace.resx">
+      <DependentUpon>FormFindReplace.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormHelp.resx">
+      <DependentUpon>FormHelp.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormMissionProperties.resx">
+      <DependentUpon>FormMissionProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormSearchResults.resx">
+      <DependentUpon>FormSearchResults.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormLog.resx">
+      <DependentUpon>FormLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormMain.resx">
+      <DependentUpon>FormMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormSerializeableToRegistry.resx">
+      <DependentUpon>FormSerializeableToRegistry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormSpaceMap.resx">
+      <DependentUpon>FormSpaceMap.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormSettings.resx">
+      <DependentUpon>FormSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\commentary.png" />
+    <None Include="Images\folder.gif" />
+    <None Include="Images\page.gif" />
+    <None Include="Images\Flag-blue-icon.png" />
+    <None Include="Images\sys-command-icon.png" />
+    <None Include="Images\page_code.gif" />
+    <None Include="Images\action_back.gif" />
+    <None Include="Images\action_forward.gif" />
+    <None Include="Images\commentary2.png" />
+    <None Include="Images\icon_wand.gif" />
+    <None Include="Images\icon_get_world.gif" />
+    <None Include="Resources\icon_settings.gif" />
+    <None Include="Resources\action_save.gif" />
+    <None Include="Resources\action_refresh_blue.gif" />
+    <None Include="Resources\icon_download.gif" />
+    <None Include="Images\page_right.gif" />
+    <None Include="Images\box.gif" />
+    <None Include="Images\page_find.gif" />
+    <None Include="Resources\page_edit.gif" />
+    <None Include="Images\page_left.gif" />
+    <None Include="Images\page_link.gif" />
+    <None Include="Images\page_refresh.gif" />
+    <None Include="Images\page_script.gif" />
+    <None Include="Images\copy.gif" />
+    <None Include="Images\cut.gif" />
+    <None Include="Images\action_paste.gif" />
+    <None Include="Images\page_text_delete.gif" />
+    <None Include="Images\icon_monitor_pc.gif" />
+    <None Include="Images\move_cross.png" />
+<<<<<<< HEAD
+    <Content Include="Classes\Mission\zzz_Documentation on parsing system.txt" />
+=======
+    <Content Include="zzz_Documentation on parsing system.txt" />
+>>>>>>> b15bafdb633ff459060c667dddb8d7cb666ba824
+    <None Include="Images\SmallUpArrow.png" />
+    <None Include="Images\Underscore.png" />
+    <Content Include="Maps-Earth.ico" />
+    <None Include="Resources\artemis_logo_vert.png" />
+    <Content Include="zzz_Changelog.txt" />
+    <Content Include="zzz_Future_Plans.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
