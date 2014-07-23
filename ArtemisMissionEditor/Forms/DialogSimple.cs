@@ -15,44 +15,41 @@ namespace ArtemisMissionEditor
 {
 	public partial class DialogSimple : Form
 	{
-		private string _def;
-		private ExpressionMemberValueDescription _description;
-        private List<int> _errorPosList;
-        private List<int> _warningPosList;
+		private string DefaultValue;
+		private ExpressionMemberValueDescription Description;
+        private List<int> ErrorPositions;
+        private List<int> WarningPositions;
+        private Brush BrushError;
+        private Brush BrushWarning;
         private Brush _errorBrush;
         private Brush _warningBrush;
         public string OpenFileExtensions { get; set; }
 		public string OpenFileHeader { get; set; }
 
-		/// <summary>
-		/// NEVER ACCESS THIS!
-		/// </summary>
-		private bool _xxx_nullMode;
-		/// <summary>
-		/// Null mode
-		/// </summary>
-		private bool NullMode { get { return _xxx_nullMode; } set { _xxx_nullMode = value; UpdateNullStatus(); } }
-
-		private bool _valid;
-		/// <summary>
-		/// Is the input in the textbox valid
-		/// </summary>
+		/// <summary> Wether the input value is considered to be null (distinguishes between null and empty string)</summary>
+		private bool NullMode { get { return _nullMode; } set { _nullMode = value; UpdateNullStatus(); } }
+        /// <summary> NEVER ACCESS THIS! </summary>
+        private bool _nullMode;
+		
+		/// <summary> Is the input in the textbox valid or not</summary>
 		private bool Valid { get { return _valid; } set { _valid = value; UpdateValidStatus(); } }
-
-		private bool _preventTextBoxEvents;
+        private bool _valid;
+		
+		/// <summary> Raised to temporarily prevent input TextBox's "OnTextChanged" events</summary>
+        private bool PreventTextBoxEvents;
 
 		private DialogSimple()
 		{
 			InitializeComponent();
 			Valid = true;
-			_preventTextBoxEvents = false;
+			PreventTextBoxEvents = false;
 			OpenFileExtensions = "";
 			OpenFileHeader = "";
             Screen myScreen = Screen.FromControl(this);
             this.MaximumSize = new Size(myScreen.WorkingArea.Width, myScreen.WorkingArea.Height);
 
-            _errorBrush = new SolidBrush(Color.DarkRed);
-            _warningBrush = new SolidBrush(Color.DarkBlue);
+            BrushError = new SolidBrush(Color.DarkRed);
+            BrushWarning = new SolidBrush(Color.DarkBlue);
 		}
 
 		public static KeyValuePair<bool, string> Show(string name, ExpressionMemberValueDescription description, string initialValue, bool mandatory, string def, bool pathEditor = false)
@@ -102,9 +99,9 @@ namespace ArtemisMissionEditor
                 }
 
                 form.Text = caption;
-                form._description = description;
+                form.Description = description;
                 form.input.Text = initialValue;
-                form._def = def;
+                form.DefaultValue = def;
                 form.NullMode = initialValue == null;
                 form.nullButton.Text = def == null ? "Null" : "Default";
                 //form.Width = type == ExpressionMemberValueType.VarString ? 390 : 212;
@@ -161,14 +158,14 @@ namespace ArtemisMissionEditor
 
 			if (e.KeyCode == Keys.Home && Control.ModifierKeys == Keys.Alt)
 			{
-				if (_description.Min != null)
-                    input.Text = _description.Min.ToString();
+				if (Description.Min != null)
+                    input.Text = Description.Min.ToString();
 			}
 
 			if (e.KeyCode == Keys.End && Control.ModifierKeys == Keys.Alt)
 			{
-                if (_description.Max != null)
-                    input.Text = _description.Max.ToString();
+                if (Description.Max != null)
+                    input.Text = Description.Max.ToString();
 			}
 
 			if (e.KeyCode == Keys.Delete && Control.ModifierKeys == Keys.Alt)
@@ -179,24 +176,31 @@ namespace ArtemisMissionEditor
 
 		private void SetNullMode()
 		{
-			_preventTextBoxEvents = true;
-			input.Text = _def;
-			NullMode = _def == null;
+			PreventTextBoxEvents = true;
+			
+            input.Text = DefaultValue;
+			NullMode = DefaultValue == null;
             ValidateInput();
-			_preventTextBoxEvents = false;
+			
+            PreventTextBoxEvents = false;
 		}
 
 		private void input_TextChanged(object sender, EventArgs e)
 		{
-			if (_preventTextBoxEvents) 
+			if (PreventTextBoxEvents) 
 				return;
-			_preventTextBoxEvents = true;
+			PreventTextBoxEvents = true;
 
-			NullMode = false;
-			ValidateInput();
-			UpdateNullStatus();
-			
-			_preventTextBoxEvents = false;
+            if (NullMode)
+                timerValidate_Tick(null, null);
+            NullMode = false;
+            
+            timerValidate.Stop();
+            timerValidate.Start();
+
+            
+
+			PreventTextBoxEvents = false;
 		}
 
 		/// <summary>
@@ -207,16 +211,18 @@ namespace ArtemisMissionEditor
             if (NullMode)
             {
                 warningLabel.Text = "";
-                _errorPosList = null;
-                _warningPosList = null;
+                ErrorPositions = null;
+                WarningPositions = null;
                 panelHighlighter.Invalidate();
                 return;
             }
-            ValidateResult vr =  Helper.Validate(input.Text, _description);
+            ValidateResult vr =  Helper.Validate(input.Text, Description);
             Valid = vr.Valid;
-            warningLabel.Text = vr.WarningText;
-            _errorPosList = vr.ErrorList;
-            _warningPosList = vr.WarningList;
+            string[] labels = vr.WarningText.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            warningLabel.Text = labels.Length>0?labels[0]:"" ;
+            warningLabel.Tag = vr.WarningText;
+            ErrorPositions = vr.ErrorList;
+            WarningPositions = vr.WarningList;
             panelHighlighter.Invalidate();
 		}
 
@@ -241,7 +247,7 @@ namespace ArtemisMissionEditor
 		private void UpdateNullStatus()
 		{
 			Valid = Valid || NullMode;
-			nullButton.Enabled = !NullMode && input.Text != _def;
+			nullButton.Enabled = !NullMode && input.Text != DefaultValue;
 			if (NullMode && input.BackColor != Color.LightGray)
 				input.BackColor = Color.LightGray;
 			if (!NullMode && input.BackColor == Color.LightGray)
@@ -267,6 +273,8 @@ namespace ArtemisMissionEditor
 		private void nullButton_Click(object sender, EventArgs e)
 		{
 			SetNullMode();
+            timerValidate.Stop();
+            input.Focus();
 		}
 
 		private void DialogSimple_Shown(object sender, EventArgs e)
@@ -315,8 +323,8 @@ namespace ArtemisMissionEditor
 
         private void warningLabel_Click(object sender, EventArgs e)
         {
-            if (!String.IsNullOrWhiteSpace(warningLabel.Text))
-                MessageBox.Show(warningLabel.Text, "All warning and error messages");
+            if (!String.IsNullOrWhiteSpace(warningLabel.Tag as string))
+                MessageBox.Show((string)warningLabel.Tag, "All warning and error messages");
         }
 
         private void panelHighlighter_Paint(object sender, PaintEventArgs e)
@@ -324,9 +332,9 @@ namespace ArtemisMissionEditor
             try
             {
                 string measureString = input.Text.Length > 1 ? input.Text : "XX";
-                if (_errorPosList != null)
+                if (ErrorPositions != null)
                 {
-                    foreach (int pos in _errorPosList)
+                    foreach (int pos in ErrorPositions)
                     {
                         while (measureString.Length < pos + 1) measureString += "X";
                         Font font = input.Font;
@@ -354,15 +362,15 @@ namespace ArtemisMissionEditor
                             new Point(x + 3, y + 3), 
                             new Point(x - 4, y + 3), 
                             };
-                        g.FillPolygon(_errorBrush, underscore);
+                        g.FillPolygon(BrushError, underscore);
                         //g.DrawImage(_upArrow, x - 5, y);
                     }
                 }
-                if (_warningPosList != null)
+                if (WarningPositions != null)
                 {
-                    foreach (int pos in _warningPosList)
+                    foreach (int pos in WarningPositions)
                     {
-                        if (_errorPosList != null && _errorPosList.Contains(pos))
+                        if (ErrorPositions != null && ErrorPositions.Contains(pos))
                             continue;
                         while (measureString.Length < pos + 1) measureString += "X";
                         Font font = input.Font;
@@ -381,13 +389,26 @@ namespace ArtemisMissionEditor
                             new Point(x + 3, y + 2), 
                             new Point(x - 4, y + 2), 
                             };
-                        g.FillPolygon(_warningBrush, underscore);
+                        g.FillPolygon(BrushWarning, underscore);
                     }
                 }
             }
             catch
             {
             }
+        }
+
+        private void timerValidate_Tick(object sender, EventArgs e)
+        {
+            ValidateInput();
+            UpdateNullStatus();
+
+            timerValidate.Stop();
+        }
+
+        private void warningLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
         }
 	}
 }

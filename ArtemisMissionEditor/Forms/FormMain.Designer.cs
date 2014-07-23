@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(_FormMain));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this._FM_ss_Main = new System.Windows.Forms.StatusStrip();
             this._FM_ss_Main_RandomCrap = new System.Windows.Forms.ToolStripStatusLabel();
             this._FM_ss_Main_s_2 = new System.Windows.Forms.ToolStripStatusLabel();
