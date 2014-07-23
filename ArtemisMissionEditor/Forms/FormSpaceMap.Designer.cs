@@ -621,7 +621,7 @@
             // _FSM_ss_Main_s_3
             // 
             this._FSM_ss_Main_s_3.Name = "_FSM_ss_Main_s_3";
-            this._FSM_ss_Main_s_3.Size = new System.Drawing.Size(802, 17);
+            this._FSM_ss_Main_s_3.Size = new System.Drawing.Size(833, 17);
             this._FSM_ss_Main_s_3.Spring = true;
             this._FSM_ss_Main_s_3.Text = "  ";
             // 

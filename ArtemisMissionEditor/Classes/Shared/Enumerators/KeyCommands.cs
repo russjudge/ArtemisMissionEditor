@@ -5,6 +5,9 @@ using System.Text;
 
 namespace ArtemisMissionEditor
 {
+    /// <summary>
+    /// List of actions available to the user via keyboard or mouse commands
+    /// </summary>
     public enum KeyCommands
     {
         KeyCommands_Nothing,
@@ -53,6 +56,5 @@ namespace ArtemisMissionEditor
         FinishEditingForceYes,
         FinishEditingForceNo,
         FocusMap,
-        MAX
     }
 }

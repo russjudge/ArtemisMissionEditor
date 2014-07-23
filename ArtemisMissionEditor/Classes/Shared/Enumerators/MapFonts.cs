@@ -5,11 +5,13 @@ using System.Text;
 
 namespace ArtemisMissionEditor
 {
+    /// <summary>
+    /// List of fonts used by SpaceMap
+    /// </summary>
     public enum MapFonts
     {
         QuadrantText,
         ObjectText,
         FleetText,
-        MAX
     }
 }

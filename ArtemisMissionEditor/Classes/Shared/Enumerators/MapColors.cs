@@ -5,6 +5,9 @@ using System.Text;
 
 namespace ArtemisMissionEditor
 {
+    /// <summary>
+    /// List of colors used by Space map
+    /// </summary>
     public enum MapColors
     {
         MapBackground,
@@ -39,6 +42,5 @@ namespace ArtemisMissionEditor
         Mine,
 		MineBG,
         MineDark,
-		MAX
     }
 }

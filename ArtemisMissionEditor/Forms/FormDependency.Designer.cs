@@ -1,6 +1,6 @@
 ﻿namespace ArtemisMissionEditor
 {
-    partial class _FormDependency
+    partial class FormDependency
     {
         /// <summary>
         /// Required designer variable.

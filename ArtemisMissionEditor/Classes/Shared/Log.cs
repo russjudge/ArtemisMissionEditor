@@ -15,7 +15,7 @@ namespace ArtemisMissionEditor
         public static string _fileName = "log.txt";
 
         private static List<string> _logLines;
-        public static ListBox.ObjectCollection LogLines {get{return Program.FL._FL_lb_Log.Items;}}
+        public static ListBox.ObjectCollection LogLines {get{return Program.FormLogInstance._FL_lb_Log.Items;}}
         public static List<string> LogDisplayLinesTemp;
 
         public static event NewLogEntryEventHandler NewLogEntry;
@@ -52,10 +52,10 @@ namespace ArtemisMissionEditor
         public static void Add(string text)
         {
             _logLines.Add(DateTime.Now.ToString("[yyyy-MM-dd HH:mm:ss] ") + text);
-            if (Program.FL==null)
+            if (Program.FormLogInstance==null)
                 LogDisplayLinesTemp.Add(DateTime.Now.ToString("[HH:mm:ss] ") + text);
             else
-                Program.FL._FL_lb_Log.Items.Add(DateTime.Now.ToString("[HH:mm:ss] ") + text);
+                Program.FormLogInstance._FL_lb_Log.Items.Add(DateTime.Now.ToString("[HH:mm:ss] ") + text);
             UnreadLines++;
             
             OnNewLogEntry();

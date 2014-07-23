@@ -23,7 +23,5 @@ namespace ArtemisMissionEditor
 		Minus10,
 		Minus100,
 		Minus1000,
-		
-		MAX
 	}
 }

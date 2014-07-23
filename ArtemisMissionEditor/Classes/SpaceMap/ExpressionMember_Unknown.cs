@@ -7,8 +7,8 @@ using System.Windows.Forms;
 
 namespace ArtemisMissionEditor
 {
-	using EMVD = ExpressionMemberValueDescription;
-	using EMVB = ExpressionMemberValueBehaviorInXml;
+	
+	
 	using EMVT = ExpressionMemberValueType;
 	using EMVE = ExpressionMemberValueEditor;
 
@@ -63,7 +63,7 @@ namespace ArtemisMissionEditor
 		}
 
 		public ExpressionMember_Unknown()
-			: base("", EMVD.GetItem("unknown"))
+			: base("", "unknown")
 		{
 
 		}

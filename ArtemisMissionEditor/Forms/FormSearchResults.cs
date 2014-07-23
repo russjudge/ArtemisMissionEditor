@@ -8,13 +8,13 @@ using System.Windows.Forms;
 
 namespace ArtemisMissionEditor
 {
-    public partial class _FormSearchResults : FormSerializeableToRegistry
+    public partial class FormSearchResults : FormSerializeableToRegistry
     {
         public bool Empty;
 
-		private MissionSearchStructure _mss;
+		private MissionSearchStructure MissionSearchStructureInstance;
 
-        public _FormSearchResults()
+        public FormSearchResults()
         {
             InitializeComponent();
 			
@@ -23,22 +23,22 @@ namespace ArtemisMissionEditor
 
 		public void SetSubtitle(MissionSearchStructure mss)
 		{
-			_mss = mss;
+			MissionSearchStructureInstance = mss;
 
 			UpdateState();
 		}
 
         public void UpdateState()
         {
-			string text = (_mss.replacement == null ? "Looked for \"" + _mss.input + "\" in " : "Replaced \"" + _mss.input + "\" with \"" + _mss.replacement + "\" in ")
-				+ (_mss.xmlAttName ? "[Xml attribute name], " : "")
-				+ (_mss.xmlAttValue ? "[Xml attribute value" + (string.IsNullOrWhiteSpace(_mss.attName) ? "" : " (in att name \"" + _mss.attName + "\")") + "], " : "")
-				+ (_mss.nodeNames ? "[Mission node name], " : "")
-				+ (_mss.commentaries ? "[Commentary], " : "")
-				+ (_mss.statementText ? "[Displayed text], " : "")
-				+ (_mss.matchCase ? "Matching case and " : "")
-				+ (_mss.matchExact ? "Matching value exactly and " : "")
-				+ (_mss.onlyInCurrentNode ? "Only in selected node and " : "");
+			string text = (MissionSearchStructureInstance.replacement == null ? "Looked for \"" + MissionSearchStructureInstance.input + "\" in " : "Replaced \"" + MissionSearchStructureInstance.input + "\" with \"" + MissionSearchStructureInstance.replacement + "\" in ")
+				+ (MissionSearchStructureInstance.xmlAttName ? "[Xml attribute name], " : "")
+				+ (MissionSearchStructureInstance.xmlAttValue ? "[Xml attribute value" + (string.IsNullOrWhiteSpace(MissionSearchStructureInstance.attName) ? "" : " (in att name \"" + MissionSearchStructureInstance.attName + "\")") + "], " : "")
+				+ (MissionSearchStructureInstance.nodeNames ? "[Mission node name], " : "")
+				+ (MissionSearchStructureInstance.commentaries ? "[Commentary], " : "")
+				+ (MissionSearchStructureInstance.statementText ? "[Displayed text], " : "")
+				+ (MissionSearchStructureInstance.matchCase ? "Matching case and " : "")
+				+ (MissionSearchStructureInstance.matchExact ? "Matching value exactly and " : "")
+				+ (MissionSearchStructureInstance.onlyInCurrentNode ? "Only in selected node and " : "");
 
 			if (text.Substring(text.Length - 2, 2) == ", ")
 				text = text.Substring(0, text.Length - 2);
@@ -48,7 +48,7 @@ namespace ArtemisMissionEditor
 			_FSR_ss_Main_l_Main.Text = text;
 
             _FSR_ss_Main_tsb_Clear.Enabled = _FSR_lb_Main.Items.Count > 0;
-			Text = _mss.replacement == null ? "Find Results: Total " + _FSR_lb_Main.Items.Count.ToString() + " matches" : "Replace Results: Total " + _FSR_lb_Main.Items.Count.ToString() + " items";
+			Text = MissionSearchStructureInstance.replacement == null ? "Find Results: Total " + _FSR_lb_Main.Items.Count.ToString() + " matches" : "Replace Results: Total " + _FSR_lb_Main.Items.Count.ToString() + " items";
             Empty = !_FSR_ss_Main_tsb_Clear.Enabled;
 
 			if (Empty)
@@ -105,8 +105,8 @@ namespace ArtemisMissionEditor
 			if (_FSR_lb_Main.SelectedItem != null)
 			{
 				((MissionSearchResult)_FSR_lb_Main.SelectedItem).Activate();
-				Program.FM.BringToFront();
-				Program.FSR.BringToFront();
+				Program.FormMainInstance.BringToFront();
+				Program.FormSearchResultsInstance.BringToFront();
 			}
         }
 

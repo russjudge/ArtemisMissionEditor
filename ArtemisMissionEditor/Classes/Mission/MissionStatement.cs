@@ -472,7 +472,7 @@ namespace ArtemisMissionEditor
 								continue;
 							XmlAttribute cAtt = xDoc.CreateAttribute(container.Member.Name);
 							cAtt.Value = container.GetAttribute();
-							if (container.Member.ValueDescription.BehaviorInXml == ExpressionMemberValueBehaviorInXml.AsIs || !String.IsNullOrEmpty(cAtt.Value))
+							if (container.Member.ValueDescription.BehaviorInXml == ExpressionMemberValueBehaviorInXml.StoredAsIs || !String.IsNullOrEmpty(cAtt.Value))
 								eResult.Attributes.Append(cAtt);
 						}
 					if (Body != "")

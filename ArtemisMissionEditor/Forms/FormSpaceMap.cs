@@ -15,9 +15,8 @@ namespace ArtemisMissionEditor
 {
 	public partial class FormSpaceMap : FormSerializeableToRegistry
     {
-		bool _wasLoaded;
+		private bool WasLoaded;
 
-        //LinkedList<SpaceMap> historySpaceMap;
         private FormSpaceMap()
         {
             //BASE INIT            
@@ -30,12 +29,12 @@ namespace ArtemisMissionEditor
             pSpaceMap.AssignNamelessObjectsListBox(_FSM_lb_NamelessObjects);
             pSpaceMap.AssignNamedObjectsListBox(this._FSM_lb_NamedObjects);
 
-			_wasLoaded = false;
+			WasLoaded = false;
         }
 
         private void _E_FSM_ms_Main_Settings_UseYNameless_CheckedChanged(object sender, EventArgs e)
         {
-			if (!_wasLoaded)
+			if (!WasLoaded)
 				return;
 			Settings.Current.UseYForNameless = _FSM_ms_Main_Settings_UseYNameless.Checked;
 			Settings.Save();
@@ -44,7 +43,7 @@ namespace ArtemisMissionEditor
 
         private void _E_FSM_ms_Main_Settings_UseYNamed_CheckedChanged(object sender, EventArgs e)
         {
-			if (!_wasLoaded)
+			if (!WasLoaded)
 				return;
             Settings.Current.UseYForNamed = _FSM_ms_Main_Settings_UseYNamed.Checked;
 			Settings.Save();
@@ -132,12 +131,12 @@ namespace ArtemisMissionEditor
 			pSpaceMap.UpdateObjectsText();
 			pSpaceMap.Reset();
 			pSpaceMap.SetFocus();
-			_wasLoaded = true;
+			WasLoaded = true;
 		}
 
 		private void _E_FSM_ms_Main_Settings_MarkWhitespaceNames_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (!_wasLoaded)
+			if (!WasLoaded)
 				return;
 			Settings.Current.MarkWhitespaceNamesOnSpaceMap = _FSM_ms_Main_Settings_MarkWhitespaceNames.Checked;
 			Settings.Save();

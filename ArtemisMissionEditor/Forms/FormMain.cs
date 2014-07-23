@@ -12,21 +12,21 @@ using System.Reflection;
 
 namespace ArtemisMissionEditor
 {
-	public partial class _FormMain : FormSerializeableToRegistry
+	public partial class FormMain : FormSerializeableToRegistry
     {
-		private static string _mainFormName = AboutBox.AssemblyTitle + " v" + AboutBox.AssemblyVersion;
+		private static string MainFormName = AboutBox.AssemblyTitle + " v" + AboutBox.AssemblyVersion;
         
         public void UpdateFormText()
 		{
 			string value = Mission.Current.FilePath == "" ? "Unnamed" : Path.GetFileName(Mission.Current.FilePath);
 
-			Text = (Mission.Current.ChangesPending ? "* " : "") + value + " - " + _mainFormName;
+			Text = (Mission.Current.ChangesPending ? "* " : "") + value + " - " + MainFormName;
 		}
 
-        private Point _mousePositionWhenOpeningDropDownMissionNode = new Point();
-		private Point _mousePositionWhenOpeningDropDownMissionStatement = new Point();
+        private Point MousePositionWhenOpeningDropDownMissionNode = new Point();
+		private Point MousePositionWhenOpeningDropDownMissionStatement = new Point();
 
-        public  _FormMain()
+        public  FormMain()
         {
             InitializeComponent();
 
@@ -266,8 +266,8 @@ namespace ArtemisMissionEditor
 
         private void _E_FM_ms_Main_Tools_Settings_Click(object sender, EventArgs e)
         {
-            Program.FS.Show();
-            Program.FS.BringToFront();
+            Program.FormSettingsInstance.Show();
+            Program.FormSettingsInstance.BringToFront();
         }
 
         private void _E_FM_ms_Main_SpaceMap_Help_DebugXML_Click(object sender, EventArgs e)
@@ -286,22 +286,22 @@ namespace ArtemisMissionEditor
 
         private void _E_FM_cms_MissionNodeTree_New_Folder_Click(object sender, EventArgs e)
         {
-            Mission.Current.NodeAddFolder(true, _FM_tve_MissionNode.GetNodeAt(_FM_tve_MissionNode.PointToClient(_mousePositionWhenOpeningDropDownMissionNode)));
+            Mission.Current.NodeAddFolder(true, _FM_tve_MissionNode.GetNodeAt(_FM_tve_MissionNode.PointToClient(MousePositionWhenOpeningDropDownMissionNode)));
         }
 
         private void _E_FM_cms_MissionNodeTree_New_Comment_Click(object sender, EventArgs e)
         {
-            Mission.Current.NodeAddCommentary(true, _FM_tve_MissionNode.GetNodeAt(_FM_tve_MissionNode.PointToClient(_mousePositionWhenOpeningDropDownMissionNode)));
+            Mission.Current.NodeAddCommentary(true, _FM_tve_MissionNode.GetNodeAt(_FM_tve_MissionNode.PointToClient(MousePositionWhenOpeningDropDownMissionNode)));
         }
 
         private void _E_FM_cms_MissionNodeTree_New_Event_Click(object sender, EventArgs e)
         {
-            Mission.Current.NodeAddEvent(true, _FM_tve_MissionNode.GetNodeAt(_FM_tve_MissionNode.PointToClient(_mousePositionWhenOpeningDropDownMissionNode)));
+            Mission.Current.NodeAddEvent(true, _FM_tve_MissionNode.GetNodeAt(_FM_tve_MissionNode.PointToClient(MousePositionWhenOpeningDropDownMissionNode)));
         }
 
         private void _E_FM_cms_MissionNodeTree_Opening(object sender, CancelEventArgs e)
         {
-            _mousePositionWhenOpeningDropDownMissionNode = Cursor.Position;
+            MousePositionWhenOpeningDropDownMissionNode = Cursor.Position;
 
 			_FM_cms_MissionNodeTree_Copy.Enabled = _FM_tve_MissionNode.SelectedNode != null;
 			_FM_cms_MissionNodeTree_Cut.Enabled = _FM_tve_MissionNode.SelectedNode != null;
@@ -425,22 +425,22 @@ namespace ArtemisMissionEditor
 
 		private void _E_FM_cms_MissionStatementTree_NewCondition_Click(object sender, EventArgs e)
 		{
-			Mission.Current.StatementAddCondition(true, _FM_tve_MissionStatement.GetNodeAt(_FM_tve_MissionStatement.PointToClient(_mousePositionWhenOpeningDropDownMissionStatement)));
+			Mission.Current.StatementAddCondition(true, _FM_tve_MissionStatement.GetNodeAt(_FM_tve_MissionStatement.PointToClient(MousePositionWhenOpeningDropDownMissionStatement)));
 		}
 
 		private void _E_FM_cms_MissionStatementTree_NewAction_Click(object sender, EventArgs e)
 		{
-			Mission.Current.StatementAddAction(true, _FM_tve_MissionStatement.GetNodeAt(_FM_tve_MissionStatement.PointToClient(_mousePositionWhenOpeningDropDownMissionStatement)));
+			Mission.Current.StatementAddAction(true, _FM_tve_MissionStatement.GetNodeAt(_FM_tve_MissionStatement.PointToClient(MousePositionWhenOpeningDropDownMissionStatement)));
 		}
 
 		private void _E_FM_cms_MissionStatementTree_NewComment_Click(object sender, EventArgs e)
 		{
-			Mission.Current.StatementAddCommentary(true, _FM_tve_MissionStatement.GetNodeAt(_FM_tve_MissionStatement.PointToClient(_mousePositionWhenOpeningDropDownMissionStatement)));
+			Mission.Current.StatementAddCommentary(true, _FM_tve_MissionStatement.GetNodeAt(_FM_tve_MissionStatement.PointToClient(MousePositionWhenOpeningDropDownMissionStatement)));
 		}
 		
 		private void _E_FM_cms_MissionStatementTree_Opening(object sender, CancelEventArgs e)
 		{
-			_mousePositionWhenOpeningDropDownMissionStatement = Cursor.Position;
+			MousePositionWhenOpeningDropDownMissionStatement = Cursor.Position;
 
 			_FM_cms_MissionStatementTree_Copy.Enabled = _FM_tve_MissionNode.SelectedNode != null && _FM_tve_MissionStatement.SelectedNode != null && (_FM_tve_MissionStatement.SelectedNode.Tag is MissionStatement || _FM_tve_MissionStatement.SelectedNodes.Count > 0);
 			_FM_cms_MissionStatementTree_Cut.Enabled = _FM_tve_MissionNode.SelectedNode != null && _FM_tve_MissionStatement.SelectedNode != null && (_FM_tve_MissionStatement.SelectedNode.Tag is MissionStatement || _FM_tve_MissionStatement.SelectedNodes.Count > 0);
@@ -477,12 +477,12 @@ namespace ArtemisMissionEditor
 
         private void _E_FM_cms_MissionStatementTree_AddViaSpaceMap_Click(object sender, EventArgs e)
         {
-            Mission.Current.AddCreateStatementsViaSpaceMap(true, _FM_tve_MissionStatement.GetNodeAt(_FM_tve_MissionStatement.PointToClient(_mousePositionWhenOpeningDropDownMissionStatement)));
+            Mission.Current.AddCreateStatementsViaSpaceMap(true, _FM_tve_MissionStatement.GetNodeAt(_FM_tve_MissionStatement.PointToClient(MousePositionWhenOpeningDropDownMissionStatement)));
         }
 
         private void _E_FM_cms_MissionStatementTree_EditOnSpaceMap_Click(object sender, EventArgs e)
         {
-            Mission.Current.EditCreateStatementsOnSpaceMap(true, _FM_tve_MissionStatement.GetNodeAt(_FM_tve_MissionStatement.PointToClient(_mousePositionWhenOpeningDropDownMissionStatement)));
+            Mission.Current.EditCreateStatementsOnSpaceMap(true, _FM_tve_MissionStatement.GetNodeAt(_FM_tve_MissionStatement.PointToClient(MousePositionWhenOpeningDropDownMissionStatement)));
         }
 
         private void _E_FM_cms_MissionStatementTree_Copy_Click(object sender, EventArgs e)
@@ -513,8 +513,8 @@ namespace ArtemisMissionEditor
 
         private void _E_FM_ss_Main_s_1_Click(object sender, EventArgs e)
 		{
-			Program.FL.Show();
-			Program.FL.BringToFront();
+			Program.FormLogInstance.Show();
+			Program.FormLogInstance.BringToFront();
 		}
 
 		private void _E_FM_ss_Main_VesselData_Click(object sender, EventArgs e)
@@ -562,12 +562,12 @@ namespace ArtemisMissionEditor
 
         private void _E_FM_ms_Main_Edit_FindNext_Click(object sender, EventArgs e)
         {
-            Program.FFR.FindNext();
+            Program.FormFindReplaceInstance.FindNext();
         }
 
         private void _E_FM_ms_Main_Edit_FindPrevious_Click(object sender, EventArgs e)
         {
-            Program.FFR.FindPrevious();
+            Program.FormFindReplaceInstance.FindPrevious();
 		}
 
 		private void _E_FM_ms_Main_Tools_Dependencies_ShowForCurrent_Click(object sender, EventArgs e)
@@ -597,8 +597,8 @@ namespace ArtemisMissionEditor
 
 		private void helpFormToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Program.FH.Show();
-			Program.FH.BringToFront();
+			Program.FormHelpInstance.Show();
+			Program.FormHelpInstance.BringToFront();
 		}
 
 		private void _E_FM_ms_Main_Edit_Properties_Click(object sender, EventArgs e)
