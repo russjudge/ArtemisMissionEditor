@@ -1,4 +1,12 @@
 ﻿----------------------
+Version 2.1.1.8 [7-25-2014] (Alexey Andronov)
+* Fixed Side value's name in set_side_value statement (was "sideValue", should be just "value")
+* Fixed a typo in the space map form menu: "Make whitespace names" -> "Mark whitespace names"
+* Added help page for the space map hotkeys
+* Added option to open help form from the space map
+* Warnings about expressions are now underlining whole variable/literal instead of only first letter
+
+----------------------
 Version 2.1.1.7 [7-24-2014] (Alexey Andronov)
 * Fixed a bug: exception when opening context menu that offers a choice of preset options (like side) for any numeric value that contains an expression
 * HullID context menu should now be nested to prevent insanely tall menu that is clunky and hard to navigate

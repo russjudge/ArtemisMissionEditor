@@ -10,8 +10,8 @@ namespace ArtemisMissionEditor
 {
 	
 	
-	using EMVT = ExpressionMemberValueType;
-	using EMVE = ExpressionMemberValueEditor;
+	
+	
 	
 	/// <summary>
 	/// Represents a single member in an expression, like (variable) in "If (variable) (comparator) (value)"

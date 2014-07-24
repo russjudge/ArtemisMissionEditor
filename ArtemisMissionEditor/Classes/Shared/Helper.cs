@@ -8,10 +8,17 @@ using System.Drawing;
 	
 namespace ArtemisMissionEditor
 {
-	
-	
-	using EMVT = ExpressionMemberValueType;
-	using EMVE = ExpressionMemberValueEditor;
+    public struct ValidateResultWarning
+    {
+        public int Position;
+        public int Length;
+
+        public ValidateResultWarning(int position, int length)
+        {
+            Position = position;
+            Length = length;
+        }
+    }
 
     public struct ValidateResult
     {
@@ -19,7 +26,7 @@ namespace ArtemisMissionEditor
         public bool IsExpression;
         public string WarningText;
         public List<int> ErrorList;
-        public List<int> WarningList;
+        public List<ValidateResultWarning> WarningList;
 
         /// <summary> A ValidateResult with "true" result, everything else unset.</summary>
         public static ValidateResult True { get; private set; }
@@ -33,7 +40,7 @@ namespace ArtemisMissionEditor
             False = new ValidateResult(false);
         }
 
-        public ValidateResult(bool valid, bool isExpression = false, string warningText = "", List<int> errorList = null, List<int> warningList = null)
+        public ValidateResult(bool valid, bool isExpression = false, string warningText = "", List<int> errorList = null, List<ValidateResultWarning> warningList = null)
         {
             Valid = valid;
             IsExpression = isExpression;
@@ -192,11 +199,11 @@ namespace ArtemisMissionEditor
             string warning = "";
 			switch (description.Type)
 			{
-				case EMVT.VarBool:
+				case ExpressionMemberValueType.VarBool:
 					if (value == "")
 					    return ValidateResult.False;
                     return ValidateResult.True;
-				case EMVT.VarInteger:
+                case ExpressionMemberValueType.VarInteger:
 					int i;
                     if (!Helper.IntTryParse(value, out i))
                         return ValidateExpression(value, description);
@@ -205,7 +212,7 @@ namespace ArtemisMissionEditor
                     valid = valid && (description.Min == null || i >= (int)description.Min);
 					valid = valid && (description.Max == null || i <= (int)description.Max);
 					return new ValidateResult(valid, false, warning);
-				case EMVT.VarDouble:
+                case ExpressionMemberValueType.VarDouble:
 					double d;
 					if (!DoubleTryParse(value, out d))
                         return ValidateExpression(value, description);
@@ -214,11 +221,11 @@ namespace ArtemisMissionEditor
                     valid = valid && (description.Min == null || d >= (double)description.Min);
 					valid = valid && (description.Max == null || d <= (double)description.Max);
                     return new ValidateResult(valid, false, warning);
-				case EMVT.VarString:
+                case ExpressionMemberValueType.VarString:
                     return ValidateResult.True;
-				case EMVT.Body:
+                case ExpressionMemberValueType.Body:
                     return ValidateResult.True;
-				case EMVT.Nothing:
+                case ExpressionMemberValueType.Nothing:
                     return ValidateResult.True;
 				default:
 					throw new NotImplementedException("FAIL! Attempting to validate something unknown!");
@@ -238,7 +245,7 @@ namespace ArtemisMissionEditor
         {
             bool isValid = true;
             string warnings = "";
-            List<int> warningList = new List<int>();
+            List<ValidateResultWarning> warningList = new List<ValidateResultWarning>();
             List<int> errorList = new List<int>();
             bool nextMustBeOperator = false;
             Tuple<int, string> curItem = null;
@@ -249,9 +256,9 @@ namespace ArtemisMissionEditor
                 errorList.Add(i);
                 warnings += "ERROR at " + i.ToString("000") + ": " + text + "\r\n";
             };
-            Action<int, string> AddWarning = (int i, string text) =>{
-                warningList.Add(i);
-                warnings += "WARNING at " + i.ToString("000") + ": " + text + "\r\n";
+            Action<int, int, string> AddWarning = (int pos, int len, string text) =>{
+                warningList.Add(new ValidateResultWarning(pos, len));
+                warnings += "WARNING at " + pos.ToString("000") + ": " + text + "\r\n";
             };
 
             for (int i = 0; i < value.Length; i++)
@@ -381,13 +388,13 @@ namespace ArtemisMissionEditor
             {
                 if (token.Item2.Length == 1 && GetOperatorPrecedence(token.Item2[0]) > 0)
                     continue;
-                if (description.Type == EMVT.VarInteger)
+                if (description.Type == ExpressionMemberValueType.VarInteger)
                     if (!IntTryParse(token.Item2) && DoubleTryParse(token.Item2))
-                        AddWarning(token.Item1, "Float literal used inside an integer value");
+                        AddWarning(token.Item1, token.Item2.Length, "Float literal used inside an integer value");
                 if ((IntTryParse(token.Item2) || DoubleTryParse(token.Item2)) && variableNames.Contains(token.Item2))
-                    AddWarning(token.Item1, "Variable named \"" + token.Item2 + "\" is set in the mission script. While this is technically allowed by the Artemis script parser, you should avoid doing this, because variable names take precedence to literals during expression evalutation. For example, an expression \""+token.Item2+"+1\" will not evaluate to " + (StringToDouble(token.Item2)+1.0).ToString()+", but rather to the current "+token.Item2+"'s value plus 1");
+                    AddWarning(token.Item1, token.Item2.Length, "Variable named \"" + token.Item2 + "\" is set in the mission script. While this is technically allowed by the Artemis script parser, you should avoid doing this, because variable names take precedence to literals during expression evalutation. For example, an expression \""+token.Item2+"+1\" will not evaluate to " + (StringToDouble(token.Item2)+1.0).ToString()+", but rather to the current "+token.Item2+"'s value plus 1");
                 if (!IntTryParse(token.Item2) && !DoubleTryParse(token.Item2) && !variableNames.Contains(token.Item2))
-                    AddWarning(token.Item1, "Variable named \"" + token.Item2 + "\" is never set in the mission script (a typo?)");
+                    AddWarning(token.Item1, token.Item2.Length, "Variable named \"" + token.Item2 + "\" is never set in the mission script (a typo?)");
             }
 
             return new ValidateResult(isValid, true, warnings.Length == 0 ? warnings : warnings.Substring(0, warnings.Length - 2), errorList, warningList);
@@ -406,21 +413,21 @@ namespace ArtemisMissionEditor
 				return false;
 			switch (description.Type)
 			{
-				case EMVT.VarBool:
+				case ExpressionMemberValueType.VarBool:
 					return value1 == value2;
-				case EMVT.VarInteger:
+				case ExpressionMemberValueType.VarInteger:
 					int xi = Helper.StringToInt(value1);
 					int yi = Helper.StringToInt(value2);
 					return xi == yi;
-				case EMVT.VarDouble:
+				case ExpressionMemberValueType.VarDouble:
 					double xd = Helper.StringToDouble(value1);
 					double yd = Helper.StringToDouble(value2);
 					return xd == yd;
-				case EMVT.VarString:
+				case ExpressionMemberValueType.VarString:
 					return value1.Trim() == value2.Trim();
-				case EMVT.Body:
+				case ExpressionMemberValueType.Body:
 					return value1.Trim() == value2.Trim();
-				case EMVT.Nothing:
+				case ExpressionMemberValueType.Nothing:
 					throw new Exception("FAIL! Attempting to compare two NOTHING values!");
 				default:
 					throw new Exception("FAIL! Attempting to compare something unknown!");

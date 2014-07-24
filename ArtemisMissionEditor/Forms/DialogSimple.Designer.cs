@@ -13,7 +13,9 @@
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing && (components != null))
+            BrushError.Dispose();
+            BrushWarning.Dispose();
+            if (disposing && (components != null))
 			{
 				components.Dispose();
 			}
@@ -125,7 +127,7 @@
             // 
             this.panelHighlighter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panelHighlighter.Location = new System.Drawing.Point(12, 35);
+            this.panelHighlighter.Location = new System.Drawing.Point(12, 34);
             this.panelHighlighter.Name = "panelHighlighter";
             this.panelHighlighter.Size = new System.Drawing.Size(545, 9);
             this.panelHighlighter.TabIndex = 13;

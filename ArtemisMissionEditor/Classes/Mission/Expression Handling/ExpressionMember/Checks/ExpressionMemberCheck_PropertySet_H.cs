@@ -9,8 +9,8 @@ namespace ArtemisMissionEditor
 {
 	
 	
-	using EMVT = ExpressionMemberValueType;
-	using EMVE = ExpressionMemberValueEditor;
+	
+	
 
 	/// <summary>
 	/// Add ai (type) check, is hidden since add ai statement has type as a member

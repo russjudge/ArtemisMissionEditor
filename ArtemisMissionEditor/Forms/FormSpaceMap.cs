@@ -259,5 +259,12 @@ namespace ArtemisMissionEditor
 			pSpaceMap.ExecuteCommand(KeyCommands.DeleteSelected);
 			pSpaceMap.SetFocus();
 		}
+
+        private void showHelpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Program.FormHelpInstance.SetPage(FormHelpPage.SpaceMapHotkeys);
+            Program.FormHelpInstance.Show();
+            Program.FormHelpInstance.BringToFront();
+        }
     }
 }

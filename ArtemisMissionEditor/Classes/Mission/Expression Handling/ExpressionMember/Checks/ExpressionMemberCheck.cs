@@ -9,8 +9,8 @@ namespace ArtemisMissionEditor
 {
 	
 	
-	using EMVT = ExpressionMemberValueType;
-	using EMVE = ExpressionMemberValueEditor;
+	
+	
 
 	/// <summary>
 	/// Base class to be inherited by all checks

@@ -18,7 +18,7 @@ namespace ArtemisMissionEditor
 		private string DefaultValue;
 		private ExpressionMemberValueDescription Description;
         private List<int> ErrorPositions;
-        private List<int> WarningPositions;
+        private List<ValidateResultWarning> WarningPositions;
         private Brush BrushError;
         private Brush BrushWarning;
         public string OpenFileExtensions { get; set; }
@@ -366,26 +366,31 @@ namespace ArtemisMissionEditor
                 }
                 if (WarningPositions != null)
                 {
-                    foreach (int pos in WarningPositions)
+                    foreach (ValidateResultWarning warning in WarningPositions)
                     {
-                        if (ErrorPositions != null && ErrorPositions.Contains(pos))
+                        if (ErrorPositions != null && ErrorPositions.Contains(warning.Position))
                             continue;
-                        while (measureString.Length < pos + 1) measureString += "X";
+                        while (measureString.Length < warning.Position + warning.Length) measureString += "X";
                         Font font = input.Font;
                         Graphics g = e.Graphics;
 
-                        int left = pos == 0 ?
+                        int left = warning.Position == 0 ?
                             2 * TextRenderer.MeasureText(measureString.Substring(0, 1), font).Width - TextRenderer.MeasureText(measureString.Substring(0, 2), font).Width :
-                            TextRenderer.MeasureText(measureString.Substring(0, pos), font).Width;
-                        int right = TextRenderer.MeasureText(measureString.Substring(0, pos + 1), font).Width;
-                        int x = (left + right) / 2 - 4;
+                            TextRenderer.MeasureText(measureString.Substring(0, warning.Position), font).Width;
+                        int right = TextRenderer.MeasureText(measureString.Substring(0, warning.Position + 1), font).Width;
+                        int x1 = (left + right) / 2 - 4;
+                        left = warning.Position + warning.Length == 0 ?
+                            2 * TextRenderer.MeasureText(measureString.Substring(0, 1), font).Width - TextRenderer.MeasureText(measureString.Substring(0, 2), font).Width :
+                            TextRenderer.MeasureText(measureString.Substring(0, warning.Position + warning.Length), font).Width;
+                        right = TextRenderer.MeasureText(measureString.Substring(0, warning.Position + warning.Length), font).Width;
+                        int x2 = (left + right) / 2 - 4;
                         int y = 0;
 
                         Point[] underscore = new Point[] { 
-                            new Point(x - 4, y),
-                            new Point(x + 3, y),
-                            new Point(x + 3, y + 2), 
-                            new Point(x - 4, y + 2), 
+                            new Point(x1 - 4, y),
+                            new Point(x2, y),
+                            new Point(x2, y + 2), 
+                            new Point(x1 - 4, y + 2), 
                             };
                         g.FillPolygon(BrushWarning, underscore);
                     }

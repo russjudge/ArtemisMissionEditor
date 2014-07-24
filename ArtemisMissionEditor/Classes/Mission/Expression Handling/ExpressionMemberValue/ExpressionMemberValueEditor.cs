@@ -7,62 +7,57 @@ using System.Drawing;
 
 namespace ArtemisMissionEditor
 {
-	
-	
-	using EMVT = ExpressionMemberValueType;
-	using EMVE = ExpressionMemberValueEditor;
-
 	public class ExpressionMemberValueEditor
 	{
 		/// <summary>
 		/// Means it wont appear in the editor visually at all
 		/// </summary>
-		public static EMVE Nothing;
+		public static ExpressionMemberValueEditor Nothing;
 		/// <summary>
 		/// Means it will appear as an uneditable label
 		/// </summary>
-		public static EMVE Label;
-		public static EMVE DefaultInteger;
-		public static EMVE DefaultBool;
-		public static EMVE DefaultDouble;
-		public static EMVE DefaultString;
-		public static EMVE DefaultBody; 
-		public static EMVE CreateType;
-		public static EMVE DefaultCheckUnsorted;
-		public static EMVE DefaultCheckSorted;
-		public static EMVE XmlNameActionCheck;
-		public static EMVE XmlNameConditionCheck;
-		public static EMVE SetVariableCheck;
-		public static EMVE AIType;
-		public static EMVE PropertyObject;
-		public static EMVE PropertyFleet;
-		public static EMVE SkyboxIndex;
-		public static EMVE Difficulty;
-		public static EMVE ShipSystem;
-		public static EMVE CountFrom;
-		public static EMVE DamageValue;
-		public static EMVE TeamIndex;
-		public static EMVE TeamAmount;
-		public static EMVE TeamAmountF;
-        public static EMVE SpecialShipType;
-        public static EMVE SpecialCapitainType;
-        public static EMVE Side;
-		public static EMVE Comparator;
-		public static EMVE DistanceNebulaCheck;
-		public static EMVE ConvertDirectCheck;
-		public static EMVE TimerName;
-		public static EMVE VariableName;
-		public static EMVE NamedAllName;
-		public static EMVE NamedStationName;
-		public static EMVE ConsoleList;
-		public static EMVE EliteAIType;
-		public static EMVE EliteAbilityBits;
-		public static EMVE PlayerNames;
-		public static EMVE WarpState;
-		public static EMVE PathEditor;
-		public static EMVE HullID;
-		public static EMVE RaceKeys;
-		public static EMVE HullKeys;
+		public static ExpressionMemberValueEditor Label;
+		public static ExpressionMemberValueEditor DefaultInteger;
+		public static ExpressionMemberValueEditor DefaultBool;
+		public static ExpressionMemberValueEditor DefaultDouble;
+		public static ExpressionMemberValueEditor DefaultString;
+		public static ExpressionMemberValueEditor DefaultBody; 
+		public static ExpressionMemberValueEditor CreateType;
+		public static ExpressionMemberValueEditor DefaultCheckUnsorted;
+		public static ExpressionMemberValueEditor DefaultCheckSorted;
+		public static ExpressionMemberValueEditor XmlNameActionCheck;
+		public static ExpressionMemberValueEditor XmlNameConditionCheck;
+		public static ExpressionMemberValueEditor SetVariableCheck;
+		public static ExpressionMemberValueEditor AIType;
+		public static ExpressionMemberValueEditor PropertyObject;
+		public static ExpressionMemberValueEditor PropertyFleet;
+		public static ExpressionMemberValueEditor SkyboxIndex;
+		public static ExpressionMemberValueEditor Difficulty;
+		public static ExpressionMemberValueEditor ShipSystem;
+		public static ExpressionMemberValueEditor CountFrom;
+		public static ExpressionMemberValueEditor DamageValue;
+		public static ExpressionMemberValueEditor TeamIndex;
+		public static ExpressionMemberValueEditor TeamAmount;
+		public static ExpressionMemberValueEditor TeamAmountF;
+        public static ExpressionMemberValueEditor SpecialShipType;
+        public static ExpressionMemberValueEditor SpecialCapitainType;
+        public static ExpressionMemberValueEditor Side;
+		public static ExpressionMemberValueEditor Comparator;
+		public static ExpressionMemberValueEditor DistanceNebulaCheck;
+		public static ExpressionMemberValueEditor ConvertDirectCheck;
+		public static ExpressionMemberValueEditor TimerName;
+		public static ExpressionMemberValueEditor VariableName;
+		public static ExpressionMemberValueEditor NamedAllName;
+		public static ExpressionMemberValueEditor NamedStationName;
+		public static ExpressionMemberValueEditor ConsoleList;
+		public static ExpressionMemberValueEditor EliteAIType;
+		public static ExpressionMemberValueEditor EliteAbilityBits;
+		public static ExpressionMemberValueEditor PlayerNames;
+		public static ExpressionMemberValueEditor WarpState;
+		public static ExpressionMemberValueEditor PathEditor;
+		public static ExpressionMemberValueEditor HullID;
+		public static ExpressionMemberValueEditor RaceKeys;
+		public static ExpressionMemberValueEditor HullKeys;
 
 		/// <summary>
 		/// This value is displayed in GUI
@@ -107,11 +102,11 @@ namespace ArtemisMissionEditor
 			_valueFromMenu.Add(menu, xml);
 		}
 
-		public virtual string ValueToDisplay(string value, EMVT type, object min, object max)
+        public virtual string ValueToDisplay(string value, ExpressionMemberValueType type, object min, object max)
 		{
 			switch (type)
 			{
-				case EMVT.VarBool:
+                case ExpressionMemberValueType.VarBool:
 					int tmpBool;
 					if (!Helper.IntTryParse(value, out tmpBool))
 						tmpBool = 0;
@@ -120,13 +115,13 @@ namespace ArtemisMissionEditor
 					else
 						value = tmpBool != 0 ? "true" : "false";
 					break;
-				case EMVT.VarInteger:
+				case ExpressionMemberValueType.VarInteger:
 					break;
-				case EMVT.VarDouble:
+				case ExpressionMemberValueType.VarDouble:
 					break;
-				case EMVT.VarString:
+				case ExpressionMemberValueType.VarString:
 					break;
-				case EMVT.Body:
+				case ExpressionMemberValueType.Body:
 					break;
 				default:
 					break;
@@ -140,23 +135,23 @@ namespace ArtemisMissionEditor
 				return value;
 		}
 
-		public virtual string ValueToXml(string value, EMVT type, object min, object max)
+        public virtual string ValueToXml(string value, ExpressionMemberValueType type, object min, object max)
 		{
 			switch (type)
 			{
-				case EMVT.VarBool:
+				case ExpressionMemberValueType.VarBool:
 					if ((min != null && value == min.ToString()) || (min == null && value == "false"))
 						value = "0";
 					if ((max != null && value == max.ToString()) || (max == null && value == "true"))
 						value = "1";
 					break;
-				case EMVT.VarInteger:
+				case ExpressionMemberValueType.VarInteger:
 					break;
-				case EMVT.VarDouble:
+				case ExpressionMemberValueType.VarDouble:
 					break;
-				case EMVT.VarString:
+				case ExpressionMemberValueType.VarString:
 					break;
-				case EMVT.Body:
+				case ExpressionMemberValueType.Body:
 					break;
 				default:
 					break;
@@ -195,7 +190,7 @@ namespace ArtemisMissionEditor
 			MenuGroups = new Dictionary<int, string>();
 			MenuItems = new List<string>();
 
-			PrepareContextMenuStripMethod = (ExpressionMemberContainer i, EMVE j, EditorActivationMode mode) => null;
+			PrepareContextMenuStripMethod = (ExpressionMemberContainer i, ExpressionMemberValueEditor j, EditorActivationMode mode) => null;
 			cmsValueSelector = null;
 			_lastUser = null;
 		}
@@ -208,7 +203,7 @@ namespace ArtemisMissionEditor
             return cms;
 		}
 
-		private Func<ExpressionMemberContainer, EMVE, EditorActivationMode, ContextMenuStrip> PrepareContextMenuStripMethod;
+		private Func<ExpressionMemberContainer, ExpressionMemberValueEditor, EditorActivationMode, ContextMenuStrip> PrepareContextMenuStripMethod;
 
 		private ContextMenuStrip cmsValueSelector;
 		private ExpressionMemberValueDescription _lastUser;
@@ -281,7 +276,7 @@ namespace ArtemisMissionEditor
 
 		#region PrepareCMS functions
 
-		private static ContextMenuStrip PrepareContextMenuStrip_CreateType(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
+		private static ContextMenuStrip PrepareContextMenuStrip_CreateType(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
 		{
 			string value = container.GetValue();
 			
@@ -307,7 +302,7 @@ namespace ArtemisMissionEditor
             return editor.cmsValueSelector;
 		}
 
-		private static ContextMenuStrip PrepareContextMenuStrip_DefaultList(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
+		private static ContextMenuStrip PrepareContextMenuStrip_DefaultList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
 		{
 			string value = container.GetValue();
 
@@ -331,7 +326,7 @@ namespace ArtemisMissionEditor
             return editor.cmsValueSelector;
 		}
 
-        private static ContextMenuStrip PrepareContextMenuStrip_DefaultListWithFirstSeparated(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
+        private static ContextMenuStrip PrepareContextMenuStrip_DefaultListWithFirstSeparated(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
         {
             string value = container.GetValue();
 
@@ -362,7 +357,7 @@ namespace ArtemisMissionEditor
             return editor.cmsValueSelector;
         }
 
-		private static ContextMenuStrip PrepareContextMenuStrip_DefaultListPlusGUI(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
+		private static ContextMenuStrip PrepareContextMenuStrip_DefaultListPlusGUI(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
 		{
 			if (mode == EditorActivationMode.ForceGUI)
 				return null;
@@ -392,7 +387,7 @@ namespace ArtemisMissionEditor
             return editor.cmsValueSelector;
 		}
 
-        private static ContextMenuStrip PrepareContextMenuStrip_DefaultListPlusGUIWithFirstSepearted(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
+        private static ContextMenuStrip PrepareContextMenuStrip_DefaultListPlusGUIWithFirstSepearted(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
         {
             if (mode == EditorActivationMode.ForceGUI)
                 return null;
@@ -429,7 +424,7 @@ namespace ArtemisMissionEditor
             return editor.cmsValueSelector;
         }
 
-		private static ContextMenuStrip PrepareContextMenuStrip_NestedList(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
+		private static ContextMenuStrip PrepareContextMenuStrip_NestedList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
 		{
 			string value = container.GetValue();
 
@@ -464,17 +459,17 @@ namespace ArtemisMissionEditor
             return editor.cmsValueSelector;
 		}
 
-		private static ContextMenuStrip PrepareContextMenuStrip_DefaultCheckUnsorted(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
+		private static ContextMenuStrip PrepareContextMenuStrip_DefaultCheckUnsorted(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
 		{
 			return PrepareContextMenuStrip_DefaultCheck(container, editor, false);
 		}
 
-		private static ContextMenuStrip PrepareContextMenuStrip_DefaultCheckSorted(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
+		private static ContextMenuStrip PrepareContextMenuStrip_DefaultCheckSorted(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
 		{
 			return PrepareContextMenuStrip_DefaultCheck(container, editor, true);
 		}
 
-		private static void				PrepareContextMenuStrip_DefaultCheck_private_loopIteration(ExpressionMemberContainer container, EMVE editor, ContextMenuStrip cms, string value, string item, int index)
+		private static void				PrepareContextMenuStrip_DefaultCheck_private_loopIteration(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ContextMenuStrip cms, string value, string item, int index)
 		{
 			if (container.ValueToDisplay(item) == null)
 				return;
@@ -487,7 +482,7 @@ namespace ArtemisMissionEditor
 				cms.Items.Add(new ToolStripSeparator());
 		}
 
-		private static ContextMenuStrip PrepareContextMenuStrip_DefaultCheck(ExpressionMemberContainer container, EMVE editor, bool sorted)
+		private static ContextMenuStrip PrepareContextMenuStrip_DefaultCheck(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, bool sorted)
 		{
 			string value = container.GetValue(); 
 			
@@ -512,7 +507,7 @@ namespace ArtemisMissionEditor
             return editor.cmsValueSelector;
 		}
 		
-		private static ContextMenuStrip PrepareContextMenuStrip_DefaultBool(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
+		private static ContextMenuStrip PrepareContextMenuStrip_DefaultBool(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
 		{
 			string value = container.GetValue(); 
 			
@@ -538,7 +533,7 @@ namespace ArtemisMissionEditor
             return editor.cmsValueSelector;
 		}
 
-		private static ContextMenuStrip PrepareContextMenuStrip_SpecifiedListPlusGUI(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode, KeyValuePair<List<string>, List<string>> list)
+		private static ContextMenuStrip PrepareContextMenuStrip_SpecifiedListPlusGUI(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode, KeyValuePair<List<string>, List<string>> list)
 		{
 			if (mode == EditorActivationMode.ForceGUI)
 				return null;
@@ -596,22 +591,22 @@ namespace ArtemisMissionEditor
             return editor.cmsValueSelector;
 		}
 
-		private static ContextMenuStrip PrepareContextMenuStrip_TimerNameList(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
+		private static ContextMenuStrip PrepareContextMenuStrip_TimerNameList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
 		{
 			return PrepareContextMenuStrip_SpecifiedListPlusGUI(container, editor, mode, Mission.Current.TimerNamesList);
 		}
 
-		private static ContextMenuStrip PrepareContextMenuStrip_VariableNameList(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
+		private static ContextMenuStrip PrepareContextMenuStrip_VariableNameList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
 		{
 			return PrepareContextMenuStrip_SpecifiedListPlusGUI(container, editor, mode, Mission.Current.VariableNamesList);
 		}
 
-		private static ContextMenuStrip PrepareContextMenuStrip_NamedStationNameList(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
+		private static ContextMenuStrip PrepareContextMenuStrip_NamedStationNameList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
 		{
 			return PrepareContextMenuStrip_SpecifiedListPlusGUI(container, editor, mode, Mission.Current.StationNamesList);
 		}
 
-		private static ContextMenuStrip PrepareContextMenuStrip_SpecifiedNestedListPlusGUI(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode, Dictionary<string,List<string>> dict)
+		private static ContextMenuStrip PrepareContextMenuStrip_SpecifiedNestedListPlusGUI(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode, Dictionary<string,List<string>> dict)
 		{
 			if (mode == EditorActivationMode.ForceGUI)
 				return null;
@@ -696,12 +691,12 @@ namespace ArtemisMissionEditor
             return editor.cmsValueSelector;
 		}
 
-		private static ContextMenuStrip PrepareContextMenuStrip_NamedAllNameList(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
+		private static ContextMenuStrip PrepareContextMenuStrip_NamedAllNameList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
 		{
 			return PrepareContextMenuStrip_SpecifiedNestedListPlusGUI(container, editor, mode, Mission.Current.AllNamesLists);
 		}
 
-		private static ContextMenuStrip PrepareContextMenuStrip_HullIDList(ExpressionMemberContainer container, EMVE editor, EditorActivationMode mode)
+		private static ContextMenuStrip PrepareContextMenuStrip_HullIDList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
 		{
 			string value = container.GetValue();
 
@@ -790,22 +785,22 @@ namespace ArtemisMissionEditor
 		{
 			CMSFont = new Font("Segoe UI", 16);
 
-			Nothing = new EMVE(false, false);
+			Nothing = new ExpressionMemberValueEditor(false, false);
 
-			Label = new EMVE(true, false);
+			Label = new ExpressionMemberValueEditor(true, false);
 
-			DefaultInteger = new EMVE();
+			DefaultInteger = new ExpressionMemberValueEditor();
 
-			DefaultBool = new EMVE();
+			DefaultBool = new ExpressionMemberValueEditor();
 			DefaultBool.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultBool;
 
-			DefaultDouble = new EMVE();
+			DefaultDouble = new ExpressionMemberValueEditor();
 
-			DefaultString = new EMVE();
+			DefaultString = new ExpressionMemberValueEditor();
 
-			DefaultBody = new EMVE();
+			DefaultBody = new ExpressionMemberValueEditor();
 
-			CreateType = new EMVE();
+			CreateType = new ExpressionMemberValueEditor();
 			CreateType.AddToDictionary("anomaly", "anomaly");
 			CreateType.AddToDictionary("blackHole", "black hole");
 			CreateType.AddToDictionary("monster", "monster");
@@ -820,10 +815,10 @@ namespace ArtemisMissionEditor
 			CreateType.AddToDictionary("mines", "mines");
 			CreateType.PrepareContextMenuStripMethod = PrepareContextMenuStrip_CreateType;
 
-			DefaultCheckUnsorted = new EMVE();
+			DefaultCheckUnsorted = new ExpressionMemberValueEditor();
 			DefaultCheckUnsorted.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultCheckUnsorted;
 
-			DefaultCheckSorted = new EMVE();
+			DefaultCheckSorted = new ExpressionMemberValueEditor();
 			DefaultCheckSorted.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultCheckSorted;
 
 			XmlNameActionCheck = new ExpressionMemberValueEditor_XmlName();
@@ -903,12 +898,12 @@ namespace ArtemisMissionEditor
 
 			XmlNameConditionCheck.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultCheckUnsorted;
 
-			SetVariableCheck = new EMVE();
+			SetVariableCheck = new ExpressionMemberValueEditor();
 			SetVariableCheck.AddToDictionary("<to>", "to");
 			SetVariableCheck.AddToMenuDictionary("<to>", "to an exact value");
 			SetVariableCheck.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultCheckUnsorted;
 
-			AIType = new EMVE();
+			AIType = new ExpressionMemberValueEditor();
 			AIType.AddToDictionary("TRY_TO_BECOME_LEADER", "TRY TO BECOME LEADER");
 			AIType.AddToDictionary("CHASE_PLAYER", "CHASE PLAYER ");
 			AIType.AddToDictionary("CHASE_AI_SHIP", "CHASE AI SHIP ");
@@ -934,7 +929,7 @@ namespace ArtemisMissionEditor
 			AIType.AddToDictionary("GUARD_STATION", "GUARD STATION ");
 			AIType.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultList;
 
-			PropertyObject = new EMVE();
+			PropertyObject = new ExpressionMemberValueEditor();
 			PropertyObject.AddToDictionary("positionX", "positionX");
 			PropertyObject.AddToDictionary("positionY", "positionY");
 			PropertyObject.AddToDictionary("positionZ", "positionZ");
@@ -1008,12 +1003,12 @@ namespace ArtemisMissionEditor
 			PropertyObject.NewMenuGroup("Players");
 			PropertyObject.PrepareContextMenuStripMethod = PrepareContextMenuStrip_NestedList;
 
-			PropertyFleet = new EMVE();
+			PropertyFleet = new ExpressionMemberValueEditor();
 			PropertyFleet.AddToDictionary("fleetSpacing", "spacing");
 			PropertyFleet.AddToDictionary("fleetMaxRadius", "max radius");
 			PropertyFleet.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultList;
 
-			SkyboxIndex = new EMVE();
+			SkyboxIndex = new ExpressionMemberValueEditor();
 
             for (int i = 0; i <= 29; i++)
             {
@@ -1022,7 +1017,7 @@ namespace ArtemisMissionEditor
 			
 			SkyboxIndex.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultListPlusGUI;
 
-			Difficulty = new EMVE();
+			Difficulty = new ExpressionMemberValueEditor();
             for (int i = 0; i <= 11; i++)
             {
                 Difficulty.AddToDictionary(i.ToString(), i.ToString());
@@ -1030,7 +1025,7 @@ namespace ArtemisMissionEditor
 			
 			Difficulty.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultList;
 
-			ShipSystem = new EMVE();
+			ShipSystem = new ExpressionMemberValueEditor();
 			ShipSystem.AddToDictionary("systemBeam", "Primary Beam");
 			ShipSystem.AddToDictionary("systemTorpedo", "Torpedo");
 			ShipSystem.AddToDictionary("systemTactical", "Sensors");
@@ -1041,7 +1036,7 @@ namespace ArtemisMissionEditor
 			ShipSystem.AddToDictionary("systemBackShield", "Rear Shield");
 			ShipSystem.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultList;
 
-			CountFrom = new EMVE();
+			CountFrom = new ExpressionMemberValueEditor();
 			CountFrom.AddToDictionary("left", "left");
 			CountFrom.AddToDictionary("top", "top");
 			CountFrom.AddToDictionary("front", "front");
@@ -1055,13 +1050,13 @@ namespace ArtemisMissionEditor
 			DamageValue.AddToDictionary("1.0", "100%");
 			DamageValue.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultListPlusGUI;
 
-			TeamIndex = new EMVE();
+			TeamIndex = new ExpressionMemberValueEditor();
 			TeamIndex.AddToDictionary("0", "0");
 			TeamIndex.AddToDictionary("1", "1");
 			TeamIndex.AddToDictionary("2", "2");
 			TeamIndex.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultList;
 
-			TeamAmount = new EMVE();
+			TeamAmount = new ExpressionMemberValueEditor();
 			TeamAmount.AddToDictionary("0", "0");
 			TeamAmount.AddToDictionary("1", "1");
 			TeamAmount.AddToDictionary("2", "2");
@@ -1071,7 +1066,7 @@ namespace ArtemisMissionEditor
 			TeamAmount.AddToDictionary("6", "6");
 			TeamAmount.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultList;
 
-			TeamAmountF = new EMVE();
+			TeamAmountF = new ExpressionMemberValueEditor();
 			TeamAmountF.AddToDictionary("0", "0");
 			TeamAmountF.AddToDictionary("1", "1");
 			TeamAmountF.AddToDictionary("2", "2");
@@ -1081,7 +1076,7 @@ namespace ArtemisMissionEditor
 			TeamAmountF.AddToDictionary("6", "6");
 			TeamAmountF.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultListPlusGUI;
 
-            SpecialShipType = new EMVE();
+            SpecialShipType = new ExpressionMemberValueEditor();
             SpecialShipType.AddToDictionary(null, "Unspecified");
             SpecialShipType.AddToDictionary("-1", "Nothing");
             SpecialShipType.AddToDictionary("0",  "Dilapidated");
@@ -1090,7 +1085,7 @@ namespace ArtemisMissionEditor
             SpecialShipType.AddToDictionary("3",  "Underpowered");
             SpecialShipType.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultListWithFirstSeparated;
 
-            SpecialCapitainType = new EMVE();
+            SpecialCapitainType = new ExpressionMemberValueEditor();
             SpecialCapitainType.AddToDictionary(null, "Unspecified");
             SpecialCapitainType.AddToDictionary("-1","Nothing");
             SpecialCapitainType.AddToDictionary("0", "Cowardly");
@@ -1101,14 +1096,14 @@ namespace ArtemisMissionEditor
             SpecialCapitainType.AddToDictionary("5", "Exceptional");
             SpecialCapitainType.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultListWithFirstSeparated;
 
-            Side = new EMVE();
+            Side = new ExpressionMemberValueEditor();
             Side.AddToDictionary(null, "Default");
             Side.AddToDictionary("0", "0 (No side)");
             Side.AddToDictionary("1", "1 (Enemy)");
             Side.AddToDictionary("2", "2 (Player)");
             Side.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultListPlusGUIWithFirstSepearted;
 
-			Comparator = new EMVE();
+			Comparator = new ExpressionMemberValueEditor();
 			Comparator.AddToDictionary("GREATER", ">");
 			Comparator.AddToDictionary("GREATER_EQUAL", ">=");
 			Comparator.AddToDictionary("EQUALS", "=");
@@ -1117,35 +1112,35 @@ namespace ArtemisMissionEditor
 			Comparator.AddToDictionary("LESS", "<");
 			Comparator.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultList;
 
-			DistanceNebulaCheck = new EMVE();
+			DistanceNebulaCheck = new ExpressionMemberValueEditor();
 			DistanceNebulaCheck.AddToDictionary("anywhere2", "anywhere");
 			DistanceNebulaCheck.AddToMenuDictionary("anywhere", "anywhere on the map");
 			DistanceNebulaCheck.AddToMenuDictionary("anywhere2", "anywhere outside a nebula or up to ... if inside");
 			DistanceNebulaCheck.AddToMenuDictionary("closer than", "closer than ... if outside a nebula or up to ... if inside");
 			DistanceNebulaCheck.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultCheckUnsorted;
 
-			ConvertDirectCheck = new EMVE();
+			ConvertDirectCheck = new ExpressionMemberValueEditor();
 			ConvertDirectCheck.AddToDictionary("Do nothing", "(Click here to convert)");
 			ConvertDirectCheck.AddToDictionary("Convert to add_ai", "YOU SHOULD NEVER SEE THIS");
 			ConvertDirectCheck.AddToMenuDictionary("Do nothing", "Do nothing");
 			ConvertDirectCheck.AddToMenuDictionary("Convert to add_ai", "Convert to add_ai");
 			ConvertDirectCheck.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultCheckUnsorted;
 
-			TimerName = new EMVE();
+			TimerName = new ExpressionMemberValueEditor();
 			TimerName.PrepareContextMenuStripMethod = PrepareContextMenuStrip_TimerNameList;
 
-			VariableName = new EMVE();
+			VariableName = new ExpressionMemberValueEditor();
 			VariableName.PrepareContextMenuStripMethod = PrepareContextMenuStrip_VariableNameList;
 
-			NamedAllName = new EMVE();
+			NamedAllName = new ExpressionMemberValueEditor();
 			NamedAllName.PrepareContextMenuStripMethod = PrepareContextMenuStrip_NamedAllNameList;
 			
-			NamedStationName = new EMVE();
+			NamedStationName = new ExpressionMemberValueEditor();
 			NamedStationName.PrepareContextMenuStripMethod = PrepareContextMenuStrip_NamedStationNameList;
 
 			ConsoleList = new ExpressionMemberValueEditor_ConsoleList();
 
-			EliteAIType = new EMVE();
+			EliteAIType = new ExpressionMemberValueEditor();
 			EliteAIType.AddToDictionary("0", "behave like a normal ship");
 			EliteAIType._valueToDisplay.Add("0.0", "behave like a normal ship");
 			EliteAIType.AddToDictionary("1", "follow nearest normal fleet");
@@ -1156,7 +1151,7 @@ namespace ArtemisMissionEditor
 
 			EliteAbilityBits = new ExpressionMemberValueEditor_AbilityBits();
 
-			PlayerNames = new EMVE();
+			PlayerNames = new ExpressionMemberValueEditor();
 			PlayerNames.AddToDictionary("Artemis", "Artemis");
 			PlayerNames.AddToDictionary("Intrepid", "Intrepid");
 			PlayerNames.AddToDictionary("Aegis", "Aegis");
@@ -1165,7 +1160,7 @@ namespace ArtemisMissionEditor
 			PlayerNames.AddToDictionary("Hera", "Hera");
 			PlayerNames.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultListPlusGUI;
 
-			WarpState = new EMVE();
+			WarpState = new ExpressionMemberValueEditor();
 			WarpState.AddToDictionary("0", "0");
 			WarpState.AddToDictionary("1", "1");
 			WarpState.AddToDictionary("2", "2");
@@ -1191,7 +1186,7 @@ namespace ArtemisMissionEditor
 	/// </summary>
 	public sealed class ExpressionMemberValueEditor_XmlName : ExpressionMemberValueEditor
 	{
-		public override string ValueToDisplay(string value, EMVT type, object min, object max)
+        public override string ValueToDisplay(string value, ExpressionMemberValueType type, object min, object max)
 		{
 			string result = base.ValueToDisplay(value, type, min, max);
 			if (result != value)
@@ -1205,7 +1200,7 @@ namespace ArtemisMissionEditor
 			return value;
 		}
 
-		public override string ValueToXml(string value, EMVT type, object min, object max)
+        public override string ValueToXml(string value, ExpressionMemberValueType type, object min, object max)
 		{
 			string result = base.ValueToXml(value, type, min, max);
 			if (result != value)
@@ -1224,7 +1219,7 @@ namespace ArtemisMissionEditor
 	/// </summary>
 	public sealed class ExpressionMemberValueEditor_Percent : ExpressionMemberValueEditor
 	{
-		public override string ValueToDisplay(string value, EMVT type, object min, object max)
+        public override string ValueToDisplay(string value, ExpressionMemberValueType type, object min, object max)
 		{
 			string result = base.ValueToDisplay(value, type, min, max);
 			if (result != value)
@@ -1236,7 +1231,7 @@ namespace ArtemisMissionEditor
 			return value;
 		}
 
-		public override string ValueToXml(string value, EMVT type, object min, object max)
+        public override string ValueToXml(string value, ExpressionMemberValueType type, object min, object max)
 		{
 			string result = base.ValueToXml(value, type, min, max);
 			if (result != value)
@@ -1251,7 +1246,7 @@ namespace ArtemisMissionEditor
 	/// </summary>
 	public sealed class ExpressionMemberValueEditor_ConsoleList : ExpressionMemberValueEditor
 	{
-		public override string ValueToDisplay(string value, EMVT type, object min, object max)
+        public override string ValueToDisplay(string value, ExpressionMemberValueType type, object min, object max)
 		{
 			string result = "";
 			
@@ -1281,7 +1276,7 @@ namespace ArtemisMissionEditor
 				return "None";
 		}
 
-		public override string ValueToXml(string value, EMVT type, object min, object max)
+        public override string ValueToXml(string value, ExpressionMemberValueType type, object min, object max)
 		{
 			return value;
 		}
@@ -1303,7 +1298,7 @@ namespace ArtemisMissionEditor
 	/// </summary>
 	public sealed class ExpressionMemberValueEditor_AbilityBits : ExpressionMemberValueEditor
 	{
-		public override string ValueToDisplay(string value, EMVT type, object min, object max)
+        public override string ValueToDisplay(string value, ExpressionMemberValueType type, object min, object max)
 		{
 			string result = "";
 
@@ -1330,7 +1325,7 @@ namespace ArtemisMissionEditor
 				return "[NO]";
 		}
 
-		public override string ValueToXml(string value, EMVT type, object min, object max)
+        public override string ValueToXml(string value, ExpressionMemberValueType type, object min, object max)
 		{
 			return value;
 		}
@@ -1366,7 +1361,7 @@ namespace ArtemisMissionEditor
 	/// </summary>
 	public sealed class ExpressionMemberValueEditor_HullID : ExpressionMemberValueEditor
 	{
-		public override string ValueToDisplay(string value, EMVT type, object min, object max)
+        public override string ValueToDisplay(string value, ExpressionMemberValueType type, object min, object max)
 		{
 			if (string.IsNullOrWhiteSpace(value))
 				return value;
@@ -1375,7 +1370,7 @@ namespace ArtemisMissionEditor
 			return Settings.VesselData.VesselToString(value);
 		}
 
-		public override string ValueToXml(string value, EMVT type, object min, object max)
+        public override string ValueToXml(string value, ExpressionMemberValueType type, object min, object max)
 		{
 			string result = value;
 			int tmp;

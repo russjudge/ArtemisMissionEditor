@@ -9,8 +9,8 @@ namespace ArtemisMissionEditor
 {
 	
 	
-	using EMVT = ExpressionMemberValueType;
-	using EMVE = ExpressionMemberValueEditor;
+	
+	
 
 	public sealed class ExpressionMemberCheck_Box_x_Sphere : ExpressionMemberCheck
 	{

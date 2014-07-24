@@ -118,58 +118,185 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="textBox1.Text" xml:space="preserve">
-    <value>This tab contains some useful information about mission editing.
+    <value>====================================================================================
+ Video Tutorials
+====================================================================================
+
+ There are videos available at YouTube, describing the functionality of the editor and showing how to use it:
+
+ Introduction:                         www.youtube.com/watch?v=lX69QaoZyRA
+ 01 - Interface and basic editing:     www.youtube.com/watch?v=M14GG6WI5m8
+ 02 - Space map:                       www.youtube.com/watch?v=4nL6tBnoISY
+ 03 - Advanced editing:                www.youtube.com/watch?v=RaW-gu0H33Q
+ 04 - Dependencies:                    www.youtube.com/watch?v=wVcHsntVdk4
 
 
-==========================================
-Video Tutorials
-==========================================
-There are videos available at YouTube, describing the functionality of the editor and showing how to use it:
+====================================================================================
+ Angles
+====================================================================================
 
-Introduction:                         www.youtube.com/watch?v=lX69QaoZyRA
-01 - Interface and basic editing:     www.youtube.com/watch?v=M14GG6WI5m8
-02 - Space map:                       www.youtube.com/watch?v=4nL6tBnoISY
-03 - Advanced editing:                www.youtube.com/watch?v=RaW-gu0H33Q
-04 - Dependencies:                    www.youtube.com/watch?v=wVcHsntVdk4
-
-
-==========================================
-Angles
-==========================================
  - Angles in most mission statements are in degrees, where 0 is looking up, clockwise being positive direction while counter-clockwise is negative. 
-For example, 270 is looking to the left.
+   For example, 270 is looking to the left.
  - Angles in set/add property statements are in radians, where 0 is looking down, clockwise being positive direction while counter-clockwise is negative. 
-For example, 1.57 is looking to the left.
+   For example, 1.57 is looking to the left.
 
 
-==========================================
-Audio
-==========================================
+====================================================================================
+ Audio
+====================================================================================
+
  - incoming_message:   you need a mono OGG Vorbis file for this command
  - play_sound_now:     you need an uncompressed Wav file for this command
 
 
-==========================================
-Pathing
-==========================================
-1. Paths for the artwork are relative to the Artemis.exe. 
-So, it should look like" \dat\Missions\MISS_XYZ\file.123" if you want to have custom artwork in your mission
-2. Paths for audio files are relative to the script folder.
-So, if you are using a file in your mission folder, you can just type the filename like "sound.wav"
+====================================================================================
+ Pathing
+====================================================================================
 
-==========================================
-Most frequent mistakes in mission scripts
-==========================================
- 1. Unless you want your event to repeat endlessly, make sure that something is changed in the event's body that invalidates the event's condition. You can use a new variable name and compare it to 0, then set it to 1 in the event (undefined variables are considered to have a value of 0).
- 2. "Timer expired" condition does not "fire" once when the timer expires: it is true at any moment after the moment when the timer expres. So, if you have an event that has no other condition except the timer_expires one, the event will repeat endlessly once the timer runs out. 
- 3. Do not attempt to set or add to object's properties in the same event in which it was created. You can only do so for objects that are already created by the time the event happens. If you want to set an object's properties, do it in another event that follows logically right after the event where the object is created.
+ 1. Paths for the artwork are relative to the Artemis.exe. 
+    So, it should look like" \dat\Missions\MISS_XYZ\file.123" if you want to have custom artwork in your mission
+ 2. Paths for audio files are relative to the script folder.
+    So, if you are using a file in your mission folder, you can just type the filename like "sound.wav"
 
 
-==========================================
-More Information
-==========================================
+====================================================================================
+ Most frequent mistakes in mission scripts
+====================================================================================
+
+  1. Unless you want your event to repeat endlessly, make sure that something is changed in the event's body that invalidates the event's condition. You can use a new variable name and compare it to 0, then set it to 1 in the event (undefined variables are considered to have a value of 0).
+
+  2. "Timer expired" condition does not "fire" once when the timer expires: it is true at any moment after the moment when the timer expres. So, if you have an event that has no other condition except the timer_expires one, the event will repeat endlessly once the timer runs out. 
+
+  3. Do not attempt to set or add to object's properties in the same event in which it was created. You can only do so for objects that are already created by the time the event happens. If you want to set an object's properties, do it in another event that follows logically right after the event where the object is created.
+
+
+====================================================================================
+ More Information
+====================================================================================
+
 Additional information in non-video form can be found here:
 http://artemiswiki.pbworks.com/w/page/53390043/Mission%20Editor%20-%20Interface%20Overview
+</value>
+  </data>
+  <data name="textBox2.Text" xml:space="preserve">
+    <value>====================================================================================
+ Map operation
+====================================================================================
+
+ [Shift] + [Up]/[Down]/[Left]/[Right]   : Move the map around
+ Hold and drag with [RMB]               : Move the map around
+ [+]                                    : Zoom map in
+ [-]                                    : Zoom map out
+ [~]                                    : Reset map zoom
+ [Shift] + [MouseWheel]                 : Zoom the map in/out
+ [RMB]                                  : Show context menu
+
+
+====================================================================================
+ Create objects
+====================================================================================
+
+ [1] or [Shift] + [1]                   : Add Anomaly
+ [2] or [Shift] + [2]                   : Add Black Hole
+ [3] or [Shift] + [3]                   : Add Enemy
+ [4] or [Shift] + [4]                   : Add Generic Mesh
+ [5] or [Shift] + [5]                   : Add Neutral
+ [6] or [Shift] + [6]                   : Add Monster
+ [7] or [Shift] + [7]                   : Add Player
+ [8] or [Shift] + [8]                   : Add Station
+ [9] or [Shift] + [9]                   : Add Whale
+    * New object will be added under mouse cursor.
+    * If another object was selected, the newly created object 
+      will copy properties of the selected object (where applicable)
+    * If [Shift] was not pressed, new object will become selected.
+    * If [Shift] was pressed, new object will be added to the current selection.
+ 
+ [I]                                    : Add asteroids
+ [O]                                    : Add mines
+ [P]                                    : Add nebulas
+    * New nameless object will become selected
+    * By default it will be with a radius of 0 and a count of 10
+
+
+====================================================================================
+ Selecting objects
+====================================================================================
+
+ [Ctrl] + [A]                           : Select all named objects
+ [Home] / [End]                         : Select previous / next nameless object
+ [PgUp] / [PgDown]                      : Select previous / next named object
+ [LMB]                                  : Select named object under cursor 
+                                          (will cycle through objects under cursor)
+ 
+ Hold and drag with [LMB]               : Select named objects in a rectangle
+ Click or hold and drag [Shift] + [LMB] : Add named object(s) to selection
+ Click or hold and drag [Ctrl] + [LMB]  : Remove named object(s) from selection
+
+
+====================================================================================
+ Basic operations on selected named/nameless object(s)
+====================================================================================
+
+ [0] / [Del]                            : Delete selected objects
+ [Up]/[Down]/[Left]/[Right]             : Move selection on XZ axis, 10  meters per click
+ [Ctrl] + [Up]/[Down]/[Left]/[Right]    : Move selection on XZ axis, 100 meters per click
+ [MouseWheel]                           : Move selection on Y axis,  10  meters per 1 scroll
+ [Ctrl] + [MouseWheel]                  : Move selection on Y axis,  100 meters per 1 scroll
+    * The whole map is 100'000 x 100'000 meters, a quadrant is 20'000 x 20'000 meters
+
+
+====================================================================================
+ Working with selected named object(s)
+====================================================================================
+
+ [Space]                                : Move selected object(s) to the point under cursor
+ 
+ [Alt] + [LMB]                          : Make selected object(s) face cursor
+ [Ctrl] + [Alt] + [LMB]                 : Make selected object(s) face away from the cursor
+    * Every object will change its angle individually relevant to the cursor.
+ 
+ [Shift] + [Alt] + [LMB]                : Make selected object(s) face cursor
+ [Ctrl] + [Shift] + [Alt] + [LMB]       : Make selected object(s) face away from the cursor
+    * Every object will have its angle set to the same value, 
+      based on the direction from the center of mass to the cursor.
+
+
+====================================================================================
+ Working with selected nameless object
+====================================================================================
+
+ [Space]                                : Move selected object's start position to the point under cursor
+ 
+ [Alt] + [LMB]                          
+    - if this object has a radius       : Change radius to be equal to distance 
+                                          from start position to the cursor's location
+    - if this object has no radius      : Move the object's end position to the cursor's loaction
+ 
+ [Shift] + [Alt] + [LMB]                : Switch object's "mode": 
+                                          if it was a "circle" - it becomes a "line" and vice versa.
+                                          Then preform [Alt] + [LMB] action
+ [Ctrl] + [Alt] + [LMB]                 
+    - if this object has radius         : Set the object's randomRange relative to object's radius
+    - if this object has no radius      : Set the randomRange to the distance from the start position 
+                                          to the cursor's location
+ 
+ [Q]                                    : Set start angle to the angle from the start position 
+                                          to the cursor's location
+ 
+ [Shift] + [Q]                          : Set start angle to the angle from the start position 
+                                          to the cursor's location minus 360
+                                          (ex.: if you point at 270 you'll get -90 instead)
+ 
+ [Ctrl] + [Q]                           : Set start angle to null
+ 
+ [W]                                    : Set end angle to the angle from the start position 
+                                          to the cursor's location
+ 
+ [Shift] + [W]                          : Set end angle to the angle from the start position 
+                                          to the cursor's location minus 360
+                                          (ex.: if you point at 270 you'll get -90 instead)
+ 
+ [Ctrl] + [W]                           : Set end angle to null
 </value>
   </data>
 </root>

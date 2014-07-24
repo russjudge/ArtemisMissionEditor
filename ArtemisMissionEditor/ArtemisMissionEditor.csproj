@@ -38,7 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
@@ -130,6 +130,9 @@
     <Compile Include="Classes\Shared\Enumerators\MapFonts.cs" />
     <Compile Include="Classes\Shared\Helper.cs" />
     <Compile Include="Classes\Shared\Log.cs" />
+    <Compile Include="Classes\User Controls\DoubleBufferedTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Classes\User Controls\NormalLabel.cs">
       <SubType>Component</SubType>
     </Compile>

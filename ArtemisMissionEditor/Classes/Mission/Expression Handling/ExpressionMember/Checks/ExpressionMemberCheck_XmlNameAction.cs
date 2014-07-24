@@ -9,8 +9,8 @@ namespace ArtemisMissionEditor
 {
 	
 	
-	using EMVT = ExpressionMemberValueType;
-	using EMVE = ExpressionMemberValueEditor;
+	
+	
 
 	/// <summary>
 	/// Main check that checks for xml node name
@@ -268,7 +268,7 @@ namespace ArtemisMissionEditor
             #region Set_side_value
             eML = this.Add("set_side_value");
             eML.Add(new ExpressionMember("to "));
-            eML.Add(new ExpressionMember("<>", "sideValue", "sideValue", true));
+            eML.Add(new ExpressionMember("<>", "sideValue", "value", true));
             eML.Add(new ExpressionMember("for "));
             eML.Add(new ExpressionMember("object "));
             eML.Add(new ExpressionMember("with "));

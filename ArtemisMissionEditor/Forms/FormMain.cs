@@ -597,8 +597,9 @@ namespace ArtemisMissionEditor
 
 		private void helpFormToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Program.FormHelpInstance.Show();
-			Program.FormHelpInstance.BringToFront();
+            Program.FormHelpInstance.SetPage(FormHelpPage.Miscellaneous);
+            Program.FormHelpInstance.Show();
+            Program.FormHelpInstance.BringToFront();
 		}
 
 		private void _E_FM_ms_Main_Edit_Properties_Click(object sender, EventArgs e)

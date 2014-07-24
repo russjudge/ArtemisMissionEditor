@@ -82,6 +82,8 @@
             this._FSM_ss_Main_s_3 = new System.Windows.Forms.ToolStripStatusLabel();
             this._FSM_ss_Main_ObjectsSelected = new System.Windows.Forms.ToolStripStatusLabel();
             this._FSM_tsc_Main = new System.Windows.Forms.ToolStripContainer();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showHelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this._FSM_sc_Main)).BeginInit();
             this._FSM_sc_Main.Panel1.SuspendLayout();
             this._FSM_sc_Main.Panel2.SuspendLayout();
@@ -357,7 +359,8 @@
             this._FSM_ms_Main.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._FSM_ms_Main_SpaceMap,
             this._FSM_ms_Main_Edit,
-            this._FSM_ms_Main_Settings});
+            this._FSM_ms_Main_Settings,
+            this.helpToolStripMenuItem});
             this._FSM_ms_Main.Location = new System.Drawing.Point(0, 0);
             this._FSM_ms_Main.Name = "_FSM_ms_Main";
             this._FSM_ms_Main.Size = new System.Drawing.Size(1264, 24);
@@ -555,7 +558,7 @@
             this._FSM_ms_Main_Settings_MarkWhitespaceNames.CheckOnClick = true;
             this._FSM_ms_Main_Settings_MarkWhitespaceNames.Name = "_FSM_ms_Main_Settings_MarkWhitespaceNames";
             this._FSM_ms_Main_Settings_MarkWhitespaceNames.Size = new System.Drawing.Size(274, 22);
-            this._FSM_ms_Main_Settings_MarkWhitespaceNames.Text = "Make whitespace names";
+            this._FSM_ms_Main_Settings_MarkWhitespaceNames.Text = "Mark whitespace names";
             this._FSM_ms_Main_Settings_MarkWhitespaceNames.CheckStateChanged += new System.EventHandler(this._E_FSM_ms_Main_Settings_MarkWhitespaceNames_CheckStateChanged);
             // 
             // _FSM_ms_Main_Settings_s_1
@@ -654,6 +657,21 @@
             // _FSM_tsc_Main.TopToolStripPanel
             // 
             this._FSM_tsc_Main.TopToolStripPanel.Controls.Add(this._FSM_ms_Main);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showHelpToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // showHelpToolStripMenuItem
+            // 
+            this.showHelpToolStripMenuItem.Name = "showHelpToolStripMenuItem";
+            this.showHelpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.showHelpToolStripMenuItem.Text = "Show Help";
+            this.showHelpToolStripMenuItem.Click += new System.EventHandler(this.showHelpToolStripMenuItem_Click);
             // 
             // FormSpaceMap
             // 
@@ -759,6 +777,8 @@
 		private System.Windows.Forms.ToolStripMenuItem _FSM_ms_Main_Edit_RedoList;
 		private System.Windows.Forms.ToolStripMenuItem _FSM_ms_Main_Edit_UndoList;
         private System.Windows.Forms.ToolStripStatusLabel _FSM_ss_Main_Coordinates;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showHelpToolStripMenuItem;
     }
 }
 

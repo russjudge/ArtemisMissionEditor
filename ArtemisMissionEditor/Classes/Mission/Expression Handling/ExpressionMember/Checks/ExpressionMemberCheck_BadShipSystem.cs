@@ -9,8 +9,6 @@ namespace ArtemisMissionEditor
 {
 	
 	
-	using EMVT = ExpressionMemberValueType;
-	using EMVE = ExpressionMemberValueEditor;
 
 	public sealed class ExpressionMemberCheck_BadShipSystem : ExpressionMemberCheck
 	{

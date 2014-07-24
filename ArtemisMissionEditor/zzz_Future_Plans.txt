@@ -2,7 +2,6 @@
 * BUG: Path does not consider the differnce for meshes and audio files
 
 * Improve expression parsing:
-  - highlight whole warning item if it's a long one
   - maybe show error/warning text differently?
   - maybe add autocomplete or such stuff for var names?
 
