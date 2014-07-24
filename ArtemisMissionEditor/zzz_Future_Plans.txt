@@ -1,5 +1,4 @@
 ﻿* CODE rework ~ Work-work!
-* BUG: Path does not consider the differnce for meshes and audio files
 
 * Improve expression parsing:
   - maybe show error/warning text differently?

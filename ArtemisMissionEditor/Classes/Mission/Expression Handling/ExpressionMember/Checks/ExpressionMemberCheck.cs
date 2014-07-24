@@ -60,7 +60,7 @@ namespace ArtemisMissionEditor
 		protected override void OnValueDescriptionChange()
 		{
 			if (_valueDescription != null && _valueDescription.IsSerialized)
-				throw new Exception("FAIL! A check member has been assigned a serialized xml value!");
+				throw new ArgumentOutOfRangeException("A check member has been assigned a serialized xml value!");
 		}
 		
 		/// <summary>

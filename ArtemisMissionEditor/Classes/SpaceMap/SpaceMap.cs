@@ -106,7 +106,7 @@ namespace ArtemisMissionEditor
         public  NamelessMapObject SelectionNameless
         {
             get { return _selectionNameless; }
-            set { if (value != null) Select_None(); if(value!=null && !namelessObjects.Contains(value)) throw new Exception("FAIL! Attempting to select a nonexistant nameless object"); _selectionNameless = value; }
+            set { if (value != null) Select_None(); if(value!=null && !namelessObjects.Contains(value)) throw new ArgumentOutOfRangeException("Attempting to select a nonexistant nameless object"); _selectionNameless = value; }
         }
 
         public SpecialMapObject SelectionSpecial { get; set; }
@@ -162,7 +162,7 @@ namespace ArtemisMissionEditor
             }
 
             if (mo == null && nmo==null)
-                throw new Exception("FAIL! Attempting to add object of unknown type " + type);
+                throw new NotImplementedException("Attempting to add object of unknown type " + type);
 
             if (mo != null)
             {

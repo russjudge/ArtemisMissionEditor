@@ -471,8 +471,6 @@ namespace ArtemisMissionEditor
                 {
                     case NamelessMapObjectType.asteroids:
                         KeyValuePair<double, double> result = GetAsteroidPositionOnArc(item.radius, angleEnd - angleStart, i, item.count);
-                        if (result.Value < 0)
-                            MessageBox.Show("FAIL!");
                         a = 3 * Math.PI / 2 - //Convert from map coords to screen coords
                             (angleStart + ((angleEnd - angleStart) * result.Value)); //start angle plus position inside arc from start to end angle
                         length = result.Key;

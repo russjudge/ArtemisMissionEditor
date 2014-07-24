@@ -130,13 +130,13 @@
     <Compile Include="Classes\Shared\Enumerators\MapFonts.cs" />
     <Compile Include="Classes\Shared\Helper.cs" />
     <Compile Include="Classes\Shared\Log.cs" />
-    <Compile Include="Classes\User Controls\DoubleBufferedTextBox.cs">
+    <Compile Include="Controls\DoubleBufferedTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Classes\User Controls\NormalLabel.cs">
+    <Compile Include="Controls\NormalLabel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Classes\User Controls\TreeViewEx.cs">
+    <Compile Include="Controls\TreeViewEx.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Classes\SpaceMap\Coordinates3D.cs" />
@@ -144,10 +144,10 @@
     <Compile Include="Classes\Shared\Enumerators\KeyCommands.cs" />
     <Compile Include="Classes\SpaceMap\SpaceMapSavedState.cs" />
     <Compile Include="Classes\SpaceMap\NamelessMapObject.cs" />
-    <Compile Include="Classes\User Controls\DoubleBufferedPanel.cs">
+    <Compile Include="Controls\DoubleBufferedPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Classes\User Controls\PanelSpaceMap.cs">
+    <Compile Include="Controls\PanelSpaceMap.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Classes\Shared\Settings.cs" />
@@ -251,11 +251,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Classes\User Controls\PanelSpaceMap.resx">
+    <EmbeddedResource Include="Controls\PanelSpaceMap.resx">
       <DependentUpon>PanelSpaceMap.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Classes\User Controls\TreeViewEx.resx">
+    <EmbeddedResource Include="Controls\TreeViewEx.resx">
       <DependentUpon>TreeViewEx.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>

@@ -13,6 +13,12 @@ using System.Resources;
 
 namespace ArtemisMissionEditor
 {
+    public enum PathRelativityMode
+    { 
+        RelativeToMissionFolder,
+        RelativeToArtemisFolder
+    }
+
 	public partial class DialogSimple : Form
 	{
 		private string DefaultValue;
@@ -21,9 +27,10 @@ namespace ArtemisMissionEditor
         private List<ValidateResultWarning> WarningPositions;
         private Brush BrushError;
         private Brush BrushWarning;
-        public string OpenFileExtensions { get; set; }
-		public string OpenFileHeader { get; set; }
-
+        private string OpenFileExtensions;
+        private string OpenFileHeader;
+        private PathRelativityMode PathRelativity;
+        
 		/// <summary> Wether the input value is considered to be null (distinguishes between null and empty string)</summary>
 		private bool NullMode { get { return _nullMode; } set { _nullMode = value; UpdateNullStatus(); } }
         /// <summary> NEVER ACCESS THIS! </summary>
@@ -84,15 +91,22 @@ namespace ArtemisMissionEditor
                         caption += "]";
                     }
                 }
-
+                
                 if (pathEditor)
                 {
-                    form.OpenFileExtensions = (string)description.Min;
-                    form.OpenFileHeader = (string)description.Max;
+                    string info = (string)description.Min;
+                    if (info.IndexOf(';') == -1)
+                        throw new ArgumentOutOfRangeException("Semicolon not found! Min value for PathEditor typed ValueDescription should contain file extensions and header separated by semicolon.");
+                    form.OpenFileExtensions = info.Substring(0, info.IndexOf(';'));
+                    form.OpenFileHeader = info.Substring(info.IndexOf(';') + 1);
+                    form.PathRelativity = (PathRelativityMode)description.Max;
                     form.openFileButton.Visible = true;
                 }
                 else
                 {
+                    form.OpenFileExtensions = "";
+                    form.OpenFileHeader = "";
+                    form.PathRelativity = (PathRelativityMode)0;
                     form.openFileButton.Visible = false;
                 }
 
@@ -113,7 +127,7 @@ namespace ArtemisMissionEditor
                     form.Width = 900;
                     form.input.Multiline = true;
                 }
-                form.warningLabel.Width = form.button1.Left - form.warningLabel.Left - 2;
+                form.warningLabel.Width = (pathEditor ? form.openFileButton.Left : form.button1.Left) - form.warningLabel.Left - 2;
 
                 if (form.ShowDialog() == DialogResult.Cancel)
                     return new KeyValuePair<bool, string>(false, null);
@@ -307,16 +321,52 @@ namespace ArtemisMissionEditor
 				return;
 
 			int pos = -1;
-			
-			//If file is inside mission folder - take only file name
-            if (!string.IsNullOrEmpty(Mission.Current.FilePath) && Path.GetDirectoryName(filename) == Path.GetDirectoryName(Mission.Current.FilePath))
-				input.Text = Path.GetFileName(filename);
-			//If file is inside dat folder - take only part from dat and on
-			else if ((pos = filename.LastIndexOf("dat\\")) != -1)
-				input.Text = filename.Substring(pos, filename.Length - pos);
-			//Else - take absolute path
-			else
-				input.Text = filename;
+
+            switch (PathRelativity)
+            {
+                case PathRelativityMode.RelativeToArtemisFolder:
+                    //If file is inside mission folder - take only file name and make path relative to Artemis.exe
+                    if (!string.IsNullOrEmpty(Mission.Current.FilePath) && Path.GetDirectoryName(filename) == Path.GetDirectoryName(Mission.Current.FilePath))
+                        input.Text = "dat\\Missions\\" + Path.GetFileNameWithoutExtension(Mission.Current.FilePath) + "\\" + Path.GetFileName(filename);
+                    //othrewise if the file is somewhere inside the artemis folder - take path from artemis folder
+                    else if (filename.IndexOf("dat\\") != -1)
+                    {
+                        // in case we find nothing, store full path
+                        input.Text = filename;
+                        pos = -1;
+                        while ((pos = filename.IndexOf("\\", pos + 1)) != -1)
+                        {
+                            if (File.Exists(filename.Substring(0, pos) + "\\" + "Artemis.exe"))
+                            {
+                                input.Text = filename.Substring(pos + 1, filename.Length - pos - 1);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                case PathRelativityMode.RelativeToMissionFolder:
+                    //If the file is inside the mission folder - take only file name
+                    if (!string.IsNullOrEmpty(Mission.Current.FilePath) && Path.GetDirectoryName(filename) == Path.GetDirectoryName(Mission.Current.FilePath))
+                        input.Text = Path.GetFileName(filename);
+                    //othrewise if the file is somewhere inside the artemis folder - make a path to that folder from mission folder
+                    else if (filename.IndexOf("dat\\") != -1)
+                    {
+                        // in case we find nothing, store full path
+                        input.Text = filename; 
+                        pos = -1;
+                        while ((pos = filename.IndexOf("\\", pos + 1)) != -1)
+                        {
+                            if (File.Exists(filename.Substring(0, pos) + "\\" + "Artemis.exe"))
+                            {
+                                input.Text = "..\\..\\..\\"+filename.Substring(pos + 1, filename.Length - pos - 1);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException("An unknown path relativity encountered: " + PathRelativity);
+            }
 		}
 
         private void warningLabel_Click(object sender, EventArgs e)

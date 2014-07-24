@@ -228,7 +228,7 @@ namespace ArtemisMissionEditor
                 case ExpressionMemberValueType.Nothing:
                     return ValidateResult.True;
 				default:
-					throw new NotImplementedException("FAIL! Attempting to validate something unknown!");
+					throw new NotImplementedException("Attempting to validate something unknown!");
 			}
 		}
 
@@ -428,9 +428,9 @@ namespace ArtemisMissionEditor
 				case ExpressionMemberValueType.Body:
 					return value1.Trim() == value2.Trim();
 				case ExpressionMemberValueType.Nothing:
-					throw new Exception("FAIL! Attempting to compare two NOTHING values!");
+					throw new ArgumentOutOfRangeException("Attempting to compare two NOTHING values!");
 				default:
-					throw new Exception("FAIL! Attempting to compare something unknown!");
+					throw new NotImplementedException("Attempting to compare something unknown!");
 			}
 		}
 

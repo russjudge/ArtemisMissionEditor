@@ -212,7 +212,7 @@ namespace ArtemisMissionEditor
 		public string GetAttribute(string name)
 		{
 			if (name == "")
-				throw new Exception("FAIL! Attribute cannot have a blank name!");
+				throw new ArgumentOutOfRangeException("Attribute cannot have a blank name!");
 
 			//Try reading directly
 			if (Attributes.ContainsKey(name))

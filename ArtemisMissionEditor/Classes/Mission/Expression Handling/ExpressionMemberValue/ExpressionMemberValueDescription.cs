@@ -39,7 +39,7 @@ namespace ArtemisMissionEditor
 			if (Items.ContainsKey(name))
 				return Items[name];
 			else
-				throw new NotImplementedException("FAIL! Trying to get a nonexistant ExpressionMemberValueDescription "+name);
+				throw new NotImplementedException("Trying to get a nonexistant ExpressionMemberValueDescription "+name);
 		}
 
         /// <summary>
@@ -119,10 +119,10 @@ namespace ArtemisMissionEditor
             Items.Add("podnumber",		    new ExpressionMemberValueDescription(EMVT.VarInteger,	EMVB.StoredWhenFilled,	EMVE.DefaultInteger, 0, 9));
             // meshFileName from [create]
             Items.Add("meshFileName",	    new ExpressionMemberValueDescription(EMVT.VarString,	EMVB.StoredWhenFilled,	EMVE.PathEditor,
-                                            "DeleD Mesh Files|*.dxs|All Files|*.*","Select Delgine mesh file","\"","\" "));
+                                            "DeleD Mesh Files|*.dxs|All Files|*.*;Select Delgine mesh file", PathRelativityMode.RelativeToArtemisFolder, "\"", "\" "));
             // textureFileName from [create]
             Items.Add("textureFileName",    new ExpressionMemberValueDescription(EMVT.VarString,	EMVB.StoredWhenFilled,	EMVE.PathEditor,
-                                            "PNG Files|*.png|All Files|*.*", "Select texture file", "\"", "\" "));
+                                            "PNG Files|*.png|All Files|*.*;Select texture file", PathRelativityMode.RelativeToArtemisFolder, "\"", "\" "));
             // hullRace from [create]
             Items.Add("hullRace",		    new ExpressionMemberValueDescription(EMVT.VarString,	EMVB.StoredWhenFilled,	EMVE.DefaultString, null, null, "\"", "\" "));
             // hullType from [create]
@@ -185,10 +185,10 @@ namespace ArtemisMissionEditor
 
             // fileName from [incoming_message]
             Items.Add("msgFileName",	    new ExpressionMemberValueDescription(EMVT.VarString,	EMVB.StoredWhenFilled,	EMVE.PathEditor,
-                                            "OGG Audio Files|*.ogg|All Files|*.*", "Select message audio file","\"","\" "));
+                                            "OGG Audio Files|*.ogg|All Files|*.*;Select message audio file", PathRelativityMode.RelativeToMissionFolder, "\"", "\" "));
             // fileName from [play_sound_now]
             Items.Add("soundFileName",	    new ExpressionMemberValueDescription(EMVT.VarString,	EMVB.StoredWhenFilled,	EMVE.PathEditor,
-                                            "WAVE Audio Files|*.wav|All Files|*.*", "Select sound file","\"","\" "));
+                                            "WAVE Audio Files|*.wav|All Files|*.*;Select sound file", PathRelativityMode.RelativeToMissionFolder, "\"", "\" "));
             // from from [incoming_message]
             Items.Add("msg_from",		    new ExpressionMemberValueDescription(EMVT.VarString,	EMVB.StoredWhenFilled,	EMVE.DefaultString,null,null,"\"","\" "));
             // mediaType from [incoming_message]

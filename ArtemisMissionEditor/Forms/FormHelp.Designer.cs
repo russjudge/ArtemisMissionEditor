@@ -31,9 +31,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormHelp));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabMiscellaneous = new System.Windows.Forms.TabPage();
-            this.textBox1 = new DoubleBufferedTextBox();
+            this.textBox1 = new ArtemisMissionEditor.DoubleBufferedTextBox();
             this.tabSpaceMapHotkeys = new System.Windows.Forms.TabPage();
-            this.textBox2 = new DoubleBufferedTextBox();
+            this.textBox2 = new ArtemisMissionEditor.DoubleBufferedTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.buttonOK = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
@@ -86,7 +86,7 @@
             this.tabSpaceMapHotkeys.Location = new System.Drawing.Point(4, 22);
             this.tabSpaceMapHotkeys.Name = "tabSpaceMapHotkeys";
             this.tabSpaceMapHotkeys.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSpaceMapHotkeys.Size = new System.Drawing.Size(836, 560);
+            this.tabSpaceMapHotkeys.Size = new System.Drawing.Size(836, 517);
             this.tabSpaceMapHotkeys.TabIndex = 1;
             this.tabSpaceMapHotkeys.Text = "Space Map Hotkeys";
             this.tabSpaceMapHotkeys.UseVisualStyleBackColor = true;
@@ -101,7 +101,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
             this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox2.Size = new System.Drawing.Size(830, 554);
+            this.textBox2.Size = new System.Drawing.Size(830, 511);
             this.textBox2.TabIndex = 1;
             this.textBox2.Text = resources.GetString("textBox2.Text");
             // 
@@ -115,12 +115,12 @@
             this.panel1.Size = new System.Drawing.Size(844, 42);
             this.panel1.TabIndex = 12;
             // 
-            // _FM_b_OK
+            // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.buttonOK.Location = new System.Drawing.Point(760, 10);
-            this.buttonOK.Name = "_FM_b_OK";
+            this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 10;
             this.buttonOK.Text = "OK";

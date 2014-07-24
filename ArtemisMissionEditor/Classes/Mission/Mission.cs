@@ -272,7 +272,7 @@ namespace ArtemisMissionEditor
 		private bool NodeIsAllowedToHaveRelation(TreeNode parent, TreeNode child, NodeRelationship relation)
 		{
 			if (child.Tag == null || parent.Tag == null)
-				throw new Exception("FAIL! Moving a TreeNode without a Tag, WTF?");
+				throw new ArgumentNullException("Moving a TreeNode without a Tag, WTF?");
 
             if (relation == NodeRelationship.ChildGoesInside && !TreeViewNodes.IsFolder(parent))
 				return false;
@@ -1392,9 +1392,9 @@ namespace ArtemisMissionEditor
 		private void ImportMissionNodeContentsFromStatementTree()
 		{
 			if (TreeViewNodes.SelectedNode == null)
-				throw new Exception("FAIL! Moving statements while selected node is null!?");
+				throw new ArgumentNullException("Moving statements while selected node is null!?");
 			if (!(TreeViewNodes.SelectedNode.Tag is MissionNode))
-				throw new Exception("FAIL! Moving statements within a non-MissionNode node!");
+				throw new ArgumentOutOfRangeException("Moving statements within a non-MissionNode node!");
 			
 			MissionNode mn = (MissionNode)TreeViewNodes.SelectedNode.Tag;
 

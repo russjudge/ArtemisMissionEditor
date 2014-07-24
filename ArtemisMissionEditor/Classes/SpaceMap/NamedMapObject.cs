@@ -632,7 +632,7 @@ namespace ArtemisMissionEditor
                 int tmp;
                 _hullID = value;
                 if (_hullID == "") return;
-                if (_hullID == null) throw new Exception("FAIL! Attempt to assign null to hullID!");
+                if (_hullID == null) throw new ArgumentNullException("Attempt to assign null to hullID!");
                 
                 if (Helper.IntTryParse(_hullID, out tmp)) return;
                 _hullID = _hullID.Replace("[", "").Replace(" ","");

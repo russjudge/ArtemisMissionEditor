@@ -1,4 +1,9 @@
 ﻿----------------------
+Version 2.1.1.8b [7-25-2014] (Alexey Andronov)
+* Fixed a bug: paths to textures and sounds were processed in the same way (should be relevant to Artemis folder for textures, and mission folder for sounds)
+* Fixed a bug: in dialog windows with Open File button, label for warnings overlapped the button
+
+----------------------
 Version 2.1.1.8 [7-25-2014] (Alexey Andronov)
 * Fixed Side value's name in set_side_value statement (was "sideValue", should be just "value")
 * Fixed a typo in the space map form menu: "Make whitespace names" -> "Mark whitespace names"

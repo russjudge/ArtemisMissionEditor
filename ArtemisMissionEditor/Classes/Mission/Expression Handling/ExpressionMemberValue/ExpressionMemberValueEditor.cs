@@ -7,22 +7,28 @@ using System.Drawing;
 
 namespace ArtemisMissionEditor
 {
+    /// <summary>
+    /// Defines everything about how the value is edited
+    /// </summary>
+    /// <remarks>
+    /// This class defines how the value is edited. 
+    /// For typical classes, default editor will be enough. In this case, simply a dialog will pop when required.
+    /// However, if special ways of editing would be useful, an editor class must be defined.
+    /// </remarks>
 	public class ExpressionMemberValueEditor
 	{
-		/// <summary>
-		/// Means it wont appear in the editor visually at all
-		/// </summary>
+		/// <summary> Means it wont appear in the editor visually at all </summary>
 		public static ExpressionMemberValueEditor Nothing;
-		/// <summary>
-		/// Means it will appear as an uneditable label
-		/// </summary>
+		/// <summary> Means it will appear as an uneditable label </summary>
 		public static ExpressionMemberValueEditor Label;
+        // Default editors for all types
 		public static ExpressionMemberValueEditor DefaultInteger;
 		public static ExpressionMemberValueEditor DefaultBool;
 		public static ExpressionMemberValueEditor DefaultDouble;
 		public static ExpressionMemberValueEditor DefaultString;
 		public static ExpressionMemberValueEditor DefaultBody; 
-		public static ExpressionMemberValueEditor CreateType;
+		
+        public static ExpressionMemberValueEditor CreateType;
 		public static ExpressionMemberValueEditor DefaultCheckUnsorted;
 		public static ExpressionMemberValueEditor DefaultCheckSorted;
 		public static ExpressionMemberValueEditor XmlNameActionCheck;
