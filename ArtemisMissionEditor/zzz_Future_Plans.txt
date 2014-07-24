@@ -1,8 +1,8 @@
 ﻿* CODE rework ~ Work-work!
 
 * Improve expression parsing:
-  - maybe show error/warning text differently?
-  - maybe add autocomplete or such stuff for var names?
+  - maybe show error/warning text differently? IDK, somehow in a more Visual Studio - style?
+  - maybe add autocomplete or such stuff for var names? IntelliSense-style?
 
 * Foolproof check
   Have an option to highlight problematic events in the mission. Probably as an option "Scan mission for errors" or maybe change event icons and add tooltips? Maybe as an option?
@@ -25,7 +25,7 @@ OLD TODOs:
 TODO's for the DISTANT FUTURE
 
 1. Selection:
-* Multiselect with one click (ctrl_click)
+* Multiselect with one click (ctrl_click): selecting all nodes between the current and the chosen
 * Drag and drop whole selection?
 
 2. Add MANDATORY wherever it is needed by the game

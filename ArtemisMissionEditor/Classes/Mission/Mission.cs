@@ -2727,12 +2727,14 @@ namespace ArtemisMissionEditor
 			return null;
 		}
 
-        public void SelectStatement(object tag)
+        public void SelectStatement(object tag, bool forbidMultiSelect = false)
         {
 			TreeNode node = GetStatementNode(tag);
 
 			if (node!=null)
 			{
+                if (forbidMultiSelect)
+                    TreeViewStatements.SelectedNodes.Clear();
 				TreeViewStatements.SelectedNode = node;
 				TreeViewStatements.SelectedNode.EnsureVisible();
 			}

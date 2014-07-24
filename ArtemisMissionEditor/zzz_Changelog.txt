@@ -1,4 +1,8 @@
 ﻿----------------------
+Version 2.1.1.8c [7-25-2014] (Alexey Andronov)
+* Fixed a bug: clicking Shift-F3 to select previous found item also added it to the selection
+
+----------------------
 Version 2.1.1.8b [7-25-2014] (Alexey Andronov)
 * Fixed a bug: paths to textures and sounds were processed in the same way (should be relevant to Artemis folder for textures, and mission folder for sounds)
 * Fixed a bug: in dialog windows with Open File button, label for warnings overlapped the button

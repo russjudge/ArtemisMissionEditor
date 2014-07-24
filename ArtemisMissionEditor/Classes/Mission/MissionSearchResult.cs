@@ -59,9 +59,9 @@ namespace ArtemisMissionEditor
 				return;
 			Mission.Current.SelectNode(Node);
 			if (Statement == null)
-				Mission.Current.SelectStatement(Node.Tag);
+				Mission.Current.SelectStatement(Node.Tag, true);
 			else
-				Mission.Current.SelectStatement(Statement);
+				Mission.Current.SelectStatement(Statement, true);
 		}
 
         public MissionSearchResult(int curNode, int curStatement, string text, TreeNode node, MissionStatement statement)
