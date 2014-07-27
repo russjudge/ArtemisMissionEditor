@@ -1,4 +1,21 @@
 ﻿----------------------
+Version 2.1.1.9 [7-28-2014] (Alexey Andronov)
+
+* CODE: Changed main form's tabcontrol to a panel with a label. Visually should remain the same.
+  This is because with TabControl, there's flickering on child controls no matter what you do! While this way, at least there's no flickering when changing horizontal size.
+* CODE: Forms are now properly closed at all times except when closed by user's choice. 
+  This is better than before because this allows forms to close properly on all sorts of events - task manger's close, windows shutdown, etc.
+  All forms are now Owned by Main Form, and thus when MF is closed, all other forms get closed as well.
+* Fixed a bug with upgrading settings file to a new version (that nobody should have ever encountered since settings version was last updated very long ago)
+* Cosmetic fixes in the "Find" menu: Replace had no ellipsis, Next and Previous were not capitalised, and Previous was shorted to prev. for some odd reason
+* All forms (except the main form and dialogs) are now shown above the Main Form at all times, so that they do not get lost behind the Main Form
+* All forms (except the main form and dialogs) can now be made transparent when they're not active
+* Notepad form was added, so that the editor does not demand you to paste anything into a text editor of your choice, but rather shows it to you immediately
+* Dependency form is now properly opened with "Open dependency form" option (Shift + F4) even for the first time (before it would not open unless you at least once open it "for current node")
+* You can now define what player ship names you want to have as default options for create statements (and there is now a list of 8 by default)
+* New feature: finding problematic places in the mission script. This will allow you to find subtle things like names not matching up or conditions possibly leading to weird results.
+
+----------------------
 Version 2.1.1.8c [7-25-2014] (Alexey Andronov)
 * Fixed a bug: clicking Shift-F3 to select previous found item also added it to the selection
 

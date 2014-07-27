@@ -27,10 +27,11 @@ namespace ArtemisMissionEditor
 
         private void _E_FS_FormClosing(object sender, FormClosingEventArgs e)
         {
-			if (!Program.IsClosing)
+            if (e.CloseReason == CloseReason.UserClosing)
             {
                 e.Cancel = true;
                 this.Hide();
+                Program.ShowMainFormIfRequired();
             }
 
 			SaveToRegistry(); 
@@ -87,6 +88,7 @@ namespace ArtemisMissionEditor
 		{
 			_FM_tb_VD.Text = Settings.Current.DefaultVesselDataPath;
 			_FM_tb_SN.Text = Settings.Current.NewMissionStartBlock;
+            _FM_tb_PN.Lines = Settings.Current.PlayerShipNames;
 		}
 
 		private void _E_FM_tb_SN_TextChanged(object sender, EventArgs e)
@@ -105,6 +107,11 @@ namespace ArtemisMissionEditor
 			if (e.KeyData == Keys.Escape)
 				Close();
 		}
+
+        private void _FM_tb_PN_TextChanged(object sender, EventArgs e)
+        {
+            Settings.Current.PlayerShipNames = _FM_tb_PN.Lines;
+        }
 
 
 

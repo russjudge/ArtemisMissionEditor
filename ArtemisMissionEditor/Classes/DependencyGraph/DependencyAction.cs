@@ -71,7 +71,7 @@ namespace ArtemisMissionEditor
 
 		public MissionStatement Statement;
 
-		public DependencyAction()
+        protected DependencyAction()
 		{
 			Statement = null;
 		}

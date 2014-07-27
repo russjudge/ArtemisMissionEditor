@@ -63,8 +63,8 @@ namespace ArtemisMissionEditor
 
     public sealed class SpecialMapObject_DestroyCircle : SpecialMapObject
     {
-        public static int _minRadius = 0;
-        public static int _maxRadius = 100000;
+        public static readonly int _minRadius = 0;
+        public static readonly int _maxRadius = 100000;
 
         [DisplayName("Statement"), Description("Specifies the statement being edited"), Category("ID")]
         public string Statement { get { return "Destroy objects near..."; } }
@@ -424,8 +424,8 @@ namespace ArtemisMissionEditor
 
     public sealed class SpecialMapObject_BoxSphere : SpecialMapObject
     {
-        public static int _minRadius = 0;
-        public static int _maxRadius = 100000;
+        public static readonly int _minRadius = 0;
+        public static readonly int _maxRadius = 100000;
 
         [DisplayName("Statement"), Description("Specifies the statement being edited"), Category("ID")]
         public string Statement { get { return "If object is " + (InOut == SpecialMapObjectInOut.Inside ? "inside " : "outside ") + (SphereBox == SpecialMapObjectSphereBox.Sphere ? "sphere" : "box"); } }

@@ -73,6 +73,8 @@
             this._FSM_ms_Main_Settings_UseYNameless = new System.Windows.Forms.ToolStripMenuItem();
             this._FSM_ms_Main_Settings_MarkWhitespaceNames = new System.Windows.Forms.ToolStripMenuItem();
             this._FSM_ms_Main_Settings_s_1 = new System.Windows.Forms.ToolStripSeparator();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showHelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._FSM_ss_Main = new System.Windows.Forms.StatusStrip();
             this._FSM_ss_Main_Coordinates = new System.Windows.Forms.ToolStripStatusLabel();
             this._FSM_ss_Main_s_1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -82,8 +84,6 @@
             this._FSM_ss_Main_s_3 = new System.Windows.Forms.ToolStripStatusLabel();
             this._FSM_ss_Main_ObjectsSelected = new System.Windows.Forms.ToolStripStatusLabel();
             this._FSM_tsc_Main = new System.Windows.Forms.ToolStripContainer();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showHelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this._FSM_sc_Main)).BeginInit();
             this._FSM_sc_Main.Panel1.SuspendLayout();
             this._FSM_sc_Main.Panel2.SuspendLayout();
@@ -566,6 +566,21 @@
             this._FSM_ms_Main_Settings_s_1.Name = "_FSM_ms_Main_Settings_s_1";
             this._FSM_ms_Main_Settings_s_1.Size = new System.Drawing.Size(154, 6);
             // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showHelpToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // showHelpToolStripMenuItem
+            // 
+            this.showHelpToolStripMenuItem.Name = "showHelpToolStripMenuItem";
+            this.showHelpToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.showHelpToolStripMenuItem.Text = "Show Help";
+            this.showHelpToolStripMenuItem.Click += new System.EventHandler(this.showHelpToolStripMenuItem_Click);
+            // 
             // _FSM_ss_Main
             // 
             this._FSM_ss_Main.Dock = System.Windows.Forms.DockStyle.None;
@@ -657,21 +672,6 @@
             // _FSM_tsc_Main.TopToolStripPanel
             // 
             this._FSM_tsc_Main.TopToolStripPanel.Controls.Add(this._FSM_ms_Main);
-            // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showHelpToolStripMenuItem});
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "Help";
-            // 
-            // showHelpToolStripMenuItem
-            // 
-            this.showHelpToolStripMenuItem.Name = "showHelpToolStripMenuItem";
-            this.showHelpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.showHelpToolStripMenuItem.Text = "Show Help";
-            this.showHelpToolStripMenuItem.Click += new System.EventHandler(this.showHelpToolStripMenuItem_Click);
             // 
             // FormSpaceMap
             // 

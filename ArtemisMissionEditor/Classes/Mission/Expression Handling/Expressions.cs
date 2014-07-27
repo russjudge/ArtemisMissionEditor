@@ -21,13 +21,11 @@ namespace ArtemisMissionEditor
     /// </remarks>
 	public static class Expressions 
 	{
-        static Expressions() { Root = new List<ExpressionMember>(); Root.Add(new ExpressionMemberCheck_XmlNode_H()); }
-
 		/// <summary>
 		/// Contains all of the possible expressions
 		/// </summary>
         /// <remarks>Root of all evil :) </remarks>
-		public static List<ExpressionMember> Root;
+        public static readonly List<ExpressionMember> Root = new List<ExpressionMember>() { new ExpressionMemberCheck_XmlNode_H() };
 
 		/// <summary>
 		/// Constructs the expression representing the given statement

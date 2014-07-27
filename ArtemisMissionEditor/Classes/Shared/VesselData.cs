@@ -102,6 +102,22 @@ namespace ArtemisMissionEditor
     {
         private static List<string> parserLog;
 
+        private static VesselData _current;
+        public static VesselData Current
+        {
+            get
+            {
+                if (_current == null) _current = new VesselData();
+                return _current;
+            }
+            set { _current = value; }
+        }
+
+        static VesselData()
+        {
+            Current = new VesselData();
+        }
+
 		public event EventHandler Update;
 
 		private void OnUpdate()
@@ -114,12 +130,12 @@ namespace ArtemisMissionEditor
 				Update(this, EventArgs.Empty);
 		}
 
-        public List<string> raceNames;
-        public List<string> raceKeys;
-        public List<string> vesselClassNames;
-        public List<string> vesselBroadTypes;
-        public Dictionary<string, Vessel> vesselList;
-        public Dictionary<string, HullRace> hullRaceList;
+        public List<string> RaceNames { get; private set; }
+        public List<string> RaceKeys { get; private set; }
+        public List<string> VesselClassNames { get; private set; }
+        public List<string> VesselBroadTypes { get; private set; }
+        public Dictionary<string, Vessel> VesselList { get; private set; }
+        public Dictionary<string, HullRace> HullRaceList { get; private set; }
 
         //possible races object can have
         public List<string> GetPossibleRaceIDs(List<string> checkedRaceNames, List<string> checkedRaceKeys)
@@ -137,14 +153,14 @@ namespace ArtemisMissionEditor
             
             //If something is selected first look for race names
             foreach (string raceName in checkedRaceNames)
-                foreach (KeyValuePair<string, HullRace> kvp in hullRaceList)
+                foreach (KeyValuePair<string, HullRace> kvp in HullRaceList)
                     if (kvp.Value.name == raceName)
                         if (!possibleRaceIDs.Contains(kvp.Key))
                             possibleRaceIDs.Add(kvp.Key);
 
             //If no race name found look for race that has all the keys
             if (possibleRaceIDs.Count == 0)
-                foreach (KeyValuePair<string, HullRace> kvp in hullRaceList)
+                foreach (KeyValuePair<string, HullRace> kvp in HullRaceList)
                 {
                     acceptable = true;
                     foreach (string raceKey in checkedRaceKeys)
@@ -165,7 +181,7 @@ namespace ArtemisMissionEditor
             bool acceptable;
 
             //First find all ships for the available races
-            foreach (KeyValuePair<string, Vessel> kvp in vesselList)
+            foreach (KeyValuePair<string, Vessel> kvp in VesselList)
                 if (possibleRaceIDs.Contains(kvp.Value.side))
                     probableVesselIDs.Add(kvp.Key);
 
@@ -180,7 +196,7 @@ namespace ArtemisMissionEditor
             //Find all ships with class  from those who are okay by race
             foreach (string vesselClassName in checkedVesselClassNames)
                 foreach (string id in probableVesselIDs)
-                    if (vesselList[id].classname == vesselClassName)
+                    if (VesselList[id].classname == vesselClassName)
                         possibleVesselIDs.Add(id);
 
             //If no ship matches classname => find ships that fit all the broad types
@@ -189,7 +205,7 @@ namespace ArtemisMissionEditor
                 {
                     acceptable = true;
                     foreach (string vesselBroadType in checkedVesselBroadTypes)
-                        if (!(vesselList[id].broadType == vesselBroadType))
+                        if (!(VesselList[id].broadType == vesselBroadType))
                             acceptable = false;
 
                     if (acceptable)
@@ -208,29 +224,18 @@ namespace ArtemisMissionEditor
 
         public string VesselToString(string id)
         {
-            Vessel v = vesselList[id];
-            HullRace r = hullRaceList[v.side];
+            Vessel v = VesselList[id];
+            HullRace r = HullRaceList[v.side];
             return "[" + v.uniqueID.ToString() + "] " + r.name + " " + v.classname;
         }
         
         public string RaceToString(string id)
         {
-            HullRace r = hullRaceList[id];
+            HullRace r = HullRaceList[id];
             return "[" + r.ID.ToString() + "] " + r.name;
         }
 
-
-        private void _Load_From_Xml_Version_1_66(XmlDocument xDoc)
-        {
-            _Load_From_Xml_Version_1_56(xDoc);
-        }
-        
-        private void _Load_From_Xml_Version_1_65(XmlDocument xDoc)
-        {
-			_Load_From_Xml_Version_1_56(xDoc);
-		}
-
-        private void _Load_From_Xml_Version_1_56(XmlDocument xDoc)
+        private void FromXml_Version_1_56(XmlDocument xDoc)
         {
             XmlNodeList xNodeList;
             HullRace race;
@@ -255,24 +260,24 @@ namespace ArtemisMissionEditor
                             break;
                         case "name":
                             race.name = att.Value;
-                            if (!raceNames.Contains(race.name))
-                                raceNames.Add(race.name);
+                            if (!RaceNames.Contains(race.name))
+                                RaceNames.Add(race.name);
                             break;
                         case "keys":
 
                             foreach (string s in att.Value.Split(' '))
                             {
                                 race.keys.Add(s);
-                                if (!raceKeys.Contains(s))
-                                    raceKeys.Add(s);
+                                if (!RaceKeys.Contains(s))
+                                    RaceKeys.Add(s);
                             }
                             break;
                     }
                 }
 
-                if (race.ID == "")
+                if (String.IsNullOrEmpty(race.ID))
                     continue;
-                hullRaceList.Add(race.ID, race);
+                HullRaceList.Add(race.ID, race);
             }
 
             xNodeList = xDoc.GetElementsByTagName("vessel");
@@ -292,17 +297,17 @@ namespace ArtemisMissionEditor
                             break;
                         case "classname":
                             vessel.classname = att.Value;
-                            if (!vesselClassNames.Contains(vessel.classname))
-                                vesselClassNames.Add(vessel.classname);
+                            if (!VesselClassNames.Contains(vessel.classname))
+                                VesselClassNames.Add(vessel.classname);
                             break;
                         case "broadType":
                             vessel.broadType = att.Value;
-                            if (!vesselBroadTypes.Contains(vessel.broadType))
-                                vesselBroadTypes.Add(vessel.broadType);
+                            if (!VesselBroadTypes.Contains(vessel.broadType))
+                                VesselBroadTypes.Add(vessel.broadType);
                             break;
                     }
                 }
-                if (vessel.uniqueID =="")
+                if (String.IsNullOrEmpty(vessel.uniqueID))
                     continue;
 
                 foreach (XmlNode subNode in node.ChildNodes)
@@ -516,7 +521,7 @@ namespace ArtemisMissionEditor
                             break;
                     }
                 }
-                vesselList.Add(vessel.uniqueID, vessel);
+                VesselList.Add(vessel.uniqueID, vessel);
             }
         }
 
@@ -539,30 +544,30 @@ namespace ArtemisMissionEditor
                 foreach (XmlAttribute att in xNodeList[0].Attributes)
                     if (att.Name == "version")
                         version = att.Value;
-                if (version=="")
+                if (String.IsNullOrEmpty(version))
                     parserLog.Add("Could not locate version attribute in vessel_data tag or it was blank");
             }
 
             //Parse based on the version
             switch (version){
                 case "1.56":
-                    _Load_From_Xml_Version_1_56(xDoc);
+                    FromXml_Version_1_56(xDoc);
                     break;
 				case "1.65":
-					_Load_From_Xml_Version_1_65(xDoc);
+					FromXml_Version_1_56(xDoc);
 					break;
                 case "1.66":
-                    _Load_From_Xml_Version_1_66(xDoc);
+                    FromXml_Version_1_56(xDoc);
                     break;
                 case "1.7":
-                    _Load_From_Xml_Version_1_66(xDoc);
+                    FromXml_Version_1_56(xDoc);
                     break;
                 case "2.1":
-                    _Load_From_Xml_Version_1_66(xDoc);
+                    FromXml_Version_1_56(xDoc);
                     break;
                 default:
                     parserLog.Add("Attempting to parse unknown version: \""+version+"\", will use oldest loading method possible.");
-                    _Load_From_Xml_Version_1_66(xDoc); //Using oldest method
+                    FromXml_Version_1_56(xDoc); //Using oldest method
                     break;
             }
         }
@@ -582,7 +587,7 @@ namespace ArtemisMissionEditor
 				Log.Add("Problems when loading vesselData.xml");
                 Log.Add("Unable to open file: " + path );
                 Log.Add("Error message: ");
-                Log.Add(e.Message);
+                Log.Add(e);
 				OnUpdate();
 				Log.Add("There were problems when loading vesselData.xml");
                 return;
@@ -597,12 +602,12 @@ namespace ArtemisMissionEditor
             }
             catch (Exception e)
 			{
-				int errorPos = vesselList.Count+1;
+				int errorPos = VesselList.Count+1;
 				_Initialize();
 				Log.Add("Unable to parse file: " + path);
 				Log.Add("Error occured while parsing vessel #" + errorPos);
 				Log.Add("Error message: ");
-                Log.Add(e.Message);
+                Log.Add(e);
 				error = true;
             }
 
@@ -625,12 +630,12 @@ namespace ArtemisMissionEditor
         {
             parserLog = new List<string>(); 
             
-            raceNames = new List<string>();
-            raceKeys = new List<string>();
-            vesselBroadTypes = new List<string>();
-            vesselClassNames = new List<string>();
-            vesselList = new Dictionary<string, Vessel>();
-            hullRaceList = new Dictionary<string, HullRace>();
+            RaceNames = new List<string>();
+            RaceKeys = new List<string>();
+            VesselBroadTypes = new List<string>();
+            VesselClassNames = new List<string>();
+            VesselList = new Dictionary<string, Vessel>();
+            HullRaceList = new Dictionary<string, HullRace>();
         }
         
         public VesselData()

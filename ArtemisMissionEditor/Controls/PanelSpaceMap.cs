@@ -38,8 +38,8 @@ namespace ArtemisMissionEditor
 		private TabControl				_objectsTabControl;
 
 		//Other stuff
-		private bool readOnly;
-		public bool ReadOnly { get { return readOnly; } set { readOnly = value; if (_propertyEditorPG != null) _propertyEditorPG.Enabled = !value; } }
+		private bool _readOnly;
+		public bool ReadOnly { get { return _readOnly; } set { _readOnly = value; if (_propertyEditorPG != null) _propertyEditorPG.Enabled = !value; } }
 		public bool ChangesPending { get { return SpaceMap.ChangesPending; } set { SpaceMap.ChangesPending = value; UpdateFormText(); } }
 
 		//For dragging the panel with space map around
@@ -283,7 +283,7 @@ namespace ArtemisMissionEditor
 				_propertyContainer = (SplitContainer)_propertyEditorPG.Parent.Parent;
 
 				AssignPropertyGrid_private_RecursivelyFindControls(_propertyContainer.Panel2, "Panel2");
-				if (_propertyContainerPossiblesPanel == "") AssignPropertyGrid_private_RecursivelyFindControls(_propertyContainer.Panel1, "Panel1");
+				if (String.IsNullOrEmpty(_propertyContainerPossiblesPanel)) AssignPropertyGrid_private_RecursivelyFindControls(_propertyContainer.Panel1, "Panel1");
 			}
 		}
 		public void AssignNamedObjectsListBox(ListBox value = null)
@@ -1282,7 +1282,7 @@ namespace ArtemisMissionEditor
 			}
 			else
 			{
-				foreach (NamedMapObject mo in SpaceMap.SelectionNamed)
+                foreach (NamedMapObject mo in SpaceMap.GetSelectionNamed())
 				{
 					x = PointXToScreen(mo.Coordinates.X_Scr);
 					zy = PointZToScreen(mo.Coordinates.Z_Scr) - mo.Coordinates.Y_Scr * screen_y_scale;
@@ -1521,7 +1521,7 @@ namespace ArtemisMissionEditor
                 }
                 else
                 {
-                    _propertyEditorPG.SelectedObjects = SpaceMap.SelectionNamed;
+                    _propertyEditorPG.SelectedObjects = SpaceMap.GetSelectionNamed();
                     if (_propertyContainerPossiblesPanel == "Panel1") _propertyContainer.Panel1Collapsed = !NamedMapObject.IsPropertyPresent("raceKeys", (NamedMapObject[])_propertyEditorPG.SelectedObjects) || _propertyEditorPG.SelectedObjects.Count() == 0;
                     if (_propertyContainerPossiblesPanel == "Panel2") _propertyContainer.Panel2Collapsed = !NamedMapObject.IsPropertyPresent("raceKeys", (NamedMapObject[])_propertyEditorPG.SelectedObjects) || _propertyEditorPG.SelectedObjects.Count() == 0;
                 }
@@ -1589,7 +1589,7 @@ namespace ArtemisMissionEditor
 				for (i = 0; i < SpaceMap.namedObjects.Count; i++)
 				{
 					_namedObjectsLB.Items.Add("[" + (i + 1).ToString("000") + "] " + SpaceMap.namedObjects[i].TypeToStringShort
-						+ (SpaceMap.namedObjects[i].name != "" ? " - " + SpaceMap.namedObjects[i].name : ""));
+						+ (!String.IsNullOrEmpty(SpaceMap.namedObjects[i].name) ? " - " + SpaceMap.namedObjects[i].name : ""));
 					if (SpaceMap.namedObjects[i].Selected)
 						_namedObjectsLB.SetSelected(_namedObjectsLB.Items.Count - 1, true);
 					if (_namedObjectsLB.Items[_namedObjectsLB.Items.Count - 1].ToString().Length > max.Length)
@@ -1646,47 +1646,47 @@ namespace ArtemisMissionEditor
 			if (_possibleVesselsLB != null) _possibleVesselsLB.Items.Clear();
 
 			NamedMapObjectArhK mo = new NamedMapObjectArhK();
-			mo.Copy(true, SpaceMap.SelectionNamed);
+            mo.Copy(true, SpaceMap.GetSelectionNamed());
 
-			if (!(mo.hullID == "" || mo.hullID == null))
+			if (!String.IsNullOrEmpty(mo.hullID))
 			{
-				if (!Settings.VesselData.vesselList.ContainsKey(mo.hullID))
+				if (!VesselData.Current.VesselList.ContainsKey(mo.hullID))
 					return;
 
-				v = Settings.VesselData.vesselList[mo.hullID];
+				v = VesselData.Current.VesselList[mo.hullID];
 
-				if (_possibleRacesLB != null) _possibleRacesLB.Items.Add(Settings.VesselData.RaceToString(v.side));
-				if (_possibleVesselsLB != null) _possibleVesselsLB.Items.Add(Settings.VesselData.VesselToString(v.uniqueID));
+				if (_possibleRacesLB != null) _possibleRacesLB.Items.Add(VesselData.Current.RaceToString(v.side));
+				if (_possibleVesselsLB != null) _possibleVesselsLB.Items.Add(VesselData.Current.VesselToString(v.uniqueID));
 
 				return;
 			}
 
 			foreach (string item in mo.RaceNames.Split(' '))
-				if (item != "")
+				if (!String.IsNullOrEmpty(item))
 					checkedRaceNames.Add(item);
 			foreach (string item in mo.RaceKeys.Split(' '))
-				if (item != "")
+				if (!String.IsNullOrEmpty(item))
 					checkedRaceKeys.Add(item);
 			foreach (string item in mo.VesselBroadTypes.Split(' '))
-				if (item != "")
+				if (!String.IsNullOrEmpty(item))
 					checkedVesselBroadTypes.Add(item);
 			foreach (string item in mo.VesselClassNames.Split(' '))
-				if (item != "")
+				if (!String.IsNullOrEmpty(item))
 					checkedVesselClassNames.Add(item);
 
 			//Prepare races list
-			List<string> possibleRaceIDs = Settings.VesselData.GetPossibleRaceIDs(checkedRaceNames, checkedRaceKeys);
+			List<string> possibleRaceIDs = VesselData.Current.GetPossibleRaceIDs(checkedRaceNames, checkedRaceKeys);
 
 			//Output races list
 			foreach (string item in possibleRaceIDs)
-				if (_possibleRacesLB != null) _possibleRacesLB.Items.Add(Settings.VesselData.RaceToString(item));
+				if (_possibleRacesLB != null) _possibleRacesLB.Items.Add(VesselData.Current.RaceToString(item));
 
 			//Prepare vessel list
-			List<string> possibleVesselIDs = Settings.VesselData.GetPossibleVesselIDs(possibleRaceIDs, checkedVesselClassNames, checkedVesselBroadTypes);
+			List<string> possibleVesselIDs = VesselData.Current.GetPossibleVesselIDs(possibleRaceIDs, checkedVesselClassNames, checkedVesselBroadTypes);
 
 			//Finally output the vessel list
 			foreach (string id in possibleVesselIDs)
-				if (_possibleVesselsLB != null) _possibleVesselsLB.Items.Add(Settings.VesselData.VesselToString(id));
+				if (_possibleVesselsLB != null) _possibleVesselsLB.Items.Add(VesselData.Current.VesselToString(id));
 
 		}
 
@@ -1999,7 +1999,7 @@ namespace ArtemisMissionEditor
 			if (newObject.GetType() != typeof(NamelessMapObject))
 			{
 				NamedMapObject mo = (NamedMapObject)newObject;
-				mo.Copy(true, SpaceMap.SelectionNamed);
+                mo.Copy(true, SpaceMap.GetSelectionNamed());
 				if (!additive)
 					SpaceMap.Select_None();
 				mo.Selected = true;
@@ -2021,7 +2021,7 @@ namespace ArtemisMissionEditor
 		public void ExecuteCommand(KeyCommands command)
 		{
 			bool additive = Control.ModifierKeys == Keys.Shift;
-			bool removative = Control.ModifierKeys == Keys.Control;
+			//bool removative = Control.ModifierKeys == Keys.Control; // Not used yet, but in case we ever need it
 
             //Commands that are same for all modes
             switch (command)
@@ -2723,18 +2723,10 @@ namespace ArtemisMissionEditor
 			_PSM_tb_scapeGoat.MouseWheel += new MouseEventHandler(_E_PSM_tb_ScapeGoat_MouseWheel);
 
 			//init other vars
-			readOnly = false;
+			_readOnly = false;
 			_mouseMovedSinceMouseDown = false;
 
             ChangesPending = false;
-		}
-
-		~_PanelSpaceMap()
-		{
-			//AssignPropertyGrid();
-			//AssignNamedObjectsListBox();
-			//AssignNamelessObjectsListBox();
-			//AssignStatusToolStrip();
 		}
 
 		private void InitializeComponent()
@@ -2853,7 +2845,8 @@ namespace ArtemisMissionEditor
             this._PSM_cms_Main_Select,
             this._PSM_cms_Main_Selection});
             this._PSM_cms_Main.Name = "_PSM_cms_MainSelection";
-            this._PSM_cms_Main.Size = new System.Drawing.Size(123, 70);
+            this._PSM_cms_Main.Size = new System.Drawing.Size(153, 92);
+            this._PSM_cms_Main.Opening += new System.ComponentModel.CancelEventHandler(this._E_PSM_cms_Main_Opening);
             // 
             // _PSM_cms_Main_New
             // 
@@ -2872,7 +2865,7 @@ namespace ArtemisMissionEditor
             this._PSM_cms_Main_New_Mines,
             this._PSM_cms_Main_New_Nebulas});
             this._PSM_cms_Main_New.Name = "_PSM_cms_Main_New";
-            this._PSM_cms_Main_New.Size = new System.Drawing.Size(122, 22);
+            this._PSM_cms_Main_New.Size = new System.Drawing.Size(152, 22);
             this._PSM_cms_Main_New.Text = "&New";
             // 
             // _PSM_cms_Main_New_Anomaly
@@ -2936,7 +2929,7 @@ namespace ArtemisMissionEditor
             this._PSM_cms_Main_New_Whale.Name = "_PSM_cms_Main_New_Whale";
             this._PSM_cms_Main_New_Whale.Size = new System.Drawing.Size(163, 22);
             this._PSM_cms_Main_New_Whale.Text = "(&9) Whale";
-            this._PSM_cms_Main_New_Whale.Click += new EventHandler(_E_PSM_cms_Main_New_Whale_Click);
+            this._PSM_cms_Main_New_Whale.Click += new System.EventHandler(this._E_PSM_cms_Main_New_Whale_Click);
             // 
             // _PSM_cms_Main_New_s_1
             // 
@@ -2970,7 +2963,7 @@ namespace ArtemisMissionEditor
             this._PSM_cms_Main_Selection_All,
             this._PSM_cms_Main_Selection_None});
             this._PSM_cms_Main_Select.Name = "_PSM_cms_Main_Select";
-            this._PSM_cms_Main_Select.Size = new System.Drawing.Size(122, 22);
+            this._PSM_cms_Main_Select.Size = new System.Drawing.Size(152, 22);
             this._PSM_cms_Main_Select.Text = "Select";
             // 
             // _PSM_cms_Main_Selection_All
@@ -2999,7 +2992,7 @@ namespace ArtemisMissionEditor
             this._PSM_cms_Main_Selection_s_2,
             this._PSM_cms_Main_Selection_Delete});
             this._PSM_cms_Main_Selection.Name = "_PSM_cms_Main_Selection";
-            this._PSM_cms_Main_Selection.Size = new System.Drawing.Size(122, 22);
+            this._PSM_cms_Main_Selection.Size = new System.Drawing.Size(152, 22);
             this._PSM_cms_Main_Selection.Text = "&Selection";
             // 
             // _PSM_cms_Main_Selection_MoveToCursor
@@ -3204,7 +3197,7 @@ namespace ArtemisMissionEditor
             this._PSM_cms_NamelessObjectList_MoveToFront,
             this._PSM_cms_NamelessObjectList_MoveToBack});
             this._PSM_cms_NamelessObjectList.Name = "_PSM_cms_NamedObjectList";
-            this._PSM_cms_NamelessObjectList.Size = new System.Drawing.Size(212, 126);
+            this._PSM_cms_NamelessObjectList.Size = new System.Drawing.Size(212, 104);
             // 
             // _PSM_cms_NamelessObjectList_Select
             // 

@@ -10,8 +10,7 @@ using System.Windows.Forms.Design;
 
 namespace ArtemisMissionEditor
 {
-
-    public sealed class CheckedListBoxUITypeEditor_vesselClassNames : System.Drawing.Design.UITypeEditor
+    public sealed class CheckedListBoxUITypeEditor_vesselClassNames : System.Drawing.Design.UITypeEditor, IDisposable
     {
         public CheckedListBox cbx = new CheckedListBox();
 
@@ -37,7 +36,7 @@ namespace ArtemisMissionEditor
                 cbx.Items.Clear();
                 cbx.Sorted = false; //dont sort while adding
 
-                foreach (string item in Settings.VesselData.vesselClassNames)
+                foreach (string item in VesselData.Current.VesselClassNames)
                 {
                     cbx.Items.Add(item);
                     if (value != null)
@@ -64,10 +63,15 @@ namespace ArtemisMissionEditor
                     return tmp.Aggregate((alfa, beta) => alfa + " " + beta);
             }
             return null;
+        }
+
+        public void Dispose()
+        {
+            cbx.Dispose();
         }
     }
 
-    public sealed class CheckedListBoxUITypeEditor_vesselBroadTypes : System.Drawing.Design.UITypeEditor
+    public sealed class CheckedListBoxUITypeEditor_vesselBroadTypes : System.Drawing.Design.UITypeEditor, IDisposable
     {
         public CheckedListBox cbx = new CheckedListBox();
 
@@ -93,7 +97,7 @@ namespace ArtemisMissionEditor
                 cbx.Items.Clear();
                 cbx.Sorted = false; //dont sort while adding
 
-                foreach (string item in Settings.VesselData.vesselBroadTypes)
+                foreach (string item in VesselData.Current.VesselBroadTypes)
                 {
                     cbx.Items.Add(item);
                     if (value != null)
@@ -120,10 +124,15 @@ namespace ArtemisMissionEditor
                     return tmp.Aggregate((alfa, beta) => alfa + " " + beta);
             }
             return null;
+        }
+
+        public void Dispose()
+        {
+            cbx.Dispose();
         }
     }
 
-    public sealed class CheckedListBoxUITypeEditor_raceNames : System.Drawing.Design.UITypeEditor
+    public sealed class CheckedListBoxUITypeEditor_raceNames : System.Drawing.Design.UITypeEditor, IDisposable
     {
         public CheckedListBox cbx = new CheckedListBox();
 
@@ -149,7 +158,7 @@ namespace ArtemisMissionEditor
                 cbx.Items.Clear();
                 cbx.Sorted = false; //dont sort while adding
 
-                foreach (string item in Settings.VesselData.raceNames)
+                foreach (string item in VesselData.Current.RaceNames)
                 {
                     cbx.Items.Add(item);
                     if (value != null)
@@ -176,10 +185,15 @@ namespace ArtemisMissionEditor
                     return tmp.Aggregate((alfa, beta) => alfa + " " + beta);
             }
             return null;
+        }
+
+        public void Dispose()
+        {
+            cbx.Dispose();
         }
     }
 
-    public sealed class CheckedListBoxUITypeEditor_raceKeys : System.Drawing.Design.UITypeEditor
+    public sealed class CheckedListBoxUITypeEditor_raceKeys : System.Drawing.Design.UITypeEditor, IDisposable
     {
         public CheckedListBox cbx = new CheckedListBox();
 
@@ -205,7 +219,7 @@ namespace ArtemisMissionEditor
                 cbx.Items.Clear();
                 cbx.Sorted = false; //dont sort while adding
 
-                foreach (string item in Settings.VesselData.raceKeys)
+                foreach (string item in VesselData.Current.RaceKeys)
                 {
                     cbx.Items.Add(item);
                     if (value != null)
@@ -232,6 +246,11 @@ namespace ArtemisMissionEditor
                     return tmp.Aggregate((alfa, beta) => alfa + " " + beta);
             }
             return null;
+        }
+
+        public void Dispose()
+        {
+            cbx.Dispose();
         }
     }
 

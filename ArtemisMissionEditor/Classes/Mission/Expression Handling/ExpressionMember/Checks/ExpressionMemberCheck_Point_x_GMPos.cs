@@ -41,9 +41,9 @@ namespace ArtemisMissionEditor
 			: base("", "check_point/gmpos")
 		{
 			List<ExpressionMember> eML;
-			string x = prefix == "" ? "x" : prefix + "X";
-			string y = prefix == "" ? "y" : prefix + "Y";
-			string z = prefix == "" ? "z" : prefix + "Z";
+			string x = String.IsNullOrEmpty(prefix) ? "x" : prefix + "X";
+			string y = String.IsNullOrEmpty(prefix) ? "y" : prefix + "Y";
+			string z = String.IsNullOrEmpty(prefix) ? "z" : prefix + "Z";
 			string suffix = unbound ? "u" : "";
 
 			eML = this.Add(pointCaption); //_choices[0]

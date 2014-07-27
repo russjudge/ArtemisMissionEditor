@@ -18,9 +18,10 @@ namespace ArtemisMissionEditor
             _FD_b_Event.Text = "";
         }
 
-        public void OpenEventDependency(TreeNode node)
+        public void OpenEventDependency(TreeNode node, bool recalculate = false)
         {
-            if (node != null)
+            // if recalculate is false and we already have a node, then do not recalculate, otherwise, we are forced to
+            if (node != null && !(((MissionSearchResult)_FD_b_Event.Tag).Valid && !recalculate))
             {
                 _FD_lb_Left.Items.Clear();
                 _FD_lb_Right.Items.Clear();
@@ -161,7 +162,7 @@ namespace ArtemisMissionEditor
 			}
 			else
 			{
-				Close();
+                Hide();
 			}
         }
 
@@ -175,11 +176,14 @@ namespace ArtemisMissionEditor
 
         private void _E_FD_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!Program.IsClosing)
+            if (e.CloseReason == CloseReason.UserClosing)
             {
                 e.Cancel = true;
                 this.Hide();
+                Program.ShowMainFormIfRequired();
             }
+
+            SaveToRegistry();
         }
 
         private void _E_FD_b_Event_Click(object sender, EventArgs e)

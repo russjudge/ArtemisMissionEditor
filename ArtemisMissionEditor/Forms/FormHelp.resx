@@ -117,6 +117,29 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="textBox3.Text" xml:space="preserve">
+    <value>====================================================================================
+ Overview
+====================================================================================
+
+The Mission Editor provides several analysis options to help you with mission scripting. They can be helpful because Artemis scripting is not always easy to comprehend, as sometimes it goes against common sense of normal people, those used to scripting or even programmers. These options are available via the Tools -&gt; Analyze menu option.
+
+
+====================================================================================
+ Compare current state with the source
+====================================================================================
+
+If you are opening a mission script that was edited manually (in a text editor), then this option might be useful for you. It will list all the changes that Mission Editor made to the script after it was parsed. Usually this will indicate excessive attributes that are not supported by the statement or typos in the original script, or even an error in the Mission Editor script parsing logic, in which case please report this as a bug on Artemis forums. 
+
+It is recommended to do this after you open a manually created mission script for the first time with the editor, or after you open a mission script for the first time with an editor version different from the one which was previously used.
+
+
+====================================================================================
+ Find potential problems with the script
+====================================================================================
+
+There are many peculiarities in the Artemis mission scripting system that may catch even experienced scripters or programmers off-guard. This is what "Find potential problems" is for. Using this feature you can check your whole mission script for problematic places - not outright errors like missing attributes, but subtle things like names not matching up or conditions possibly leading to weird results.</value>
+  </data>
   <data name="textBox1.Text" xml:space="preserve">
     <value>====================================================================================
  Video Tutorials

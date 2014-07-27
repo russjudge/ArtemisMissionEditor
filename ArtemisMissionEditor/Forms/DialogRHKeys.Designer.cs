@@ -36,7 +36,6 @@
             this._DRHK_l_2 = new System.Windows.Forms.Label();
             this._DRHK_lb_1 = new System.Windows.Forms.CheckedListBox();
             this._DRHK_lb_2 = new System.Windows.Forms.CheckedListBox();
-            this.fontDialog1 = new System.Windows.Forms.FontDialog();
             this.button2 = new System.Windows.Forms.Button();
             this.tbUnrecognised = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -218,7 +217,6 @@
 		private System.Windows.Forms.Label _DRHK_l_2;
 		private System.Windows.Forms.CheckedListBox _DRHK_lb_1;
 		private System.Windows.Forms.CheckedListBox _DRHK_lb_2;
-		private System.Windows.Forms.FontDialog fontDialog1;
 		private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox tbUnrecognised;
         private System.Windows.Forms.Label label1;

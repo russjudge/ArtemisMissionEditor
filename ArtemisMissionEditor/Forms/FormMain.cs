@@ -18,13 +18,14 @@ namespace ArtemisMissionEditor
         
         public void UpdateFormText()
 		{
-			string value = Mission.Current.FilePath == "" ? "Unnamed" : Path.GetFileName(Mission.Current.FilePath);
+			string value = String.IsNullOrEmpty(Mission.Current.FilePath) ? "Unnamed" : Path.GetFileName(Mission.Current.FilePath);
 
 			Text = (Mission.Current.ChangesPending ? "* " : "") + value + " - " + MainFormName;
 		}
 
         private Point MousePositionWhenOpeningDropDownMissionNode = new Point();
 		private Point MousePositionWhenOpeningDropDownMissionStatement = new Point();
+
 
         public  FormMain()
         {
@@ -33,14 +34,14 @@ namespace ArtemisMissionEditor
             Log.NewLogEntry += _E_Log_NewLogEntry;
 			_E_Log_NewLogEntry();
 
-			SubscribeToVesselDataUpdates(Settings.VesselData);
+			SubscribeToVesselDataUpdates(VesselData.Current);
 
 			Mission.Current = new Mission();
 			Mission.Current.AssignFlowPanel(_FM_flp_Bottom_Right);
 			Mission.Current.AssignNodeTreeView(_FM_tve_MissionNode);
 			Mission.Current.AssignStatementTreeView(_FM_tve_MissionStatement);
 			Mission.Current.AssignForm(this);
-			Mission.Current.AssignTabControl(_FM_tc_Right_Top);
+			Mission.Current.AssignLabel(_FM_lbl_Main);
             Mission.Current.AssignStatusToolStrip(_FM_ss_Main);
 			Mission.Current.AssignLabelCMS(_FM_cms_Label);
             
@@ -54,7 +55,7 @@ namespace ArtemisMissionEditor
 
         private void UpdateVesselDataText(object sender, EventArgs e)
         {
-            _FM_ss_Main_VesselData.Text = "[vesselData.xml]: " + Settings.VesselData.hullRaceList.Count.ToString() + " races and " + Settings.VesselData.vesselList.Count.ToString() + " vessels.";
+            _FM_ss_Main_VesselData.Text = "[vesselData.xml]: " + VesselData.Current.HullRaceList.Count.ToString() + " races and " + VesselData.Current.VesselList.Count.ToString() + " vessels.";
         }
 
         private void _E_Log_NewLogEntry()
@@ -83,6 +84,8 @@ namespace ArtemisMissionEditor
 						return;
 					}
 			}
+
+            e.Cancel = false;
 
             SaveToRegistry();
         }
@@ -279,8 +282,9 @@ namespace ArtemisMissionEditor
             }
             else
             {
-                MessageBox.Show("Debug information was copied to clipboard.\r\nPaste it into any preferred text editor", "Success!");
-                Clipboard.SetText(result);
+                while (result.IndexOf("\r\n") == 0)
+                    result = result.Substring(2);
+                Program.FormNotepadInstance.ShowText(result, "Difference with the source file");
             }
         }
 
@@ -332,7 +336,7 @@ namespace ArtemisMissionEditor
                     || (_FM_tve_MissionNode.SelectedNode.NextNode != null && _FM_tve_MissionNode.IsFolder(_FM_tve_MissionNode.SelectedNode.NextNode));
             }
 
-			_FM_cms_MissionNodeTree_SetAsBackground.Enabled = (_FM_tve_MissionNode.SelectedNode.Tag is MissionNode_Event || _FM_tve_MissionNode.SelectedNode.Tag is MissionNode_Start) && Mission.Current.BgNode != _FM_tve_MissionNode.SelectedNode;
+			_FM_cms_MissionNodeTree_SetAsBackground.Enabled =  _FM_tve_MissionNode.SelectedNode != null && (_FM_tve_MissionNode.SelectedNode.Tag is MissionNode_Event || _FM_tve_MissionNode.SelectedNode.Tag is MissionNode_Start) && Mission.Current.BgNode != _FM_tve_MissionNode.SelectedNode;
 			_FM_cms_MissionNodeTree_XML.Enabled = Mission.Current.CanGetNodeXmlText();
         }
 
@@ -542,7 +546,7 @@ namespace ArtemisMissionEditor
             if (res != DialogResult.OK)
                 return;
 
-            Settings.VesselData.Load(filename);
+            VesselData.Current.Load(filename);
         }
 
 		private void _E_FM_cms_Label_Opening(object sender, CancelEventArgs e)
@@ -597,9 +601,7 @@ namespace ArtemisMissionEditor
 
 		private void helpFormToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-            Program.FormHelpInstance.SetPage(FormHelpPage.Miscellaneous);
-            Program.FormHelpInstance.Show();
-            Program.FormHelpInstance.BringToFront();
+            Program.FormHelpInstance.ShowPage(FormHelpPage.Miscellaneous);
 		}
 
 		private void _E_FM_ms_Main_Edit_Properties_Click(object sender, EventArgs e)
@@ -617,7 +619,7 @@ namespace ArtemisMissionEditor
 
 		private void _E_FM_t_AutoUpdateTimer_Tick(object sender, EventArgs e)
 		{
-			string programFolder = Environment.ExpandEnvironmentVariables(Settings._programDataFolder);
+			string programFolder = Environment.ExpandEnvironmentVariables(Settings.ProgramDataFolder);
 
 			List<string> files = Directory.GetFiles(programFolder, "autosave*.xml").ToList();
 
@@ -673,6 +675,25 @@ namespace ArtemisMissionEditor
 		{
 			Mission.Current.StatementEnableDisable(true);
 		}
+
+        private void showHelpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Program.FormHelpInstance.ShowPage(FormHelpPage.Analysis);
+        }
+
+        private void findPotentialProblemsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Program.FormSearchResultsInstance.FindProblems();
+        }
+
+        private void label1_Paint(object sender, PaintEventArgs e)
+        {
+            Label l = (Label)sender;
+            //e.Graphics.DrawLine(SystemPens.ControlLightLight, 0, l.Height-2, l.Width, l.Height-2);
+            e.Graphics.DrawLine(SystemPens.WindowFrame, 0, 0, l.Width, 0);
+            e.Graphics.DrawLine(SystemPens.WindowFrame, 0, 0, 0, l.Height - 1);
+            e.Graphics.DrawLine(SystemPens.WindowFrame, l.Width - 1, 0, l.Width - 1, l.Height - 1);
+        }
 
     }
 }

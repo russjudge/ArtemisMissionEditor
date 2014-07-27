@@ -96,7 +96,7 @@ namespace ArtemisMissionEditor
                 {
                     string info = (string)description.Min;
                     if (info.IndexOf(';') == -1)
-                        throw new ArgumentOutOfRangeException("Semicolon not found! Min value for PathEditor typed ValueDescription should contain file extensions and header separated by semicolon.");
+                        throw new ArgumentException("description", "Semicolon not found! Min value for PathEditor typed ValueDescription should contain file extensions and header separated by semicolon.");
                     form.OpenFileExtensions = info.Substring(0, info.IndexOf(';'));
                     form.OpenFileHeader = info.Substring(info.IndexOf(';') + 1);
                     form.PathRelativity = (PathRelativityMode)description.Max;

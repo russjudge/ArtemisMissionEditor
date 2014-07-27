@@ -22,10 +22,11 @@ namespace ArtemisMissionEditor
 
 		private void _E_FormLog_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if (!Program.IsClosing)
+			if (e.CloseReason == CloseReason.UserClosing)
 			{
 				e.Cancel = true;
 				this.Hide();
+                Program.ShowMainFormIfRequired();
 			}
 
 			SaveToRegistry();

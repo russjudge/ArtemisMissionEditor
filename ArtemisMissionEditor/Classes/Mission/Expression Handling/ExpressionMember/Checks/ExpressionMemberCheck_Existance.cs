@@ -36,10 +36,8 @@ namespace ArtemisMissionEditor
 			: base("", "check_existance")
 		{
 			List<ExpressionMember> eML;
-			
-			eML = this.Add("exists"); //_choices[0]
-
-			eML = this.Add("does not exist"); //_choices[1]
+			eML = Add("exists"); //_choices[0]
+			eML = Add("does not exist"); //_choices[1]
 			
 		}
 

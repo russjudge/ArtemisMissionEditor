@@ -23,8 +23,8 @@ namespace ArtemisMissionEditor
             List<string> tmp = new List<string>();
 
             tmp.Add("None");
-			foreach (string id in Settings.VesselData.vesselList.Keys)
-				tmp.Add(Settings.VesselData.VesselToString(id));
+			foreach (string id in VesselData.Current.VesselList.Keys)
+				tmp.Add(VesselData.Current.VesselToString(id));
 
             return new StandardValuesCollection(tmp.ToArray());
         }
@@ -234,7 +234,7 @@ namespace ArtemisMissionEditor
             __AddNewAttribute(xDoc, create, "y", Helper.DoubleToString(_coordinates.Y));
             __AddNewAttribute(xDoc, create, "z", Helper.DoubleToString(_coordinates.Z));
 
-			if (name != "")
+			if (!String.IsNullOrEmpty(name))
 				__AddNewAttribute(xDoc, create, "name", name);
 			else
 				__RememberPropertyIfMissing(missingProperties, "name", IsPropertyMandatory("name"));
@@ -344,7 +344,7 @@ namespace ArtemisMissionEditor
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (type == "") type = TypeToString;//If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
             __AddNewAttribute(xDoc, create, "angle", A_deg.ToString());
@@ -446,7 +446,7 @@ namespace ArtemisMissionEditor
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (type == "") type = TypeToString;//If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
             if (sideValue.HasValue)
@@ -481,51 +481,50 @@ namespace ArtemisMissionEditor
         //RACE KEYS && HULL KEYS
 
         //Only for easy output to xml
-        [Browsable(false)] 
-        public List<string> raceKeys
+        public List<string> GetRaceKeysForXml()
         {
-            get
-            {
-                List<string> tmp = new List<string>();
-                foreach (string item in _race_Names.Split(' '))
-                    if(item!="") tmp.Add(item);
-                foreach (string item in _race_Keys.Split(' '))
-                    if (item != "") tmp.Add(item);
-                foreach (string item in _race_Unrecognised.Split(' '))
-                    if (item != "") tmp.Add(item);
-                return tmp;
-            }
+            List<string> tmp = new List<string>();
+            foreach (string item in _race_Names.Split(' '))
+                if(!String.IsNullOrEmpty(item)) 
+                    tmp.Add(item);
+            foreach (string item in _race_Keys.Split(' '))
+                if (!String.IsNullOrEmpty(item)) 
+                    tmp.Add(item);
+            foreach (string item in _race_Unrecognised.Split(' '))
+                if (!String.IsNullOrEmpty(item)) 
+                    tmp.Add(item);
+            return tmp;
         }
         
         //Only for easy output to xml
         [Browsable(false)]
-        public List<string> hullKeys
+        public List<string> GetHullKeysForXml()
         {
-            get
-            {
-                List<string> tmp = new List<string>();
-                foreach (string item in _vessel_BroadTypes.Split(' '))
-                    if (item != "") tmp.Add(item);
-                foreach (string item in _vessel_ClassNames.Split(' '))
-                    if (item != "") tmp.Add(item);
-                foreach (string item in _vessel_Unrecognised.Split(' '))
-                    if (item != "") tmp.Add(item);
-                return tmp;
-            }
+            List<string> tmp = new List<string>();
+            foreach (string item in _vessel_BroadTypes.Split(' '))
+                if (!String.IsNullOrEmpty(item)) 
+                    tmp.Add(item);
+            foreach (string item in _vessel_ClassNames.Split(' '))
+                if (!String.IsNullOrEmpty(item)) 
+                    tmp.Add(item);
+            foreach (string item in _vessel_Unrecognised.Split(' '))
+                if (!String.IsNullOrEmpty(item)) 
+                    tmp.Add(item);
+            return tmp;
         }
 
         private string _race_Names;
 
         [DisplayName("names"), Category("\t\traceKeys"), Description("List of object's race names (from vesselData.xml)"), DefaultValue("< none >"), EditorAttribute(typeof(CheckedListBoxUITypeEditor_raceNames), typeof(System.Drawing.Design.UITypeEditor))]
-        public string RaceNames_Display { get { if (_race_Names == "") return "< none >"; return _race_Names; } set { _race_Names = value.Replace("< none >", ""); RaceNames_ValidateSort(); } }
+        public string RaceNames_Display { get { if (String.IsNullOrEmpty(_race_Names)) return "< none >"; return _race_Names; } set { _race_Names = value.Replace("< none >", ""); RaceNames_ValidateSort(); } }
         [Browsable(false)]
         public string RaceNames { get { return _race_Names; } set { _race_Names = value; RaceNames_ValidateSort(); } }
-        public void RaceNames_Add(string value) { _race_Names = (_race_Names == "" ? "" : _race_Names + " ") + value; RaceNames_ValidateSort(); }
+        public void RaceNames_Add(string value) { _race_Names = (String.IsNullOrEmpty(_race_Names) ? "" : _race_Names + " ") + value; RaceNames_ValidateSort(); }
         private void RaceNames_ValidateSort()
         {
             string[] tmp = _race_Names.Split(' ');
             List<string> tmp2 = new List<string>();
-            foreach (string item in Settings.VesselData.raceNames)
+            foreach (string item in VesselData.Current.RaceNames)
                 if (tmp.Contains(item))
                     tmp2.Add(item);
             tmp2.Sort();
@@ -538,15 +537,15 @@ namespace ArtemisMissionEditor
         private string _race_Keys;
 
         [DisplayName("keys"), Category("\t\traceKeys"), Description("List of object's race keys (from vesselData.xml)"), DefaultValue("< none >"), EditorAttribute(typeof(CheckedListBoxUITypeEditor_raceKeys), typeof(System.Drawing.Design.UITypeEditor))]
-        public string RaceKeys_Display { get { if (_race_Keys == "") return "< none >"; return _race_Keys; } set { _race_Keys = value.Replace("< none >", ""); RaceKeys_ValidateSort(); } }
+        public string RaceKeys_Display { get { if (String.IsNullOrEmpty(_race_Keys)) return "< none >"; return _race_Keys; } set { _race_Keys = value.Replace("< none >", ""); RaceKeys_ValidateSort(); } }
         [Browsable(false)]
         public string RaceKeys { get { return _race_Keys; } set { _race_Keys = value; RaceKeys_ValidateSort(); } }
-        public void RaceKeys_Add(string value) { _race_Keys = (_race_Keys == "" ? "" : _race_Keys + " ") + value; RaceKeys_ValidateSort(); }
+        public void RaceKeys_Add(string value) { _race_Keys = (String.IsNullOrEmpty(_race_Keys) ? "" : _race_Keys + " ") + value; RaceKeys_ValidateSort(); }
         private void RaceKeys_ValidateSort()
         {
             string[] tmp = _race_Keys.Split(' ');
             List<string> tmp2 = new List<string>();
-            foreach (string item in Settings.VesselData.raceKeys)
+            foreach (string item in VesselData.Current.RaceKeys)
                 if (tmp.Contains(item))
                     tmp2.Add(item);
             tmp2.Sort();
@@ -559,20 +558,20 @@ namespace ArtemisMissionEditor
         private string _race_Unrecognised;
         [DisplayName("unrecognised"), Category("\t\traceKeys"), Description("Race names and keys that were not recognised by the program (not present in current vesselData.xml) are put here."), DefaultValue("")]
         public string RaceUnrecognised { get { return _race_Unrecognised; } set { _race_Unrecognised = value; } }
-        public void RaceUnrecognised_Add(string value) { _race_Unrecognised = (_race_Unrecognised == "" ? "" : _race_Unrecognised + " ") + value; }
+        public void RaceUnrecognised_Add(string value) { _race_Unrecognised = (String.IsNullOrEmpty(_race_Unrecognised) ? "" : _race_Unrecognised + " ") + value; }
 
         private string _vessel_ClassNames;
 
         [DisplayName("classNames"), Category("\thullKeys"), Description("List of object's vessel class names (from vesselData.xml)"), DefaultValue("< none >"), EditorAttribute(typeof(CheckedListBoxUITypeEditor_vesselClassNames), typeof(System.Drawing.Design.UITypeEditor))]
-        public string VesselClassNames_Display { get { if (_vessel_ClassNames == "") return "< none >"; return _vessel_ClassNames; } set { _vessel_ClassNames = value.Replace("< none >", ""); VesselClassNames_ValidateSort(); } }
+        public string VesselClassNames_Display { get { if (String.IsNullOrEmpty(_vessel_ClassNames)) return "< none >"; return _vessel_ClassNames; } set { _vessel_ClassNames = value.Replace("< none >", ""); VesselClassNames_ValidateSort(); } }
         [Browsable(false)]
         public string VesselClassNames { get { return _vessel_ClassNames; } set { _vessel_ClassNames = value; VesselClassNames_ValidateSort(); } }
-        public void VesselClassNames_Add(string value) { _vessel_ClassNames = (_vessel_ClassNames == "" ? "" : _vessel_ClassNames + " ") + value; VesselClassNames_ValidateSort(); }
+        public void VesselClassNames_Add(string value) { _vessel_ClassNames = (String.IsNullOrEmpty(_vessel_ClassNames) ? "" : _vessel_ClassNames + " ") + value; VesselClassNames_ValidateSort(); }
         private void VesselClassNames_ValidateSort()
         {
             string[] tmp = _vessel_ClassNames.Split(' ');
             List<string> tmp2 = new List<string>();
-            foreach (string item in Settings.VesselData.vesselClassNames)
+            foreach (string item in VesselData.Current.VesselClassNames)
                 if (tmp.Contains(item))
                     tmp2.Add(item);
             tmp2.Sort();
@@ -585,15 +584,15 @@ namespace ArtemisMissionEditor
         private string _vessel_BroadTypes;
 
         [DisplayName("broadTypes"), Category("\thullKeys"), Description("List of object's vessel broad types (from vesselData.xml)"), DefaultValue("< none >"), EditorAttribute(typeof(CheckedListBoxUITypeEditor_vesselBroadTypes), typeof(System.Drawing.Design.UITypeEditor))]
-        public string VesselBroadTypes_Display { get { if (_vessel_BroadTypes == "") return "< none >"; return _vessel_BroadTypes; } set { _vessel_BroadTypes = value.Replace("< none >",""); VesselBroadTypes_ValidateSort(); } }
+        public string VesselBroadTypes_Display { get { if (String.IsNullOrEmpty(_vessel_BroadTypes)) return "< none >"; return _vessel_BroadTypes; } set { _vessel_BroadTypes = value.Replace("< none >",""); VesselBroadTypes_ValidateSort(); } }
         [Browsable(false)]
         public string VesselBroadTypes { get { return _vessel_BroadTypes; } set { _vessel_BroadTypes = value; VesselBroadTypes_ValidateSort(); } }
-        public void VesselBroadTypes_Add(string value) { _vessel_BroadTypes = (_vessel_BroadTypes == "" ? "" : _vessel_BroadTypes + " ") + value; VesselBroadTypes_ValidateSort(); }
+        public void VesselBroadTypes_Add(string value) { _vessel_BroadTypes = (String.IsNullOrEmpty(_vessel_BroadTypes) ? "" : _vessel_BroadTypes + " ") + value; VesselBroadTypes_ValidateSort(); }
         private void VesselBroadTypes_ValidateSort()
         {
             string[] tmp = _vessel_BroadTypes.Split(' ');
             List<string> tmp2 = new List<string>();
-            foreach (string item in Settings.VesselData.vesselBroadTypes)
+            foreach (string item in VesselData.Current.VesselBroadTypes)
                 if (tmp.Contains(item))
                     tmp2.Add(item);
             tmp2.Sort();
@@ -606,7 +605,7 @@ namespace ArtemisMissionEditor
         private string _vessel_Unrecognised;
         [DisplayName("unrecognised"), Category("\thullKeys"), Description("Hull types and keys that were not recognised by the program (not present in current vesselData.xml) are put here."), DefaultValue("")]
         public string VesselUnrecognised { get { return _vessel_Unrecognised; } set { _vessel_Unrecognised = value; } }
-        public void VesselUnrecognised_Add(string value) { _vessel_Unrecognised = (_vessel_Unrecognised == "" ? "" : _vessel_Unrecognised + " ") + value; }
+        public void VesselUnrecognised_Add(string value) { _vessel_Unrecognised = (String.IsNullOrEmpty(_vessel_Unrecognised) ? "" : _vessel_Unrecognised + " ") + value; }
 
         
 
@@ -620,19 +619,19 @@ namespace ArtemisMissionEditor
         {
             get 
             { 
-                if (_hullID=="")
+                if (String.IsNullOrEmpty(_hullID))
                     return "< none >";
-                if (!Settings.VesselData.vesselList.ContainsKey(_hullID))
+                if (!VesselData.Current.VesselList.ContainsKey(_hullID))
                     return "[" + _hullID + "] Vessel does not exist";
-                return Settings.VesselData.VesselToString(_hullID);
+                return VesselData.Current.VesselToString(_hullID);
             }
 
             set
             {
                 int tmp;
                 _hullID = value;
-                if (_hullID == "") return;
-                if (_hullID == null) throw new ArgumentNullException("Attempt to assign null to hullID!");
+                if (String.IsNullOrEmpty(_hullID)) return;
+                if (_hullID == null) throw new ArgumentNullException("value", "Attempt to assign null to hullID!");
                 
                 if (Helper.IntTryParse(_hullID, out tmp)) return;
                 _hullID = _hullID.Replace("[", "").Replace(" ","");
@@ -744,21 +743,21 @@ namespace ArtemisMissionEditor
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (type == "") type = TypeToString;//If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
-
-            if (raceKeys.Count() > 0)
-                __AddNewAttribute(xDoc, create, "raceKeys", raceKeys.Aggregate((i, j) => i + " " + j));
+            List<string> list;
+            if ((list = GetRaceKeysForXml()).Count() > 0)
+                __AddNewAttribute(xDoc, create, "raceKeys", list.Aggregate((i, j) => i + " " + j));
             else
-                __RememberPropertyIfMissing(missingProperties, "raceKeys", IsPropertyMandatory("raceKeys") && _hullID == "");
+                __RememberPropertyIfMissing(missingProperties, "raceKeys", IsPropertyMandatory("raceKeys") && String.IsNullOrEmpty(_hullID));
 
-            if (hullKeys.Count() > 0)
-                __AddNewAttribute(xDoc, create, "hullKeys", hullKeys.Aggregate((i, j) => i + " " + j));
+            if ((list = GetHullKeysForXml()).Count() > 0)
+                __AddNewAttribute(xDoc, create, "hullKeys", list.Aggregate((i, j) => i + " " + j));
             else
-                __RememberPropertyIfMissing(missingProperties, "hullKeys", IsPropertyMandatory("hullKeys") && _hullID == "");
+                __RememberPropertyIfMissing(missingProperties, "hullKeys", IsPropertyMandatory("hullKeys") && String.IsNullOrEmpty(_hullID));
 
-            if (_hullID!="")
+            if (!String.IsNullOrEmpty(_hullID))
                 __AddNewAttribute(xDoc, create, "hullID", _hullID);
 
             return create;
@@ -774,9 +773,9 @@ namespace ArtemisMissionEditor
                     case "raceKeys":
                         foreach (string str in att.Value.Split(' '))
                         {
-                            if (Settings.VesselData.raceKeys.Contains(str))
+                            if (VesselData.Current.RaceKeys.Contains(str))
                                 RaceKeys_Add(str);
-                            else if (Settings.VesselData.raceNames.Contains(str))
+                            else if (VesselData.Current.RaceNames.Contains(str))
                                 RaceNames_Add(str);
                             else 
                                 RaceUnrecognised_Add(str);
@@ -785,9 +784,9 @@ namespace ArtemisMissionEditor
                     case "hullKeys":
                         foreach (string str in att.Value.Split(' '))
                         {
-                            if (Settings.VesselData.vesselBroadTypes.Contains(str))
+                            if (VesselData.Current.VesselBroadTypes.Contains(str))
                                 VesselBroadTypes_Add(str);
-                            else if (Settings.VesselData.vesselClassNames.Contains(str))
+                            else if (VesselData.Current.VesselClassNames.Contains(str))
                                 VesselClassNames_Add(str);
                             else
                                 VesselUnrecognised_Add(str);
@@ -880,7 +879,7 @@ namespace ArtemisMissionEditor
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (type == "") type = TypeToString;//If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
             if (sideValue.HasValue)
@@ -934,7 +933,7 @@ namespace ArtemisMissionEditor
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (type == "") type = TypeToString;//If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
             return create;
@@ -981,7 +980,7 @@ namespace ArtemisMissionEditor
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (type == "") type = TypeToString;//If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
             return create;
@@ -1028,7 +1027,7 @@ namespace ArtemisMissionEditor
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (type == "") type = TypeToString;//If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
             return create;
@@ -1075,7 +1074,7 @@ namespace ArtemisMissionEditor
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (type == "") type = TypeToString;//If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
             return create;
@@ -1131,7 +1130,7 @@ namespace ArtemisMissionEditor
 		//TO XML
 		public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
 		{
-			if (type == "") type = TypeToString;//If this was the first called ToXml - set this object's type
+			if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
 			XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
 			__AddNewAttribute(xDoc, create, "podnumber", _podnumber.ToString());
@@ -1185,7 +1184,7 @@ namespace ArtemisMissionEditor
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (type == "") type = TypeToString;//If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
             return create;
@@ -1236,7 +1235,7 @@ namespace ArtemisMissionEditor
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (type == "") type = TypeToString;//If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
             return create;
@@ -1318,7 +1317,7 @@ namespace ArtemisMissionEditor
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (type == "") type = TypeToString;//If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
             __AddNewAttribute(xDoc, create, "fleetnumber", _fleetnumber.ToString());
@@ -1531,7 +1530,7 @@ namespace ArtemisMissionEditor
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (type == "") type = TypeToString;//If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
             __AddNewAttribute(xDoc, create, "colorBlue", Helper.DoubleFormatToString("{0:0.0}",Color_Blue));
@@ -1555,22 +1554,22 @@ namespace ArtemisMissionEditor
             else
                 __RememberPropertyIfMissing(missingProperties, "hasFakeShldFreq", IsPropertyMandatory("hasFakeShldFreq"));
 
-			if (hullRace != "")
+			if (!String.IsNullOrEmpty(hullRace))
 				__AddNewAttribute(xDoc, create, "hullRace", String.Format("{0}", hullRace));
 			else
 				__RememberPropertyIfMissing(missingProperties, "hullRace", IsPropertyMandatory("hullRace"));
 
-			if (hullType != "")
+			if (!String.IsNullOrEmpty(hullType))
 				__AddNewAttribute(xDoc, create, "hullType", String.Format("{0}", hullType));
 			else
 				__RememberPropertyIfMissing(missingProperties, "hullType", IsPropertyMandatory("hullType"));
 			
-			if (meshFileName != "")
+			if (!String.IsNullOrEmpty(meshFileName))
                 __AddNewAttribute(xDoc, create, "meshFileName", String.Format("{0}", meshFileName));
             else
                 __RememberPropertyIfMissing(missingProperties, "meshFileName", IsPropertyMandatory("meshFileName"));
 
-            if (textureFileName != "")
+            if (!String.IsNullOrEmpty(textureFileName))
                 __AddNewAttribute(xDoc, create, "textureFileName", String.Format("{0}", textureFileName));
             else
                 __RememberPropertyIfMissing(missingProperties, "textureFileName", IsPropertyMandatory("textureFileName"));

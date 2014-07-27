@@ -17,13 +17,17 @@ namespace ArtemisMissionEditor
 	{
 		public int SortOrder = 0;
 
-		public int CurNode;
-        public int CurStatement;
+        public int CurNode { get; private set; }
+        public int CurStatement { get; private set; }
 
         /// <summary> Text representing the search result (to be displayed in the list box) </summary>
-        public string Text;
+        public string Text { get; private set; }
+        /// <summary> Text from the node that contains search result </summary>
+        public string NodeText { get; private set; }
         /// <summary> Node from the mission nodes tree that is to be selected </summary>
         public TreeNode Node;
+        /// <summary> Safe way to check for Node's tag </summary>
+        public object NodeTag { get { return Node == null ? null : Node.Tag; } }
         /// <summary> Node from the statement tree that is to be selected </summary>
         public MissionStatement Statement;
 
@@ -43,7 +47,7 @@ namespace ArtemisMissionEditor
 				return; 
 			Mission.Current.SelectNode(Node);
 			if (Statement == null)
-				Mission.Current.SelectStatement(Node.Tag);
+				Mission.Current.SelectStatement(NodeTag);
 			else 
 				Mission.Current.SelectStatement(Statement);
 			
@@ -59,7 +63,7 @@ namespace ArtemisMissionEditor
 				return;
 			Mission.Current.SelectNode(Node);
 			if (Statement == null)
-				Mission.Current.SelectStatement(Node.Tag, true);
+				Mission.Current.SelectStatement(NodeTag, true);
 			else
 				Mission.Current.SelectStatement(Statement, true);
 		}
@@ -68,15 +72,23 @@ namespace ArtemisMissionEditor
         {
             CurNode = curNode;
             CurStatement = curStatement;
-            if (text==null)
+            if (text == null)
             {
                 Text = null;
                 Valid = false;
             }
+            else if (node == null)
+            {
+                Text =  text;
+                NodeText = null;
+                Valid = false;
+            }
             else
             {
-				string node_text = node.Text.Length > 25 ? node.Text.Substring(0, 25 - 3) + "..." : string.Format("{0,-25}", node.Text);
-                Text = "[" + CurNode.ToString("000") + "][" + (CurStatement==0 ? "--" : CurStatement.ToString("###00")) + "] : " + "("+node_text +") "+text;
+                //string node_text = node.Text.Length > 25 ? node.Text.Substring(0, 25 - 3) + "..." : string.Format("{0,-25}", node.Text);
+                NodeText = node.Text;
+                //Text = "(" + node_text + ") " + text;
+                Text = text;
                 Valid = true;
             }
             Node = node;
@@ -108,6 +120,7 @@ namespace ArtemisMissionEditor
 			CurNode = -1;
 			CurStatement = -1;
 			Text = null;
+            NodeText = null;
 			Valid = false;
 			Node = null;
 			Statement = null;

@@ -15,7 +15,7 @@ namespace ArtemisMissionEditor
     /// For typical classes, default editor will be enough. In this case, simply a dialog will pop when required.
     /// However, if special ways of editing would be useful, an editor class must be defined.
     /// </remarks>
-	public class ExpressionMemberValueEditor
+	public class ExpressionMemberValueEditor: IDisposable
 	{
 		/// <summary> Means it wont appear in the editor visually at all </summary>
 		public static ExpressionMemberValueEditor Nothing;
@@ -78,6 +78,16 @@ namespace ArtemisMissionEditor
 		/// <returns></returns>
 		public bool IsInteractive { get { return _isInteractive; } }
 		private bool _isInteractive;
+
+        /// <summary>
+        /// This value editor's context menu strip must be recreated on every opening
+        /// </summary>
+        public bool ForceRecreateMenu { get; private set; }
+
+        /// <summary>
+        /// For miscellaneous use
+        /// </summary>
+        private object Tag;
 
 		/// <summary>
 		/// Menu group dictionary, int denotes up to which index does the menu group start, string is the menu group name
@@ -184,8 +194,9 @@ namespace ArtemisMissionEditor
 				ValueChosen(container, result.Value);
 		}
 
-		protected ExpressionMemberValueEditor(bool isDisplayed = true, bool isInteractive = true)
+		protected ExpressionMemberValueEditor(bool isDisplayed = true, bool isInteractive = true, bool forceRecreateMenu = false)
 		{
+            ForceRecreateMenu = forceRecreateMenu;
 			_isDisplayed = isDisplayed;
 			_isInteractive = isInteractive;
 
@@ -213,7 +224,12 @@ namespace ArtemisMissionEditor
 
 		private ContextMenuStrip cmsValueSelector;
 		private ExpressionMemberValueDescription _lastUser;
-		public void InvalidateCMS() { cmsValueSelector = null; }
+		
+        /// <summary> 
+        /// Forces recreation of the context menu when it is next opened. 
+        /// Used for menus that depend on content created elsewhere, like list of variable names
+        /// </summary>
+        public void InvalidateCMS() { if (cmsValueSelector != null)cmsValueSelector.Dispose(); cmsValueSelector = null; }
 
 		private static Font CMSFont;
 		protected void InitCMS()
@@ -285,15 +301,13 @@ namespace ArtemisMissionEditor
 		private static ContextMenuStrip PrepareContextMenuStrip_CreateType(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
 		{
 			string value = container.GetValue();
-			
-			if (editor.cmsValueSelector == null || editor._lastUser != container.Member.ValueDescription)
+
+            if (editor.cmsValueSelector == null || editor._lastUser != container.Member.ValueDescription || editor.ForceRecreateMenu)
 			{
 				editor.cmsValueSelector = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
-
 				editor.cmsValueSelector.Items.Clear();
 				editor.cmsValueSelector.Tag = false;
 
-				//Add all possible types, sorting by alphabet but putting named bunch first and Nameless Bunch second (NANASHI RENJUU!!! :)
 				foreach (string item in editor._valueToXml.Keys.OrderBy((x) => (x[x.Length - 1] == 's' ? "b" : "a") + x))
 				{
 					ToolStripItem tsi = editor.cmsValueSelector.Items.Add(item);
@@ -310,101 +324,38 @@ namespace ArtemisMissionEditor
 
 		private static ContextMenuStrip PrepareContextMenuStrip_DefaultList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
 		{
-			string value = container.GetValue();
-
-			if (editor.cmsValueSelector == null || editor._lastUser!=container.Member.ValueDescription)
-			{
-				editor.cmsValueSelector = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
-				editor.cmsValueSelector.Items.Clear();
-				editor.cmsValueSelector.Tag = false;
-
-				foreach (string item in editor._valueToXml.Keys)
-				{
-					ToolStripItem tsi = editor.cmsValueSelector.Items.Add(item);
-					tsi.Tag = container;
-					tsi.Click += ContextMenuClick_Choose;
-				}
-
-				editor.ShowHideCMS();
-			}
-
-			AssignCMSContainer(editor.cmsValueSelector, container,value);
-            return editor.cmsValueSelector;
+            return PrepareContextMenuStrip_DefaultListWithOptions(container, editor, mode, false, false);
 		}
 
         private static ContextMenuStrip PrepareContextMenuStrip_DefaultListWithFirstSeparated(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
         {
-            string value = container.GetValue();
-
-            if (editor.cmsValueSelector == null || editor._lastUser != container.Member.ValueDescription)
-            {
-                editor.cmsValueSelector = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
-                editor.cmsValueSelector.Items.Clear();
-                editor.cmsValueSelector.Tag = false;
-
-                bool doOnce = true;
-                foreach (string item in editor._valueToXml.Keys)
-                {
-                    ToolStripItem tsi = editor.cmsValueSelector.Items.Add(item);
-                    tsi.Tag = container;
-                    tsi.Click += ContextMenuClick_Choose;
-
-                    if (doOnce)
-                    {
-                        doOnce = false;
-                        editor.cmsValueSelector.Items.Add(new ToolStripSeparator());
-                    }
-                }
-
-                editor.ShowHideCMS();
-            }
-
-            AssignCMSContainer(editor.cmsValueSelector, container, value); 
-            return editor.cmsValueSelector;
+            return PrepareContextMenuStrip_DefaultListWithOptions(container, editor, mode, false, true);
         }
 
 		private static ContextMenuStrip PrepareContextMenuStrip_DefaultListPlusGUI(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
 		{
-			if (mode == EditorActivationMode.ForceGUI)
-				return null;
-
-			if (editor.cmsValueSelector == null || editor._lastUser!=container.Member.ValueDescription)
-			{
-				editor.cmsValueSelector = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
-				editor.cmsValueSelector.Items.Clear();
-				editor.cmsValueSelector.Tag = true;
-
-				foreach (string item in editor._valueToXml.Keys)
-				{
-					ToolStripItem tsi = editor.cmsValueSelector.Items.Add(item);
-					tsi.Tag = container;
-					tsi.Click += ContextMenuClick_Choose;
-				}
-
-				editor.cmsValueSelector.Items.Add(new ToolStripSeparator());
-				ToolStripItem tsl = editor.cmsValueSelector.Items.Add("Input value...");
-				tsl.Tag = container;
-				tsl.Click += ContextMenuClick_Show_GUI;
-
-				editor.ShowHideCMS();
-			}
-
-            AssignCMSContainer(editor.cmsValueSelector, container, container.GetValue(), true);
-            return editor.cmsValueSelector;
+            return PrepareContextMenuStrip_DefaultListWithOptions(container, editor, mode, true, false);
 		}
 
         private static ContextMenuStrip PrepareContextMenuStrip_DefaultListPlusGUIWithFirstSepearted(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
         {
+            return PrepareContextMenuStrip_DefaultListWithOptions(container, editor, mode, true, true);
+        }
+
+        private static ContextMenuStrip PrepareContextMenuStrip_DefaultListWithOptions(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode, bool plusGUI, bool firstSeparated)
+        {
             if (mode == EditorActivationMode.ForceGUI)
                 return null;
 
-            if (editor.cmsValueSelector == null || editor._lastUser != container.Member.ValueDescription)
+            if (editor.cmsValueSelector == null || editor._lastUser != container.Member.ValueDescription || editor.ForceRecreateMenu)
             {
-                editor.cmsValueSelector = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
+                editor.cmsValueSelector = new ContextMenuStrip(); 
+                editor.InitCMS(); 
+                editor._lastUser = container.Member.ValueDescription;
                 editor.cmsValueSelector.Items.Clear();
-                editor.cmsValueSelector.Tag = true;
+                editor.cmsValueSelector.Tag = plusGUI;
 
-                bool doOnce = true;
+                bool doOnce = firstSeparated;
                 foreach (string item in editor._valueToXml.Keys)
                 {
                     ToolStripItem tsi = editor.cmsValueSelector.Items.Add(item);
@@ -418,15 +369,18 @@ namespace ArtemisMissionEditor
                     }
                 }
 
-                editor.cmsValueSelector.Items.Add(new ToolStripSeparator());
-                ToolStripItem tsl = editor.cmsValueSelector.Items.Add("Input value...");
-                tsl.Tag = container;
-                tsl.Click += ContextMenuClick_Show_GUI;
-
+                if (plusGUI)
+                {
+                    if (firstSeparated != true || editor._valueToXml.Keys.Count != 1)
+                        editor.cmsValueSelector.Items.Add(new ToolStripSeparator());
+                    ToolStripItem tsl = editor.cmsValueSelector.Items.Add("Input value...");
+                    tsl.Tag = container;
+                    tsl.Click += ContextMenuClick_Show_GUI;
+                }
                 editor.ShowHideCMS();
             }
 
-            AssignCMSContainer(editor.cmsValueSelector, container, container.GetValue(), true); 
+            AssignCMSContainer(editor.cmsValueSelector, container, container.GetValue(), true);
             return editor.cmsValueSelector;
         }
 
@@ -434,7 +388,7 @@ namespace ArtemisMissionEditor
 		{
 			string value = container.GetValue();
 
-			if (editor.cmsValueSelector == null || editor._lastUser != container.Member.ValueDescription)
+            if (editor.cmsValueSelector == null || editor._lastUser != container.Member.ValueDescription || editor.ForceRecreateMenu)
 			{
 				editor.cmsValueSelector = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
 
@@ -467,12 +421,12 @@ namespace ArtemisMissionEditor
 
 		private static ContextMenuStrip PrepareContextMenuStrip_DefaultCheckUnsorted(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
 		{
-			return PrepareContextMenuStrip_DefaultCheck(container, editor, false);
+			return PrepareContextMenuStrip_DefaultCheckWithOptions(container, editor, false);
 		}
 
 		private static ContextMenuStrip PrepareContextMenuStrip_DefaultCheckSorted(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
 		{
-			return PrepareContextMenuStrip_DefaultCheck(container, editor, true);
+			return PrepareContextMenuStrip_DefaultCheckWithOptions(container, editor, true);
 		}
 
 		private static void				PrepareContextMenuStrip_DefaultCheck_private_loopIteration(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ContextMenuStrip cms, string value, string item, int index)
@@ -488,11 +442,11 @@ namespace ArtemisMissionEditor
 				cms.Items.Add(new ToolStripSeparator());
 		}
 
-		private static ContextMenuStrip PrepareContextMenuStrip_DefaultCheck(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, bool sorted)
+		private static ContextMenuStrip PrepareContextMenuStrip_DefaultCheckWithOptions(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, bool sorted)
 		{
-			string value = container.GetValue(); 
-			
-			if (editor.cmsValueSelector == null || editor._lastUser != container.Member.ValueDescription)
+			string value = container.GetValue();
+
+            if (editor.cmsValueSelector == null || editor._lastUser != container.Member.ValueDescription || editor.ForceRecreateMenu)
 			{
 				editor.cmsValueSelector = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
 
@@ -515,16 +469,15 @@ namespace ArtemisMissionEditor
 		
 		private static ContextMenuStrip PrepareContextMenuStrip_DefaultBool(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
 		{
-			string value = container.GetValue(); 
-			
-			if (editor.cmsValueSelector == null || editor._lastUser != container.Member.ValueDescription)
+			string value = container.GetValue();
+
+            if (editor.cmsValueSelector == null || editor._lastUser != container.Member.ValueDescription || editor.ForceRecreateMenu)
 			{
 				editor.cmsValueSelector = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
 
 				editor.cmsValueSelector.Items.Clear();
 				editor.cmsValueSelector.Tag = false;
 
-				//Add all possible types, sorting by alphabet but putting named bunch first and Nameless Bunch second (NANASHI RENJUU!!! :)
 				foreach (string item in new string[2] { container.ValueToDisplay("1"), container.ValueToDisplay("0") })
 				{
 					ToolStripItem tsi = editor.cmsValueSelector.Items.Add(item);
@@ -544,7 +497,7 @@ namespace ArtemisMissionEditor
 			if (mode == EditorActivationMode.ForceGUI)
 				return null;
 
-			if (editor.cmsValueSelector == null || editor._lastUser != container.Member.ValueDescription)
+            if (editor.cmsValueSelector == null || editor._lastUser != container.Member.ValueDescription || editor.ForceRecreateMenu)
 			{
 				editor.cmsValueSelector = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
 
@@ -617,7 +570,7 @@ namespace ArtemisMissionEditor
 			if (mode == EditorActivationMode.ForceGUI)
 				return null;
 
-			if (editor.cmsValueSelector == null || editor._lastUser != container.Member.ValueDescription)
+            if (editor.cmsValueSelector == null || editor._lastUser != container.Member.ValueDescription || editor.ForceRecreateMenu)
 			{
 				editor.cmsValueSelector = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
 
@@ -706,7 +659,7 @@ namespace ArtemisMissionEditor
 		{
 			string value = container.GetValue();
 
-			if (editor.cmsValueSelector == null || editor._lastUser != container.Member.ValueDescription)
+            if (editor.cmsValueSelector == null || editor._lastUser != container.Member.ValueDescription || editor.ForceRecreateMenu)
 			{
 				editor.cmsValueSelector = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
                 editor.cmsValueSelector.Items.Clear();
@@ -717,7 +670,7 @@ namespace ArtemisMissionEditor
                 tsn1.Click += new EventHandler(ContextMenuClick_Choose);
                 editor.cmsValueSelector.Items.Add(new ToolStripSeparator());
 
-                List<string> keys = Settings.VesselData.vesselList.Keys.ToList();
+                List<string> keys = VesselData.Current.VesselList.Keys.ToList();
 
                 if (keys.Count > Settings.Current.NamesPerSubmenu)
                 {
@@ -725,16 +678,16 @@ namespace ArtemisMissionEditor
                     List<string> headers = new List<string>();
                     for (i = 0; i < keys.Count / Settings.Current.NamesPerSubmenu; i++)
                     {
-                        string first =  Settings.VesselData.VesselToString(keys[i * Settings.Current.NamesPerSubmenu]);
+                        string first =  VesselData.Current.VesselToString(keys[i * Settings.Current.NamesPerSubmenu]);
 
-                        string last = Settings.VesselData.VesselToString(keys[(i + 1) * Settings.Current.NamesPerSubmenu - 1]);
+                        string last = VesselData.Current.VesselToString(keys[(i + 1) * Settings.Current.NamesPerSubmenu - 1]);
 
                         headers.Add(first + " - " + last);
                     }
                     if (i * Settings.Current.NamesPerSubmenu <= keys.Count - 1)
-                        headers.Add(Settings.VesselData.VesselToString(keys[i * Settings.Current.NamesPerSubmenu] )
+                        headers.Add(VesselData.Current.VesselToString(keys[i * Settings.Current.NamesPerSubmenu] )
                                   + " - " 
-                                  + Settings.VesselData.VesselToString(keys[keys.Count - 1]));
+                                  + VesselData.Current.VesselToString(keys[keys.Count - 1]));
 
                     for (i = 0; i < headers.Count; i++)
                     {
@@ -743,7 +696,7 @@ namespace ArtemisMissionEditor
 
                         for (int j = i * Settings.Current.NamesPerSubmenu; j < (i == headers.Count - 1 ? keys.Count : (i + 1) * Settings.Current.NamesPerSubmenu); j++)
                         {
-                            ToolStripItem tsi = tsm2.DropDownItems.Add(Settings.VesselData.VesselToString(keys[j]));
+                            ToolStripItem tsi = tsm2.DropDownItems.Add(VesselData.Current.VesselToString(keys[j]));
 
                             tsi.Tag = container;
                             tsi.Click += ContextMenuClick_Choose;
@@ -752,15 +705,15 @@ namespace ArtemisMissionEditor
                 }
                 else
                 {
-                    foreach (string item in Settings.VesselData.vesselList.Keys)
+                    foreach (string item in VesselData.Current.VesselList.Keys)
                     {
-                        ToolStripItem tsi = editor.cmsValueSelector.Items.Add(Settings.VesselData.VesselToString(item));
+                        ToolStripItem tsi = editor.cmsValueSelector.Items.Add(VesselData.Current.VesselToString(item));
                         tsi.Tag = container;
                         tsi.Click += new EventHandler(ContextMenuClick_Choose);
                     }
                 }
 
-                if (Settings.VesselData.vesselList.Keys.Count > 0)
+                if (VesselData.Current.VesselList.Keys.Count > 0)
                 {
                     editor.cmsValueSelector.Items.Add(new ToolStripSeparator());
 
@@ -785,7 +738,60 @@ namespace ArtemisMissionEditor
             return editor.cmsValueSelector;
 		}
 
-		#endregion
+        private static ContextMenuStrip PrepareContextMenuStrip_PlayerListPlusGUI(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, EditorActivationMode mode)
+        {
+            if (mode == EditorActivationMode.ForceGUI)
+                return null;
+
+            bool forceRecreate = true;
+            if (editor.Tag != null && editor.Tag as string[] != null)
+            {
+                string[] prevNames = (string[])editor.Tag;
+                string[] curNames = Settings.Current.PlayerShipNames;
+                if (prevNames.Length == curNames.Length)
+                {
+                    bool identical = true;
+                    for (int i = 0; identical && i < prevNames.Length; i++)
+                        if (prevNames[i] != curNames[i])
+                            identical = false;
+                    if (identical)
+                        forceRecreate = false;
+                }
+            }
+            editor.Tag = Settings.Current.PlayerShipNames;
+
+            if (editor.cmsValueSelector == null || editor._lastUser != container.Member.ValueDescription || editor.ForceRecreateMenu || forceRecreate)
+            {
+                editor._valueToDisplay.Clear();
+                editor._valueToXml.Clear();
+                editor.MenuItems.Clear();
+                foreach (string playerShipName in Settings.Current.PlayerShipNames)
+                    PlayerNames.AddToDictionary(playerShipName, playerShipName);
+
+                editor.cmsValueSelector = new ContextMenuStrip(); editor.InitCMS(); editor._lastUser = container.Member.ValueDescription;
+                editor.cmsValueSelector.Items.Clear();
+                editor.cmsValueSelector.Tag = true;
+
+                foreach (string item in editor._valueToXml.Keys)
+                {
+                    ToolStripItem tsi = editor.cmsValueSelector.Items.Add(item);
+                    tsi.Tag = container;
+                    tsi.Click += ContextMenuClick_Choose;
+                }
+
+                editor.cmsValueSelector.Items.Add(new ToolStripSeparator());
+                ToolStripItem tsl = editor.cmsValueSelector.Items.Add("Input value...");
+                tsl.Tag = container;
+                tsl.Click += ContextMenuClick_Show_GUI;
+
+                editor.ShowHideCMS();
+            }
+
+            AssignCMSContainer(editor.cmsValueSelector, container, container.GetValue(), true);
+            return editor.cmsValueSelector;
+        }
+
+        #endregion
 	  
 		static ExpressionMemberValueEditor()
 		{
@@ -892,7 +898,7 @@ namespace ArtemisMissionEditor
 			//variable
 			XmlNameConditionCheck.AddToMenuDictionary("if_timer_finished", "Timer has finished");
 			XmlNameConditionCheck.AddToMenuDictionary("if_damcon_members", "Amount of DamCon members");
-			XmlNameConditionCheck.AddToMenuDictionary("if_fleet_count", "Ship count (in fleet)");
+			XmlNameConditionCheck.AddToMenuDictionary("if_fleet_count", "Ship count (in a fleet)");
 			//docked
 			//targeting
 			XmlNameConditionCheck.AddToMenuDictionary("<existance>", "Object exists / doesn't");
@@ -1158,13 +1164,7 @@ namespace ArtemisMissionEditor
 			EliteAbilityBits = new ExpressionMemberValueEditor_AbilityBits();
 
 			PlayerNames = new ExpressionMemberValueEditor();
-			PlayerNames.AddToDictionary("Artemis", "Artemis");
-			PlayerNames.AddToDictionary("Intrepid", "Intrepid");
-			PlayerNames.AddToDictionary("Aegis", "Aegis");
-			PlayerNames.AddToDictionary("Horatio", "Horatio");
-			PlayerNames.AddToDictionary("Excalibur", "Excalibur");
-			PlayerNames.AddToDictionary("Hera", "Hera");
-			PlayerNames.PrepareContextMenuStripMethod = PrepareContextMenuStrip_DefaultListPlusGUI;
+			PlayerNames.PrepareContextMenuStripMethod = PrepareContextMenuStrip_PlayerListPlusGUI;
 
 			WarpState = new ExpressionMemberValueEditor();
 			WarpState.AddToDictionary("0", "0");
@@ -1182,9 +1182,21 @@ namespace ArtemisMissionEditor
 			RaceKeys = new ExpressionMemberValueEditor_RaceKeys();
 
 			HullKeys = new ExpressionMemberValueEditor_HullKeys();
-
-
 		}
+
+        protected virtual void Dispose(Boolean disposing) 
+        {
+            if (CMSFont != null)
+                CMSFont.Dispose();
+            if (cmsValueSelector != null)
+                cmsValueSelector.Dispose();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 	}
 
 	/// <summary>
@@ -1371,9 +1383,9 @@ namespace ArtemisMissionEditor
 		{
 			if (string.IsNullOrWhiteSpace(value))
 				return value;
-			if (!Settings.VesselData.vesselList.ContainsKey(value))
+			if (!VesselData.Current.VesselList.ContainsKey(value))
 				return "[" + value + "] Vessel does not exist";
-			return Settings.VesselData.VesselToString(value);
+			return VesselData.Current.VesselToString(value);
 		}
 
         public override string ValueToXml(string value, ExpressionMemberValueType type, object min, object max)

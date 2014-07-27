@@ -262,9 +262,7 @@ namespace ArtemisMissionEditor
 
         private void showHelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Program.FormHelpInstance.SetPage(FormHelpPage.SpaceMapHotkeys);
-            Program.FormHelpInstance.Show();
-            Program.FormHelpInstance.BringToFront();
+            Program.FormHelpInstance.ShowPage(FormHelpPage.SpaceMapHotkeys);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace ArtemisMissionEditor
 				cAtt.Value = kvp.Value;
 				eResult.Attributes.Append(cAtt);
 			}
-			if (container.ParentStatement.Body != "")
+			if (!String.IsNullOrEmpty(container.ParentStatement.Body))
 				eResult.InnerText = container.ParentStatement.Body;
 			return eResult.OuterXml;
 		}
@@ -53,7 +53,7 @@ namespace ArtemisMissionEditor
 			}
 			catch (Exception e)
 			{
-				MessageBox.Show(e.Message);
+				MessageBox.Show(e.Message + " " +e.StackTrace);
 			}
 		}
 

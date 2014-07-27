@@ -26,27 +26,29 @@ namespace ArtemisMissionEditor
 
 		private void _FormMissionProperties_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if (!Program.IsClosing)
+            if (e.CloseReason == CloseReason.UserClosing)
 			{
 				e.Cancel = true;
 				this.Hide();
+                Program.ShowMainFormIfRequired();
 			}
 
 			SaveToRegistry();
 		}
 
-		private void _FM_b_OK_Click(object sender, EventArgs e)
+		private void _FM_b_OK_Click(object sender, EventArgs ea)
 		{
 			try
 			{
-				string x;
+				string justSoThatOuterXmlGetLogicIsCalled;
 				foreach (string item in Program.FormMissionPropertiesInstance._FMP_tb_Before.Text.Split(new string[1] { "\r\n" }, StringSplitOptions.None))
-					x = new XmlDocument().CreateComment(item).OuterXml;
+					// Miscrosoft.Preformance is so helpful! Yeah sure, if I could just call OuterXml without assigning it, I'd never do this!
+                    justSoThatOuterXmlGetLogicIsCalled = new XmlDocument().CreateComment(item).OuterXml;
 
 			}
-			catch (Exception ee)
+			catch (Exception e)
 			{
-				MessageBox.Show("Invalid comment in \"before\" section:\r\n"+ee.Message, "Commentary error");
+				MessageBox.Show("Invalid comment in \"before\" section:\r\n"+e.Message + " "+e.StackTrace, "Commentary error");
 				return;
 			}
 
@@ -56,9 +58,9 @@ namespace ArtemisMissionEditor
 				foreach (string item in Program.FormMissionPropertiesInstance._FMP_tb_After.Text.Split(new string[1] { "\r\n" }, StringSplitOptions.None))
 					x = new XmlDocument().CreateComment(item).OuterXml;
 			}
-			catch (Exception ee)
+			catch (Exception e)
 			{
-				MessageBox.Show("Invalid comment in \"after\" section:\r\n" + ee.Message, "Commentary error");
+                MessageBox.Show("Invalid comment in \"after\" section:\r\n" + e.Message + " " + e.StackTrace, "Commentary error");
 				return;
 			}
 
@@ -93,7 +95,7 @@ namespace ArtemisMissionEditor
 		public void UpdateBgNode()
 		{
 			TreeNode tNode = (TreeNode)_FMP_tb_Node.Tag;
-			MissionNode mNode = (MissionNode)tNode.Tag;
+			//MissionNode mNode = (MissionNode)tNode.Tag;
 			_FMP_tb_Node.Text = tNode.Text + " - " + Mission.Current.CanInvokeSpaceMapCreate(tNode) + " create statement(s)" + "";
 		}
 

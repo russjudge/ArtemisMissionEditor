@@ -200,7 +200,7 @@ namespace ArtemisMissionEditor
 			switch (description.Type)
 			{
 				case ExpressionMemberValueType.VarBool:
-					if (value == "")
+					if (String.IsNullOrEmpty(value))
 					    return ValidateResult.False;
                     return ValidateResult.True;
                 case ExpressionMemberValueType.VarInteger:
@@ -428,7 +428,7 @@ namespace ArtemisMissionEditor
 				case ExpressionMemberValueType.Body:
 					return value1.Trim() == value2.Trim();
 				case ExpressionMemberValueType.Nothing:
-					throw new ArgumentOutOfRangeException("Attempting to compare two NOTHING values!");
+					throw new ArgumentException("description", "Attempting to compare ValueType.NOTHING values!");
 				default:
 					throw new NotImplementedException("Attempting to compare something unknown!");
 			}

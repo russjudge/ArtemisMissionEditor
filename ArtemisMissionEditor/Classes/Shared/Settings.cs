@@ -12,15 +12,14 @@ using Microsoft.Win32;
 
 namespace ArtemisMissionEditor
 {
-
     [Serializable]
-    public sealed class Settings
+    public sealed partial class Settings
     {
-        public  static string _programDataFolder = @"%appdata%\ArtemisMissionEditor\";
-        public  static string _fileName = "settings.binary";
-        private static int LastVersion = 3;
+        public static readonly string ProgramDataFolder = @"%appdata%\ArtemisMissionEditor\";
+        private static readonly string FileName = "settings.binary";
+        private static readonly int LastVersion = 4;
 
-        private static Settings _current;
+        private static Settings _current = new Settings();
         [Browsable(false)]
         public static Settings Current
         {
@@ -36,35 +35,28 @@ namespace ArtemisMissionEditor
             }
         }
 
-        private static VesselData _vesselData;
-        public static VesselData VesselData
-        {
-            get
-            {
-                if (_vesselData == null) _vesselData = new VesselData();
-                return _vesselData;
-            }
-            set { _vesselData = value; }
-        }
-
-		#region Misc. Settings
+        #region Misc. Settings
 
         private int _version;
 
+        [DisplayName("Form opacity"), Description("Additional forms that are not focused will be transparent if this value is set below 1."), DefaultValue(false)]
+        public double FormOpacity { get { return _formOpacity; } set { _formOpacity = Math.Max(0.1, Math.Min(1.0, value)); Program.UpdateAllFormsOpacity(); } }
+        private double _formOpacity;
+
         [DisplayName("Add failure comments"), Description("Add comments about failure when saving create statements from the space map."), DefaultValue(false)]
-        public bool AddFailureComments{get;set;}
+        public bool AddFailureComments { get; set; }
 
         /// <summary>
         /// When inserting new node, insert it over or under the selected element
         /// </summar>y
         [DisplayName("Insert new element over selected element"), Description("Whether to insert new elements over selected elements or under selected elements in the tree view."), DefaultValue(true)]
-        public bool InsertNewOverElement{get;set;}
+        public bool InsertNewOverElement { get; set; }
 
         /// <summary>
         /// When moving node inside node, it should end up at last or first position
         /// </summary>
         [DisplayName("Place nodes dragged inside a folder to the last position"), Description("Whether the nodes dragged into a folder should be put to the last position or to the first position."), DefaultValue(true)]
-        public bool DragIntoFolderToLastPosition{get;set;}
+        public bool DragIntoFolderToLastPosition { get; set; }
 
 		/// <summary>
 		/// Wether the default (`) map scale will be padded or zommed in 100%
@@ -76,13 +68,13 @@ namespace ArtemisMissionEditor
 		/// Show y-coordinate lines for nameless objects on the space map
 		/// </summary>
         [DisplayName("Use Y for nameless"), Description("Consider Y coordinate when displaying nameless (nebulas, asteroids, mines) objects on the space map.\r\nIf true, objects with nonzero-Y coordinate will appear with guidelines showing their distance to the zero Y plane."), DefaultValue(true)]
-        public bool UseYForNameless{get;set;}
+        public bool UseYForNameless { get; set; }
 
 		/// <summary>
 		/// Show y-coordinate lines for named objects on the space map
 		/// </summary>
         [DisplayName("Use Y for named"), Description("Consider Y coordinate when displaying named (enemies, stations, ...) objects on the space map.\r\nIf true, objects with nonzero-Y coordinate will appear with guidelines showing their distance to the zero Y plane."), DefaultValue(true)]
-        public bool UseYForNamed{get;set;}
+        public bool UseYForNamed { get; set; }
 
 		/// <summary>
 		/// Show y-coordinate lines for named objects on the space map
@@ -94,13 +86,13 @@ namespace ArtemisMissionEditor
 		/// How big are the y-coord lines on the space map
 		/// </summary>
         [DisplayName("Y scale"), Description("Object's Y value is multiplied by this value when it is displayed on the space map.\r\nEx: if Y scale = 7, objects with X=0 Y=1000 Z=0 and X=0 Y=0 Z=7000 will be displayed on the screen in the same position."), DefaultValue(7.0)]
-        public double YScale{get;set;}
+        public double YScale { get; set; }
 
         /// <summary>
         /// Show numbers near labels for expression editing
         /// </summary>
         [DisplayName("Show label numbers"), Description("Show hotkey numbers near expression labels."), DefaultValue(false)]
-        public bool ShowLabelNumbers{get;set;}
+        public bool ShowLabelNumbers { get; set; }
 
         /// <summary>
         /// Amount of names displayed in one submenu for timers and variables
@@ -112,7 +104,7 @@ namespace ArtemisMissionEditor
 		/// Shall the spacemap display names consisting of whitespaces decorated with angle brackets
 		/// </summary>
         [DisplayName("Mark whitespace names on space map"), Description("Mark object names consisting only of whitespaces with <> brackets."), DefaultValue(false)]
-		public bool MarkWhitespaceNamesOnSpaceMap{get;set;}
+        public bool MarkWhitespaceNamesOnSpaceMap { get; set; }
 
 		/// <summary>
 		/// Focus statement window when pasting into selected node
@@ -164,7 +156,7 @@ namespace ArtemisMissionEditor
 
 		private int _autoSaveInterval;
 		/// <summary>
-		/// 
+        /// Defines interval (in minutes) between autosaves. 0 means autosave is disabled.
 		/// </summary>
 		[DisplayName("Autosave interval"), Description("Defines interval (in minutes) between autosaves. Autosave saves current mission state to a file in program folder (%APPDATA%\\ArtemisMissionEditor\\). You can manually load mission file from that folder if you need, like a program crashes or computer reboots unexpectedly. 0 means autosave is disabled."), DefaultValue(5)]
 		public int AutoSaveInterval
@@ -201,37 +193,40 @@ namespace ArtemisMissionEditor
 		[Browsable(false)]
 		public string NewMissionStartBlock { get; set; }
 
-		public static  void MakeSureProgramDataFolderExists(string fileName)
+        /// <summary>
+        /// 
+        /// </summary>
+        [Browsable(false)]
+        public string[] PlayerShipNames { get; set; }
+
+		public static  void EnsureProgramDataFolderExists()
         {
-            if (fileName.Contains(@"\"))
-            {
-                if (!Directory.Exists(fileName.Substring(0, fileName.LastIndexOf(@"\") + 1)))
-                    Directory.CreateDirectory(fileName.Substring(0, fileName.LastIndexOf(@"\") + 1));
-            }
+            if (!Directory.Exists( Environment.ExpandEnvironmentVariables(ProgramDataFolder)))
+                Directory.CreateDirectory(Environment.ExpandEnvironmentVariables(ProgramDataFolder));
         }
 
         public static bool Load()
         {
-            string fileName = Environment.ExpandEnvironmentVariables(_programDataFolder + _fileName);
+            string fileName = Environment.ExpandEnvironmentVariables(ProgramDataFolder + FileName);
             try
             {
                 BinaryFormatter iser = new BinaryFormatter();
                 using (FileStream istream = new FileStream(fileName, FileMode.Open))
-                {
                     Settings.Current = (Settings)(iser.Deserialize(istream));
-                    
-                    if (Settings.Current._version != Settings.LastVersion)
-                    {
-                        Settings.Current.UpdateSettings();
-                        Settings.Save();
-                    }
-                    return true;
+                if (Settings.Current._version != Settings.LastVersion)
+                {
+                    Settings.Current.UpdateSettings(true);
+                    Settings.Save();
                 }
+
+                Program.UpdateAllFormsOpacity();
+
+                return true;
             }
             catch (Exception e)
             {
                 Log.Add("Loading settings file has failed with the following exception:");
-                Log.Add(e.Message);
+                Log.Add(e);
 
                 return false;
             }
@@ -239,12 +234,12 @@ namespace ArtemisMissionEditor
 
         public static bool Save()
         {
-            string fileName = Environment.ExpandEnvironmentVariables(_programDataFolder + _fileName);
+            string fileName = Environment.ExpandEnvironmentVariables(ProgramDataFolder + FileName);
             FileStream ostream = null;
             try
             {
                 BinaryFormatter oser = new BinaryFormatter();
-                MakeSureProgramDataFolderExists(fileName);
+                EnsureProgramDataFolderExists();
                 ostream = new FileStream(fileName, FileMode.Create);
                 oser.Serialize(ostream, Settings.Current);
                 ostream.Close();
@@ -255,7 +250,7 @@ namespace ArtemisMissionEditor
                 if (ostream != null)
                     ostream.Close();
                 Log.Add("Creating settings file has failed with the following exception:");
-                Log.Add(e.Message);
+                Log.Add(e);
                 return false;
             }
         }
@@ -443,70 +438,39 @@ namespace ArtemisMissionEditor
         }
         private static Font _defaultFont = new Font(FontFamily.GenericMonospace, 24);
 
-        static Settings()
-        {
-            Current = new Settings();
-            VesselData = new VesselData();
-        }
-
         public Settings()
         {
-			_version = Settings.LastVersion;
-
-            BindsBrush_LoadDefaults();
-            BindsFont_LoadDefaults();
-            BindsKeyboard_LoadDefaults();
-
-            DefaultVesselDataPath = @"..\dat\vesselData.xml";
-            
-            AddFailureComments = false;
-            InsertNewOverElement = true;
-            DragIntoFolderToLastPosition = true;
-			DefaultSpaceMapScalePadded = true;
-			UseYForNameless = true;
-			UseYForNamed = true;
-			UseYForSelection = true;
-			YScale = 7.0;
-            ShowLabelNumbers = false;
-            NamesPerSubmenu = 15;
-			MarkWhitespaceNamesOnSpaceMap = false;
-			FocusOnStatementPaste = false;
-			ShowStartStatementsInBackground = true;
-			UseGenericMeshColor = true;
-			MinimalLuminance = 0.05;
-			MinimalSpaceMapSize = 100;
-			MaximalSpaceMapSize = 15000;
-
-			//Version 2
-			SelectLabelWhenUsingPlusMinus = false;
-
-			//Version 3
-			ClearStartNodeOnDelete = true;
-			AutoSaveInterval = 5;
-			AutoSaveFilesCount = 10;
-
-			NewMissionStartBlock = "<create type=\"player\" name = \"Artemis\" x=\"50000\" y=\"0\" z=\"50000\"/>\r\n<set_difficulty_level value=\"5\"/>\r\n<set_skybox_index index=\"9\"/><big_message title=\"Unnamed mission\" subtitle1=\"by Unknown Author\" subtitle2=\"adventure for Artemis 2.1\"/>\r\n<set_timer name=\"start_mission_timer_1\" seconds=\"10\"/>\r\n<set_variable name=\"chapter_1\" value=\"1\"/>";
-
-			if (Program.FormMainInstance!=null)
-				Program.FormMainInstance.SubscribeToVesselDataUpdates(VesselData);
+            _version = -1;
+            UpdateSettings();
         }
 
-        public void UpdateSettings()
+        public void UpdateSettings(bool verbose = false)
         {
-			if (_version > LastVersion)
-			{
-				_version = 0;
-				Log.Add("Read unknown settings version "+_version);
-			}
+			if (_version > LastVersion && verbose)
+				Log.Add("Encountered unknown settings version "+_version);
 			for (; _version++ < LastVersion; )
             {
-                Log.Add("Updating settings to version "+_version.ToString());
+                if (verbose) Log.Add("Updating settings to version " + _version.ToString());
                 switch(_version)
                 {
-                    //Forgot what changed here so will just fix everything in bulk
+                    case 0:
+                        BindsFont_LoadDefaults();
+                        DefaultVesselDataPath = @"..\dat\vesselData.xml";
+                        AddFailureComments = false;
+                        InsertNewOverElement = true;
+                        DragIntoFolderToLastPosition = true;
+			            DefaultSpaceMapScalePadded = true;
+			            UseYForNameless = true;
+			            UseYForNamed = true;
+			            YScale = 7.0;
+                        ShowLabelNumbers = false;
+                        NamesPerSubmenu = 15;
+			            MarkWhitespaceNamesOnSpaceMap = false;
+			            FocusOnStatementPaste = false;
+			            ShowStartStatementsInBackground = true;
+                        break;
                     case 1:
                         BindsBrush_LoadDefaults();
-                        BindsFont_LoadDefaults();
                         BindsKeyboard_LoadDefaults();
 						UseGenericMeshColor = true;
 						MinimalLuminance = 0.05;
@@ -525,6 +489,20 @@ namespace ArtemisMissionEditor
 						AutoSaveInterval = 5;
 						AutoSaveFilesCount = 10;
 						break;
+                    case 4:
+                        //Version 4
+                        FormOpacity = 1.0;
+                        PlayerShipNames = new string[]{ 
+                            "Artemis",
+                            "Intrepid",
+                            "Aegis",
+                            "Horatio",
+                            "Excalibur",
+                            "Hera",
+                            "Ceres",
+                            "Diana",
+                                };
+                        break;
                 }
             }
 			_version = LastVersion;

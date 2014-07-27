@@ -1,25 +1,15 @@
 ﻿* CODE rework ~ Work-work!
+  * Move all static classes to a different static class (like EMVEditors for EMVEditor) so that they don't clutter the class
+  * Move PrepareContextMenuStrip functions to other static class?
+  * COMMEN-FUCKING-TARY EVERYWHERE IT's MISSING! ESPECIALLY METHODS!
+  * Should I switch Coordinates and FakeShields to classes?
 
 * Improve expression parsing:
   - maybe show error/warning text differently? IDK, somehow in a more Visual Studio - style?
   - maybe add autocomplete or such stuff for var names? IntelliSense-style?
 
-* Foolproof check
-  Have an option to highlight problematic events in the mission. Probably as an option "Scan mission for errors" or maybe change event icons and add tooltips? Maybe as an option?
-  Check for common mistakes such as:
-  - not changing at least one variable that is also in the condition list. 
-  - trying to set properties of an object created in the same event
-  - wrong paths to files (absolute for sounds, relative for graphics)
-  - something else?
-  - NOTE: we already have error highlighting. Maybe warning highlighting should be somehow incorporated there
-
-OLD TODOs:
-
-* BUG! Convert comms/etc [Is this bug there anymore? Was it fixed long time ago?...]
-* Somehow show how many spaces there are in names consisting only of them [David: Dosen't 1.7 disallow this now?]
-* Text description for all properties on space map [Is this done already?]
-* Convert to comment/from comment for statements [Is this done already?]
-
+* Improve Foolproof check
+  - there must be ways to do it :)
 
 
 TODO's for the DISTANT FUTURE
@@ -36,6 +26,15 @@ TODO's for the DISTANT FUTURE
 The way mission scripting parsing works, you should not set object properties in the statement where you create an object.
 Therefore, allowing this would not be worth it.
 
+5. Find a way to make the treeview control never flicker at all no matter how it is resized, while retaining the slider functionality to resize form dimensions
+
+
+OLD TODOs:
+
+* BUG! Convert comms/etc [Is this bug there anymore? Was it fixed long time ago?...]
+* Somehow show how many spaces there are in names consisting only of them [David: Dosen't 1.7 disallow this now?]
+* Text description for all properties on space map [Is this done already?]
+* Convert to comment/from comment for statements [Is this done already?]
 
 
 PS: In case I want to go for graphical display of the dependencies, these are links about graphs:

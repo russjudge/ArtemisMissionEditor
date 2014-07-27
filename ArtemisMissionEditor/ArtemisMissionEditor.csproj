@@ -38,7 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
@@ -78,7 +78,7 @@
     <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_BadShipSystem.cs" />
     <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_PropertyIf_H.cs" />
     <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Side.cs" />
-    <Compile Include="Classes\Mission\MissionSearchStructure.cs" />
+    <Compile Include="Classes\Mission\MissionSearchCommand.cs" />
     <Compile Include="Classes\Mission\MissionSearchResult.cs" />
     <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_BadFleetProp.cs" />
     <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Point_x_TargetName.cs" />
@@ -215,6 +215,12 @@
     <Compile Include="Forms\FormMissionProperties.Designer.cs">
       <DependentUpon>FormMissionProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormNotepad.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormNotepad.Designer.cs">
+      <DependentUpon>FormNotepad.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormSearchResults.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -295,6 +301,9 @@
     <EmbeddedResource Include="Forms\FormMissionProperties.resx">
       <DependentUpon>FormMissionProperties.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormNotepad.resx">
+      <DependentUpon>FormNotepad.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormSearchResults.resx">
       <DependentUpon>FormSearchResults.cs</DependentUpon>
     </EmbeddedResource>
@@ -356,6 +365,7 @@
     <None Include="Images\page_text_delete.gif" />
     <None Include="Images\icon_monitor_pc.gif" />
     <None Include="Images\move_cross.png" />
+    <None Include="Images\icon_info.gif" />
     <Content Include="zzz_Documentation on parsing system.txt" />
     <None Include="Images\SmallUpArrow.png" />
     <None Include="Images\Underscore.png" />

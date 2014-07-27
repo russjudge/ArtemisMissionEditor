@@ -43,7 +43,8 @@ namespace ArtemisMissionEditor
 			{
 				try
 				{
-					string tmp = container.ParentStatement.ToXml(new XmlDocument()).OuterXml;
+					// Miscrosoft.Preformance is so helpful! Yeah sure, if I could just call OuterXml without assigning it, I'd never do this!
+                    string justSoThatOuterXmlGetLogicIsCalled = container.ParentStatement.ToXml(new XmlDocument()).OuterXml;
 				}
 				catch
 				{

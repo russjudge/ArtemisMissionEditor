@@ -211,8 +211,8 @@ namespace ArtemisMissionEditor
 		/// <returns>Value if attribute exists, null if doesnt</returns>
 		public string GetAttribute(string name)
 		{
-			if (name == "")
-				throw new ArgumentOutOfRangeException("Attribute cannot have a blank name!");
+			if (String.IsNullOrEmpty(name))
+				throw new ArgumentOutOfRangeException("name", "Attribute cannot have a blank name!");
 
 			//Try reading directly
 			if (Attributes.ContainsKey(name))
@@ -235,7 +235,7 @@ namespace ArtemisMissionEditor
 			//Try finding by another name
 			string pseudonym = null;
 
-			foreach (string[] arr in _linkedAttributes)
+			foreach (string[] arr in LinkedAttributes)
 				if (arr.Contains(name))
 					foreach (string item in arr)
 						if (name != item && Attributes.ContainsKey(item))
@@ -297,7 +297,7 @@ namespace ArtemisMissionEditor
 		public void SetAttribute(string name, string value)
 		{
 			//First see if there is already a variable with a shared name and remove it
-			foreach (string[] arr in _linkedAttributes)
+			foreach (string[] arr in LinkedAttributes)
 				if (arr.Contains(name))
 					foreach (string item in arr)
 						if (name != item)
@@ -310,7 +310,7 @@ namespace ArtemisMissionEditor
 			if (value != null)
 			{
 				string low = null, high = null;
-				foreach (string[] arr in _boundAttributes)
+				foreach (string[] arr in BoundAttributes)
 					if (arr[0] == name || arr[1] == name)
 					{
 						low = arr[0];
@@ -345,50 +345,22 @@ namespace ArtemisMissionEditor
 		}
 
 		/// <summary> Contains arrays of attribute names that share the same value, like, x/startX/centerX/... </summary>
-		private static string[][] _linkedAttributes;
+        private static readonly string[][] LinkedAttributes = new string[][]{
+            new string[]{ "x", "startX", "centerX", "pointX" },
+            new string[]{ "y", "startY", "centerY", "pointY" },
+            new string[]{ "z", "startZ", "centerZ", "pointZ" },
+            new string[]{ "use_gm_position", "use_gm_selection" },
+            new string[]{ "name", "name1" },
+            new string[]{ "name2", "targetName" },
+        };
 
 		/// <summary> Contains arrays of attribute names that signify boundaries, like, randomIntLow/randomIntHigh, and thus the first one must be less than the second </summary>
-		private static string[][] _boundAttributes;
-		
-		static MissionStatement()
-		{
-			string[] tmp;
-
-			_linkedAttributes = new string[6][];
-			
-			tmp = new string[4] { "x", "startX", "centerX", "pointX" };
-			_linkedAttributes[0] = tmp;
-			
-			tmp = new string[4] { "y", "startY", "centerY", "pointY" };
-			_linkedAttributes[1] = tmp;
-			
-			tmp = new string[4] { "z", "startZ", "centerZ", "pointZ" };
-			_linkedAttributes[2] = tmp;
-			
-			tmp = new string[2] { "use_gm_position", "use_gm_selection" };
-			_linkedAttributes[3] = tmp;
-			
-			tmp = new string[2] { "name", "name1" };
-			_linkedAttributes[4] = tmp;
-			
-			tmp = new string[2] { "name2", "targetName" };
-			_linkedAttributes[5] = tmp;
-			
-			_boundAttributes = new string[4][];
-
-			tmp = new string[2] { "randomIntLow", "randomIntHigh" };
-			_boundAttributes[0] = tmp;
-
-			tmp = new string[2] { "randomFloatLow", "randomFloatHigh" };
-			_boundAttributes[1] = tmp;
-
-			tmp = new string[2] { "leastX", "mostX" };
-			_boundAttributes[2] = tmp;
-
-			tmp = new string[2] { "leastZ", "mostZ" };
-			_boundAttributes[3] = tmp;
-
-		}
+        private static readonly string[][] BoundAttributes = new string[][]{
+        new string[] { "randomIntLow", "randomIntHigh" },
+        new string[] { "randomFloatLow", "randomFloatHigh" },
+        new string[] { "leastX", "mostX" },
+        new string[] { "leastZ", "mostZ" },
+        };
 
 		/// <summary> The exression that currently represents the statement </summary>
 		public List<ExpressionMemberContainer> Expression;
@@ -475,7 +447,7 @@ namespace ArtemisMissionEditor
 							if (container.Member.ValueDescription.BehaviorInXml == ExpressionMemberValueBehaviorInXml.StoredAsIs || !String.IsNullOrEmpty(cAtt.Value))
 								eResult.Attributes.Append(cAtt);
 						}
-					if (Body != "")
+					if (!String.IsNullOrEmpty(Body))
 						eResult.InnerText = Body;
 					return eResult;
 			}
@@ -501,7 +473,7 @@ namespace ArtemisMissionEditor
 					Name = item.Name;
 					foreach (XmlAttribute att in item.Attributes)
 						SetAttribute(att.Name, att.Value);
-					if (item.InnerText != "")
+					if (!String.IsNullOrEmpty(item.InnerText))
 						Body = item.InnerText;
 					break;
 			}

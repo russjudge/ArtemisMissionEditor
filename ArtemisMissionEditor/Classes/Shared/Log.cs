@@ -14,9 +14,9 @@ namespace ArtemisMissionEditor
     {
         public static string _fileName = "log.txt";
 
-        private static List<string> _logLines;
         public static ListBox.ObjectCollection LogLines {get{return Program.FormLogInstance._FL_lb_Log.Items;}}
-        public static List<string> LogDisplayLinesTemp;
+        private static List<string> _logLines = new List<string>();
+        public static List<string> LogDisplayLinesTemp = new List<string>();
 
         public static event NewLogEntryEventHandler NewLogEntry;
 
@@ -30,11 +30,11 @@ namespace ArtemisMissionEditor
 
         public static void Save()
         {
-            string fileName = Environment.ExpandEnvironmentVariables(Settings._programDataFolder + _fileName);
+            string fileName = Environment.ExpandEnvironmentVariables(Settings.ProgramDataFolder + _fileName);
             StreamWriter ostream = null;
             try
             {
-                Settings.MakeSureProgramDataFolderExists(fileName);
+                Settings.EnsureProgramDataFolderExists();
                 ostream = new StreamWriter(fileName, true);
                 foreach (string item in _logLines)
                     ostream.Write(item + "\r\n");
@@ -61,16 +61,11 @@ namespace ArtemisMissionEditor
             OnNewLogEntry();
         }
 
+        public static void Add(Exception e) { Add(e.Message + " "+e.StackTrace); }
+
         public static void MarkAsRead()
         {
             UnreadLines = 0;
         }
-
-        static Log()
-        {
-            _logLines = new List<string>();
-            LogDisplayLinesTemp = new List<string>();
-        }
-
     }
 }

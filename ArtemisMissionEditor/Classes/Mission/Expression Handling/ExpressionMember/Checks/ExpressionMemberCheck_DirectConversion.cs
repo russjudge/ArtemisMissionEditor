@@ -60,9 +60,7 @@ namespace ArtemisMissionEditor
 			: base("", "check_convertd")
 		{
 			List<ExpressionMember> eML;
-
 			eML = this.Add("Do nothing"); //_choices[0]
-
 			eML = this.Add("Convert to add_ai"); //_choices[1]
 		}
 	}

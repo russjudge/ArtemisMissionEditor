@@ -100,7 +100,7 @@ namespace ArtemisMissionEditor
 			return result;
 		}
 
-        public MissionNode()
+        protected MissionNode()
         {
             ID = null;
             ParentID = null;
@@ -440,7 +440,7 @@ namespace ArtemisMissionEditor
 		public override XmlNode ToXml(XmlDocument xDoc, bool full = false)
         {
             XmlNode xNode = xDoc.CreateNode(_node.NodeType, _node.Name, "");
-            if (_node.InnerText != "")
+            if (!String.IsNullOrEmpty(_node.InnerText))
                 xNode.InnerText = _node.InnerText;
             if (_node.Attributes != null)
                 foreach (XmlAttribute att in _node.Attributes)

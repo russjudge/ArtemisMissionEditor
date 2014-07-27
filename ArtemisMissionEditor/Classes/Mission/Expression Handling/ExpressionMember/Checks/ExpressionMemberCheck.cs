@@ -60,7 +60,7 @@ namespace ArtemisMissionEditor
 		protected override void OnValueDescriptionChange()
 		{
 			if (_valueDescription != null && _valueDescription.IsSerialized)
-				throw new ArgumentOutOfRangeException("A check member has been assigned a serialized xml value!");
+				throw new Exception("A check member has been assigned a serialized xml value! This should never be possible");
 		}
 		
 		/// <summary>
@@ -94,7 +94,7 @@ namespace ArtemisMissionEditor
 		/// <param name="value"></param>
 		protected override void SetValueInternal(ExpressionMemberContainer container, string value) { container.CheckValue = value; }
 
-		public ExpressionMemberCheck(string text, ExpressionMemberValueDescription valueDescription, string nameXml = "", bool mandatory = false)
+        protected ExpressionMemberCheck(string text, ExpressionMemberValueDescription valueDescription, string nameXml = "", bool mandatory = false)
 			: base(text, valueDescription, nameXml, mandatory)
 		{
 			_separators = new List<int>();
@@ -104,9 +104,9 @@ namespace ArtemisMissionEditor
             PossibleExpressions = new Dictionary<string, List<ExpressionMember>>();
 		}
 
-        public ExpressionMemberCheck(string text, string valueDescriptionName, string nameXml = "", bool mandatory = false)
-			: this(text, ExpressionMemberValueDescription.GetItem(valueDescriptionName)) {}
+        protected ExpressionMemberCheck(string text, string valueDescriptionName, string nameXml = "", bool mandatory = false)
+			: this(text, ExpressionMemberValueDescription.GetItem(valueDescriptionName), nameXml, mandatory) {}
 
-        public ExpressionMemberCheck() : this("", "<blank>") { }
+        protected ExpressionMemberCheck() : this("", "<blank>") { }
 	}
 }

@@ -51,3 +51,4 @@ E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\Artem
 E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.FormLog.resources
 E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.FormMain.resources
 E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.FormSettings.resources
+E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\obj\x86\Debug\ArtemisMissionEditor.FormNotepad.resources

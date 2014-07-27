@@ -286,7 +286,7 @@ namespace ArtemisMissionEditor
 
 		protected override void OnDrawNode(DrawTreeNodeEventArgs e)
         {
-            TreeNodeStates treeState = e.State;
+            //TreeNodeStates treeState = e.State; // no longer required as we have custom selection method
             Font treeFont = e.Node.NodeFont ?? e.Node.TreeView.Font;
             
             // Colors.
@@ -521,7 +521,7 @@ namespace ArtemisMissionEditor
 
         public TreeViewEx() : base()
         {
-			IsFolder_Reset();
+            IsFolder_Reset();
 			IsAllowedToHaveRelation_Reset();
 
             SelectedNodeColorFocused = Color.FromArgb(50, 150, 250);

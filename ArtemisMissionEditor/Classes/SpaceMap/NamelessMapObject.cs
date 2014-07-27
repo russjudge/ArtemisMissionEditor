@@ -40,14 +40,13 @@ namespace ArtemisMissionEditor
         mines
     }
 
-    //NANASHI RENJU, DETTE KOI!!!
     public sealed class NamelessMapObject
     {
-        public static int _minRadius = 0;
-        public static int _maxRadius = 100000;
-        public static int _minCount = 0;
-        //public static int _maxCount = 500;  //ISNT CHECKED LOL!
-        public static int _maxCount = 100000;
+        public static readonly int _minRadius = 0;
+        public static readonly int _maxRadius = 100000;
+        public static readonly int _minCount = 0;
+        //public static readonly int _maxCount = 500;  //This is written in mission docs, but actually isn't checked
+        public static readonly int _maxCount = 100000;
 
         //IMPORTED
 		[Browsable(false)]
@@ -326,7 +325,12 @@ namespace ArtemisMissionEditor
                 this._type = source._type;
         }
 
-        //TO XML
+        /// <summary>
+        /// Output Xml text that represents this nameless object
+        /// </summary>
+        /// <param name="xDoc"></param>
+        /// <param name="missingProperties">Will be filled with names of parameters that are missing. Currently this method does not fill it, but added for consistency with Nameds and future use.</param>
+        /// <returns></returns>
         public XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties)
         {
             XmlElement create = xDoc.CreateElement("create");

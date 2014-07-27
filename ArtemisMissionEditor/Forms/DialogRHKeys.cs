@@ -36,14 +36,14 @@ namespace ArtemisMissionEditor
                 {
                     case DialogRHKeysMode.HullBroadTypesClassNames:
                         form._DRHK_l_1.Text = "Class Names";
-                        foreach (string item in Settings.VesselData.vesselClassNames)
+                        foreach (string item in VesselData.Current.VesselClassNames)
                         {
                             form._DRHK_lb_1.Items.Add(item);
                             form._DRHK_lb_1.SetItemChecked(form._DRHK_lb_1.Items.Count - 1, keys.Contains(item));
                             if (keys.Contains(item)) keys.Remove(item);
                         }
                         form._DRHK_l_2.Text = "Broad Types";
-                        foreach (string item in Settings.VesselData.vesselBroadTypes)
+                        foreach (string item in VesselData.Current.VesselBroadTypes)
                         {
                             form._DRHK_lb_2.Items.Add(item);
                             form._DRHK_lb_2.SetItemChecked(form._DRHK_lb_2.Items.Count - 1, keys.Contains(item));
@@ -52,14 +52,14 @@ namespace ArtemisMissionEditor
                         break;
                     case DialogRHKeysMode.RaceNamesKeys:
                         form._DRHK_l_1.Text = "Race Names";
-                        foreach (string item in Settings.VesselData.raceNames)
+                        foreach (string item in VesselData.Current.RaceNames)
                         {
                             form._DRHK_lb_1.Items.Add(item);
                             form._DRHK_lb_1.SetItemChecked(form._DRHK_lb_1.Items.Count - 1, keys.Contains(item));
                             if (keys.Contains(item)) keys.Remove(item);
                         }
                         form._DRHK_l_2.Text = "Race Keys";
-                        foreach (string item in Settings.VesselData.raceKeys)
+                        foreach (string item in VesselData.Current.RaceKeys)
                         {
                             form._DRHK_lb_2.Items.Add(item);
                             form._DRHK_lb_2.SetItemChecked(form._DRHK_lb_2.Items.Count - 1, keys.Contains(item));

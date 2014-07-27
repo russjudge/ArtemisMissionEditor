@@ -212,7 +212,7 @@ namespace ArtemisMissionEditor
 				return false;
 		}
 
-		public DependencyValueCondition(MissionStatement statement, string name, string comparator, string value)
+        public DependencyValueCondition(MissionStatement statement, string name, string comparator, string value)
 		{
 			Statement = statement;
 			Name = name;

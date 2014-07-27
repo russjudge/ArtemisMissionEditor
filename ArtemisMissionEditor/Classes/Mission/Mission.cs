@@ -20,17 +20,32 @@ namespace ArtemisMissionEditor
 		private bool ___STATIC_E_nodeTV_SupressExpandCollapseEvents;//flag to supress afterexpand and aftercollapse events while mass-operating
 		private int ___STATIC_Update_Counter;//Semaphore for begin/end update
 
-		#region Name lists
+		#region Name lists and other tracked mission parameters
 
         //The list of names of objects present in such statements as creating set_variable create set_timer
-		private List<string> _variables, _timers;
-        private List<string> _variableHeaders, _timerHeaders;
-        private Dictionary<string,List<string>> _nameds;
-        public KeyValuePair<List<string>, List<string>> VariableNamesList { get { return new KeyValuePair<List<string>,List<string>>(_variables,_variableHeaders); } }
-        public KeyValuePair<List<string>, List<string>> TimerNamesList { get { return new KeyValuePair<List<string>,List<string>>(_timers,_timerHeaders); } }
-		public KeyValuePair<List<string>, List<string>> StationNamesList { get { return new KeyValuePair<List<string>, List<string>>(_nameds["station"], new List<string>()); } }
-		public Dictionary<string, List<string>> AllNamesLists { get { return _nameds; } }
-
+		public KeyValuePair<List<string>, List<string>> VariableNamesList { get { return new KeyValuePair<List<string>,List<string>>(_variableNames,_variableHeaders); } }
+        public KeyValuePair<List<string>, List<string>> TimerNamesList { get { return new KeyValuePair<List<string>,List<string>>(_timerNames,_timerHeaders); } }
+		public KeyValuePair<List<string>, List<string>> StationNamesList { get { return new KeyValuePair<List<string>, List<string>>(_namedObjects["station"], new List<string>()); } }
+		public Dictionary<string, List<string>> AllNamesLists { get { return _namedObjects; } }
+        /// <summary> All nodes where the variable is checked</summary>
+        public Dictionary<string, List<MissionNode>> VariableCheckLocations { get; private set; }
+        /// <summary> All variables that are set</summary>
+        public List<string> VariableSetNames { get; private set; }
+        /// <summary> All variables that are checked</summary>
+        public List<string> VariableCheckNames { get; private set; }
+        /// <summary> All timers that are set</summary>
+        public List<string> TimerSetNames { get; private set; }
+        /// <summary> All timers that are checked</summary>
+        public List<string> TimerCheckNames { get; private set; }
+        /// <summary> All objects that are created</summary>
+        public List<string> AllCreatedObjectNames { get; private set; }
+        public bool ContainsMissionEndStatement { get; private set; }
+        private List<string> _variableNames;
+        private List<string> _variableHeaders; // Headers for separators
+        private List<string> _timerNames;
+        private List<string> _timerHeaders; // Headers for separators
+        private Dictionary<string, List<string>> _namedObjects;
+        
 		#endregion
 
 		#region Mission inner parameters
@@ -82,7 +97,7 @@ namespace ArtemisMissionEditor
 		private TreeViewEx TreeViewStatements;
 		private FlowLayoutPanel FlowLayoutPanelMain;
 		private FormMain FormMain;
-		private TabControl TabControlMain;
+		private Label LabelMain;
 		private StatusStrip StatusStripMain;
 		private ToolStripStatusLabel ToolStripObjectsTotal;
 		private ContextMenuStrip ContextMenuStripForLabels;
@@ -227,18 +242,18 @@ namespace ArtemisMissionEditor
 			FormMain.KeyDown += _E_form_KeyDown;
 		}
 
-		public void AssignTabControl(TabControl value = null)
+		public void AssignLabel(Label value = null)
 		{
-			if (TabControlMain != null)
+			if (LabelMain != null)
 			{
-				TabControlMain.TabPages[0].Text = "";
+				LabelMain.Text = "";
 			}
-			TabControlMain = null;
+			LabelMain = null;
 
 			if (value == null)
 				return;
 
-			TabControlMain = value;
+			LabelMain = value;
 		}
 
 		public void AssignStatusToolStrip(StatusStrip value = null)
@@ -271,8 +286,10 @@ namespace ArtemisMissionEditor
         /// </example>
 		private bool NodeIsAllowedToHaveRelation(TreeNode parent, TreeNode child, NodeRelationship relation)
 		{
-			if (child.Tag == null || parent.Tag == null)
-				throw new ArgumentNullException("Moving a TreeNode without a Tag, WTF?");
+			if (child.Tag == null)
+				throw new ArgumentException("child", "Moving a TreeNode without a Tag, WTF?");
+            if (parent.Tag == null)
+                throw new ArgumentException("parent", "Moving a TreeNode without a Tag, WTF?");
 
             if (relation == NodeRelationship.ChildGoesInside && !TreeViewNodes.IsFolder(parent))
 				return false;
@@ -398,7 +415,7 @@ namespace ArtemisMissionEditor
 			TreeViewStatements = null;
 			FlowLayoutPanelMain = null;
 			FormMain = null;
-			TabControlMain = null;
+			LabelMain = null;
             StatusStripMain = null;
             ToolStripObjectsTotal = null;
 			ContextMenuStripForLabels = null;
@@ -407,26 +424,33 @@ namespace ArtemisMissionEditor
 			this.AssignNodeTreeView();
 			this.AssignStatementTreeView();
 			this.AssignForm();
-			this.AssignTabControl();
+			this.AssignLabel();
             this.AssignStatusToolStrip();
 			this.AssignLabelCMS();
 
 			Dependencies = new DependencyGraph();
-			
-			_variables = new List<string>();
+
+            ContainsMissionEndStatement = false;
+            VariableSetNames = new List<string>();
+            VariableCheckNames = new List<string>();
+            VariableCheckLocations = new Dictionary<string, List<MissionNode>>();
+            TimerSetNames = new List<string>();
+            TimerCheckNames = new List<string>();
+            AllCreatedObjectNames = new List<string>();
+            _variableNames = new List<string>();
             _variableHeaders = new List<string>();
-			_timers = new List<string>();
+			_timerNames = new List<string>();
             _timerHeaders = new List<string>();
-			_nameds = new Dictionary<string,List<string>>();
-            _nameds.Add("anomaly", new List<string>());
-            _nameds.Add("blackHole", new List<string>());
-            _nameds.Add("enemy", new List<string>());
-            _nameds.Add("neutral", new List<string>());
-            _nameds.Add("genericMesh", new List<string>());
-            _nameds.Add("player", new List<string>());
-            _nameds.Add("station", new List<string>());
-            _nameds.Add("monster", new List<string>());
-			_nameds.Add("whale", new List<string>());
+			_namedObjects = new Dictionary<string,List<string>>();
+            _namedObjects.Add("anomaly", new List<string>());
+            _namedObjects.Add("blackHole", new List<string>());
+            _namedObjects.Add("enemy", new List<string>());
+            _namedObjects.Add("neutral", new List<string>());
+            _namedObjects.Add("genericMesh", new List<string>());
+            _namedObjects.Add("player", new List<string>());
+            _namedObjects.Add("station", new List<string>());
+            _namedObjects.Add("monster", new List<string>());
+			_namedObjects.Add("whale", new List<string>());
             
 			_undoStack = new Stack<MissionSavedState>();
 			_redoStack = new Stack<MissionSavedState>();
@@ -439,15 +463,6 @@ namespace ArtemisMissionEditor
             ___STATIC_Update_Counter = 0;
 		}
 		
-		~Mission()
-		{
-			//this.AssignFlowPanel();
-			//this.AssignNodeTreeView();
-			//this.AssignStatementTreeView();
-			//this.AssignForm();
-			//this.AssignTabControl();
-		}
-
 		#region Undo / Redo / Change registration
 
 		public void Undo(MissionSavedState state = null)
@@ -579,9 +594,6 @@ namespace ArtemisMissionEditor
 
         public void FromFile(string fileName)
         {
-            XmlDocument xDoc;
-            xDoc = new XmlDocument();
-
             using (StreamReader streamReader = new StreamReader(fileName))
             {
                 string text = streamReader.ReadToEnd();
@@ -943,7 +955,7 @@ namespace ArtemisMissionEditor
 
 		public bool Save()
 		{
-            if (FilePath == "")
+            if (String.IsNullOrEmpty(FilePath))
                 return SaveAs();
             else
                 if (ChangesPending)
@@ -1420,17 +1432,6 @@ namespace ArtemisMissionEditor
 
         #region Node operation (delete, move, add...)
 
-        private int NodeDelete_private_RecursiveCalculate(TreeNode node)
-        {
-            int i = 0;
-            foreach (TreeNode child in node.Nodes)
-                i += NodeDelete_private_RecursiveCalculate(child);
-
-            if (node.Tag is MissionNode_Event)
-                i++;
-            return i;
-        }
-
         public void NodeDelete()
 		{
 			if (TreeViewNodes.SelectedNode == null)
@@ -1740,7 +1741,7 @@ namespace ArtemisMissionEditor
 				case "ArtemisMissionEditor.MissionNode_Folder":
 					nNode = TreeViewStatements.Nodes.Add("folder", mNode.ToXml(new XmlDocument()).OuterXml.Replace("&", "&&"), 3, 3);
 					nNode.Tag = mNode;
-					TabControlMain.TabPages[0].Text = "Folder";
+					LabelMain.Text = "Folder";
 					break;
 				case "ArtemisMissionEditor.MissionNode_Start":
 					actions = TreeViewStatements.Nodes.Add("Actions", "Actions", 1, 1);
@@ -1770,7 +1771,7 @@ namespace ArtemisMissionEditor
 				case "ArtemisMissionEditor.MissionNode_Comment":
 					nNode = TreeViewStatements.Nodes.Add("comment", mNode.ToXml(new XmlDocument()).OuterXml.Replace("&", "&&"), 2, 2);
 					nNode.Tag = mNode;
-					TabControlMain.TabPages[0].Text = "Commentary";
+					LabelMain.Text = "Commentary";
 					break;
 			}
 
@@ -1987,15 +1988,28 @@ namespace ArtemisMissionEditor
 				if (statement.Name == "if_variable")
 				{
 					string var_name = statement.GetAttribute("name");
-					if (var_name != null && !_variables.Contains(var_name))
-						_variables.Add(var_name);
+                    if (var_name != null)
+                    {
+                        if (!_variableNames.Contains(var_name))
+                            _variableNames.Add(var_name);
+                        if (!VariableCheckNames.Contains(var_name))
+                            VariableCheckNames.Add(var_name);
+                        if (!VariableCheckLocations.Keys.Contains(var_name))
+                            VariableCheckLocations.Add(var_name, new List<MissionNode>());
+                        VariableCheckLocations[var_name].Add(((MissionNode)node.Tag));
+                    }
 				}
 
 				if (statement.Name == "if_timer_finished")
 				{
 					string var_timer = statement.GetAttribute("name");
-					if (var_timer != null && !_timers.Contains(var_timer))
-						_timers.Add(var_timer);
+                    if (var_timer != null)
+                    {
+                        if (!_timerNames.Contains(var_timer))
+                            _timerNames.Add(var_timer);
+                        if (!TimerCheckNames.Contains(var_timer))
+                            TimerCheckNames.Add(var_timer);
+                    }
 				}
             } 
             
@@ -2009,71 +2023,98 @@ namespace ArtemisMissionEditor
                 {
                     string type = statement.GetAttribute("type");
 					string named_name;
-                    if (type!=null && _nameds.ContainsKey(type) && (named_name = statement.GetAttribute("name")) != null && !_nameds[type].Contains(named_name))
-                        _nameds[type].Add(named_name);
+                    if (type != null && (named_name = statement.GetAttribute("name")) != null)
+                    {
+                        if (_namedObjects.ContainsKey(type) && !_namedObjects[type].Contains(named_name))
+                            _namedObjects[type].Add(named_name);
+                        if (!AllCreatedObjectNames.Contains(named_name))
+                            AllCreatedObjectNames.Add(named_name);
+                    }
                 }
 
 				if (statement.Name == "set_variable")
                 {
                     string var_name = statement.GetAttribute("name");
-                    if (var_name!=null && !_variables.Contains(var_name))
-                        _variables.Add(var_name);
+                    if (var_name != null)
+                    {
+                        if (!_variableNames.Contains(var_name))
+                            _variableNames.Add(var_name);
+                        if (!VariableSetNames.Contains(var_name))
+                            VariableSetNames.Add(var_name);
+                    }
                 }
 
 				if (statement.Name == "set_timer") 
                 {
                     string var_timer = statement.GetAttribute("name");
-                    if (var_timer != null && !_timers.Contains(var_timer))
-                        _timers.Add(var_timer);
+                    if (var_timer != null)
+                    {
+                        if (!_timerNames.Contains(var_timer))
+                            _timerNames.Add(var_timer);
+                        if (!TimerSetNames.Contains(var_timer))
+                            TimerSetNames.Add(var_timer);
+                    }
+                }
+
+                if (statement.Name == "end_mission")
+                {
+                    ContainsMissionEndStatement = true;
                 }
             }
         }
 
         private void UpdateObjectLists()
         {
-            foreach (KeyValuePair<string, List<string>> kvp in _nameds)
+            foreach (KeyValuePair<string, List<string>> kvp in _namedObjects)
                 kvp.Value.Clear();
-            _variables.Clear();
+            ContainsMissionEndStatement = false;
+            _variableNames.Clear();
+            VariableSetNames.Clear();
+            VariableCheckNames.Clear();
+            VariableCheckLocations.Clear();
+            TimerSetNames.Clear();
+            TimerCheckNames.Clear();
+            AllCreatedObjectNames.Clear();
             _variableHeaders.Clear();
-            _timers.Clear();
+            _timerNames.Clear();
             _timerHeaders.Clear();
 
             foreach (TreeNode node in TreeViewNodes.Nodes)
                 UpdateObjectLists_private_RecursivelyScan(node);
 
-            _timers.Sort();
-            _variables.Sort();
+            _timerNames.Sort();
+            _variableNames.Sort();
 
-            if (_variables.Count > Settings.Current.NamesPerSubmenu)
+            if (_variableNames.Count > Settings.Current.NamesPerSubmenu)
             {
                 int i;
-                for (i = 0; i < _variables.Count / Settings.Current.NamesPerSubmenu; i++)
+                for (i = 0; i < _variableNames.Count / Settings.Current.NamesPerSubmenu; i++)
                 {
-                    string first = _variables[i * Settings.Current.NamesPerSubmenu];
+                    string first = _variableNames[i * Settings.Current.NamesPerSubmenu];
                     //if (i == 0 || first[0] != _variables[i * Settings.Current.NamesPerSubmenu - 1][0]) first = first.Substring(0,1).ToUpper();
-                    string last = _variables[(i + 1) * Settings.Current.NamesPerSubmenu - 1];
+                    string last = _variableNames[(i + 1) * Settings.Current.NamesPerSubmenu - 1];
                     //if ((i + 1) * Settings.Current.NamesPerSubmenu == _variables.Count - 1 || last[0] != _variables[(i + 1) * Settings.Current.NamesPerSubmenu - 2][0]) last = last.Substring(0, 1).ToUpper();
                     _variableHeaders.Add(first + " - " + last);
                 }
                 //_variableHeaders.Add(_variables[i * Settings.Current.NamesPerSubmenu] + " - " + _variables[_variables.Count - 1][0]);
-				if (_variables.Count - 1 >= i * Settings.Current.NamesPerSubmenu)
-					_variableHeaders.Add(_variables[i * Settings.Current.NamesPerSubmenu] + " - " + _variables[_variables.Count - 1]);
+				if (_variableNames.Count - 1 >= i * Settings.Current.NamesPerSubmenu)
+					_variableHeaders.Add(_variableNames[i * Settings.Current.NamesPerSubmenu] + " - " + _variableNames[_variableNames.Count - 1]);
             }
 
-			if (_timers.Count > Settings.Current.NamesPerSubmenu)
+			if (_timerNames.Count > Settings.Current.NamesPerSubmenu)
 			{
 				int i;
-				for (i = 0; i < _timers.Count / Settings.Current.NamesPerSubmenu; i++)
+				for (i = 0; i < _timerNames.Count / Settings.Current.NamesPerSubmenu; i++)
 				{
-					string first = _timers[i * Settings.Current.NamesPerSubmenu];
+					string first = _timerNames[i * Settings.Current.NamesPerSubmenu];
 					//if (i == 0 || first[0] != _timers[i * Settings.Current.NamesPerSubmenu - 1][0]) first = first.Substring(0,1).ToUpper();
-					string last = _timers[(i + 1) * Settings.Current.NamesPerSubmenu - 1];
+					string last = _timerNames[(i + 1) * Settings.Current.NamesPerSubmenu - 1];
 					//if ((i + 1) * Settings.Current.NamesPerSubmenu == _timers.Count - 1 || last[0] != _timers[(i + 1) * Settings.Current.NamesPerSubmenu - 2][0]) last = last.Substring(0, 1).ToUpper();
 					_timerHeaders.Add(first + " - " + last);
 				}
 				//_timerHeaders.Add(_timers[i * Settings.Current.NamesPerSubmenu] + " - " + _timers[_timers.Count - 1][0]);
-				if (_timers.Count - 1 >= i * Settings.Current.NamesPerSubmenu)
-					_timerHeaders.Add(_timers[i * Settings.Current.NamesPerSubmenu] + " - " + _timers[_timers.Count - 1]);
+				if (_timerNames.Count - 1 >= i * Settings.Current.NamesPerSubmenu)
+					_timerHeaders.Add(_timerNames[i * Settings.Current.NamesPerSubmenu] + " - " + _timerNames[_timerNames.Count - 1]);
 			}
 
 			ExpressionMemberValueEditor.TimerName.InvalidateCMS();
@@ -2290,7 +2331,7 @@ namespace ArtemisMissionEditor
 		/// <summary> Output selected node's tag to the tabpage's top text </summary>
 		private void UpdateNodeTag()
 		{
-			TabControlMain.TabPages[0].Text = ((MissionNode)TreeViewNodes.SelectedNode.Tag).Name;
+			LabelMain.Text = ((MissionNode)TreeViewNodes.SelectedNode.Tag).Name;
 		}
 
         #endregion
@@ -2321,10 +2362,8 @@ namespace ArtemisMissionEditor
         {
 			Program.FormFindReplaceInstance._FFR_tc_Main.SelectedTab = Program.FormFindReplaceInstance._FFR_tc_Main.TabPages[0];
 			Program.FormFindReplaceInstance.Show();
-
 			if (Program.FormSearchResultsInstance.Visible)
 				Program.FormSearchResultsInstance.BringToFront();
-
 			Program.FormFindReplaceInstance.BringToFront();
 		}
 
@@ -2332,19 +2371,14 @@ namespace ArtemisMissionEditor
         {
 			Program.FormFindReplaceInstance._FFR_tc_Main.SelectedTab = Program.FormFindReplaceInstance._FFR_tc_Main.TabPages[1];
 			Program.FormFindReplaceInstance.Show();
-            
 			if (Program.FormSearchResultsInstance.Visible)
 				Program.FormSearchResultsInstance.BringToFront();
-				
 			Program.FormFindReplaceInstance.BringToFront();
         }
 
 		public void ShowEventDependencyForm(bool recalculate = false)
 		{
-			if (recalculate)
-				Program.FormDependencyInstance.OpenEventDependency(TreeViewNodes.SelectedNode);
-			else
-				Program.FormDependencyInstance.OpenEventDependency(null);
+			Program.FormDependencyInstance.OpenEventDependency(TreeViewNodes.SelectedNode, recalculate);
 		}
 
 		public void ShowMissionPropertiesForm()
@@ -2359,45 +2393,45 @@ namespace ArtemisMissionEditor
 		}
 
 		/// <summary> Check for match, taking search terms in account </summary>
-		public bool Find_CheckStringForMatch(string text1, MissionSearchStructure mss)
+		public bool Find_CheckStringForMatch(string text1, MissionSearchCommand msc)
 		{
-			string text2 = mss.input;
-			if (!mss.matchCase)
+			string text2 = msc.Input;
+			if (!msc.MatchCase)
 			{
 				text1 = text1.ToLower();
 				text2 = text2.ToLower();
 			}
 
-			if (mss.matchExact)
+			if (msc.MatchExact)
 				return text1 == text2;
 			else
 				return text1.Contains(text2);
 		}
 
         /// <summary> Checks if current selection (node and/or statement) matches the search criteria </summary>
-        public bool Find_DoesCurrentSelectionMatch(MissionSearchStructure mss)
+        public bool Find_DoesCurrentSelectionMatch(MissionSearchCommand msc)
         {
-            if (Find_CheckNodeForMatch(TreeViewNodes.SelectedNode, (MissionNode)TreeViewNodes.SelectedNode.Tag, -1, mss).Valid)
+            if (Find_CheckNodeForMatch(TreeViewNodes.SelectedNode, (MissionNode)TreeViewNodes.SelectedNode.Tag, -1, msc).Valid)
                 return true;
 
 			if (TreeViewStatements.SelectedNode == null || !(TreeViewStatements.SelectedNode.Tag is MissionStatement))
 				return false;
 
-            return Find_CheckStatementForMatch(TreeViewNodes.SelectedNode, (MissionStatement)TreeViewStatements.SelectedNode.Tag, -1, -1, mss).Valid;
+            return Find_CheckStatementForMatch(TreeViewNodes.SelectedNode, (MissionStatement)TreeViewStatements.SelectedNode.Tag, -1, -1, msc).Valid;
         }
 
         /// <summary> Check if the mission node matches the search criteria, return search result if it does </summary>
-        public MissionSearchResult Find_CheckNodeForMatch(TreeNode node, MissionNode mNode, int curNode, MissionSearchStructure mss)
+        public MissionSearchResult Find_CheckNodeForMatch(TreeNode node, MissionNode mNode, int curNode, MissionSearchCommand msc)
         {
             bool statisfies = false;
 
             //We are interested in event/start/folder nodes...
-            if (mss.nodeNames && (node.Tag is MissionNode_Event || node.Tag is MissionNode_Folder || node.Tag is MissionNode_Start))
-                statisfies = statisfies | Find_CheckStringForMatch(mNode.Name, mss);
+            if (msc.NodeNames && (node.Tag is MissionNode_Event || node.Tag is MissionNode_Folder || node.Tag is MissionNode_Start))
+                statisfies = statisfies | Find_CheckStringForMatch(mNode.Name, msc);
 
             //... or commentaries
-            if (mss.commentaries && node.Tag is MissionNode_Comment)
-                statisfies = statisfies | Find_CheckStringForMatch(mNode.Name, mss);
+            if (msc.Commentaries && node.Tag is MissionNode_Comment)
+                statisfies = statisfies | Find_CheckStringForMatch(mNode.Name, msc);
                     
             if (statisfies)
                 return new MissionSearchResult(curNode, 0, mNode.Name, node, null);
@@ -2406,13 +2440,13 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary> Check if mission statement matches the search criteria, return search result if it does </summary>
-        public MissionSearchResult Find_CheckStatementForMatch(TreeNode node, MissionStatement statement, int curNode, int curStatement, MissionSearchStructure mss)
+        public MissionSearchResult Find_CheckStatementForMatch(TreeNode node, MissionStatement statement, int curNode, int curStatement, MissionSearchCommand msc)
         {
             //We are interested in comments only if we are especially looking for them
             if (statement.Kind == MissionStatementKind.Commentary)
             {
-                if (mss.commentaries)
-                    if (Find_CheckStringForMatch(statement.Body, mss))
+                if (msc.Commentaries)
+                    if (Find_CheckStringForMatch(statement.Body, msc))
                         return new MissionSearchResult(curNode, curStatement, statement.Body, node, statement);
 
                 return new MissionSearchResult(curNode, curStatement, null, node, statement);
@@ -2421,18 +2455,18 @@ namespace ArtemisMissionEditor
             bool statisfies = false;
 
             //Look for xml attribute names
-            if (mss.xmlAttName)
+            if (msc.XmlAttName)
                 foreach (KeyValuePair<string, string> kvp in statement.GetAttributes())
-                    statisfies = statisfies | Find_CheckStringForMatch(kvp.Key, mss);
+                    statisfies = statisfies | Find_CheckStringForMatch(kvp.Key, msc);
 
             //Look for xml attribute values
-            if (mss.xmlAttValue)
+            if (msc.XmlAttValue)
                 foreach (KeyValuePair<string, string> kvp in statement.GetAttributes())
-                    statisfies = statisfies | ((string.IsNullOrEmpty(mss.attName) || kvp.Key == mss.attName) && Find_CheckStringForMatch(kvp.Value, mss));
+                    statisfies = statisfies | ((string.IsNullOrEmpty(msc.AttName) || kvp.Key == msc.AttName) && Find_CheckStringForMatch(kvp.Value, msc));
 
             //Look for statement text
-            if (mss.statementText)
-                statisfies = statisfies | Find_CheckStringForMatch(statement.Text, mss);
+            if (msc.StatementText)
+                statisfies = statisfies | Find_CheckStringForMatch(statement.Text, msc);
 
             if (statisfies)
                 return new MissionSearchResult(curNode, curStatement, statement.Text, node, statement);
@@ -2462,7 +2496,7 @@ namespace ArtemisMissionEditor
             return last;
         }
         
-		public bool FindAll_private_RecursivelyFind(TreeNode node, ref int curNode, List<MissionSearchResult> list, MissionSearchStructure mss, bool forward, bool first, ref int limitNode, ref int limitStatement)
+		public bool FindAll_private_RecursivelyFind(TreeNode node, ref int curNode, List<MissionSearchResult> list, MissionSearchCommand msc, bool forward, bool first, ref int limitNode, ref int limitStatement)
 		{
             MissionNode mNode = (MissionNode)node.Tag;
 
@@ -2470,33 +2504,33 @@ namespace ArtemisMissionEditor
             int curStatement = forward ? 0 : mNode.Conditions.Count + mNode.Actions.Count + 1;
 
             for (int i = 0; i < node.Nodes.Count; i++)
-                if (FindAll_private_RecursivelyFind(node.Nodes[forward ? i : node.Nodes.Count - 1 - i], ref curNode, list, mss, forward, first, ref limitNode, ref limitStatement)) return true;
+                if (FindAll_private_RecursivelyFind(node.Nodes[forward ? i : node.Nodes.Count - 1 - i], ref curNode, list, msc, forward, first, ref limitNode, ref limitStatement)) return true;
 
             //Skip node in we are only looking in the current node and this isnt current node
-            if (mss.onlyInCurrentNode && !TreeViewNodes.NodeIsInsideNode(node, TreeViewNodes.SelectedNode))
+            if (msc.OnlyInCurrentNode && !TreeViewNodes.NodeIsInsideNode(node, TreeViewNodes.SelectedNode))
                 return false;
 
 			if (forward)
 			{
 				//Check if node matches our search criteria
-				if (Find_TryAdd(list, Find_CheckNodeForMatch(node, mNode, curNode, mss), first, ref limitNode, ref limitStatement)) return true;
+				if (Find_TryAdd(list, Find_CheckNodeForMatch(node, mNode, curNode, msc), first, ref limitNode, ref limitStatement)) return true;
 
 				//Then we start looking through statements
 				for (int i = 0; i < mNode.Conditions.Count; i++)
-					if (Find_TryAdd(list, Find_CheckStatementForMatch(node, mNode.Conditions[forward ? i : mNode.Conditions.Count - 1 - i], curNode, forward ? ++curStatement : --curStatement, mss), first, ref limitNode, ref limitStatement)) return true;
+					if (Find_TryAdd(list, Find_CheckStatementForMatch(node, mNode.Conditions[forward ? i : mNode.Conditions.Count - 1 - i], curNode, forward ? ++curStatement : --curStatement, msc), first, ref limitNode, ref limitStatement)) return true;
 				for (int i = 0; i < mNode.Actions.Count; i++)
-					if (Find_TryAdd(list, Find_CheckStatementForMatch(node, mNode.Actions[forward ? i : mNode.Actions.Count - 1 - i], curNode, forward ? ++curStatement : --curStatement, mss), first, ref limitNode, ref limitStatement)) return true;
+					if (Find_TryAdd(list, Find_CheckStatementForMatch(node, mNode.Actions[forward ? i : mNode.Actions.Count - 1 - i], curNode, forward ? ++curStatement : --curStatement, msc), first, ref limitNode, ref limitStatement)) return true;
 			}
 			else
 			{
 				//Then we start looking through statements
 				for (int i = 0; i < mNode.Actions.Count; i++)
-					if (Find_TryAdd(list, Find_CheckStatementForMatch(node, mNode.Actions[forward ? i : mNode.Actions.Count - 1 - i], curNode, forward ? ++curStatement : --curStatement, mss), first, ref limitNode, ref limitStatement)) return true;
+					if (Find_TryAdd(list, Find_CheckStatementForMatch(node, mNode.Actions[forward ? i : mNode.Actions.Count - 1 - i], curNode, forward ? ++curStatement : --curStatement, msc), first, ref limitNode, ref limitStatement)) return true;
 				for (int i = 0; i < mNode.Conditions.Count; i++)
-					if (Find_TryAdd(list, Find_CheckStatementForMatch(node, mNode.Conditions[forward ? i : mNode.Conditions.Count - 1 - i], curNode, forward ? ++curStatement : --curStatement, mss), first, ref limitNode, ref limitStatement)) return true;
+					if (Find_TryAdd(list, Find_CheckStatementForMatch(node, mNode.Conditions[forward ? i : mNode.Conditions.Count - 1 - i], curNode, forward ? ++curStatement : --curStatement, msc), first, ref limitNode, ref limitStatement)) return true;
 
 				//Check if node matches our search criteria
-				if (Find_TryAdd(list, Find_CheckNodeForMatch(node, mNode, curNode, mss), first, ref limitNode, ref limitStatement)) return true;
+				if (Find_TryAdd(list, Find_CheckNodeForMatch(node, mNode, curNode, msc), first, ref limitNode, ref limitStatement)) return true;
 			}
 			
             return false;
@@ -2506,7 +2540,7 @@ namespace ArtemisMissionEditor
 		/// Find all items matching the criteria set in search structure and return the list of matching items
         /// Can be used to look for the first after the current too
 		/// </summary>
-		public List<MissionSearchResult> FindAll(MissionSearchStructure mss, bool forward = true, bool first = false)
+		public List<MissionSearchResult> FindAll(MissionSearchCommand msc, bool forward = true, bool first = false)
         {
             List<MissionSearchResult> result = new List<MissionSearchResult>();
 
@@ -2516,11 +2550,297 @@ namespace ArtemisMissionEditor
             {
                 curNode = forward ? 0 : GetNodeCount() + 1;
                 for (int i = 0; i < TreeViewNodes.Nodes.Count; i++)
-                    if (FindAll_private_RecursivelyFind(TreeViewNodes.Nodes[forward ? i : TreeViewNodes.Nodes.Count - 1 - i], ref curNode, result, mss, forward, first, ref limitNode, ref limitStatement)) break;
+                    if (FindAll_private_RecursivelyFind(TreeViewNodes.Nodes[forward ? i : TreeViewNodes.Nodes.Count - 1 - i], ref curNode, result, msc, forward, first, ref limitNode, ref limitStatement)) break;
             }
 
             return result;
         }
+
+        //TODO: Finish writing this
+        public List<MissionSearchResult> FindProblems()
+        {
+            List<MissionSearchResult> result = new List<MissionSearchResult>();
+
+            int curNode = 0;
+
+            foreach (TreeNode node in TreeViewNodes.Nodes)
+                FindProblems_RecursivelyCheckNodes(node, ref curNode, result);
+
+            if (!ContainsMissionEndStatement)
+                result.Add(new MissionSearchResult(0, 0, "\"End Mission\" action is not present anywhere in the script. Unless you are making a script that only ends with player ship being destroyed, you should consider adding this action.", null, null));
+
+            return result;
+        }
+
+        private void FindProblems_RecursivelyCheckNodes(TreeNode node, ref int curNode, List<MissionSearchResult> result)
+        {
+            //Preset list of statements that take names (under different, khm, names) of named objects
+            string[] statementsThatTakeName = new string[]{
+                "destroy", 
+                "destroy_near", 
+                "add_ai",
+                "clear_ai",
+                "direct",
+                "set_object_property",
+                "addto_object_property",
+                "set_to_gm_position",
+                "set_ship_text",
+                "set_special",
+                "set_side_value",
+                "if_inside_box",
+                "if_outside_box",
+                "if_inside_sphere",
+                "if_outside_sphere",
+                "if_docked",
+                "if_player_is_targeting",
+                "if_exists",
+                "if_not_exists",
+                "if_object_property",
+                };
+            string[] statementsThatTakeTargetName = new string[]{
+                "direct",
+                };
+            string[] statementsThatTakeName12 = new string[]{
+                "copy_object_property",
+                "set_relative_position",
+                "if_distance",
+                };
+
+            curNode++;
+
+            if (node.Tag as MissionNode_Start != null || node.Tag as MissionNode_Event != null)
+            {
+                MissionNode mNode = (MissionNode)node.Tag;
+                bool isStartNode = node.Tag as MissionNode_Start != null;
+
+                // Find all objects created in this node
+                List<string> namesCreatedInThisNode = new List<string>();
+                bool hasEndMission = false;
+                bool hasNonEndMission = false;
+                foreach (MissionStatement statement in mNode.Actions)
+                {
+                    if (statement.Kind != MissionStatementKind.Action)
+                        continue;
+                    string attName;
+                    if (statement.Name == "create" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")))
+                        namesCreatedInThisNode.Add(attName);
+                    if (statement.Name == "end_mission")
+                        hasEndMission = true;
+                    else
+                        hasNonEndMission = true;
+                }
+
+                if (hasEndMission && hasNonEndMission)
+                    result.Add(new MissionSearchResult(curNode, -1, "Other actions in the same node with the \"End Mission\" action make little sense, as the mission will end immediately and their effects will most likely go unnoticed by the players.", node, null));
+
+                if (!isStartNode)
+                {
+                    // Event has no conditions
+                    if (mNode.Conditions.Count == 0)
+                    {
+                        result.Add(new MissionSearchResult(curNode, 0, "An event contains no conditions. It will keep executing on every tick, potentially introducing performance issues or even crashes.", node, null));
+                    }
+                    if (mNode.Conditions.Count > 0)
+                    {
+                        bool onlyTimers = true;
+                        bool onlyNotExists = true;
+                        bool noIfVariable = true;
+                        List<string> variablesCheckedHere = new List<string>();
+                        List<string> timersCheckedHere = new List<string>();
+                        foreach (MissionStatement statement in mNode.Conditions)
+                        {
+                            if (statement.Kind == MissionStatementKind.Condition && statement.Name != "if_timer_finished")
+                                onlyTimers = false;
+                            if (statement.Kind == MissionStatementKind.Condition && statement.Name != "if_not_exists")
+                                onlyNotExists = false;
+                            if (statement.Kind == MissionStatementKind.Condition && statement.Name == "if_variable")
+                            {
+                                noIfVariable = false;
+                                variablesCheckedHere.Add(statement.GetAttribute("name"));
+                            }
+                            if (statement.Kind == MissionStatementKind.Condition && statement.Name == "if_timer_finished")
+                                timersCheckedHere.Add(statement.GetAttribute("name"));
+                        }
+                        
+                        // Event has only "timer_finished" conditions
+                        if (onlyTimers && !hasEndMission)
+                            result.Add(new MissionSearchResult(curNode, 0, "Event contains only \"Timer finished\" condition(s). Once the timer finishes, it will keep executing on every tick, potentially introducing performance issues or even crashes.", node, null));
+                        
+                        // Event has only "object_not_exists" conditions
+                        if (onlyNotExists && !hasEndMission)
+                            result.Add(new MissionSearchResult(curNode, 0, "Event contains only \"Object does not exist\" condition(s). While the specified object does not exist, it will keep executing on every tick, potentially introducing performance issues or even crashes.", node, null));
+                        
+                        // Event has no "if_variable" conditions
+                        if (noIfVariable && !hasEndMission)
+                            result.Add(new MissionSearchResult(curNode, 0, "Event contains no \"If variable\" condition. While this is not a mistake, it is recommended to have at least one such condition, or ensure that something inside the event always invalidates one of the conditions.", node, null));
+                        
+                        // Event has no set_variable mirroring if_variable
+                        if (timersCheckedHere.Count > 0 || variablesCheckedHere.Count > 0)
+                        {
+                            List<string> variablesSetHere = new List<string>();
+                            List<string> timersSetHere = new List<string>();
+                            for (int i = 0; i < mNode.Actions.Count; i++)
+                            {
+                                if (mNode.Actions[i].Kind == MissionStatementKind.Action && mNode.Actions[i].Name == "set_variable")
+                                    variablesSetHere.Add(mNode.Actions[i].GetAttribute("name"));
+                                if (mNode.Actions[i].Kind == MissionStatementKind.Action && mNode.Actions[i].Name == "set_timer")
+                                    timersSetHere.Add(mNode.Actions[i].GetAttribute("name"));
+                            }
+                            bool noCorrespondingSet = true;
+                            foreach (string checkedVar in variablesCheckedHere)
+                            {
+                                if (String.IsNullOrEmpty(checkedVar))
+                                    continue;
+                                foreach (string setVar in variablesSetHere)
+                                {
+                                    if (String.IsNullOrEmpty(setVar))
+                                        continue;
+                                    if (setVar == checkedVar)
+                                        noCorrespondingSet = false;
+                                }
+                            }
+                            foreach (string checkedTimer in timersCheckedHere)
+                            {
+                                if (String.IsNullOrEmpty(checkedTimer))
+                                    continue;
+                                foreach (string setTimer in timersSetHere)
+                                {
+                                    if (String.IsNullOrEmpty(setTimer))
+                                        continue;
+                                    if (setTimer == checkedTimer)
+                                        noCorrespondingSet = false;
+                                }
+                            }
+                            if (noCorrespondingSet && !hasEndMission)
+                            {
+                                string innerText = "";
+                                if (variablesCheckedHere.Count > 0)
+                                    innerText += "no \"Set variable\" condition matching an \"If variable\" condition";
+                                if (timersCheckedHere.Count > 0)
+                                    innerText += (String.IsNullOrEmpty(innerText) ? "" : ", and ") + "no \"Set timer\" condition matching an \"If timer finished\" condition";
+                                result.Add(new MissionSearchResult(curNode, 0, "Event contains " + innerText + ". While this is not a mistake, generally you should change at least one variable or start at least one timer present in the conditions in order to prevent the event from immediately executing again. If leaving as is, ensure that something inside the event always invalidates one of the conditions.", node, null));
+                            }
+                        }
+
+                        for (int i = 0; i < mNode.Conditions.Count; i++)
+                        {
+                            MissionStatement statement = mNode.Conditions[i];
+                            if (statement.Kind != MissionStatementKind.Condition)
+                                continue;
+
+                            // Reference to a variable that is never set
+                            string attName;
+                            if (statement.Name == "if_variable" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && !VariableSetNames.Contains(attName))
+                                result.Add(new MissionSearchResult(curNode, i + 1, "Variable named \"" + attName + "\" is checked for, but never set.", node, statement));
+
+                            // Reference to a timer that is never set
+                            if (statement.Name == "if_timer_finished" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && !TimerSetNames.Contains(attName))
+                                result.Add(new MissionSearchResult(curNode, i + 1, "Timer named \"" + attName + "\" is checked for, but never set.", node, statement));
+
+                            // Distance equality check (hardly ever happens)
+                            if (statement.Name == "if_distance" && (statement.GetAttribute("comparator") == "EQUALS" || statement.GetAttribute("comparator") == "NOT"))
+                                result.Add(new MissionSearchResult(curNode, i + 1, "Distance is checked for equality. In practice, distance will almost never be equal to an exact value. You should use \"lesser\" and \"greater\" comparisons instead.", node, statement));
+
+                            // Reference to a name never created
+                            List<string> namesToCheck = new List<string>();
+                            if (statementsThatTakeName.Contains(statement.Name))
+                                namesToCheck.Add(statement.GetAttribute("name"));
+                            if (statementsThatTakeTargetName.Contains(statement.Name))
+                                namesToCheck.Add(statement.GetAttribute("targetName"));
+                            if (statementsThatTakeName12.Contains(statement.Name))
+                            {
+                                namesToCheck.Add(statement.GetAttribute("name1"));
+                                namesToCheck.Add(statement.GetAttribute("name2"));
+                            }
+                            foreach (string name in namesToCheck)
+                            {
+                                if (String.IsNullOrWhiteSpace(name))
+                                    continue;
+                                if (!AllCreatedObjectNames.Contains(name))
+                                    result.Add(new MissionSearchResult(curNode, i + 1, "Object named \"" + name + "\" is referenced in a statement, but never created.", node, statement));
+                            }
+                        }
+                    }
+                }
+
+                for (int i = 0; i < mNode.Actions.Count; i++)
+                {
+                    MissionStatement statement = mNode.Actions[i];
+                    if (statement.Kind != MissionStatementKind.Action)
+                        continue;
+
+                    // Reference to a variable that is never checked
+                    string attName;
+                    if (statement.Name == "set_variable" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && !VariableCheckNames.Contains(attName))
+                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Variable named \"" + attName + "\" is set, but never checked.", node, statement));
+                    
+                    // Reference to a timer that is never checked
+                    if (statement.Name == "set_timer" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && !TimerCheckNames.Contains(attName))
+                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Timer named \"" + attName + "\" is set, but never checked.", node, statement));
+                    
+                    // Add/set_property for object which name figures in the list of objects created in the same statement
+                    // TODO: Confirm or denyt this problem exists and fix this statement (also maybe copy_object_property?
+                    //if ((statement.Name == "addto_object_property" || statement.Name == "set_object_property"|| statement.Name == "add_ai"|| statement.Name == "clear_ai") && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && listCreatedInThisNode.Contains(attName))
+                    //    result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Changing properties of an object \"" + attName + "\" in the event where it was just created will not work correctly.", node, statement));
+                    
+                    // Setting side of an object that was just created
+                    if (statement.Name == "set_side_value" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && namesCreatedInThisNode.Contains(attName))
+                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "You can set the side value of an object \"" + attName + "\" in its create statement without utilising a second statement.", node, statement));
+                    
+                    // Check path to art
+                    if (statement.Name == "create" && statement.GetAttribute("type") == "genericMesh")
+                    {
+                        string[] pathsToCheck = new string[] { statement.GetAttribute("meshFileName"), statement.GetAttribute("textureFileName") };
+                        foreach (string path in pathsToCheck)
+                        {
+                            if (String.IsNullOrWhiteSpace(path))
+                                continue;
+                            if (path.Contains(":\\"))
+                                result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "It looks like you have specified an absolute path. You should avoid using absolute paths, as they will almost never be the same on the other people's computers.", node, statement));
+                            else if (!path.Contains("dat"))
+                                result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "It looks like you have specified a path relative to the mission folder. Paths to art assets should be relative to the Artemis folder.", node, statement));
+                        }
+                    }
+                    
+                    // Check path to sound
+                    string soundPath;
+                    if ((statement.Name == "incoming_message" && !String.IsNullOrWhiteSpace(soundPath = statement.GetAttribute("fileName")))
+                     || (statement.Name == "play_sound_now" && !String.IsNullOrWhiteSpace(soundPath = statement.GetAttribute("filemame"))))
+                    {
+                        string path = soundPath;
+                        if (String.IsNullOrWhiteSpace(path))
+                            continue;
+                        if (path.Contains(":\\"))
+                            result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "It looks like you have specified an absolute path. You should avoid using absolute paths, as they will almost never be the same on the other people's computers.", node, statement));
+                        else if (path.Contains("dat"))
+                            result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "It looks like you have specified a path relative to the Artemis folder. Paths to sound assets should be relative to the mission folder.", node, statement));
+                    }
+                    
+                    // Refernce to a name never created
+                    List<string> namesToCheck = new List<string>();
+                    if (statementsThatTakeName.Contains(statement.Name))
+                        namesToCheck.Add(statement.GetAttribute("name"));
+                    if (statementsThatTakeTargetName.Contains(statement.Name))
+                        namesToCheck.Add(statement.GetAttribute("targetName"));
+                    if (statementsThatTakeName12.Contains(statement.Name))
+                    {
+                        namesToCheck.Add(statement.GetAttribute("name1"));
+                        namesToCheck.Add(statement.GetAttribute("name2"));
+                    }
+                    foreach (string name in namesToCheck)
+                    {
+                        if (String.IsNullOrWhiteSpace(name))
+                            continue;
+                        if (!AllCreatedObjectNames.Contains(name))
+                            result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Object named \"" + name + "\" is referenced in a statement, but never created.", node, statement));
+                    }
+                }
+            }
+            
+            foreach (TreeNode child in node.Nodes)
+                FindProblems_RecursivelyCheckNodes(child, ref curNode, result);
+        }
+
 
 		public bool HighlightErrors_private_CheckStatement(MissionStatement statement)
 		{
@@ -2564,33 +2884,33 @@ namespace ArtemisMissionEditor
 			TreeViewStatements.Invalidate();
 		}
 
-        public string Replace_ReplaceInString(string text1, MissionSearchStructure mss)
+        public string Replace_ReplaceInString(string text1, MissionSearchCommand msc)
         {
-            if (mss.matchExact)
-                text1 = mss.replacement;
+            if (msc.MatchExact)
+                text1 = msc.Replacement;
             else
-                if (mss.matchCase)
-					text1 = text1.Replace(mss.input, mss.replacement);
+                if (msc.MatchCase)
+					text1 = text1.Replace(msc.Input, msc.Replacement);
                 else
-					text1 = Helper.StringReplaceEx(text1, mss.input, mss.replacement);
+					text1 = Helper.StringReplaceEx(text1, msc.Input, msc.Replacement);
             return text1;
         }
 
-		public int Replace_InNode(TreeNode node, int curNode, List<MissionSearchResult> list, MissionSearchStructure mss)
+		public int Replace_InNode(TreeNode node, int curNode, List<MissionSearchResult> list, MissionSearchCommand msc)
         {
             int replacements = 0;
 
             //Replace in node name
-			if ((mss.nodeNames || mss.commentaries) && node != null)
+			if ((msc.NodeNames || msc.Commentaries) && node != null)
 			{
 				MissionNode mNode = (MissionNode)node.Tag;
 
 				//We are interested in event/start/folder nodes...
-				if ((mss.nodeNames && (node.Tag is MissionNode_Event || node.Tag is MissionNode_Folder || node.Tag is MissionNode_Start))
-					|| mss.commentaries && node.Tag is MissionNode_Comment)
-					if (Find_CheckStringForMatch(mNode.Name, mss))
+				if ((msc.NodeNames && (node.Tag is MissionNode_Event || node.Tag is MissionNode_Folder || node.Tag is MissionNode_Start))
+					|| msc.Commentaries && node.Tag is MissionNode_Comment)
+					if (Find_CheckStringForMatch(mNode.Name, msc))
 					{
-						mNode.Name = Replace_ReplaceInString(mNode.Name, mss);
+						mNode.Name = Replace_ReplaceInString(mNode.Name, msc);
 						replacements++;
 					}
 
@@ -2602,7 +2922,7 @@ namespace ArtemisMissionEditor
 			return replacements;
 		}
 
-		public int Replace_InStatement(TreeNode node, MissionStatement statement, int curNode, int curStatement, List<MissionSearchResult> list, MissionSearchStructure mss)
+		public int Replace_InStatement(TreeNode node, MissionStatement statement, int curNode, int curStatement, List<MissionSearchResult> list, MissionSearchCommand msc)
 		{
 			int replacements = 0;
 
@@ -2612,19 +2932,19 @@ namespace ArtemisMissionEditor
 				//We are interested in comments only if we are especially looking for them
                 if (statement.Kind == MissionStatementKind.Commentary)
                 {
-                    if (mss.commentaries)
-                        if (Find_CheckStringForMatch(statement.Body, mss))
+                    if (msc.Commentaries)
+                        if (Find_CheckStringForMatch(statement.Body, msc))
                         {
-                            statement.Body = Replace_ReplaceInString(statement.Body, mss);
+                            statement.Body = Replace_ReplaceInString(statement.Body, msc);
                             replacements++;
                         }
                 }
                 else
-                    if (mss.xmlAttValue) //Look for xml attribute values
+                    if (msc.XmlAttValue) //Look for xml attribute values
                         foreach (KeyValuePair<string, string> kvp in statement.GetAttributes())
-                            if ((string.IsNullOrEmpty(mss.attName) || kvp.Key == mss.attName) && Find_CheckStringForMatch(kvp.Value, mss))
+                            if ((string.IsNullOrEmpty(msc.AttName) || kvp.Key == msc.AttName) && Find_CheckStringForMatch(kvp.Value, msc))
                             {
-                                statement.SetAttribute(kvp.Key, Replace_ReplaceInString(kvp.Value, mss));
+                                statement.SetAttribute(kvp.Key, Replace_ReplaceInString(kvp.Value, msc));
                                 replacements++;
                             }
 				statement.Update();
@@ -2636,21 +2956,21 @@ namespace ArtemisMissionEditor
         }
 
 		/// <summary> Replace in currently selected node and statement </summary>
-		public int ReplaceCurrent(MissionSearchStructure mss)
+		public int ReplaceCurrent(MissionSearchCommand msc)
 		{
 			int replacements = 0;
 
-			replacements += Replace_InNode(TreeViewNodes.SelectedNode, 0, new List<MissionSearchResult>(), mss);
-			replacements += TreeViewStatements.SelectedNode == null || !(TreeViewStatements.SelectedNode.Tag is MissionStatement) ? 0 : Replace_InStatement(TreeViewNodes.SelectedNode, (MissionStatement)TreeViewStatements.SelectedNode.Tag, 0, 0, new List<MissionSearchResult>(), mss);
+			replacements += Replace_InNode(TreeViewNodes.SelectedNode, 0, new List<MissionSearchResult>(), msc);
+			replacements += TreeViewStatements.SelectedNode == null || !(TreeViewStatements.SelectedNode.Tag is MissionStatement) ? 0 : Replace_InStatement(TreeViewNodes.SelectedNode, (MissionStatement)TreeViewStatements.SelectedNode.Tag, 0, 0, new List<MissionSearchResult>(), msc);
 
 			OutputMissionNodeContentsToTree();
 
-			RegisterChange("Replaced '" + mss.input + "' with '" + mss.replacement + "' " + replacements.ToString() + " time(s).");
+			RegisterChange("Replaced '" + msc.Input + "' with '" + msc.Replacement + "' " + replacements.ToString() + " time(s).");
 
 			return replacements;
 		}
 
-		public int ReplaceAll_private_RecursiveReplace(TreeNode node, ref int curNode, List<MissionSearchResult> list, MissionSearchStructure mss)
+		public int ReplaceAll_private_RecursiveReplace(TreeNode node, ref int curNode, List<MissionSearchResult> list, MissionSearchCommand msc)
 		{
 			int replacements = 0;
 
@@ -2658,27 +2978,27 @@ namespace ArtemisMissionEditor
 			int curStatement = 0;
 
 			for (int i = 0; i < node.Nodes.Count; i++)
-				replacements += ReplaceAll_private_RecursiveReplace(node.Nodes[i], ref curNode, list, mss);
+				replacements += ReplaceAll_private_RecursiveReplace(node.Nodes[i], ref curNode, list, msc);
 
 			//Skip node in we are only looking in the current node and this isnt current node
-			if (mss.onlyInCurrentNode && !TreeViewNodes.NodeIsInsideNode(node, TreeViewNodes.SelectedNode))
+			if (msc.OnlyInCurrentNode && !TreeViewNodes.NodeIsInsideNode(node, TreeViewNodes.SelectedNode))
                 return replacements;
 
 			MissionNode mNode = (MissionNode)node.Tag;
 			
 			//Check if node matches our search criteria (before statements if going forward)
-			replacements += Replace_InNode(node, curNode, list, mss);
+			replacements += Replace_InNode(node, curNode, list, msc);
 
 			//Then we start looking through statements
 			for (int i = 0; i < mNode.Conditions.Count; i++)
-				replacements += Replace_InStatement(node, mNode.Conditions[i], curNode, ++curStatement, list, mss);
+				replacements += Replace_InStatement(node, mNode.Conditions[i], curNode, ++curStatement, list, msc);
 			for (int i = 0; i < mNode.Actions.Count; i++)
-				replacements += Replace_InStatement(node, mNode.Actions[i], curNode, ++curStatement, list, mss); 
+				replacements += Replace_InStatement(node, mNode.Actions[i], curNode, ++curStatement, list, msc); 
 
 			return replacements;
 		}
 
-        public int ReplaceAll(List<MissionSearchResult> list, MissionSearchStructure mss)
+        public int ReplaceAll(List<MissionSearchResult> list, MissionSearchCommand msc)
         {
             BeginUpdate();
 
@@ -2686,11 +3006,11 @@ namespace ArtemisMissionEditor
 			int curNode = 0;
 
 			for (int i = 0; i < TreeViewNodes.Nodes.Count; i++)
-				replacements += ReplaceAll_private_RecursiveReplace(TreeViewNodes.Nodes[i], ref curNode, list, mss);
+				replacements += ReplaceAll_private_RecursiveReplace(TreeViewNodes.Nodes[i], ref curNode, list, msc);
 
 			OutputMissionNodeContentsToTree();
 			
-            RegisterChange("Replaced '" + mss.input + "' with '" + mss.replacement + "' " + replacements.ToString() + " time(s).");
+            RegisterChange("Replaced '" + msc.Input + "' with '" + msc.Replacement + "' " + replacements.ToString() + " time(s).");
 
 			EndUpdate();
 
@@ -2768,10 +3088,10 @@ namespace ArtemisMissionEditor
 			{
 				foreach (MissionSearchResult item in list)
 				{
-					if (!TreeViewNodes.HighlightedTagList.Contains(item.Node.Tag) && item.Node.Tag != null)
-						TreeViewNodes.HighlightedTagList.Add(item.Node.Tag);
-					if (!TreeViewStatements.HighlightedTagList.Contains(item.Statement) && item.Node.Tag != null)
-						TreeViewStatements.HighlightedTagList.Add(item.Node.Tag);
+					if (!TreeViewNodes.HighlightedTagList.Contains(item.NodeTag) && item.NodeTag != null)
+						TreeViewNodes.HighlightedTagList.Add(item.NodeTag);
+					if (!TreeViewStatements.HighlightedTagList.Contains(item.Statement) && item.NodeTag != null)
+						TreeViewStatements.HighlightedTagList.Add(item.NodeTag);
 					if (!TreeViewStatements.HighlightedTagList.Contains(item.Statement) && item.Statement != null)
 						TreeViewStatements.HighlightedTagList.Add(item.Statement);
 				}
@@ -3294,10 +3614,10 @@ namespace ArtemisMissionEditor
 
             SpaceMap result = DialogSpaceMap.EditStatementOnSpaceMap(statementXml, editXml, bgXml);
 
-            ParseSpaceMapStatementResults(new List<MissionStatement>(), curStatement, result);
+            ParseSpaceMapStatementResults(curStatement, result);
         }
 
-        private void ParseSpaceMapStatementResults(List<MissionStatement> toDelete, MissionStatement curStatement, SpaceMap result)
+        private void ParseSpaceMapStatementResults(MissionStatement curStatement, SpaceMap result)
         {
             if (result == null)
                 return;
@@ -3497,7 +3817,8 @@ namespace ArtemisMissionEditor
 			try
 			{
 				mNode.Name = e.Label;
-				string tmp = mNode.ToXml(new XmlDocument()).OuterXml;
+				// Miscrosoft.Preformance is so helpful! Yeah sure, if I could just call OuterXml without assigning it, I'd never do this!
+                string justSoThatOuterXmlGetLogicIsCalled = mNode.ToXml(new XmlDocument()).OuterXml;
 			}
 			catch (Exception ee)
 			{
@@ -3963,22 +4284,22 @@ namespace ArtemisMissionEditor
 			string diffs = "";
 
 			if (xOld.Name!=xNew.Name)
-				diffs+="\r\n"+"Name : <"+xOld.Name+"> => <"+xNew.Name+">";
+				diffs+="\r\n"+"Name: <"+xOld.Name+"> => <"+xNew.Name+">";
 			foreach (XmlAttribute atto in xOld.Attributes)
 			{
 				XmlAttribute attn = xNew.Attributes[atto.Name];
 				if (attn == null)
-					diffs += "\r\n" + "Att : <" + atto.Name + "> removed!";
+					diffs += "\r\n" + "Attribute: <" + atto.Name + "> removed!";
 				else if (attn.Value!=atto.Value)
-					diffs += "\r\n" + "Att : <" + atto.Name + "> value changed <"+atto.Value+"> => <"+attn.Value+">";
+                    diffs += "\r\n" + "Attribute: <" + atto.Name + "> value changed <" + atto.Value + "> => <" + attn.Value + ">";
 			}
 			foreach (XmlAttribute attn in xNew.Attributes)
 			{
 				XmlAttribute atto = xOld.Attributes[attn.Name];
 				if (atto == null)
-					diffs += "\r\n" + "Att : added <" + attn.Name + ">";
+                    diffs += "\r\n" + "Attribute: added <" + attn.Name + ">";
 			}
-			if (diffs != "")
+			if (!String.IsNullOrEmpty(diffs))
 			{
 				if (first)
 				{
@@ -4001,9 +4322,9 @@ namespace ArtemisMissionEditor
 			MissionNode curMNode = (MissionNode)node.Tag;
 
             bool first = true;
-            string caption = "\r\n" + "\r\n" + curMNode.Name + ":";
+            string caption = "\r\n" + "\r\n" + "\r\n" + curMNode.Name + ":";
             foreach (MissionStatement statement in curMNode.Conditions)
-                GetDebugXmlOutput_private_GetDiff(caption, statement, ref  output, ref first);
+                GetDebugXmlOutput_private_GetDiff(caption, statement, ref output, ref first);
 
             foreach (MissionStatement statement in curMNode.Actions)
                 GetDebugXmlOutput_private_GetDiff(caption, statement, ref output, ref first);

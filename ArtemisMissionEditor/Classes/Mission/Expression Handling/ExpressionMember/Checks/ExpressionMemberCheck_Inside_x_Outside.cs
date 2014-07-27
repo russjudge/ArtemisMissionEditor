@@ -7,10 +7,6 @@ using System.Windows.Forms;
 
 namespace ArtemisMissionEditor
 {
-	
-	
-	
-	
 
 	public sealed class ExpressionMemberCheck_Inside_x_Outside : ExpressionMemberCheck
 	{
@@ -25,7 +21,7 @@ namespace ArtemisMissionEditor
 		protected override void SetValueInternal(ExpressionMemberContainer container, string value)
 		{
 			if (value == _choices[0])
-				container.ParentStatement.Name = container.ParentStatement.Name.Replace("outside","inside");
+				container.ParentStatement.Name = container.ParentStatement.Name.Replace("outside", "inside");
 			else
 				container.ParentStatement.Name = container.ParentStatement.Name.Replace("inside", "outside");
 
@@ -35,11 +31,9 @@ namespace ArtemisMissionEditor
 		public ExpressionMemberCheck_Inside_x_Outside()
 			: base("", "check_in/out")
 		{
-			List<ExpressionMember> eML;
-			
-			eML = this.Add("inside"); //_choices[0]
-
-			eML = this.Add("outside"); //_choices[1]
+            List<ExpressionMember> eML; 
+            eML = Add("inside"); //_choices[0]
+            eML = Add("outside"); //_choices[1]
 			
 		}
 

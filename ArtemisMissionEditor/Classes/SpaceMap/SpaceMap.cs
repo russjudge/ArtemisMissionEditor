@@ -10,17 +10,17 @@ namespace ArtemisMissionEditor
     public sealed class SpaceMap
     {
         //Coordinates and angle in space
-        public static int _minX = 0;
-		public static int _maxX = 100000;
-		public static int _minY = -100000;
-		public static int _maxY = 100000;
-		public static int _minZ = 0;
-		public static int _maxZ = 100000;
-		public static int _paddingZ = 10000;
-		public static int _paddingX = 10000;
-		public static int _nebulaWidth = 4000;
-		public static int _asteroidWidth = 300;
-		public static int _mineWidth = 250;
+        public static readonly int _minX = 0;
+        public static readonly int _maxX = 100000;
+        public static readonly int _minY = -100000;
+        public static readonly int _maxY = 100000;
+        public static readonly int _minZ = 0;
+        public static readonly int _maxZ = 100000;
+        public static readonly int _paddingZ = 10000;
+        public static readonly int _paddingX = 10000;
+        public static readonly int _nebulaWidth = 4000;
+        public static readonly int _asteroidWidth = 300;
+        public static readonly int _mineWidth = 250;
 
 		#region Helper Functions
 
@@ -90,16 +90,13 @@ namespace ArtemisMissionEditor
             }
         }
                 
-        public  NamedMapObject[] SelectionNamed
+        public NamedMapObject[] GetSelectionNamed()
         {
-            get
-            {
-                List<NamedMapObject> value = new List<NamedMapObject>();
-                foreach (NamedMapObject item in namedObjects)
-                    if (item.Selected)
-                        value.Add(item);
-                return value.ToArray();
-            }
+            List<NamedMapObject> value = new List<NamedMapObject>();
+            foreach (NamedMapObject item in namedObjects)
+                if (item.Selected)
+                    value.Add(item);
+            return value.ToArray();
         }
 
         private NamelessMapObject _selectionNameless;
@@ -328,7 +325,7 @@ namespace ArtemisMissionEditor
                 return changed;
             }
             
-            throw new Exception("WHAT THE FUCK!? AttemptSelection reached the end in normal mode!");
+            throw new Exception("Select_AtPoint reached the end in normal mode! This means an error in function's logic.");
             //return false;
         }
                 
@@ -452,7 +449,7 @@ namespace ArtemisMissionEditor
         {
             bool changed = false;
             NamedMapObject toBeSelected = null, cur = null;
-            NamedMapObject[] selectedObjects = SelectionNamed;
+            NamedMapObject[] selectedObjects = GetSelectionNamed();
             int i;
 
             if (SelectionNameless != null)
@@ -499,7 +496,7 @@ namespace ArtemisMissionEditor
         {
             bool changed = false;
             NamedMapObject toBeSelected = null, cur = null;
-            NamedMapObject[] selectedObjects = SelectionNamed;
+            NamedMapObject[] selectedObjects = GetSelectionNamed();
             int i;
 
             if (SelectionNameless != null)
@@ -721,7 +718,7 @@ namespace ArtemisMissionEditor
                 
         public  bool Selection_GetCenterOfMass(out int vecx, out int vecy, out int vecz)
         {
-            NamedMapObject[] selectedObjects = SelectionNamed;
+            NamedMapObject[] selectedObjects = GetSelectionNamed();
             int count = selectedObjects.Count();
             double dvecx = 0.0, dvecy = 0.0, dvecz = 0.0;
 
@@ -986,7 +983,7 @@ namespace ArtemisMissionEditor
             catch (Exception e)
             {
                 Log.Add("Failed to load space map from xml for the following reasons:");
-                Log.Add(e.Message);
+                Log.Add(e);
                 return;
             }
 
@@ -1059,7 +1056,7 @@ namespace ArtemisMissionEditor
             {
                 missingProperties.Clear();
 
-                create = item.ToXml(xDoc,missingProperties);
+                create = item.ToXml(xDoc, missingProperties);
 
                 if (missingProperties.Count > 0)
                 {

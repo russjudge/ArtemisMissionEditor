@@ -65,7 +65,7 @@ namespace ArtemisMissionEditor
 			if (value != null)
 			{
 				//Only set the node name if this is a straight 1 to 1 check value, otherwise the name would be modified by other code that will follow
-				if (value != "" && !value.Contains(' ') && !value.Contains('>') && !value.Contains('<'))
+				if (!String.IsNullOrEmpty(value) && !value.Contains(' ') && !value.Contains('>') && !value.Contains('<'))
 					container.ParentStatement.Name = value;
 				
                 //For custom one-to-one
