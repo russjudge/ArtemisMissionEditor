@@ -10,8 +10,9 @@ using System.Xml;
 using System.Reflection;
 using System.IO;
 using System.Drawing.Drawing2D;
+using ArtemisMissionEditor.SpaceMap;
 
-namespace ArtemisMissionEditor
+namespace ArtemisMissionEditor.Forms
 {
 	public partial class FormSpaceMap : FormSerializeableToRegistry
     {
@@ -52,7 +53,7 @@ namespace ArtemisMissionEditor
 
         private void _E_FSM_FormClosing(object sender, FormClosingEventArgs e)
         {
-			if (DialogResult==DialogResult.Cancel)
+			if (DialogResult == DialogResult.Cancel)
 				pSpaceMap.ExecuteCommand(KeyCommands.FinishEditing);
 
 			if (DialogResult == DialogResult.Cancel ||DialogResult == DialogResult.None)
@@ -70,7 +71,7 @@ namespace ArtemisMissionEditor
 			pSpaceMap.ExecuteCommand(KeyCommands.FinishEditing);
         }
 
-        public static SpaceMap AddViaSpaceMap(string bgXml)
+        public static Space AddViaSpaceMap(string bgXml)
         {
             using (FormSpaceMap form = CreateSpaceMapForm("Add new objects", new List<int>(), new List<int>(), "<input></input>", bgXml))
             {
@@ -81,7 +82,7 @@ namespace ArtemisMissionEditor
             }
         }
 
-        public static SpaceMap EditOnSpaceMap(List<int> namedList, List<int> namelessList, string editXml, string bgXml)
+        public static Space EditOnSpaceMap(List<int> namedList, List<int> namelessList, string editXml, string bgXml)
         {
             using (FormSpaceMap form = CreateSpaceMapForm("Edit or add objects", namedList, namelessList, editXml, bgXml))
             {
@@ -99,8 +100,8 @@ namespace ArtemisMissionEditor
             form.Text = caption;
             form.pSpaceMap.SpaceMap.FromXml(editXml);
 			form.pSpaceMap.SpaceMap.FromXml(bgXml);
-            form.pSpaceMap.SpaceMap.namedIdList = namedList;
-            form.pSpaceMap.SpaceMap.namelessIdList = namelessList;
+            form.pSpaceMap.SpaceMap.NamedIdList = namedList;
+            form.pSpaceMap.SpaceMap.NamelessIdList = namelessList;
             form.pSpaceMap.SpaceMap.MarkAsImported();
 
             return form;
@@ -156,10 +157,10 @@ namespace ArtemisMissionEditor
 			_FSM_ms_Main_Edit_Redo.Text = !_FSM_ms_Main_Edit_Redo.Enabled ? "Redo" : "Redo \"" + pSpaceMap.SpaceMap.RedoDescription + "\"";
 
 			int i = 0;
-            int maxi = pSpaceMap.SpaceMap._undoStack.Count-1;
+            int maxi = pSpaceMap.SpaceMap.UndoStack.Count-1;
             _FSM_ms_Main_Edit_UndoList.DropDownItems.Clear();
             
-			foreach (SpaceMapSavedState item in pSpaceMap.SpaceMap._undoStack)
+			foreach (SpaceSavedState item in pSpaceMap.SpaceMap.UndoStack)
 			{
 				i++;
                 if (i<maxi && i > 9 && maxi != 10)
@@ -187,9 +188,9 @@ namespace ArtemisMissionEditor
 			}
 
 			i = 0;
-            maxi = pSpaceMap.SpaceMap._redoStack.Count;
+            maxi = pSpaceMap.SpaceMap.RedoStack.Count;
 			_FSM_ms_Main_Edit_RedoList.DropDownItems.Clear();
-			foreach (SpaceMapSavedState item in pSpaceMap.SpaceMap._redoStack)
+			foreach (SpaceSavedState item in pSpaceMap.SpaceMap.RedoStack)
 			{
 				i++;
                 if (i < maxi && i > 9 && maxi != 10)
@@ -217,12 +218,12 @@ namespace ArtemisMissionEditor
 
 		void _E_FSM_ms_Main_Edit_UndoListItem_Click(object sender, EventArgs e)
 		{
-			pSpaceMap.Undo((SpaceMapSavedState)((ToolStripItem)sender).Tag);
+			pSpaceMap.Undo((SpaceSavedState)((ToolStripItem)sender).Tag);
 		}
 
 		void _E_FSM_ms_Main_Edit_RedoListItem_Click(object sender, EventArgs e)
 		{
-			pSpaceMap.Redo((SpaceMapSavedState)((ToolStripItem)sender).Tag);
+			pSpaceMap.Redo((SpaceSavedState)((ToolStripItem)sender).Tag);
 		}
 
 
@@ -259,5 +260,19 @@ namespace ArtemisMissionEditor
 			pSpaceMap.ExecuteCommand(KeyCommands.DeleteSelected);
 			pSpaceMap.SetFocus();
 		}
+
+        private void showHelpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Program.FormHelpInstance.ShowPage(FormHelpPage.SpaceMapHotkeys);
+        }
+
+        private void FormSpaceMap_VisibleChanged(object sender, EventArgs e)
+        {
+            if (!Visible)
+            {
+                SaveToRegistry();
+                Program.ShowMainFormIfRequired();
+            }
+        }
     }
 }

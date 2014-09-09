@@ -1,32 +1,35 @@
-﻿* BUG: Path does not consider the differnce for meshes and audio files
+﻿* CODE rework ~ Work-work!
+  * In multiple places we modify something in other classes directly instead of properly employing events. Switch to events!
+    For classes like Settings and Mission (where only Class.Current's event matters) we should make event itself static, and fire only for Current class.
+  * COMMEN-FUCKING-TARY EVERYWHERE IT's MISSING! ESPECIALLY METHODS!
+    * TreeView still needs comments?
+	* SpaceMap (whole namespace)
+	* PanelSpaceMap
+  * Switch to multiple namespaces where appropriate?
+  * Go through every class and go private or protected where appropriate
+  ? Should I switch Coordinates and FakeShields to classes
 
-* Improve expression parsing:
-  - highlight whole warning item if it's a long one
-  - maybe show error/warning text differently?
-  - maybe add autocomplete or such stuff for var names?
+* Improve value expression parsing:
+  - maybe show error/warning text differently? IDK, somehow in a more Visual Studio - style?
+  - add autocomplete or such stuff for var names? IntelliSense-style?
 
-* Foolproof check
-  Have an option to highlight problematic events in the mission. Probably as an option "Scan mission for errors" or maybe change event icons and add tooltips? Maybe as an option?
-  Check for common mistakes such as:
-  - NOT changing at least one variable that is also in the condition list. 
-  - trying to set properties of an object created in the same event
-  - wrong paths to files (absolute for sounds, relative for graphics)
-  - something else?
+* Add to "Find Problems" functionality
+  - any more ideas?
 
+* Since AfterSelect event is not multi-threaded, it delays the "selection" routine of the TreeView. 
+  If we quickly click a node and then scroll it out of view, we get scrolled back to the node, because 
+  the "afterselect" finishes with some delay and only then treeview is scrolled to the selected node.
+  We must multithread the update of statement treeview. However, this would require checking for thread-safety in several places.
 
-OLD TODOs:
-
-* BUG! Convert comms/etc [Is this bug there anymore? Was it fixed long time ago?...]
-* Somehow show how many spaces there are in names consisting only of them [David: Dosen't 1.7 disallow this now?]
-* Text description for all properties on space map [Is this done already?]
-* Convert to comment/from comment for statements [Is this done already?]
-
+* Undo / Redo takes a LOT of time for bigger missions. 
+  Most of the time is spent in recursive node selection or in FromXml method.
+  Maybe improve the process somehow.
 
 
 TODO's for the DISTANT FUTURE
 
 1. Selection:
-* Multiselect with one click (ctrl_click)
+* Multiselect with one click (ctrl_click): selecting all nodes between the current and the chosen
 * Drag and drop whole selection?
 
 2. Add MANDATORY wherever it is needed by the game
@@ -37,6 +40,15 @@ TODO's for the DISTANT FUTURE
 The way mission scripting parsing works, you should not set object properties in the statement where you create an object.
 Therefore, allowing this would not be worth it.
 
+5. Find a way to make the treeview control never flicker at all no matter how it is resized, while retaining the slider functionality to resize form dimensions
+
+
+OLD TODOs:
+
+* BUG! Convert comms/etc [Is this bug there anymore? Was it fixed long time ago?...]
+* Somehow show how many spaces there are in names consisting only of them [David: Dosen't 1.7 disallow this now?]
+* Text description for all properties on space map [Is this done already?]
+* Convert to comment/from comment for statements [Is this done already?]
 
 
 PS: In case I want to go for graphical display of the dependencies, these are links about graphs:

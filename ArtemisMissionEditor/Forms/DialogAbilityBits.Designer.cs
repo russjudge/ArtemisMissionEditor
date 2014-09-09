@@ -1,4 +1,4 @@
-﻿namespace ArtemisMissionEditor
+﻿namespace ArtemisMissionEditor.Forms
 {
 	partial class DialogAbilityBits
 	{
@@ -48,8 +48,9 @@
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.okButton.AutoSize = true;
+            this.okButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.okButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.okButton.Location = new System.Drawing.Point(74, 347);
+            this.okButton.Location = new System.Drawing.Point(70, 266);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(53, 25);
             this.okButton.TabIndex = 0;
@@ -62,10 +63,11 @@
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.AutoSize = true;
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.cancelButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.cancelButton.Location = new System.Drawing.Point(128, 347);
+            this.cancelButton.Location = new System.Drawing.Point(124, 266);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(53, 25);
+            this.cancelButton.Size = new System.Drawing.Size(57, 25);
             this.cancelButton.TabIndex = 1;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
@@ -134,10 +136,11 @@
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.AutoSize = true;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.button1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button1.Location = new System.Drawing.Point(51, 347);
+            this.button1.Location = new System.Drawing.Point(43, 266);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(22, 25);
+            this.button1.Size = new System.Drawing.Size(26, 25);
             this.button1.TabIndex = 9;
             this.button1.TabStop = false;
             this.button1.Text = "?";
@@ -199,7 +202,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancelButton;
-            this.ClientSize = new System.Drawing.Size(192, 382);
+            this.ClientSize = new System.Drawing.Size(192, 301);
             this.ControlBox = false;
             this.Controls.Add(this.cbAS);
             this.Controls.Add(this.cbATB);

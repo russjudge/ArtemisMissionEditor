@@ -51,7 +51,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Maps-Earth.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Maps-Earth.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -69,90 +69,97 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\DependencyGraph\DependencyCondition.cs" />
-    <Compile Include="Classes\DependencyGraph\DependencyAction.cs" />
-    <Compile Include="Classes\DependencyGraph\DependencyEvent.cs" />
-    <Compile Include="Classes\DependencyGraph\DependencyGraph.cs" />
-    <Compile Include="Classes\DependencyGraph\DependencyPrecursor.cs" />
-    <Compile Include="Classes\Mission\Enumerations\NodeRelationship.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_BadShipSystem.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_PropertyIf_H.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Side.cs" />
-    <Compile Include="Classes\Mission\ExpressionMember\Checks\ExpressionMemberCheck_Side.cs" />
-    <Compile Include="Classes\Mission\MissionSearchStructure.cs" />
-    <Compile Include="Classes\Mission\MissionSearchResult.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_BadFleetProp.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Point_x_TargetName.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_DirectConversion.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_DistanceNebula.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Box_x_Sphere.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Inside_x_Outside.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Existance.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Letter_x_ID.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_AllShips_x_FleetNumber.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_XmlNameCondition.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_PropertyCopy_H.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_PropertyAdd_H.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_PropertySet_H.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_AIType_H.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_SetVariable.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Point_x_Name_x_GMPos.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Named_x_Nameless.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Name_x_GMSel.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Line_x_Circle.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_FakeShields.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_HullID_x_HullRaceKeys.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Point_x_GMPos.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_CreateType_H.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_XmlNameAction.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_XmlNode_H.cs" />
-    <Content Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck_Template.txt" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\ExpressionMember_Body.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMemberValue\ExpressionMemberValueEditor.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMemberValue\ExpressionMemberValueType.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\ExpressionMember_Commentary.cs" />
-    <Compile Include="Classes\Shared\GrahpicsExtention.cs" />
-    <Compile Include="Classes\SpaceMap\ExpressionMember_Unknown.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\ExpressionMember.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMemberContainer.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMemberValue\ExpressionMemberValueDescription.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMemberValue\ExpressionMemberValueBehaviorInXml.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\ExpressionMember\Checks\ExpressionMemberCheck.cs" />
-    <Compile Include="Classes\Mission\Expression Handling\Expressions.cs" />
-    <Compile Include="Classes\Mission\Mission.cs" />
-    <Compile Include="Classes\Mission\MissionNode.cs" />
-    <Compile Include="Classes\Mission\MissionStatement.cs" />
-    <Compile Include="Classes\Mission\MissionSavedState.cs" />
-    <Compile Include="Classes\Mission\Enumerations\EditorActivationMode.cs" />
-    <Compile Include="Classes\Shared\Enumerators\PanelSpaceMapMode.cs" />
-    <Compile Include="Classes\Shared\Generic Adaptors, Descriptors\DictionaryPropertyDescriptor.cs" />
-    <Compile Include="Classes\Shared\Generic Adaptors, Descriptors\DictionaryPropertyGridAdapter.cs" />
-    <Compile Include="Classes\Shared\Enumerators\MapColors.cs" />
-    <Compile Include="Classes\Shared\Enumerators\MapFonts.cs" />
-    <Compile Include="Classes\Shared\Helper.cs" />
-    <Compile Include="Classes\Shared\Log.cs" />
-    <Compile Include="Classes\User Controls\NormalLabel.cs">
+    <Compile Include="DependencyGraph\DependencyCondition.cs" />
+    <Compile Include="DependencyGraph\DependencyAction.cs" />
+    <Compile Include="DependencyGraph\DependencyEvent.cs" />
+    <Compile Include="DependencyGraph\DependencyGraph.cs" />
+    <Compile Include="DependencyGraph\DependencyPrecursor.cs" />
+    <Compile Include="Expressions\ExpressionMemberValueDescriptions.cs" />
+    <Compile Include="Expressions\ExpressionMemberValueEditors.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_BadShipSystem.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_PropertyIf.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Side.cs" />
+    <Compile Include="Expressions\ExpressionMemberValueEditor[Static].cs" />
+    <Compile Include="Mission\MissionSearchCommand.cs" />
+    <Compile Include="Mission\MissionSearchResult.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_BadFleetProperty.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Point_TargetName.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_DirectConversion.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_DistanceNebula.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Box_Sphere.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Inside_Outside.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Existance.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Letter_ID.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_AllShips_FleetNumber.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_XmlNameCondition.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_PropertyCopy.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_PropertyAdd.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_PropertySet.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_AddAIType.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_SetVariable.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Point_Name_GM.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Named_Nameless.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Name_GM.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Line_Circle.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_FakeShields.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_HullID_HullRaceKeys.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Point_GM.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_CreateType.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_XmlNameAction.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_XmlNode.cs" />
+    <Content Include="Expressions\ExpressionMembers\zzz_ExpressionMemberCheck_Template.txt" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMember_Body.cs" />
+    <Compile Include="Expressions\ExpressionMemberValueEditor.cs" />
+    <Compile Include="Expressions\ExpressionMemberValueType.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMember_Commentary.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SpaceMap\GrahpicsExtention.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMember_Unknown.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMember.cs" />
+    <Compile Include="Expressions\ExpressionMemberContainer.cs" />
+    <Compile Include="Expressions\ExpressionMemberValueDescription.cs" />
+    <Compile Include="Expressions\ExpressionMemberValueBehaviorInXml.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck.cs" />
+    <Compile Include="Expressions\ExpressionParser.cs" />
+    <Compile Include="Mission\Mission.cs" />
+    <Compile Include="Mission\MissionNode.cs" />
+    <Compile Include="Mission\MissionStatement.cs" />
+    <Compile Include="Mission\MissionSavedState.cs" />
+    <Compile Include="Utility Classes\DictionaryPropertyGridAdapter.cs" />
+    <Compile Include="Utility Classes\Helper.cs" />
+    <Compile Include="Utility Classes\LegacySettings.cs" />
+    <Compile Include="Utility Classes\Log.cs" />
+    <Compile Include="Controls\DoubleBufferedTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Classes\User Controls\TreeViewEx.cs">
+    <Compile Include="Controls\NormalLabel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Classes\SpaceMap\Coordinates3D.cs" />
-    <Compile Include="Classes\SpaceMap\FakeShields.cs" />
-    <Compile Include="Classes\Shared\Enumerators\KeyCommands.cs" />
-    <Compile Include="Classes\SpaceMap\SpaceMapSavedState.cs" />
-    <Compile Include="Classes\SpaceMap\NamelessMapObject.cs" />
-    <Compile Include="Classes\User Controls\DoubleBufferedPanel.cs">
+    <Compile Include="Controls\TreeViewEx.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Classes\User Controls\PanelSpaceMap.cs">
+    <Compile Include="SpaceMap\Coordinates3D.cs" />
+    <Compile Include="SpaceMap\FakeShields.cs" />
+    <Compile Include="SpaceMap\MapColors.cs" />
+    <Compile Include="SpaceMap\KeyCommands.cs" />
+    <Compile Include="SpaceMap\MapFonts.cs" />
+    <Compile Include="SpaceMap\SpaceSavedState.cs" />
+    <Compile Include="SpaceMap\MapObjectNameless.cs" />
+    <Compile Include="Controls\DoubleBufferedPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\PanelSpaceMap.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Classes\Shared\Settings.cs" />
-    <Compile Include="Classes\SpaceMap\SpaceMap.cs" />
-    <Compile Include="Classes\SpaceMap\NamedMapObject_UIEditorscs.cs" />
-    <Compile Include="Classes\Shared\VesselData.cs" />
-    <Compile Include="Classes\SpaceMap\SpecialMapObject.cs" />
+    <Compile Include="Utility Classes\Settings.cs" />
+    <Compile Include="SpaceMap\Space.cs" />
+    <Compile Include="SpaceMap\MapObjectNamed_UIEditors.cs" />
+    <Compile Include="Utility Classes\VesselData.cs" />
+    <Compile Include="SpaceMap\MapObjectSpecial.cs" />
     <Compile Include="Forms\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -213,6 +220,12 @@
     <Compile Include="Forms\FormMissionProperties.Designer.cs">
       <DependentUpon>FormMissionProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormNotepad.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormNotepad.Designer.cs">
+      <DependentUpon>FormNotepad.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormSearchResults.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -237,7 +250,7 @@
     <Compile Include="Forms\FormSpaceMap.Designer.cs">
       <DependentUpon>FormSpaceMap.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\SpaceMap\NamedMapObject.cs" />
+    <Compile Include="SpaceMap\MapObjectNamed.cs" />
     <Compile Include="Forms\FormSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -249,11 +262,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Classes\User Controls\PanelSpaceMap.resx">
+    <EmbeddedResource Include="Controls\PanelSpaceMap.resx">
       <DependentUpon>PanelSpaceMap.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Classes\User Controls\TreeViewEx.resx">
+    <EmbeddedResource Include="Controls\TreeViewEx.resx">
       <DependentUpon>TreeViewEx.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -293,6 +306,9 @@
     <EmbeddedResource Include="Forms\FormMissionProperties.resx">
       <DependentUpon>FormMissionProperties.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormNotepad.resx">
+      <DependentUpon>FormNotepad.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormSearchResults.resx">
       <DependentUpon>FormSearchResults.cs</DependentUpon>
     </EmbeddedResource>
@@ -315,50 +331,46 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <CustomToolNamespace>ArtemisMissionEditor.Properties</CustomToolNamespace>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\commentary.png" />
-    <None Include="Images\folder.gif" />
-    <None Include="Images\page.gif" />
-    <None Include="Images\Flag-blue-icon.png" />
-    <None Include="Images\sys-command-icon.png" />
-    <None Include="Images\page_code.gif" />
-    <None Include="Images\action_back.gif" />
-    <None Include="Images\action_forward.gif" />
-    <None Include="Images\commentary2.png" />
-    <None Include="Images\icon_wand.gif" />
-    <None Include="Images\icon_get_world.gif" />
-    <None Include="Resources\icon_settings.gif" />
-    <None Include="Resources\action_save.gif" />
-    <None Include="Resources\action_refresh_blue.gif" />
-    <None Include="Resources\icon_download.gif" />
-    <None Include="Images\page_right.gif" />
-    <None Include="Images\box.gif" />
-    <None Include="Images\page_find.gif" />
-    <None Include="Resources\page_edit.gif" />
-    <None Include="Images\page_left.gif" />
-    <None Include="Images\page_link.gif" />
-    <None Include="Images\page_refresh.gif" />
-    <None Include="Images\page_script.gif" />
-    <None Include="Images\copy.gif" />
-    <None Include="Images\cut.gif" />
-    <None Include="Images\action_paste.gif" />
-    <None Include="Images\page_text_delete.gif" />
-    <None Include="Images\icon_monitor_pc.gif" />
-    <None Include="Images\move_cross.png" />
-    <Content Include="zzz_Documentation on parsing system.txt" />
-    <None Include="Images\SmallUpArrow.png" />
-    <None Include="Images\Underscore.png" />
-    <Content Include="Maps-Earth.ico" />
-    <None Include="Resources\artemis_logo_vert.png" />
+    <Content Include="Resources\action_back.gif" />
+    <Content Include="Resources\action_forward.gif" />
+    <Content Include="Resources\action_paste.gif" />
+    <Content Include="Resources\action_refresh_blue.gif" />
+    <Content Include="Resources\action_save.gif" />
+    <Content Include="Resources\artemis_logo_horz.png" />
+    <Content Include="Resources\artemis_logo_vert.png" />
+    <Content Include="Resources\box.gif" />
+    <Content Include="Resources\commentary.png" />
+    <Content Include="Resources\commentary2.png" />
+    <Content Include="Resources\copy.gif" />
+    <Content Include="Resources\cut.gif" />
+    <Content Include="Resources\Flag_blue_icon.png" />
+    <Content Include="Resources\folder.gif" />
+    <Content Include="Resources\icon_download.gif" />
+    <Content Include="Resources\icon_get_world.gif" />
+    <Content Include="Resources\icon_info.gif" />
+    <Content Include="Resources\icon_monitor_pc.gif" />
+    <Content Include="Resources\icon_settings.gif" />
+    <Content Include="Resources\icon_wand.gif" />
+    <Content Include="Resources\Maps-Earth.ico" />
+    <Content Include="Resources\move_cross.png" />
+    <Content Include="Resources\page.gif" />
+    <Content Include="Resources\page_code.gif" />
+    <Content Include="Resources\page_edit.gif" />
+    <Content Include="Resources\page_find.gif" />
+    <Content Include="Resources\page_left.gif" />
+    <Content Include="Resources\page_link.gif" />
+    <Content Include="Resources\page_refresh.gif" />
+    <Content Include="Resources\page_right.gif" />
+    <Content Include="Resources\page_script.gif" />
+    <Content Include="Resources\page_text_delete.gif" />
+    <Content Include="Resources\sys_command_icon.png" />
+    <Content Include="zzz_Documentation.txt" />
     <Content Include="zzz_Changelog.txt" />
     <Content Include="zzz_Future_Plans.txt" />
   </ItemGroup>
@@ -383,6 +395,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons.zip" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

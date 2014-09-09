@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace ArtemisMissionEditor
+namespace ArtemisMissionEditor.Forms
 {
 	public partial class DialogConsoleList : Form
 	{
@@ -57,7 +57,7 @@ namespace ArtemisMissionEditor
 		private void Close_OK()
 		{
 			this.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.Close();
+			Close();
 		}
 
         private void DialogConsoleList_KeyDown(object sender, KeyEventArgs e)

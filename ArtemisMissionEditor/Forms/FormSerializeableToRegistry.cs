@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using Microsoft.Win32;
 using System.Drawing;
 
-namespace ArtemisMissionEditor
+namespace ArtemisMissionEditor.Forms
 {
 	public class FormSerializeableToRegistry : Form
 	{
@@ -87,23 +87,17 @@ namespace ArtemisMissionEditor
 			}  
 		}
 
-		private void InitializeComponent()
-		{
-			this.SuspendLayout();
-			// 
-			// FormSerializeableToRegistry
-			// 
-			this.ClientSize = new System.Drawing.Size(284, 262);
-			this.Name = "FormSerializeableToRegistry";
-			this.Load += new System.EventHandler(this.FormSerializeableToRegistry_Load);
-			this.ResumeLayout(false);
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // FormSerializeableToRegistry
+            // 
+            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.Name = "FormSerializeableToRegistry";
+            this.ResumeLayout(false);
 
-		}
+        }
 
-		private void FormSerializeableToRegistry_Load(object sender, EventArgs e)
-		{
-		
-
-		}
 	}
 }

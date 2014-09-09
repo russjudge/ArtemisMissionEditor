@@ -1,0 +1,264 @@
+﻿  1. Wierd programming style and the idea behind it.
+
+Certain interactions in this editor were done in a way that, looking back, was not that well thought out.
+For example, MainForm's two main TreeViews's interaction with the Mission class, 
+as well as SpaceMapForm's map control and property grids interaction with the PanelSpaceMap class.
+
+The classes link directly to the UI elements (tooltips, labels, menustrips) and change their properties.
+
+The idea was that the logic that belongs to the class stays in the class. 
+So, for example, instead of writing the code to Save the Mission in the "OnClick", it's written in the Mission.
+However, this logic cannot be easilly separated from the UI. 
+For example, when amount of object on SpaceMap changes, it must be reflected in the UI tooltip. 
+Therefore, class logic had to operate on UI, and therefore, it was done the way it is done.
+
+Looking back, maybe this was I could have written it differently with events. 
+So that everything that should be changed in the UI is gotten from public properties of related classes, and
+those classes would then fire events that these properties changed, and thus UI would update.
+
+Then again, editing huge missions, it would be ridiculous to re-fill the whole contents of TreeView every time
+something in the mission changed. Which means keeping the mission data in the TreeView control remains a good
+idea. But if that is so, then how do we get rid of the fact that Mission class directly operates on TreeView 
+control, storing its data in the control itself?
+
+In any case, I hope this explanation helps anyone who wants to contribute to the project to understand how and
+why it was done this way. And if you have ideas on how to fix it - meaning, how to rewrite everything, 
+so that classes stay more isolated and do not access each other directly, 
+then you're welcome to contact me at starsabre@gmail.com. There may be a common pattern I'm missing here 
+or something else, but I am clueless as to how to rewrite this better.
+
+
+  2. How is the Mission stored and edited?
+
+After mission file is read from Xml, it is separated into Nodes. 
+Nodes in turn are separated into Statements.
+Mission-level Commentaries, Start, Event and Folder Xml Elements are all Nodes. 
+MissionNode and inherited classes are used to represent the Nodes. 
+
+MissionNode class contains lists of Actions and Conditions (and node-level commentaries) which are all Statements.
+MissionStatement and inherited classes are used to represent the Statements.
+
+The list of Nodes that reperesent the mission are actually stored in the Tag property 
+of the TreeViewNode class in the TreeViewEx control used to display mission nodes (the left one).
+In order to link to those, Mission class contains refernces to the control.
+
+So, when you edit nodes in the left TreeView (add/remove/etc.) you edit the list of mission nodes directly. 
+
+Mission statements are output into the TreeView on the right when selected mission node is changed.
+TreeView nodes are created and MissionStatement classes are assigned into the Tag property.
+
+When you edit nodes in the right TreeView (add/remove), MissionStatement lists in MissionNode class 
+that represents the node are re-read from the TreeView.
+When you edit statements themselves, the referenced MissionStatement class is edited directly.
+
+
+  3. How Copy/Paste, Undo/Redo works?
+
+In order to Undo/Redo the same technique is used as in order to Copy/Paste: Xml.
+
+When change is done, mission is saved to Xml and compressed and stored. 
+When you Undo/Redo, mission is simply read from this Xml, and then gui stuff is applied: 
+for example, what node and statement was selected etc.
+
+Copy places all selected nodes/statements into buffer as text. 
+Paste removes excessive elements if they are present and then embeds the contents into root element.
+For example, if you paste statements into a Node, then "<event>" elements are removed.
+Result is then parsed as an Xml file and the result Nodes/Statements are added into mission.
+
+
+  4. How is a statement transformed into its visual representation and converted into the GUI form?
+
+In order to be able to both display and edit a statement, we must parse it and split it into parts. 
+
+For example, we split <create type="anomaly" use_gm_position="" /> into: 
+- Create
+- anomaly
+- at GM position
+- with name
+- <name>
+
+Now we can edit the value or the name separately, and present it in a humanly readable way: 
+"Create anomaly at GM position with name <name>"
+
+The way this is done:
+
+Each statement is parsed by doing a series of branching decisions:
+- first we decide, wether the statement is a condition, action or a comment (in our case it's an action)
+- next we decide, what kind of action the statement is (it's a "create" action)
+- next we decide, what kind of create action it is (it's a "create anomaly" action)
+- next we decide, wether we create anomaly at location or at GM position (it's GM position)
+
+Finally, we arrive at a parsed statement (called "Expression"). 
+It contains an array of expression members, which can be all be put one next to another 
+in order to construct the text string for the statement.
+
+Each time we edit something (any value within a statement), the process repeats. 
+
+Say if we want to have a point, not GM position, we will set "use_gm_position" value to null, 
+which will make the check for GM position to decide it's not a GM position but a point
+Or we can change the action type - and the expression will change dramatically.
+
+
+  5. How this works in terms of code.
+
+All the data for the statement is stored in the MissionStatement class. 
+Attributes are stored in form of a Dictionary<string, string>. Body and name are stored separately.
+Other members provide functionality to calculate common things like:
+- "is this a Create statement" (can it be edited on SpaceMap)
+- "is this an Action"
+- etc.
+
+MissionStatement.Expression contains a List<ExpressionMemberContainer>.
+It is populated when MissionStatement.Update() is called.
+It contains the sequence of members that constitute the parsed statement.
+
+MissionStatementContainer links together two classes:
+- MissionStatement (contains the data)
+- ExpressionMember (contains the logic about this member)
+This way, we can use the same ExpressionMember class everywhere.
+
+ExpressionMember is a building block of an Expression. 
+For example, in the above example, "anomaly" is an Expression member, as well as "at side" and "name" and so on.
+
+An ExpressionMember can either be a "Check" or not.
+- If not, it's somehow used as a building block in an expression 
+(either just filler text, like "with name", or editable value, like "x")
+- If it's a check, then it is not acutally stored in XML, and sometimes is not even displayed 
+in the text representation of the statement, but rather used to branch.
+In this case it's a ExpressionMemberCheck class which as a list of PossibleExpressions and a Decide method. 
+PossibleExpressions contain the possible List<ExpressionMembers> that can branch from this check. 
+
+For example, in ExpressionMemberCheck_Point_GM, a check for point or GM position, there will be two entries:
+- one for point (it will contain ExpressionMembers for "at point" "X," "Y," "Z") 
+- and one for GM (it will contain ExpressionMembers for "selected by GM" and an invisible member 
+  that sets the flag in xml).
+Decide() method makes the decision which of the possible expressions is used. 
+It contains the logic that tells it how to make the decision.
+For example, in case of point or GM position check, it will look at wether the "selected_by_GM" value is set.
+If the value is set, it decides that this is a "selected by GM" case, and if not, "at point" case.
+
+ExpressionMember class is used in the structure that defines the allowed mission xml syntax. 
+It's not actually used to represent specific instances of the expression members.
+For that purpose, ExpressionMemberContainer class is used.
+
+The way ExpressionMembers define the allowed mission syntax is as follows:
+
+* ExpressionParser.Root contains the root ExpressionMember, of the ExpressionMemberCheck_XmlNode_H class. 
+This class is a check responsible for deciding wether the expression is a Commentary, Action or Condition. 
+Therefore, it's PossibleExpressions (defined in the constructor) contain three lists of one check each:
+ - Commentary
+ - Action 
+ - Condition
+It's Decide simply looks at what Type the statement has and thus decides wether it's a commentary or action.
+
+* Every "main" check class for Action and Condition has a big list of PossibleExpressions. 
+They are called ExpressionMemberCheck_XmlNameAction and ExpressionMemberCheck_XmlNameCondition
+The constructor of these two classes contains the bulk of the syntax logic. It branches most of the commands.
+
+* Every additional branching is done through other classes that also inherit ExpressionMemberCheck. 
+The constructor defines the exact ExpressionMembers added by the check, 
+the Decide() method defines how the check makes it's choice, 
+while SetValueInternal() defines how does the check enforce it's choice if it's a user-changeable.
+For example, in case of "point or GM pos" choice, when the user choses "point", 
+SetValueInternal() will clear the "use_gm_position" variable,
+while if the user choses "gm pos", then it will set that variable.
+
+Therefore, code in constructors, Decide and SetValueInternal method of all the ExpressionMember classes together 
+defines the syntax and the parsing logic. 
+
+
+  6. An example: parsing <create type="anomaly" use_gm_position="" />
+
+1) MissionStatement.Update() is called. 
+   This function, amongst other things, constructs the expression.
+
+2) ExpressionParser.ConstructExpression() is called. 
+   This function begins the recursive construction by calling the first Append() with the Root ExpressionMember.
+
+3) ExpressionParser.Append() is called for the first time. 
+   This function appends the Root ExpressionMember to the statement. 
+   Since it is a check, it will decide what to add next.
+
+4) ExpressionMemberCheck.Decide() is called on Root (class ExpressionMemberCheck_XmlNode_H).
+   It decides wether the Statement is a Comment, Condition or Action.
+   Depending on what it is, next check is added.
+
+5) ExpressionParser.Append() is called for the second time.
+   This time, Comment, Condition or Action's main check is added. 
+   If it's not a comment, it will decide what kind of condition/action it is.
+   Since this is Action, we add the action's main check.
+
+6) ExpressionMemberCheck.Decide() is called on class ExpressionMemberCheck_XmlNameAction.
+   It decides what to add next. It checks the element name, sees "create" 
+   and thus chooses ExpressionMemberCheck_CreateType_H
+
+7) ExpressionParser.Append() is called for the third time.
+
+8) ExpressionMemberCheck.Decide() is called on class ExpressionMemberCheck_CreateType_H
+   This time, we decide what kind of object is being added. Since it's an anomaly, 
+   we add more than one ExpressionMember this time:
+   - type (allowing us to choose a type of the object being created)
+   - "at " (ust a text string to make the whole statement easier to comprehend)
+   - ExpressionMemberCheck_Point_x_GMPos (this is the Check that will either add "point" or "GM pos")
+   - "with " (another string)
+   - "name " (another string)
+   - name (allowing us to edit name of the object)
+
+9) ExpressionParser.Append() is called for the fourth time (for the "type").
+   This time it's not a check, so it just adds it and goes on to next on the list.
+
+11) ExpressionParser.Append() is called (for the "at ").
+    Again, not a check, go to the next on the list,
+
+12) ExpressionParser.Append() is called (for the ExpressionMemberCheck_Point_x_GMPos)
+    This time, decision will be made that again adds multiple ExpressionMembers. 
+	They will be processed before we return to processing the next on our current list - "with ".
+
+And so on...
+
+
+  7. So, where is the parsing logic defined?
+
+Most of the logic is defined in the constructors of the revelant ExpressionMemberChecks.
+
+The most of it is contained in the two main checks:
+- ExpressionMemberCheck_XmlNameAction's constructor contains all expressions for actions. 
+  So, if you need to add a new action, you add it there in the constructor.
+  If you need to change expression of one of the actions, you change it in the constructor.
+  Etc.
+- ExpressionMemberCheck_XmlNameCondition's constructor contains all expressions for conditions.
+  So, if you need to add a new condition, you add it there in the constructor.
+  If you need to change expression of one of the conditions, you change it in the constructor.
+  Etc.
+
+The non-branching logic is also defined there. 
+For example, "set_to_gm_position" action looks mostly the same, with only small changes. 
+Therefore, most of the logic is described in ExpressionMemberCheck_XmlNameAction's constructor.
+Branching logic, like "name or gm selection", is described in the relevant classes.
+However, "create" action looks vastly different depending on what kind of object is created.
+Therefore, all of the logic is described in ExpressionMemberCheck_CreateType's constructor.
+
+
+  8. Auxillary classes for the Expression:
+
+1) ExpressionMemberValueType
+  This class describes the way mission editor treats the value. Basically it's either:
+  - Nothing, in which case this is not a value at all, but either a label, check or a derived value
+  - Body, which means the value is stored as a multi-line string in the element's body
+  - one of the typical Int/Double/Bool etc types
+
+2) ExpressionMemberValueEditor
+  This class describes the way mission editor allows to edit the value. 
+  By default it will just show a popup dialog, but you can also specify a method that will prepare a dropdown menu.
+  This class also contains dictionaries to convert strings between display and xml. 
+  This way, for example, you can make "add_ai" value in Xml display as "Add AI command", 
+  or make "Default" input string convert into value "0" in Xml.
+
+3) ExpressionMemberValueDescription
+  This class describes the way value is treated. It combines the type, the editor, 
+  denotes what kind of text is added to the sides of the value,
+  for example, quotes, spaces, brackets or maybe a colon on the right, 
+  as well as setting boundaries for numeric variables. 
+  If you need to add a new kind of value, you add an extra ExpressionMemberValueDescription.
+
+

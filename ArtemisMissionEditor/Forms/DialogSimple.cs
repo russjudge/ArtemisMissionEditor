@@ -10,22 +10,28 @@ using System.Xml;
 using System.IO;
 using System.Globalization;
 using System.Resources;
+using ArtemisMissionEditor.Expressions;
 
-namespace ArtemisMissionEditor
+namespace ArtemisMissionEditor.Forms
 {
+    public enum PathRelativityMode
+    { 
+        RelativeToMissionFolder,
+        RelativeToArtemisFolder
+    }
+
 	public partial class DialogSimple : Form
 	{
 		private string DefaultValue;
 		private ExpressionMemberValueDescription Description;
         private List<int> ErrorPositions;
-        private List<int> WarningPositions;
+        private List<ValidateResultWarning> WarningPositions;
         private Brush BrushError;
         private Brush BrushWarning;
-        private Brush _errorBrush;
-        private Brush _warningBrush;
-        public string OpenFileExtensions { get; set; }
-		public string OpenFileHeader { get; set; }
-
+        private string OpenFileExtensions;
+        private string OpenFileHeader;
+        private PathRelativityMode PathRelativity;
+        
 		/// <summary> Wether the input value is considered to be null (distinguishes between null and empty string)</summary>
 		private bool NullMode { get { return _nullMode; } set { _nullMode = value; UpdateNullStatus(); } }
         /// <summary> NEVER ACCESS THIS! </summary>
@@ -47,12 +53,11 @@ namespace ArtemisMissionEditor
 			OpenFileHeader = "";
             Screen myScreen = Screen.FromControl(this);
             this.MaximumSize = new Size(myScreen.WorkingArea.Width, myScreen.WorkingArea.Height);
-
             BrushError = new SolidBrush(Color.DarkRed);
             BrushWarning = new SolidBrush(Color.DarkBlue);
 		}
 
-		public static KeyValuePair<bool, string> Show(string name, ExpressionMemberValueDescription description, string initialValue, bool mandatory, string def, bool pathEditor = false)
+		public static KeyValuePair<bool, string> Show(string name, ExpressionMemberValueDescription description, string initialValue, bool mandatory, string defaultValue, bool pathEditor = false)
 		{
             using (DialogSimple form = new DialogSimple())
             {
@@ -67,11 +72,7 @@ namespace ArtemisMissionEditor
                 {
                     if (description.Type == ExpressionMemberValueType.VarBool)
                     {
-                        //Dunno what to do for bools yet
-                        //caption += ": ";
-                        //caption += min.ToString();
-                        //caption += "/";
-                        //caption += max.ToString();
+
                     }
                     else if (description.Type == ExpressionMemberValueType.VarString)
                     {
@@ -86,28 +87,31 @@ namespace ArtemisMissionEditor
                         caption += "]";
                     }
                 }
-
+                
                 if (pathEditor)
                 {
-                    form.OpenFileExtensions = (string)description.Min;
-                    form.OpenFileHeader = (string)description.Max;
+                    string info = (string)description.Min;
+                    if (info.IndexOf(';') == -1)
+                        throw new ArgumentException("description", "Semicolon not found! Min value for PathEditor typed ValueDescription should contain file extensions and header separated by semicolon.");
+                    form.OpenFileExtensions = info.Substring(0, info.IndexOf(';'));
+                    form.OpenFileHeader = info.Substring(info.IndexOf(';') + 1);
+                    form.PathRelativity = (PathRelativityMode)description.Max;
                     form.openFileButton.Visible = true;
                 }
                 else
                 {
+                    form.OpenFileExtensions = "";
+                    form.OpenFileHeader = "";
+                    form.PathRelativity = (PathRelativityMode)0;
                     form.openFileButton.Visible = false;
                 }
 
                 form.Text = caption;
                 form.Description = description;
                 form.input.Text = initialValue;
-                form.DefaultValue = def;
+                form.DefaultValue = defaultValue;
                 form.NullMode = initialValue == null;
-                form.nullButton.Text = def == null ? "Null" : "Default";
-                //form.Width = type == ExpressionMemberValueType.VarString ? 390 : 212;
-                //TODO: Type in exact values
-                //form.Width = 390;
-                //form.Height = 103;
+                form.nullButton.Text = defaultValue == null ? "Null" : "Default";
 
                 if (description.Type == ExpressionMemberValueType.Body)
                 {
@@ -115,12 +119,12 @@ namespace ArtemisMissionEditor
                     form.Width = 900;
                     form.input.Multiline = true;
                 }
-                form.warningLabel.Width = form.button1.Left - form.warningLabel.Left - 2;
+                form.warningLabel.Width = (pathEditor ? form.openFileButton.Left : form.button1.Left) - form.warningLabel.Left - 2;
 
                 if (form.ShowDialog() == DialogResult.Cancel)
                     return new KeyValuePair<bool, string>(false, null);
 
-                string result = form.NullMode ? def : form.input.Text;
+                string result = form.NullMode ? defaultValue : form.input.Text;
                 //R. Judge: Changes Jan 16, 2013, to band-aid up to 1.7
                 if (result != null && description.Type == ExpressionMemberValueType.VarDouble)
                 {
@@ -216,7 +220,7 @@ namespace ArtemisMissionEditor
                 panelHighlighter.Invalidate();
                 return;
             }
-            ValidateResult vr =  Helper.Validate(input.Text, Description);
+            ValidateResult vr =  Description.Validate(input.Text);
             Valid = vr.Valid;
             string[] labels = vr.WarningText.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             warningLabel.Text = labels.Length>0?labels[0]:"" ;
@@ -261,13 +265,8 @@ namespace ArtemisMissionEditor
 
 		private void Close_OK()
 		{
-            //R. Judge: Changes Jan 16, 2013, to band-aid up to 1.7
-            //if (Valid)
-            //{
-				this.DialogResult = System.Windows.Forms.DialogResult.OK;
-				this.Close();
-			//}
-            //R. Judge: End changes Jan 16, 2013.
+			this.DialogResult = System.Windows.Forms.DialogResult.OK;
+			Close();
 		}
 
 		private void nullButton_Click(object sender, EventArgs e)
@@ -309,16 +308,52 @@ namespace ArtemisMissionEditor
 				return;
 
 			int pos = -1;
-			
-			//If file is inside mission folder - take only file name
-            if (!string.IsNullOrEmpty(Mission.Current.FilePath) && Path.GetDirectoryName(filename) == Path.GetDirectoryName(Mission.Current.FilePath))
-				input.Text = Path.GetFileName(filename);
-			//If file is inside dat folder - take only part from dat and on
-			else if ((pos = filename.LastIndexOf("dat\\")) != -1)
-				input.Text = filename.Substring(pos, filename.Length - pos);
-			//Else - take absolute path
-			else
-				input.Text = filename;
+
+            switch (PathRelativity)
+            {
+                case PathRelativityMode.RelativeToArtemisFolder:
+                    //If file is inside mission folder - take only file name and make path relative to Artemis.exe
+                    if (!string.IsNullOrEmpty(Mission.Current.FilePath) && Path.GetDirectoryName(filename) == Path.GetDirectoryName(Mission.Current.FilePath))
+                        input.Text = "dat\\Missions\\" + Path.GetFileNameWithoutExtension(Mission.Current.FilePath) + "\\" + Path.GetFileName(filename);
+                    //othrewise if the file is somewhere inside the artemis folder - take path from artemis folder
+                    else if (filename.IndexOf("dat\\") != -1)
+                    {
+                        // in case we find nothing, store full path
+                        input.Text = filename;
+                        pos = -1;
+                        while ((pos = filename.IndexOf("\\", pos + 1)) != -1)
+                        {
+                            if (File.Exists(filename.Substring(0, pos) + "\\" + "Artemis.exe"))
+                            {
+                                input.Text = filename.Substring(pos + 1, filename.Length - pos - 1);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                case PathRelativityMode.RelativeToMissionFolder:
+                    //If the file is inside the mission folder - take only file name
+                    if (!string.IsNullOrEmpty(Mission.Current.FilePath) && Path.GetDirectoryName(filename) == Path.GetDirectoryName(Mission.Current.FilePath))
+                        input.Text = Path.GetFileName(filename);
+                    //othrewise if the file is somewhere inside the artemis folder - make a path to that folder from mission folder
+                    else if (filename.IndexOf("dat\\") != -1)
+                    {
+                        // in case we find nothing, store full path
+                        input.Text = filename; 
+                        pos = -1;
+                        while ((pos = filename.IndexOf("\\", pos + 1)) != -1)
+                        {
+                            if (File.Exists(filename.Substring(0, pos) + "\\" + "Artemis.exe"))
+                            {
+                                input.Text = "..\\..\\..\\"+filename.Substring(pos + 1, filename.Length - pos - 1);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException("An unknown path relativity encountered: " + PathRelativity);
+            }
 		}
 
         private void warningLabel_Click(object sender, EventArgs e)
@@ -368,26 +403,31 @@ namespace ArtemisMissionEditor
                 }
                 if (WarningPositions != null)
                 {
-                    foreach (int pos in WarningPositions)
+                    foreach (ValidateResultWarning warning in WarningPositions)
                     {
-                        if (ErrorPositions != null && ErrorPositions.Contains(pos))
+                        if (ErrorPositions != null && ErrorPositions.Contains(warning.Position))
                             continue;
-                        while (measureString.Length < pos + 1) measureString += "X";
+                        while (measureString.Length < warning.Position + warning.Length) measureString += "X";
                         Font font = input.Font;
                         Graphics g = e.Graphics;
 
-                        int left = pos == 0 ?
+                        int left = warning.Position == 0 ?
                             2 * TextRenderer.MeasureText(measureString.Substring(0, 1), font).Width - TextRenderer.MeasureText(measureString.Substring(0, 2), font).Width :
-                            TextRenderer.MeasureText(measureString.Substring(0, pos), font).Width;
-                        int right = TextRenderer.MeasureText(measureString.Substring(0, pos + 1), font).Width;
-                        int x = (left + right) / 2 - 4;
+                            TextRenderer.MeasureText(measureString.Substring(0, warning.Position), font).Width;
+                        int right = TextRenderer.MeasureText(measureString.Substring(0, warning.Position + 1), font).Width;
+                        int x1 = (left + right) / 2 - 4;
+                        left = warning.Position + warning.Length == 0 ?
+                            2 * TextRenderer.MeasureText(measureString.Substring(0, 1), font).Width - TextRenderer.MeasureText(measureString.Substring(0, 2), font).Width :
+                            TextRenderer.MeasureText(measureString.Substring(0, warning.Position + warning.Length), font).Width;
+                        right = TextRenderer.MeasureText(measureString.Substring(0, warning.Position + warning.Length), font).Width;
+                        int x2 = (left + right) / 2 - 4;
                         int y = 0;
 
                         Point[] underscore = new Point[] { 
-                            new Point(x - 4, y),
-                            new Point(x + 3, y),
-                            new Point(x + 3, y + 2), 
-                            new Point(x - 4, y + 2), 
+                            new Point(x1 - 4, y),
+                            new Point(x2, y),
+                            new Point(x2, y + 2), 
+                            new Point(x1 - 4, y + 2), 
                             };
                         g.FillPolygon(BrushWarning, underscore);
                     }
@@ -404,11 +444,6 @@ namespace ArtemisMissionEditor
             UpdateNullStatus();
 
             timerValidate.Stop();
-        }
-
-        private void warningLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-
         }
 	}
 }

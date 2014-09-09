@@ -1,5 +1,112 @@
 ﻿----------------------
-Version 2.1.1.6 [7-23-2014] (Alexey Andronov)
+Version 2.1.1.13 [2014-09-08] (Alexey Andronov)
+* CODE: More commentary
+* CODE: Rewritten ExpressionMemberValueDescription from using dictionary by name to static members. 
+  Hopefully with no mistakes introduced in process to the parsing logic...
+* CODE: Cleaned up ExpressionMemberValueEditor:
+  Removed some unused contest menu strip generating functions and editors like DefaultCheckSorted
+  Moved all these functions and other statics to another .cs file 
+* CODE: Changed Settings file to have no {get; set;} properties.
+* You can now choose the font used to display statement expression. 
+  Useful if you want to change the size to your liking or use a monospace font (like "Courier New")
+* Minor bugs when handling default node names fixed
+  (like, for example, previously if you'd add several events, then delete one, newly added events would have their numbers start from 1 again)
+* Minor bug with GUID parsing fixed (exception if you had an invalid GUID value in an attribute when parsing xml file)
+* Labels now correctly display in red when erroneous and in green when selected (this was broken in one of the latest versions)
+* Major overhaul of how race and hull keys are treated.
+  Now if you specify, for example, "Light Cruiser" as you hullKeys, you will no longer have it bug out and become separated into unknown "Light" key and "Cruiser" class.
+  Additionally, parsing was improved and the algorithm that shows possible races and hulls is updated to better resemble how the game actually works. Thanks to ryleyra for the research done on this topic.
+  Finally, dialog window for editing race and hull keys now also displays possible ships that can spawn (like Space Map already did).
+* Changed settings form to be more... common-sense, I guess? 
+  Now by default the button you use to close the form (the one in bold in the bottom right) will save the settings to disk (since that's what user usually expects).
+  Option to close the form without saving is still provided (the "Close" button)
+
+----------------------
+Version 2.1.1.12 [2014-08-01] (Alexey Andronov)
+* CODE: Changed label drawing routines to GDI (which they should be since all other labels are GDI)
+* CODE: Changed most buttons to FlatStyle.System
+* Fixed small bug introduced in 2.1.1.10 that I hope never have had a chance to encounter:
+  With new or just opened mission, attempting to edit a name value that is chosen from a list populated from mission contents,
+  like variable or vessel name, will create a "corrupt" dropdown menu, that will crash when you next try to open it
+  (unless you change something else in the mission first to cause an update of the list of values)
+* Version attribute of the root node is now displayed in the main form header and can be edited in the mission properties
+  
+----------------------
+Version 2.1.1.11b [2014-07-31] (Alexey Andronov)
+* Accepting any kind of root node in the Xml file
+
+----------------------
+Version 2.1.1.11 [2014-07-31] (Alexey Andronov)
+* Improved handling of create player statements:
+  - Added warning in "find problems" when multiple create statements are present in the script
+    (since spawning multiple player ships won't work properly)
+	Thanks to ryleyra for the research done on this topic.
+  - Added text in help form about this
+  - List of player names is now stored with the mission as an attribute to the root node.
+    For new mission and missions that don't have this attribute, value from settings is used.
+	Player names can be edited in mission properties.
+  - Player name suggestions in dropdown menus will suggest all player names from mission properties 
+    (and then all the player names that are present in "create player" statements if there are different ones)
+  - Checking for object names in "find problems" now also considers player ship names 
+    (won't warn if player ship name from the list is used even though technically a create statement is not present)
+
+----------------------
+Version 2.1.1.10 [2014-07-30] (Alexey Andronov)
+* CODE: Began splitting code into multiple namespaces to organize it better. 
+  Splitting to multiple projects is not preferred because that requires supplying dlls or meddling with assembly merging software.
+* CODE: Began changing clunky cross-class updates into proper way of doing them (events)
+* Fixed a small bug with autosave timer (actual autosave timer was not updated upon loading settings from file)
+* Significant performance improvement when navigating large missions (like TSN Sandbox):
+  Changing current event in large missions took noticable time before, should be instantanious now 
+  (or at least as fast as if the mission contains only several events)
+* Significant reduction in the amount of memory used for holding undo/redo states (basically, we compress them in memory now)
+* New setting: you can now choose how many undo options are preserved upon saving a mission, so that you can undo even after you have just saved.
+* New setting: fix flickering in tree view controls when redrawing, enabled by default. 
+  This fix can introduce artifacts when scrolling tree view while dragging a node, so you may want to disable it.
+
+----------------------
+Version 2.1.1.9 [2014-07-28] (Alexey Andronov)
+* CODE: Changed main form's tabcontrol to a panel with a label. Visually should remain the same.
+  This is because with TabControl, there's flickering on child controls no matter what you do! While this way, at least there's no flickering when changing horizontal size.
+* CODE: Forms are now properly closed at all times except when closed by user's choice. 
+  This is better than before because this allows forms to close properly on all sorts of events - task manger's close, windows shutdown, etc.
+  All forms are now Owned by Main Form, and thus when MF is closed, all other forms get closed as well.
+* Fixed a bug with upgrading settings file to a new version (that nobody should have ever encountered since settings version was last updated very long ago)
+* Cosmetic fixes in the "Find" menu: Replace had no ellipsis, Next and Previous were not capitalised, and Previous was shorted to prev. for some odd reason
+* All forms (except the main form and dialogs) are now shown above the Main Form at all times, so that they do not get lost behind the Main Form
+* All forms (except the main form and dialogs) can now be made transparent when they're not active
+* Notepad form was added, so that the editor does not demand you to paste anything into a text editor of your choice, but rather shows it to you immediately
+* Dependency form is now properly opened with "Open dependency form" option (Shift + F4) even for the first time (before it would not open unless you at least once open it "for current node")
+* You can now define what player ship names you want to have as default options for create statements (and there is now a list of 8 by default)
+* New feature: finding problematic places in the mission script. This will allow you to find subtle things like names not matching up or conditions possibly leading to weird results.
+
+----------------------
+Version 2.1.1.8c [2014-07-25] (Alexey Andronov)
+* Fixed a bug: clicking Shift-F3 to select previous found item also added it to the selection
+
+----------------------
+Version 2.1.1.8b [2014-07-25] (Alexey Andronov)
+* Fixed a bug: paths to textures and sounds were processed in the same way (should be relevant to Artemis folder for textures, and mission folder for sounds)
+* Fixed a bug: in dialog windows with Open File button, label for warnings overlapped the button
+
+----------------------
+Version 2.1.1.8 [2014-07-25] (Alexey Andronov)
+* Fixed Side value's name in set_side_value statement (was "sideValue", should be just "value")
+* Fixed a typo in the space map form menu: "Make whitespace names" -> "Mark whitespace names"
+* Added help page for the space map hotkeys
+* Added option to open help form from the space map
+* Warnings about expressions are now underlining whole variable/literal instead of only first letter
+
+----------------------
+Version 2.1.1.7 [2014-07-24] (Alexey Andronov)
+* Fixed a bug: exception when opening context menu that offers a choice of preset options (like side) for any numeric value that contains an expression
+* HullID context menu should now be nested to prevent insanely tall menu that is clunky and hard to navigate
+* Chosen value should now be selected by default when opening a context menu that offers "input value" option as well as preset choice of options
+  NOTE: This was for some reason manually disabled, and I do not know for what purpose. It looks like it's better when it's enabled.
+  If someone finds out why this is actually a bad change for some reason, please contact me (starsabre@gmail.com) and I'll revert it.
+
+----------------------
+Version 2.1.1.6 [2014-07-23] (Alexey Andronov)
 * CODE: began reorganizing code
 * Fixed a bug in expression parser (expression ending with an operator was not detected as erroneous)
 * Fixed a bug introduced in 2.1.1.4 that prevented +/- key commands that (de)increment values from working completely
@@ -7,11 +114,11 @@ Version 2.1.1.6 [7-23-2014] (Alexey Andronov)
 * Improved the way warnings are displayed in a label in dialog box
 
 ----------------------
-Version 2.1.1.5 [7-22-2014] (Alexey Andronov)
+Version 2.1.1.5 [2014-07-22] (Alexey Andronov)
 * Added handling of expressions: they are now parsed, with common problems identified and hinted to the user
 
 ----------------------
-Version 2.1.1.4 [7-21-2014] (Alexey Andronov)
+Version 2.1.1.4 [2014-07-21] (Alexey Andronov)
 * CODE: Rewritten ExceptionMember/ExceptionMemberCheck code a bit
 * CODE: Reworked DrawSpaceMap code a bit to make it more readable
 * CODE: Fixed and improved code here and there for the sake of it...
@@ -29,7 +136,7 @@ Version 2.1.1.4 [7-21-2014] (Alexey Andronov)
   - Red circle:			  a statement can be edited on space map one way or another, but contains errors or expressions
 
 ----------------------
-Version 2.1.1.3 [7-19-2014] (Alexey Andronov)
+Version 2.1.1.3 [2014-07-19] (Alexey Andronov)
 * Fixed "set_side_value" and "set_special"
 * Added custom menues for set_side_value and set_special
 * Fixed limits and editing form for elite ability bits
@@ -39,32 +146,32 @@ Version 2.1.1.3 [7-19-2014] (Alexey Andronov)
 * Allowed up to 29 skyboxes and manual input of any number
 
 ----------------------
-Version 2.1.1.2 [7-19-2014] (Alexey Andronov)
+Version 2.1.1.2 [2014-07-19] (Alexey Andronov)
 * Fixed Destroy command to process whales, drones and all correctly
 
 ----------------------
-Version 2.1.1.1 [6-28-2014] (Russ Judge)
+Version 2.1.1.1 [2014-06-28] (Russ Judge)
 * Added sideValue to Create.
 
 ----------------------
-New Version B2.1.1.0 [6-15-2014] (Russ Judge)
+New Version B2.1.1.0 [2014-06-15] (Russ Judge)
 * Updated for Version 2.1.1 of Artemis.
 
 * Put on GitHub for source control.  If you wish to have access to assist with maintaining this application, please contact the project leader.
 
 ----------------------
-New version B1.7.3.2 [6-5-13] (David Wolfe)
+New version B1.7.3.2 [2013-06-05] (David Wolfe)
 
 * Fixed crash on the opening of the dependancy form. This has been a lingering bug since the 1.7 revamp.
   DependancyGraph classes from the 1.6 version were added to fix the problem.
 
 ----------------------
-New version B1.7.3.1 [6-4-13] (David Wolfe)
+New version B1.7.3.1 [2013-06-04] (David Wolfe)
 
 * Fixed my mistake of accidentally deleting the menu drop downs in the Space Map form.
 
 ----------------------
-New version B1.7.3.0 [6-2-13] (David Wolfe)
+New version B1.7.3.0 [2013-06-02] (David Wolfe)
 
 * Fixed arcs with degrees with decimals created by the Space Map being caught by the error finder on main form. Changed allowed variable type to double.
 * Fixed divide by 0 error when form becomes too small. Prevented FormSpaceMap (Create objects) and DialogSpaceMap (Edit logic statements) from becoming less than 100x100 px

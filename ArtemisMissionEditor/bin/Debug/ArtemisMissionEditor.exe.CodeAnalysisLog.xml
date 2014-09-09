@@ -1,0 +1,339 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="d:\program files (x86)\microsoft visual studio 10.0\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
+<FxCopReport Version="10.0">
+ <Targets>
+  <Target Name="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\bin\Debug\ArtemisMissionEditor.exe">
+   <Modules>
+    <Module Name="artemismissioneditor.exe">
+     <Namespaces>
+      <Namespace Name="ArtemisMissionEditor">
+       <Types>
+        <Type Name="_PanelSpaceMap" Kind="Class" Accessibility="Assembly" ExternallyVisible="False">
+         <Members>
+          <Member Name="#AssignPropertyGrid(System.Windows.Forms.PropertyGrid)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="NonBreaking">
+             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Controls" File="PanelSpaceMap.cs" Line="258">'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)' calls into 'PropertyGrid.PropertyValueChanged.add(PropertyValueChangedEventHandler)' which has a LinkDemand. By making this call, 'PropertyGrid.PropertyValueChanged.add(PropertyValueChangedEventHandler)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'DialogSpaceMap.DialogSpaceMap()'</Issue>
+             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Controls" File="PanelSpaceMap.cs" Line="258">'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)' calls into 'PropertyGrid.PropertyValueChanged.add(PropertyValueChangedEventHandler)' which has a LinkDemand. By making this call, 'PropertyGrid.PropertyValueChanged.add(PropertyValueChangedEventHandler)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap._PanelSpaceMap()'&#xD;&#xA;   -&gt;'DialogSpaceMap.InitializeComponent()'&#xD;&#xA;   -&gt;'DialogSpaceMap.DialogSpaceMap()'</Issue>
+             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Controls" File="PanelSpaceMap.cs" Line="258">'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)' calls into 'PropertyGrid.PropertyValueChanged.add(PropertyValueChangedEventHandler)' which has a LinkDemand. By making this call, 'PropertyGrid.PropertyValueChanged.add(PropertyValueChangedEventHandler)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap._PanelSpaceMap()'&#xD;&#xA;   -&gt;'FormSpaceMap.InitializeComponent()'&#xD;&#xA;   -&gt;'FormSpaceMap.FormSpaceMap()'&#xD;&#xA;   -&gt;'FormSpaceMap.CreateSpaceMapForm(string, List&lt;int&gt;, List&lt;int&gt;, string, string)'&#xD;&#xA;   -&gt;'FormSpaceMap.AddViaSpaceMap(string)'</Issue>
+             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Controls" File="PanelSpaceMap.cs" Line="258">'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)' calls into 'PropertyGrid.PropertyValueChanged.add(PropertyValueChangedEventHandler)' which has a LinkDemand. By making this call, 'PropertyGrid.PropertyValueChanged.add(PropertyValueChangedEventHandler)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap._PanelSpaceMap()'&#xD;&#xA;   -&gt;'FormSpaceMap.InitializeComponent()'&#xD;&#xA;   -&gt;'FormSpaceMap.FormSpaceMap()'&#xD;&#xA;   -&gt;'FormSpaceMap.CreateSpaceMapForm(string, List&lt;int&gt;, List&lt;int&gt;, string, string)'&#xD;&#xA;   -&gt;'FormSpaceMap.EditOnSpaceMap(List&lt;int&gt;, List&lt;int&gt;, string, string)'</Issue>
+             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Controls" File="PanelSpaceMap.cs" Line="258">'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)' calls into 'PropertyGrid.PropertyValueChanged.remove(PropertyValueChangedEventHandler)' which has a LinkDemand. By making this call, 'PropertyGrid.PropertyValueChanged.remove(PropertyValueChangedEventHandler)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'DialogSpaceMap.DialogSpaceMap()'</Issue>
+             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Controls" File="PanelSpaceMap.cs" Line="258">'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)' calls into 'PropertyGrid.PropertyValueChanged.remove(PropertyValueChangedEventHandler)' which has a LinkDemand. By making this call, 'PropertyGrid.PropertyValueChanged.remove(PropertyValueChangedEventHandler)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap._PanelSpaceMap()'&#xD;&#xA;   -&gt;'DialogSpaceMap.InitializeComponent()'&#xD;&#xA;   -&gt;'DialogSpaceMap.DialogSpaceMap()'</Issue>
+             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Controls" File="PanelSpaceMap.cs" Line="258">'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)' calls into 'PropertyGrid.PropertyValueChanged.remove(PropertyValueChangedEventHandler)' which has a LinkDemand. By making this call, 'PropertyGrid.PropertyValueChanged.remove(PropertyValueChangedEventHandler)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap._PanelSpaceMap()'&#xD;&#xA;   -&gt;'FormSpaceMap.InitializeComponent()'&#xD;&#xA;   -&gt;'FormSpaceMap.FormSpaceMap()'&#xD;&#xA;   -&gt;'FormSpaceMap.CreateSpaceMapForm(string, List&lt;int&gt;, List&lt;int&gt;, string, string)'&#xD;&#xA;   -&gt;'FormSpaceMap.AddViaSpaceMap(string)'</Issue>
+             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Controls" File="PanelSpaceMap.cs" Line="258">'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)' calls into 'PropertyGrid.PropertyValueChanged.remove(PropertyValueChangedEventHandler)' which has a LinkDemand. By making this call, 'PropertyGrid.PropertyValueChanged.remove(PropertyValueChangedEventHandler)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap.AssignPropertyGrid(PropertyGrid)'&#xD;&#xA;   -&gt;'_PanelSpaceMap._PanelSpaceMap()'&#xD;&#xA;   -&gt;'FormSpaceMap.InitializeComponent()'&#xD;&#xA;   -&gt;'FormSpaceMap.FormSpaceMap()'&#xD;&#xA;   -&gt;'FormSpaceMap.CreateSpaceMapForm(string, List&lt;int&gt;, List&lt;int&gt;, string, string)'&#xD;&#xA;   -&gt;'FormSpaceMap.EditOnSpaceMap(List&lt;int&gt;, List&lt;int&gt;, string, string)'</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#DrawSpaceMap(System.Drawing.Graphics)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="DependsOnFix">
+             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Controls" File="PanelSpaceMap.cs" Line="1090">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'brushGenericMeshCurrent' before all references to it are out of scope.</Issue>
+             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Controls" File="PanelSpaceMap.cs" Line="1091">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'penGenericMeshCurrent1' before all references to it are out of scope.</Issue>
+             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Controls" File="PanelSpaceMap.cs" Line="1092">In method '_PanelSpaceMap.DrawSpaceMap(Graphics)', call System.IDisposable.Dispose on object 'penGenericMeshCurrent2' before all references to it are out of scope.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="CheckedListBoxUITypeEditor_raceKeys" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#.ctor()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="NonBreaking">
+             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\SpaceMap" File="NamedMapObject_UIEditors.cs" Line="198">'CheckedListBoxUITypeEditor_raceKeys.CheckedListBoxUITypeEditor_raceKeys()' calls into 'UITypeEditor.UITypeEditor()' which has a LinkDemand. By making this call, 'UITypeEditor.UITypeEditor()' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'CheckedListBoxUITypeEditor_raceKeys.CheckedListBoxUITypeEditor_raceKeys()'&#xD;&#xA;   -&gt;'CheckedListBoxUITypeEditor_raceKeys.CheckedListBoxUITypeEditor_raceKeys()'</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="CheckedListBoxUITypeEditor_raceNames" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#.ctor()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="NonBreaking">
+             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\SpaceMap" File="NamedMapObject_UIEditors.cs" Line="137">'CheckedListBoxUITypeEditor_raceNames.CheckedListBoxUITypeEditor_raceNames()' calls into 'UITypeEditor.UITypeEditor()' which has a LinkDemand. By making this call, 'UITypeEditor.UITypeEditor()' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'CheckedListBoxUITypeEditor_raceNames.CheckedListBoxUITypeEditor_raceNames()'&#xD;&#xA;   -&gt;'CheckedListBoxUITypeEditor_raceNames.CheckedListBoxUITypeEditor_raceNames()'</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="CheckedListBoxUITypeEditor_vesselClassNames" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#.ctor()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="NonBreaking">
+             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\SpaceMap" File="NamedMapObject_UIEditors.cs" Line="15">'CheckedListBoxUITypeEditor_vesselClassNames.CheckedListBoxUITypeEditor_vesselClassNames()' calls into 'UITypeEditor.UITypeEditor()' which has a LinkDemand. By making this call, 'UITypeEditor.UITypeEditor()' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'CheckedListBoxUITypeEditor_vesselClassNames.CheckedListBoxUITypeEditor_vesselClassNames()'&#xD;&#xA;   -&gt;'CheckedListBoxUITypeEditor_vesselClassNames.CheckedListBoxUITypeEditor_vesselClassNames()'</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="DialogSpaceMap" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#CreateSpaceMapDialog(System.String,System.String,System.String,System.String)" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="DependsOnFix">
+             <Issue Name="ExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Forms" File="DialogSpaceMap.cs" Line="29">In method 'DialogSpaceMap.CreateSpaceMapDialog(string, string, string, string)', object 'form' is not disposed along all exception paths. Call System.IDisposable.Dispose on object 'form' before all references to it are out of scope.</Issue>
+            </Message>
+            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="NonBreaking">
+             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Forms" File="DialogSpaceMap.cs" Line="28">'DialogSpaceMap.CreateSpaceMapDialog(string, string, string, string)' calls into 'PropertyGrid.SelectedObject.set(object)' which has a LinkDemand. By making this call, 'PropertyGrid.SelectedObject.set(object)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'DialogSpaceMap.CreateSpaceMapDialog(string, string, string, string)'&#xD;&#xA;   -&gt;'DialogSpaceMap.CreateSpaceMapDialog(string, string, string, string)'&#xD;&#xA;   -&gt;'DialogSpaceMap.EditStatementOnSpaceMap(string, string, string)'</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="FormSettings" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#InitializeComponent()" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="NonBreaking">
+             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Forms" File="FormSettings.Designer.cs" Line="30">'FormSettings.InitializeComponent()' calls into 'PropertyGrid.PropertySort.set(PropertySort)' which has a LinkDemand. By making this call, 'PropertyGrid.PropertySort.set(PropertySort)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'FormSettings.InitializeComponent()'&#xD;&#xA;   -&gt;'FormSettings.InitializeComponent()'&#xD;&#xA;   -&gt;'FormSettings.FormSettings()'</Issue>
+             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Forms" File="FormSettings.Designer.cs" Line="30">'FormSettings.InitializeComponent()' calls into 'PropertyGrid.ToolbarVisible.set(bool)' which has a LinkDemand. By making this call, 'PropertyGrid.ToolbarVisible.set(bool)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'FormSettings.InitializeComponent()'&#xD;&#xA;   -&gt;'FormSettings.InitializeComponent()'&#xD;&#xA;   -&gt;'FormSettings.FormSettings()'</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Settings_SettingsChanged()" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="NonBreaking">
+             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Forms" File="FormSettings.cs" Line="23">'FormSettings.Settings_SettingsChanged()' calls into 'PropertyGrid.SelectedObject.set(object)' which has a LinkDemand. By making this call, 'PropertyGrid.SelectedObject.set(object)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'FormSettings.Settings_SettingsChanged()'&#xD;&#xA;   -&gt;'FormSettings.Settings_SettingsChanged()'&#xD;&#xA;   -&gt;'FormSettings.FormSettings()'</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="FormSpaceMap" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#CreateSpaceMapForm(System.String,System.Collections.Generic.List`1&lt;System.Int32&gt;,System.Collections.Generic.List`1&lt;System.Int32&gt;,System.String,System.String)" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="DependsOnFix">
+             <Issue Name="ExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Forms" File="FormSpaceMap.cs" Line="97">In method 'FormSpaceMap.CreateSpaceMapForm(string, List&lt;int&gt;, List&lt;int&gt;, string, string)', object 'form' is not disposed along all exception paths. Call System.IDisposable.Dispose on object 'form' before all references to it are out of scope.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="Helper" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#StringFromCompressedByte(System.Byte[])" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor" File="Helper.cs" Line="318">Object 'memoryStream' can be disposed more than once in method 'Helper.StringFromCompressedByte(byte[])'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 318</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#StringToCompressedByte(System.String)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="DependsOnFix">
+             <Issue Name="ExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor" File="Helper.cs" Line="281">In method 'Helper.StringToCompressedByte(string)', object 'memoryStream' is not disposed along all exception paths. Call System.IDisposable.Dispose on object 'memoryStream' before all references to it are out of scope.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="Log" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#NewLogEntry" Kind="Event" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="Breaking">
+             <Issue Name="First" Certainty="95" Level="Error">Declare the first parameter of 'NewLogEntryEventHandler' as an object named 'sender'.</Issue>
+             <Issue Name="Second" Certainty="95" Level="Error">Declare the second parameter of 'NewLogEntryEventHandler' as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="Mission" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#UpdateExpression()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="DependsOnFix">
+             <Issue Name="ExceptionEdge" Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Mission" File="Mission.cs" Line="2372">In method 'Mission.UpdateExpression()', object 'label' is not disposed along all exception paths. Call System.IDisposable.Dispose on object 'label' before all references to it are out of scope.</Issue>
+            </Message>
+            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="NonBreaking">
+             <Issue Certainty="33" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Mission" File="Mission.cs" Line="2337">'Mission.UpdateExpression()' calls into 'Control.PreviewKeyDown.add(PreviewKeyDownEventHandler)' which has a LinkDemand. By making this call, 'Control.PreviewKeyDown.add(PreviewKeyDownEventHandler)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'Mission.UpdateExpression()'&#xD;&#xA;   -&gt;'Mission.UpdateExpression()'</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#NamesListUpdated" Kind="Event" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="Breaking">
+             <Issue Name="First" Certainty="95" Level="Error">Declare the first parameter of 'Mission.GenericMissionEventHandler' as an object named 'sender'.</Issue>
+             <Issue Name="Second" Certainty="95" Level="Error">Declare the second parameter of 'Mission.GenericMissionEventHandler' as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="Settings" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#SettingAutoSaveIntervalChanged" Kind="Event" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="Breaking">
+             <Issue Name="First" Certainty="95" Level="Error">Declare the first parameter of 'Settings.GenericSettingsEventHandler' as an object named 'sender'.</Issue>
+             <Issue Name="Second" Certainty="95" Level="Error">Declare the second parameter of 'Settings.GenericSettingsEventHandler' as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#SettingsCurrentChanged" Kind="Event" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="Breaking">
+             <Issue Name="First" Certainty="95" Level="Error">Declare the first parameter of 'Settings.GenericSettingsEventHandler' as an object named 'sender'.</Issue>
+             <Issue Name="Second" Certainty="95" Level="Error">Declare the second parameter of 'Settings.GenericSettingsEventHandler' as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="TreeViewEx" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#SendMessage(System.IntPtr,System.Int32,System.IntPtr,System.IntPtr)" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="Breaking">
+             <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'TreeViewEx.SendMessage(IntPtr, int, IntPtr, IntPtr)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#NodeMoved" Kind="Event" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="Breaking">
+             <Issue Name="First" Certainty="95" Level="Error">Declare the first parameter of 'TreeViewEx.NodeMovedEventHandler' as an object named 'sender'.</Issue>
+             <Issue Name="Second" Certainty="95" Level="Error">Declare the second parameter of 'TreeViewEx.NodeMovedEventHandler' as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="VesselData" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#VesselDataChanged" Kind="Event" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="Breaking">
+             <Issue Name="First" Certainty="95" Level="Error">Declare the first parameter of 'VesselData.GenericVesselDataEventHandler' as an object named 'sender'.</Issue>
+             <Issue Name="Second" Certainty="95" Level="Error">Declare the second parameter of 'VesselData.GenericVesselDataEventHandler' as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+       </Types>
+      </Namespace>
+      <Namespace Name="ArtemisMissionEditor.Expressions">
+       <Types>
+        <Type Name="ExpressionMemberValueDescription" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#OnClick(ArtemisMissionEditor.Expressions.ExpressionMemberContainer,ArtemisMissionEditor.NormalLabel,System.Drawing.Point,ArtemisMissionEditor.Expressions.ExpressionMemberValueEditorActivationMode)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Expressions\ExpressionMemberValues" File="ExpressionMemberValueDescription.cs" Line="297">Object 'curCMS' can be disposed more than once in method 'ExpressionMemberValueDescription.OnClick(ExpressionMemberContainer, NormalLabel, Point, ExpressionMemberValueEditorActivationMode)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 297</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="ValidateResult" Kind="Struct" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#.cctor()" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="InitializeValueTypeStaticFieldsInline" Category="Microsoft.Usage" CheckId="CA2207" Status="Active" Created="2014-07-31 19:58:05Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="CriticalError" Path="E:\Projects\GitHub\ArtemisMissionEditor\ArtemisMissionEditor\Expressions\ExpressionMemberValues" File="ExpressionMemberValueDescription.cs" Line="43">Initialize all static fields in 'ValidateResult' when those fields are declared and remove the explicit static constructor.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+       </Types>
+      </Namespace>
+     </Namespaces>
+    </Module>
+   </Modules>
+  </Target>
+ </Targets>
+ <Rules>
+  <Rule TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009">
+   <Name>Declare event handlers correctly</Name>
+   <Description>By convention, .NET events have two parameters that specify the event sender and event data. Event handler signatures should follow this form: void MyEventHandler(object sender, EventArgs e). The 'sender' parameter is always of type System.Object, even if it is possible to employ a more specific type. The 'e' parameter is always of type System.EventArgs. Events that do not provide event data should use the System.EventHandler delegate type. Event handlers return void so that they can send each event to multiple target methods. Any value returned by a target would be lost after the first call.</Description>
+   <Resolution Name="First">Declare the first parameter of {0} as an object named 'sender'.</Resolution>
+   <Resolution Name="Second">Declare the second parameter of {0} as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182133(VS.100).aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">Error</MessageLevel>
+   <File Name="designrules.dll" Version="10.0.0.0" />
+  </Rule>
+  <Rule TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000">
+   <Name>Dispose objects before losing scope</Name>
+   <Description>If a disposable object is not explicitly disposed before all references to it are out of scope, the object will be disposed at some indeterminate time when the garbage collector runs the finalizer of the object. Because an exceptional event might occur that will prevent the finalizer of the object from running, the object should be explicitly disposed instead.</Description>
+   <Resolution Name="ExceptionEdge">In method {0}, object {1} is not disposed along all exception paths. Call System.IDisposable.Dispose on object {1} before all references to it are out of scope.</Resolution>
+   <Resolution Name="NonExceptionEdge">In method {0}, call System.IDisposable.Dispose on object {1} before all references to it are out of scope.</Resolution>
+   <Owner>RuleOwner</Owner>
+   <Url>http://msdn.microsoft.com/library/ms182289(VS.100).aspx</Url>
+   <Email />
+   <MessageLevel Certainty="75">Warning</MessageLevel>
+   <File Name="dataflowrules.dll" Version="10.0.0.0" />
+  </Rule>
+  <Rule TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202">
+   <Name>Do not dispose objects multiple times</Name>
+   <Description>A correctly implemented Dispose method can be called multiple times without throwing an exception. However, this is not guaranteed and to avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.</Description>
+   <Resolution Name="Default">Object {0} can be disposed more than once in method {1}. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 297</Resolution>
+   <Owner>RuleOwner</Owner>
+   <Url>http://msdn.microsoft.com/library/ms182334(VS.100).aspx</Url>
+   <Email />
+   <MessageLevel Certainty="75">Warning</MessageLevel>
+   <File Name="dataflowrules.dll" Version="10.0.0.0" />
+  </Rule>
+  <Rule TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122">
+   <Name>Do not indirectly expose methods with link demands</Name>
+   <Description>Do not wrap a method protected by a LinkDemand with a method that does not perform a security check. A LinkDemand checks the permissions of the immediate caller rather than checking the permissions of all callers in the call stack. In this case, the permissions of the wrapper method will be checked. If the wrapper method does not, itself, check the permissions of callers higher in the call stack, malicious code might be able to execute the wrapped function even though it lacks permission to do so.</Description>
+   <Resolution Name="Default">{0} calls into {1} which has a LinkDemand. By making this call, {1} is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: {2}</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182303(VS.100).aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="33">CriticalError</MessageLevel>
+   <File Name="securityrules.dll" Version="10.0.0.0" />
+  </Rule>
+  <Rule TypeName="InitializeValueTypeStaticFieldsInline" Category="Microsoft.Usage" CheckId="CA2207">
+   <Name>Initialize value type static fields inline</Name>
+   <Description>Do not declare explicit static constructors on value types. Initializing static data in explicit static constructors results in a value type that is not marked in metadata as 'beforefieldinit'. In this case, the static constructor is not always guaranteed to be called before instance members on the value type are called.</Description>
+   <Resolution Name="Default">Initialize all static fields in {0} when those fields are declared and remove the explicit static constructor.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182346(VS.100).aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">CriticalError</MessageLevel>
+   <File Name="usagerules.dll" Version="10.0.0.0" />
+  </Rule>
+  <Rule TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060">
+   <Name>Move P/Invokes to NativeMethods class</Name>
+   <Description>This type contains members with the DllImport attribute. Members with the DllImport attribute should be contained in classes named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Description>
+   <Resolution Name="Default">Because it is a P/Invoke method, {0} should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182161(VS.100).aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">CriticalWarning</MessageLevel>
+   <File Name="designrules.dll" Version="10.0.0.0" />
+  </Rule>
+ </Rules>
+ <Localized>
+  <String Key="Category">Category</String>
+  <String Key="Certainty">Certainty</String>
+  <String Key="CollapseAll">Collapse All</String>
+  <String Key="CheckId">Check Id</String>
+  <String Key="Error">Error</String>
+  <String Key="Errors">error(s)</String>
+  <String Key="ExpandAll">Expand All</String>
+  <String Key="Help">Help</String>
+  <String Key="Line">Line</String>
+  <String Key="Messages">message(s)</String>
+  <String Key="LocationNotStoredInPdb">[Location not stored in Pdb]</String>
+  <String Key="Project">Project</String>
+  <String Key="Resolution">Resolution</String>
+  <String Key="Rule">Rule</String>
+  <String Key="RuleFile">Rule File</String>
+  <String Key="RuleDescription">Rule Description</String>
+  <String Key="Source">Source</String>
+  <String Key="Status">Status</String>
+  <String Key="Target">Target</String>
+  <String Key="Warning">Warning</String>
+  <String Key="Warnings">warning(s)</String>
+  <String Key="ReportTitle">Code Analysis Report</String>
+ </Localized>
+</FxCopReport>

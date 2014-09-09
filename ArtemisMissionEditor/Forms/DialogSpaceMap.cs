@@ -6,8 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using ArtemisMissionEditor.SpaceMap;
 
-namespace ArtemisMissionEditor
+namespace ArtemisMissionEditor.Forms
 {
     public partial class DialogSpaceMap : FormSerializeableToRegistry
     {
@@ -39,7 +40,7 @@ namespace ArtemisMissionEditor
             return form;
         }
 
-        public static SpaceMap EditStatementOnSpaceMap(string statementXml, string editXml, string bgXml)
+        public static Space EditStatementOnSpaceMap(string statementXml, string editXml, string bgXml)
         {
             using (DialogSpaceMap form = CreateSpaceMapDialog("Edit statement", statementXml, editXml, bgXml))
             {
@@ -87,6 +88,15 @@ namespace ArtemisMissionEditor
         private void _DSM_b_Cancel_Click(object sender, EventArgs e)
         {
             pSpaceMap.ExecuteCommand(KeyCommands.FinishEditingForceNo);
+        }
+
+        private void DialogSpaceMap_VisibleChanged(object sender, EventArgs e)
+        {
+            if (!Visible)
+            {
+                SaveToRegistry();
+                Program.ShowMainFormIfRequired();
+            }
         }
 
     }

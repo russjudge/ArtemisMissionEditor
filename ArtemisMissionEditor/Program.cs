@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Microsoft.Win32;
+using ArtemisMissionEditor.Forms;
 
 namespace ArtemisMissionEditor
 {
@@ -18,8 +19,8 @@ namespace ArtemisMissionEditor
         public static FormDependency			FormDependencyInstance;
 		public static FormHelp					FormHelpInstance;
 		public static FormMissionProperties	    FormMissionPropertiesInstance;
-
-        public static bool IsClosing { get; set; }
+        public static FormNotepad               FormNotepadInstance;
+        public static List<Form>                AllOwnedForms;
 
         /// <summary>
         /// The main entry point for the application.
@@ -48,43 +49,69 @@ namespace ArtemisMissionEditor
             if (argList.Length > 1 && argList[1] != "-v")
                 missionFileName = argList[1];
 
-            FormLogInstance  = new   FormLog();
-            FormSettingsInstance  = new   FormSettings();
-            FormMainInstance  = new   FormMain();
-			FormFindReplaceInstance = new   FormFindReplace();
+            FormLogInstance = new FormLog();
+            FormMainInstance = new FormMain();
+            FormSettingsInstance = new FormSettings();
+            FormFindReplaceInstance = new   FormFindReplace();
             FormSearchResultsInstance = new   FormSearchResults();
             FormDependencyInstance  = new   FormDependency();
-			FormHelpInstance	= new	FormHelp();
-			FormMissionPropertiesInstance	= new	FormMissionProperties();
+            FormHelpInstance	= new	FormHelp();
+            FormMissionPropertiesInstance	= new	FormMissionProperties();
+            FormNotepadInstance = new FormNotepad();
+
+            AllOwnedForms = new List<Form>();
+            AllOwnedForms.Add(FormSettingsInstance);
+            AllOwnedForms.Add(FormSettingsInstance);
+            AllOwnedForms.Add(FormFindReplaceInstance);
+            AllOwnedForms.Add(FormSearchResultsInstance);
+            AllOwnedForms.Add(FormDependencyInstance);
+            AllOwnedForms.Add(FormHelpInstance);
+            AllOwnedForms.Add(FormMissionPropertiesInstance);
+            AllOwnedForms.Add(FormNotepadInstance);
+            AllOwnedForms.Add(FormLogInstance);
+
+            foreach (Form form in AllOwnedForms)
+            {
+                form.Owner = FormMainInstance;
+                form.Deactivate +=  new EventHandler((object sender, EventArgs e) => { ((Form)sender).Opacity = Settings.Current.FormOpacity; });
+                form.Activated += new EventHandler((object sender, EventArgs e) => { ((Form)sender).Opacity = 1.0; });
+            }
 
             string currentVesselDataPathToLoad = customVesselDataFileName ?? Settings.Current.DefaultVesselDataPath;
             if (File.Exists(currentVesselDataPathToLoad))
-                Settings.VesselData.Load(currentVesselDataPathToLoad);
+                VesselData.Current.Load(currentVesselDataPathToLoad);
             
-            IsClosing = false;
-
             if (File.Exists(missionFileName))
                 Mission.Current.FromFile(missionFileName);
 
             //Start
             Application.Run(FormMainInstance);
+        }
 
-			//End
-			Program.IsClosing = true;
-			Program.FormLogInstance.SaveToRegistry();
-			Program.FormLogInstance.Close();
-			Program.FormSettingsInstance.SaveToRegistry();
-			Program.FormSettingsInstance.Close();
-			Program.FormFindReplaceInstance.SaveToRegistry();
-			Program.FormFindReplaceInstance.Close();
-			Program.FormSearchResultsInstance.SaveToRegistry();
-			Program.FormSearchResultsInstance.Close();
-            Program.FormDependencyInstance.SaveToRegistry();
-            Program.FormDependencyInstance.Close();
-			Program.FormHelpInstance.SaveToRegistry();
-			Program.FormHelpInstance.Close();
-			Program.FormMissionPropertiesInstance.SaveToRegistry();
-			Program.FormMissionPropertiesInstance.Close();
+        public static void UpdateAllFormsOpacity()
+        {
+            if (AllOwnedForms != null)
+                foreach (Form form in AllOwnedForms)
+                    if (form != Form.ActiveForm)
+                        form.Opacity = Settings.Current.FormOpacity;   
+        }
+
+        /// <summary>
+        /// Shows Main form if it is the last form remaining (called upon hiding another form)
+        /// </summary>
+        /// <remarks>
+        /// WTF MICROSOFT, WHY DOES IT GO OUT OF FOCUS!?
+        /// EDIT: Apparently, if you show a form from a form, it will happen, so all forms that open forms should have this line
+        /// Stupid Miscrosoft...
+        /// </remarks>
+        public static void ShowMainFormIfRequired()
+        {
+            int countOpenforms = 0;
+            foreach (Form form in AllOwnedForms)
+                if (form.Visible)
+                    countOpenforms++;
+            if (countOpenforms == 0)
+                FormMainInstance.BringToFront();
         }
     }
 }

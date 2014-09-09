@@ -5,14 +5,15 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Media;
 
-namespace ArtemisMissionEditor
+namespace ArtemisMissionEditor.Forms
 {
     public partial class FormSearchResults : FormSerializeableToRegistry
     {
-        public bool Empty;
+        public Form CurrentOwner { get; private set; }
 
-		private MissionSearchStructure MissionSearchStructureInstance;
+        public bool Empty;
 
         public FormSearchResults()
         {
@@ -21,60 +22,95 @@ namespace ArtemisMissionEditor
 			UpdateState();
         }
 
-		public void SetSubtitle(MissionSearchStructure mss)
-		{
-			MissionSearchStructureInstance = mss;
-
-			UpdateState();
-		}
-
-        public void UpdateState()
+        public void ShowIfNotEmpty(bool playSoundOnFailure = false)
         {
-			string text = (MissionSearchStructureInstance.replacement == null ? "Looked for \"" + MissionSearchStructureInstance.input + "\" in " : "Replaced \"" + MissionSearchStructureInstance.input + "\" with \"" + MissionSearchStructureInstance.replacement + "\" in ")
-				+ (MissionSearchStructureInstance.xmlAttName ? "[Xml attribute name], " : "")
-				+ (MissionSearchStructureInstance.xmlAttValue ? "[Xml attribute value" + (string.IsNullOrWhiteSpace(MissionSearchStructureInstance.attName) ? "" : " (in att name \"" + MissionSearchStructureInstance.attName + "\")") + "], " : "")
-				+ (MissionSearchStructureInstance.nodeNames ? "[Mission node name], " : "")
-				+ (MissionSearchStructureInstance.commentaries ? "[Commentary], " : "")
-				+ (MissionSearchStructureInstance.statementText ? "[Displayed text], " : "")
-				+ (MissionSearchStructureInstance.matchCase ? "Matching case and " : "")
-				+ (MissionSearchStructureInstance.matchExact ? "Matching value exactly and " : "")
-				+ (MissionSearchStructureInstance.onlyInCurrentNode ? "Only in selected node and " : "");
-
-			if (text.Substring(text.Length - 2, 2) == ", ")
-				text = text.Substring(0, text.Length - 2);
-			if (text.Substring(text.Length - 5, 5) == " and ")
-				text = text.Substring(0, text.Length - 5);
-
-			_FSR_ss_Main_l_Main.Text = text;
-
-            _FSR_ss_Main_tsb_Clear.Enabled = _FSR_lb_Main.Items.Count > 0;
-			Text = MissionSearchStructureInstance.replacement == null ? "Find Results: Total " + _FSR_lb_Main.Items.Count.ToString() + " matches" : "Replace Results: Total " + _FSR_lb_Main.Items.Count.ToString() + " items";
-            Empty = !_FSR_ss_Main_tsb_Clear.Enabled;
-
-			if (Empty)
-				Hide();
+            if (Empty)
+            {
+                if (playSoundOnFailure)
+                    SystemSounds.Beep.Play();
+                return;
+            }
+            Show();
+            BringToFront();
         }
 
-		public void ClearList()
-		{
-			_FSR_lb_Main.Items.Clear();
+        /// <summary>  Set subtitle from a Mission Search Command class </summary>
+        public void SetDataSearchResult(MissionSearchCommand missionSearchCommandInstance, List<MissionSearchResult> list)
+        {
+            string text = (missionSearchCommandInstance.Replacement == null ? "Looked for \"" + missionSearchCommandInstance.Input + "\" in " : "Replaced \"" + missionSearchCommandInstance.Input + "\" with \"" + missionSearchCommandInstance.Replacement + "\" in ")
+                    + (missionSearchCommandInstance.XmlAttName ? "[Xml attribute name], " : "")
+                    + (missionSearchCommandInstance.XmlAttValue ? "[Xml attribute value" + (string.IsNullOrWhiteSpace(missionSearchCommandInstance.AttName) ? "" : " (in att name \"" + missionSearchCommandInstance.AttName + "\")") + "], " : "")
+                    + (missionSearchCommandInstance.NodeNames ? "[Mission node name], " : "")
+                    + (missionSearchCommandInstance.Commentaries ? "[Commentary], " : "")
+                    + (missionSearchCommandInstance.StatementText ? "[Displayed text], " : "")
+                    + (missionSearchCommandInstance.MatchCase ? "Matching case and " : "")
+                    + (missionSearchCommandInstance.MatchExact ? "Matching value exactly and " : "")
+                    + (missionSearchCommandInstance.OnlyInCurrentNode ? "Only in selected node and " : "");
 
-			Mission.Current.SetSelection();
+            if (text.Substring(text.Length - 2, 2) == ", ")
+                text = text.Substring(0, text.Length - 2);
+            if (text.Substring(text.Length - 5, 5) == " and ")
+                text = text.Substring(0, text.Length - 5);
+
+             _FSR_ss_Main_l_Main.Text = text;
+            Text = missionSearchCommandInstance.Replacement == null ? "Find Results: Total " + _FSR_lv_Main.Rows.Count.ToString() + " matches" : "Replace Results: Total " + _FSR_lv_Main.Rows.Count.ToString() + " items";
+            _FSR_ss_Main_tsb_Update.Visible = false;
+
+            SetListContents(list);
+            UpdateState();
+            CurrentOwner = Program.FormFindReplaceInstance;
+		}
+
+        /// <summary>  Set subtitle from a string </summary>
+        public void SetDataMiscellaneousList(string text, List<MissionSearchResult> list)
+        {
+            _FSR_ss_Main_l_Main.Text = text;
+            Text = "Potential Problems: " + _FSR_lv_Main.Rows.Count.ToString() + " matches";
+            _FSR_ss_Main_tsb_Update.Visible = true;
+
+            SetListContents(list);
+            UpdateState();
+            CurrentOwner = null;
+        }
+
+        public void ClearList()
+		{
+			_FSR_lv_Main.Rows.Clear();
+
+			Mission.Current.ApplyHighlighting();
 
 			UpdateState();
 		}
 
-		public void SetList(List<MissionSearchResult> list)
+        private void UpdateState()
+        {
+            _FSR_ss_Main_tsb_Clear.Enabled = _FSR_lv_Main.Rows.Count > 0;
+            Empty = !_FSR_ss_Main_tsb_Clear.Enabled;
+
+            if (Empty)
+                Hide();
+        }
+
+		private void SetListContents(List<MissionSearchResult> list)
 		{
-			_FSR_lb_Main.Items.Clear();
+            _FSR_lv_Main.SuspendLayout();
+            _FSR_lv_Main.Rows.Clear();
+            foreach (MissionSearchResult item in list)
+                AddItemToList(item);
+            _FSR_lv_Main.ResumeLayout();
 
-			foreach (MissionSearchResult item in list)
-				_FSR_lb_Main.Items.Add(item);
-
-			Mission.Current.SetSelection(list);
-
-			UpdateState();
+			Mission.Current.ApplyHighlighting(list);
 		}
+
+        private void AddItemToList(MissionSearchResult msr)
+        {
+            DataGridViewRow dgvr = _FSR_lv_Main.Rows[_FSR_lv_Main.Rows.Add()];
+            dgvr.Tag = msr;
+            dgvr.Cells[0].Value = msr.CurNode > 0 ? (int?)msr.CurNode : null;
+            dgvr.Cells[1].Value = msr.CurStatement > 0 ? (int?)msr.CurStatement : null;
+            dgvr.Cells[2].Value = msr.NodeText;
+            dgvr.Cells[3].Value = msr.Text;
+        }
 
         private void _E_FSR_Load(object sender, EventArgs e)
         {
@@ -88,11 +124,13 @@ namespace ArtemisMissionEditor
 
         private void _E_FSR_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!Program.IsClosing)
+            if (e.CloseReason == CloseReason.UserClosing)
             {
                 e.Cancel = true;
                 this.Hide();
             }
+            else
+                SaveToRegistry();
         }
 
         private void _E_FSR_ss_Main_tsb_Clear_ButtonClick(object sender, EventArgs e)
@@ -102,9 +140,9 @@ namespace ArtemisMissionEditor
 
         private void _E_FSR_lb_Main_DoubleClick(object sender, EventArgs e)
         {
-			if (_FSR_lb_Main.SelectedItem != null)
+			if (_FSR_lv_Main.SelectedRows.Count != 0)
 			{
-				((MissionSearchResult)_FSR_lb_Main.SelectedItem).Activate();
+                ((MissionSearchResult)_FSR_lv_Main.SelectedRows[0].Tag).Activate();
 				Program.FormMainInstance.BringToFront();
 				Program.FormSearchResultsInstance.BringToFront();
 			}
@@ -121,7 +159,7 @@ namespace ArtemisMissionEditor
 			if (e.KeyCode == Keys.Escape)
 			{
 				e.SuppressKeyPress = true;
-				Close();
+                Hide();
 			}
 
 			if (e.KeyCode == Keys.F && Control.ModifierKeys == Keys.Control)
@@ -135,5 +173,28 @@ namespace ArtemisMissionEditor
 				Mission.Current.ShowReplaceForm();
 			}
 		}
+
+        public void FindProblems(bool hide = true)
+        {
+            if (hide) Hide();
+            List<MissionSearchResult> result = Mission.Current.FindProblems();
+
+            SetDataMiscellaneousList("", result);
+            ShowIfNotEmpty(true);
+        }
+
+        private void _FSR_ss_Main_tsb_Update_ButtonClick(object sender, EventArgs e)
+        {
+            FindProblems(false);
+        }
+
+        private void FormSearchResults_VisibleChanged(object sender, EventArgs e)
+        {
+            if (!Visible)
+            {
+                SaveToRegistry();
+                Program.ShowMainFormIfRequired();
+            }
+        }
     }
 }

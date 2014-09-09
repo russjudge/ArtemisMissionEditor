@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace ArtemisMissionEditor
+namespace ArtemisMissionEditor.Forms
 {
 	partial class AboutBox : Form
 	{
@@ -31,10 +31,8 @@ namespace ArtemisMissionEditor
 				if (attributes.Length > 0)
 				{
 					AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
-					if (titleAttribute.Title != "")
-					{
+					if (!String.IsNullOrEmpty(titleAttribute.Title))
 						return titleAttribute.Title;
-					}
 				}
 				return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
 			}
@@ -110,10 +108,5 @@ namespace ArtemisMissionEditor
 			if (e.KeyData == Keys.Escape)
 				Close();
 		}
-
-        private void labelVersion_Click(object sender, EventArgs e)
-        {
-
-        }
 	}
 }

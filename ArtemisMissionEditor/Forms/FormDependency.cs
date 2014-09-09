@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace ArtemisMissionEditor
+namespace ArtemisMissionEditor.Forms
 {
     public partial class FormDependency : FormSerializeableToRegistry
     {
@@ -18,9 +18,10 @@ namespace ArtemisMissionEditor
             _FD_b_Event.Text = "";
         }
 
-        public void OpenEventDependency(TreeNode node)
+        public void OpenEventDependency(TreeNode node, bool recalculate = false)
         {
-            if (node != null)
+            // if recalculate is false and we already have a node, then do not recalculate, otherwise, we are forced to
+            if (node != null && !(((MissionSearchResult)_FD_b_Event.Tag).Valid && !recalculate))
             {
                 _FD_lb_Left.Items.Clear();
                 _FD_lb_Right.Items.Clear();
@@ -161,7 +162,7 @@ namespace ArtemisMissionEditor
 			}
 			else
 			{
-				Close();
+                Hide();
 			}
         }
 
@@ -175,11 +176,13 @@ namespace ArtemisMissionEditor
 
         private void _E_FD_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!Program.IsClosing)
+            if (e.CloseReason == CloseReason.UserClosing)
             {
                 e.Cancel = true;
                 this.Hide();
             }
+            else
+                SaveToRegistry();
         }
 
         private void _E_FD_b_Event_Click(object sender, EventArgs e)
@@ -218,7 +221,7 @@ namespace ArtemisMissionEditor
 			if (e.KeyData == Keys.Escape)
 			{
 				e.SuppressKeyPress = true;
-				Close();
+                Hide();
 			}
 			if (e.KeyData == Keys.F4)
 			{
@@ -263,6 +266,15 @@ namespace ArtemisMissionEditor
 			if (e.KeyCode == Keys.Enter)
 				_E_FD_lb_Right_Click(sender, e);
 		}
+
+        private void FormDependency_VisibleChanged(object sender, EventArgs e)
+        {
+            if (!Visible)
+            {
+                SaveToRegistry();
+                Program.ShowMainFormIfRequired();
+            }
+        }
 
     }
 

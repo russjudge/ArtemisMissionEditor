@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace ArtemisMissionEditor
+namespace ArtemisMissionEditor.Forms
 {
 	public partial class FormLog : FormSerializeableToRegistry
 	{
@@ -22,13 +22,13 @@ namespace ArtemisMissionEditor
 
 		private void _E_FormLog_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if (!Program.IsClosing)
+			if (e.CloseReason == CloseReason.UserClosing)
 			{
 				e.Cancel = true;
 				this.Hide();
 			}
-
-			SaveToRegistry();
+            else
+			    SaveToRegistry();
 		}
 
 		private void _E_FL_Load(object sender, EventArgs e)
@@ -43,8 +43,22 @@ namespace ArtemisMissionEditor
 
 		private void _FormLog_KeyDown(object sender, KeyEventArgs e)
 		{
-			if (e.KeyData == Keys.Escape)
-				Close();
+            if (e.KeyData == Keys.Escape)
+                Hide();
 		}
+
+        private void buttonOK_Click(object sender, EventArgs e)
+        {
+            Hide();
+        }
+
+        private void buttonOK_VisibleChanged(object sender, EventArgs e)
+        {
+            if (!Visible)
+            {
+                SaveToRegistry();
+                Program.ShowMainFormIfRequired();
+            }
+        }
 	}
 }

@@ -1,4 +1,4 @@
-﻿namespace ArtemisMissionEditor
+﻿namespace ArtemisMissionEditor.Forms
 {
     partial class DialogSpaceMap
     {
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            ArtemisMissionEditor.SpaceMap spaceMap1 = new ArtemisMissionEditor.SpaceMap();
+            ArtemisMissionEditor.SpaceMap.Space spaceMap1 = new ArtemisMissionEditor.SpaceMap.Space();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DialogSpaceMap));
             this._DSM_sc_Main = new System.Windows.Forms.SplitContainer();
             this.pSpaceMap = new ArtemisMissionEditor._PanelSpaceMap();
@@ -116,6 +116,7 @@
             // _DSM_b_Cancel
             // 
             this._DSM_b_Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this._DSM_b_Cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this._DSM_b_Cancel.Location = new System.Drawing.Point(56, 6);
             this._DSM_b_Cancel.Name = "_DSM_b_Cancel";
             this._DSM_b_Cancel.Size = new System.Drawing.Size(75, 23);
@@ -127,6 +128,7 @@
             // _DSM_b_OK
             // 
             this._DSM_b_OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this._DSM_b_OK.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this._DSM_b_OK.Location = new System.Drawing.Point(137, 6);
             this._DSM_b_OK.Name = "_DSM_b_OK";
             this._DSM_b_OK.Size = new System.Drawing.Size(75, 23);
@@ -149,6 +151,7 @@
             this.Text = "DialogSpaceMap";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DialogSpaceMap_FormClosing);
             this.Load += new System.EventHandler(this.DialogSpaceMap_Load);
+            this.VisibleChanged += new System.EventHandler(this.DialogSpaceMap_VisibleChanged);
             this._DSM_sc_Main.Panel1.ResumeLayout(false);
             this._DSM_sc_Main.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this._DSM_sc_Main)).EndInit();

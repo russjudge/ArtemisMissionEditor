@@ -6,8 +6,10 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Media;
+using System.Diagnostics;
+using ArtemisMissionEditor.Expressions;
 
-namespace ArtemisMissionEditor
+namespace ArtemisMissionEditor.Forms
 {
 	public partial class FormFindReplace : FormSerializeableToRegistry
 	{
@@ -35,7 +37,7 @@ namespace ArtemisMissionEditor
 
 			EnsureChecked();
 
-            List<MissionSearchResult> result = Mission.Current.FindAll(new MissionSearchStructure(_FFR_tb_Input.Text, null, _FFR_cb_XmlNames.Checked, _FFR_cb_XmlValuesFind.Checked, _FFR_cob_AttNameFind.Text, _FFR_cb_NodeNamesFind.Checked, _FFR_cb_CommentariesFind.Checked, _FFR_cb_DisplayedText.Checked, _FFR_cb_CaseFind.Checked, _FFR_cb_ExactFind.Checked, _FFR_cb_SelectedNodeFind.Checked), true, true);
+            List<MissionSearchResult> result = Mission.Current.FindAll(new MissionSearchCommand(_FFR_tb_Input.Text, null, _FFR_cb_XmlNames.Checked, _FFR_cb_XmlValuesFind.Checked, _FFR_cob_AttNameFind.Text, _FFR_cb_NodeNamesFind.Checked, _FFR_cb_CommentariesFind.Checked, _FFR_cb_DisplayedText.Checked, _FFR_cb_CaseFind.Checked, _FFR_cb_ExactFind.Checked, _FFR_cb_SelectedNodeFind.Checked), true, true);
 
             if (result.Count > 0)
                 result[0].Activate();
@@ -50,7 +52,7 @@ namespace ArtemisMissionEditor
 			
 			EnsureChecked();
 
-			List<MissionSearchResult> result = Mission.Current.FindAll(new MissionSearchStructure(_FFR_tb_Input.Text, null, _FFR_cb_XmlNames.Checked, _FFR_cb_XmlValuesFind.Checked, _FFR_cob_AttNameFind.Text, _FFR_cb_NodeNamesFind.Checked, _FFR_cb_CommentariesFind.Checked, _FFR_cb_DisplayedText.Checked, _FFR_cb_CaseFind.Checked, _FFR_cb_ExactFind.Checked, _FFR_cb_SelectedNodeFind.Checked), false, true);
+			List<MissionSearchResult> result = Mission.Current.FindAll(new MissionSearchCommand(_FFR_tb_Input.Text, null, _FFR_cb_XmlNames.Checked, _FFR_cb_XmlValuesFind.Checked, _FFR_cob_AttNameFind.Text, _FFR_cb_NodeNamesFind.Checked, _FFR_cb_CommentariesFind.Checked, _FFR_cb_DisplayedText.Checked, _FFR_cb_CaseFind.Checked, _FFR_cb_ExactFind.Checked, _FFR_cb_SelectedNodeFind.Checked), false, true);
 
             if (result.Count > 0)
                 result[0].Activate();
@@ -65,13 +67,12 @@ namespace ArtemisMissionEditor
 
 			EnsureChecked();
 
-			MissionSearchStructure mss = new MissionSearchStructure(_FFR_tb_Input.Text, null, _FFR_cb_XmlNames.Checked, _FFR_cb_XmlValuesFind.Checked, _FFR_cob_AttNameFind.Text, _FFR_cb_NodeNamesFind.Checked, _FFR_cb_CommentariesFind.Checked, _FFR_cb_DisplayedText.Checked, _FFR_cb_CaseFind.Checked, _FFR_cb_ExactFind.Checked, _FFR_cb_SelectedNodeFind.Checked);
-			List<MissionSearchResult> result = Mission.Current.FindAll(mss);
+            Program.FormSearchResultsInstance.Hide();
+			MissionSearchCommand msc = new MissionSearchCommand(_FFR_tb_Input.Text, null, _FFR_cb_XmlNames.Checked, _FFR_cb_XmlValuesFind.Checked, _FFR_cob_AttNameFind.Text, _FFR_cb_NodeNamesFind.Checked, _FFR_cb_CommentariesFind.Checked, _FFR_cb_DisplayedText.Checked, _FFR_cb_CaseFind.Checked, _FFR_cb_ExactFind.Checked, _FFR_cb_SelectedNodeFind.Checked);
+			List<MissionSearchResult> result = Mission.Current.FindAll(msc);
 
-			Program.FormSearchResultsInstance.SetSubtitle(mss);
-			Program.FormSearchResultsInstance.SetList(result);
-
-            ShowSearchResultsForm();
+			Program.FormSearchResultsInstance.SetDataSearchResult(msc, result);
+            Program.FormSearchResultsInstance.ShowIfNotEmpty(true);
         }
         
         public void ReplaceFindNext()
@@ -79,7 +80,7 @@ namespace ArtemisMissionEditor
 			if (_FFR_tb_ReplaceWhat.Text.Length == 0)
 				return;
 
-			List<MissionSearchResult> result = Mission.Current.FindAll(new MissionSearchStructure(_FFR_tb_ReplaceWhat.Text, null, false, _FFR_cb_XmlValuesReplace.Checked, _FFR_cob_AttNameReplace.Text, _FFR_cb_NodeNamesReplace.Checked, _FFR_cb_CommentariesReplace.Checked, false, _FFR_cb_CaseReplace.Checked, _FFR_cb_ExactReplace.Checked, _FFR_cb_SelectedNodeReplace.Checked), true, true);
+			List<MissionSearchResult> result = Mission.Current.FindAll(new MissionSearchCommand(_FFR_tb_ReplaceWhat.Text, null, false, _FFR_cb_XmlValuesReplace.Checked, _FFR_cob_AttNameReplace.Text, _FFR_cb_NodeNamesReplace.Checked, _FFR_cb_CommentariesReplace.Checked, false, _FFR_cb_CaseReplace.Checked, _FFR_cb_ExactReplace.Checked, _FFR_cb_SelectedNodeReplace.Checked), true, true);
 
             if (result.Count > 0)
                 result[0].Activate();
@@ -92,7 +93,7 @@ namespace ArtemisMissionEditor
 			if (_FFR_tb_ReplaceWhat.Text.Length == 0)
 				return;
 
-			List<MissionSearchResult> result = Mission.Current.FindAll(new MissionSearchStructure(_FFR_tb_ReplaceWhat.Text, null, false, _FFR_cb_XmlValuesReplace.Checked, _FFR_cob_AttNameReplace.Text, _FFR_cb_NodeNamesReplace.Checked, _FFR_cb_CommentariesReplace.Checked, false, _FFR_cb_CaseReplace.Checked, _FFR_cb_ExactReplace.Checked, _FFR_cb_SelectedNodeReplace.Checked), false, true);
+			List<MissionSearchResult> result = Mission.Current.FindAll(new MissionSearchCommand(_FFR_tb_ReplaceWhat.Text, null, false, _FFR_cb_XmlValuesReplace.Checked, _FFR_cob_AttNameReplace.Text, _FFR_cb_NodeNamesReplace.Checked, _FFR_cb_CommentariesReplace.Checked, false, _FFR_cb_CaseReplace.Checked, _FFR_cb_ExactReplace.Checked, _FFR_cb_SelectedNodeReplace.Checked), false, true);
 
 			if (result.Count > 0)
 				result[0].Activate();
@@ -105,14 +106,14 @@ namespace ArtemisMissionEditor
 			if (_FFR_tb_ReplaceWhat.Text.Length == 0)
 				return;
 
-			MissionSearchStructure mss = new MissionSearchStructure(_FFR_tb_ReplaceWhat.Text, _FFR_tb_ReplaceWith.Text, false, _FFR_cb_XmlValuesReplace.Checked, _FFR_cob_AttNameReplace.Text, _FFR_cb_NodeNamesReplace.Checked, _FFR_cb_CommentariesReplace.Checked, false, _FFR_cb_CaseReplace.Checked, _FFR_cb_ExactReplace.Checked, _FFR_cb_SelectedNodeReplace.Checked);
+			MissionSearchCommand msc = new MissionSearchCommand(_FFR_tb_ReplaceWhat.Text, _FFR_tb_ReplaceWith.Text, false, _FFR_cb_XmlValuesReplace.Checked, _FFR_cob_AttNameReplace.Text, _FFR_cb_NodeNamesReplace.Checked, _FFR_cb_CommentariesReplace.Checked, false, _FFR_cb_CaseReplace.Checked, _FFR_cb_ExactReplace.Checked, _FFR_cb_SelectedNodeReplace.Checked);
             
-            if (!Mission.Current.Find_DoesCurrentSelectionMatch(mss))
+            if (!Mission.Current.Find_DoesCurrentSelectionMatch(msc))
                 ReplaceFindNext();
 
-            int result = Mission.Current.ReplaceCurrent(mss);
+            int result = Mission.Current.ReplaceCurrent(msc);
 
-            Log.Add("Replaced '" + mss.input + "' with '" + _FFR_tb_ReplaceWith.Text + "' " + result.ToString() + " time(s).");
+            Log.Add("Replaced '" + msc.Input + "' with '" + _FFR_tb_ReplaceWith.Text + "' " + result.ToString() + " time(s).");
 
             if (result == 0)
                 SystemSounds.Beep.Play();
@@ -123,14 +124,14 @@ namespace ArtemisMissionEditor
 			if (_FFR_tb_ReplaceWhat.Text.Length == 0)
 				return;
 
-			MissionSearchStructure mss = new MissionSearchStructure(_FFR_tb_ReplaceWhat.Text, _FFR_tb_ReplaceWith.Text, false, _FFR_cb_XmlValuesReplace.Checked, _FFR_cob_AttNameReplace.Text, _FFR_cb_NodeNamesReplace.Checked, _FFR_cb_CommentariesReplace.Checked, false, _FFR_cb_CaseReplace.Checked, _FFR_cb_ExactReplace.Checked, _FFR_cb_SelectedNodeReplace.Checked);
+			MissionSearchCommand msc = new MissionSearchCommand(_FFR_tb_ReplaceWhat.Text, _FFR_tb_ReplaceWith.Text, false, _FFR_cb_XmlValuesReplace.Checked, _FFR_cob_AttNameReplace.Text, _FFR_cb_NodeNamesReplace.Checked, _FFR_cb_CommentariesReplace.Checked, false, _FFR_cb_CaseReplace.Checked, _FFR_cb_ExactReplace.Checked, _FFR_cb_SelectedNodeReplace.Checked);
 
-			if (!Mission.Current.Find_DoesCurrentSelectionMatch(mss))
+			if (!Mission.Current.Find_DoesCurrentSelectionMatch(msc))
 				ReplaceFindPrevious();
 
-			int result = Mission.Current.ReplaceCurrent(mss);
+			int result = Mission.Current.ReplaceCurrent(msc);
 
-			Log.Add("Replaced '" + mss.input + "' with '" + _FFR_tb_ReplaceWith.Text + "' " + result.ToString() + " time(s).");
+			Log.Add("Replaced '" + msc.Input + "' with '" + _FFR_tb_ReplaceWith.Text + "' " + result.ToString() + " time(s).");
 
 			if (result == 0)
 				SystemSounds.Beep.Play();
@@ -141,33 +142,22 @@ namespace ArtemisMissionEditor
 			if (_FFR_tb_ReplaceWhat.Text.Length == 0)
 				return;
 
-			MissionSearchStructure mss = new MissionSearchStructure(_FFR_tb_ReplaceWhat.Text, _FFR_tb_ReplaceWith.Text, false, _FFR_cb_XmlValuesReplace.Checked, _FFR_cob_AttNameReplace.Text, _FFR_cb_NodeNamesReplace.Checked, _FFR_cb_CommentariesReplace.Checked, false, _FFR_cb_CaseReplace.Checked, _FFR_cb_ExactReplace.Checked, _FFR_cb_SelectedNodeReplace.Checked);
+			MissionSearchCommand msc = new MissionSearchCommand(_FFR_tb_ReplaceWhat.Text, _FFR_tb_ReplaceWith.Text, false, _FFR_cb_XmlValuesReplace.Checked, _FFR_cob_AttNameReplace.Text, _FFR_cb_NodeNamesReplace.Checked, _FFR_cb_CommentariesReplace.Checked, false, _FFR_cb_CaseReplace.Checked, _FFR_cb_ExactReplace.Checked, _FFR_cb_SelectedNodeReplace.Checked);
 
 			List<MissionSearchResult> list = new List<MissionSearchResult>();
-            int result = Mission.Current.ReplaceAll(list, mss);
+            int result = Mission.Current.ReplaceAll(list, msc);
 
-            Log.Add("Replaced '" + mss.input + "' with '" + _FFR_tb_ReplaceWith.Text + "' " + result.ToString() + " time(s).");
+            Log.Add("Replaced '" + msc.Input + "' with '" + _FFR_tb_ReplaceWith.Text + "' " + result.ToString() + " time(s).");
 
 			if (result > 0)
 			{
-				Program.FormSearchResultsInstance.SetSubtitle(mss);
-				Program.FormSearchResultsInstance.SetList(list);
-
-				ShowSearchResultsForm();
+                Program.FormSearchResultsInstance.SetDataSearchResult(msc, list);
+                Program.FormSearchResultsInstance.ShowIfNotEmpty();
 
 				SystemSounds.Asterisk.Play();
 			}
 			else
 				SystemSounds.Beep.Play();
-        }
-
-        private void ShowSearchResultsForm()
-        {
-            if (!Program.FormSearchResultsInstance.Empty)
-            {
-                Program.FormSearchResultsInstance.Show();
-                Program.FormSearchResultsInstance.BringToFront();
-            }
         }
 
         private bool FindMode()
@@ -180,23 +170,23 @@ namespace ArtemisMissionEditor
             return _FFR_tc_Main.SelectedTab == Program.FormFindReplaceInstance._FFR_tc_Main.TabPages[1];
         }
 
-        private void _E_FFR_Load_private_RecursivelyFindAttributeValues(ExpressionMember item, List<string> list)
+        private void _E_FFR_Load_RecursivelyFindAttributeValues(ExpressionMember item, List<string> list)
         {
             if (item as ExpressionMemberCheck != null)
                 foreach (KeyValuePair<string, List<ExpressionMember>> kvp in ((ExpressionMemberCheck)item).PossibleExpressions)
                     foreach (ExpressionMember child in kvp.Value)
-                        _E_FFR_Load_private_RecursivelyFindAttributeValues(child, list);
+                        _E_FFR_Load_RecursivelyFindAttributeValues(child, list);
 
             if (!string.IsNullOrWhiteSpace(item.Name) && !list.Contains(item.Name))
                 list.Add(item.Name);
         }
 
-        private List<string> _E_FFR_Load_private_FindAttributeValues()
+        private List<string> _E_FFR_Load_FindAttributeValues()
         {
             List<string> result = new List<string>();
 
-            foreach (ExpressionMember item in Expressions.Root)
-                _E_FFR_Load_private_RecursivelyFindAttributeValues(item, result);
+            foreach (ExpressionMember item in ExpressionParser.Root)
+                _E_FFR_Load_RecursivelyFindAttributeValues(item, result);
 
             return result;
         }
@@ -208,7 +198,7 @@ namespace ArtemisMissionEditor
             ID = "FormFindReplace";
             LoadFromRegistry();
 
-            List<string> attNames = _E_FFR_Load_private_FindAttributeValues();
+            List<string> attNames = _E_FFR_Load_FindAttributeValues();
             attNames.Sort();
 
             _FFR_cob_AttNameFind.Items.Clear();
@@ -222,14 +212,13 @@ namespace ArtemisMissionEditor
 
         private void _E_FFR_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!Program.IsClosing)
+            if (e.CloseReason == CloseReason.UserClosing)
             {
                 e.Cancel = true;
                 this.Hide();
-                Program.FormSearchResultsInstance.Hide();
             }
-
-            SaveToRegistry();
+            else
+                SaveToRegistry();
         }
 
         private void _E_FFR_KeyDown(object sender, KeyEventArgs e)
@@ -237,7 +226,7 @@ namespace ArtemisMissionEditor
             if (e.KeyCode == Keys.Escape)
             {
                 e.SuppressKeyPress = true;
-                Close();
+                Hide();
             }
 
             if (e.KeyCode == Keys.Enter)
@@ -329,14 +318,10 @@ namespace ArtemisMissionEditor
 				MessageBox.Show("You can look for the searched value in the following:\r\n - attribute values (ex. \"enemy\" in \"type\" in <create/>)\r\n    - you can optionally look in attributes with specific names\r\n - mission node names (ex. a name of event or folder)\r\n - commentariesr\n\r\nYou can also:\r\n - match the whole value (ex. \"x\" will not match \"centerX\")\r\n - match the exact case (ex. \"centerx\" will not match \"centerX\")\r\n - look only in the selected event\r\n\r\nYou can use the following hotkeys:\r\n - Find Next: [Enter]\r\n - Find Previous: [Shift]+[Enter]\r\n - Replace Next: [Alt]+[Enter]\r\n - Replace Previous: [Alt]+[Shift]+[Enter]\r\n - Replace All: [Ctrl]+[Enter]", "Replace");
         }
 
-        private void _E_FFR_VisibleChanged(object sender, EventArgs e)
-        {
-            if (Visible)
-                ShowSearchResultsForm();
-        }
-
         private void _E_FFR_Activated(object sender, EventArgs e)
         {
+            if (!Visible)
+                return;
             if (FindMode())
                 _FFR_tb_Input.Focus();
             if (ReplaceMode())
@@ -387,5 +372,19 @@ namespace ArtemisMissionEditor
 		{
 			ReplacePrevious();
 		}
+
+        private void _E_FFR_VisibleChanged(object sender, EventArgs e)
+        {
+            if (Visible)
+                Program.FormSearchResultsInstance.ShowIfNotEmpty();
+            if (!Visible)
+            {
+                if (Program.FormSearchResultsInstance.CurrentOwner == this)
+                    Program.FormSearchResultsInstance.Hide();
+
+                SaveToRegistry();
+                Program.ShowMainFormIfRequired();
+            }
+        }
 	}
 }

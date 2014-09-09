@@ -1,4 +1,4 @@
-﻿namespace ArtemisMissionEditor
+﻿namespace ArtemisMissionEditor.Forms
 {
     partial class FormSettings
     {
@@ -28,25 +28,29 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label2 = new System.Windows.Forms.Label();
-            this._FM_tb_VD = new System.Windows.Forms.TextBox();
-            this._FM_b_OpenVesselData = new System.Windows.Forms.Button();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.panel2 = new System.Windows.Forms.Panel();
             this.pgMisc = new System.Windows.Forms.PropertyGrid();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this._FM_tb_PN = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this._FM_tb_SN = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this._FM_tb_VD = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this._FM_b_OpenVesselData = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.panel3 = new System.Windows.Forms.Panel();
             this.pgColor = new System.Windows.Forms.PropertyGrid();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
             this._FS_b_LoadSettings = new System.Windows.Forms.Button();
             this._FM_b_OK = new System.Windows.Forms.Button();
             this._FS_b_SaveSettings = new System.Windows.Forms.Button();
             this._FS_b_ResetDefaults = new System.Windows.Forms.Button();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -54,41 +58,24 @@
             this.tabPage4.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // label2
+            // tableLayoutPanel1
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(6, 13);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(166, 15);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Default path to vesselData.xml";
-            // 
-            // _FM_tb_VD
-            // 
-            this._FM_tb_VD.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this._FM_tb_VD.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this._FM_tb_VD.Location = new System.Drawing.Point(9, 31);
-            this._FM_tb_VD.Name = "_FM_tb_VD";
-            this._FM_tb_VD.Size = new System.Drawing.Size(710, 23);
-            this._FM_tb_VD.TabIndex = 5;
-            this._FM_tb_VD.TextChanged += new System.EventHandler(this._E_FM_tb_VD_TextChanged);
-            // 
-            // _FM_b_OpenVesselData
-            // 
-            this._FM_b_OpenVesselData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this._FM_b_OpenVesselData.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this._FM_b_OpenVesselData.Location = new System.Drawing.Point(725, 31);
-            this._FM_b_OpenVesselData.Name = "_FM_b_OpenVesselData";
-            this._FM_b_OpenVesselData.Size = new System.Drawing.Size(31, 23);
-            this._FM_b_OpenVesselData.TabIndex = 7;
-            this._FM_b_OpenVesselData.Text = "...";
-            this._FM_b_OpenVesselData.UseVisualStyleBackColor = true;
-            this._FM_b_OpenVesselData.Click += new System.EventHandler(this._E_FM_b_OpenVesselData_Click);
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.tabControl1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 1);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(776, 607);
+            this.tableLayoutPanel1.TabIndex = 12;
             // 
             // tabControl1
             // 
@@ -110,7 +97,7 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(762, 529);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Common misc.";
+            this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // panel2
@@ -136,6 +123,8 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this._FM_tb_PN);
+            this.tabPage3.Controls.Add(this.label3);
             this.tabPage3.Controls.Add(this._FM_tb_SN);
             this.tabPage3.Controls.Add(this.label1);
             this.tabPage3.Controls.Add(this._FM_tb_VD);
@@ -146,8 +135,34 @@
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage3.Size = new System.Drawing.Size(762, 529);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Common strings";
+            this.tabPage3.Text = "Common Strings";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // _FM_tb_PN
+            // 
+            this._FM_tb_PN.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._FM_tb_PN.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this._FM_tb_PN.Location = new System.Drawing.Point(9, 382);
+            this._FM_tb_PN.Multiline = true;
+            this._FM_tb_PN.Name = "_FM_tb_PN";
+            this._FM_tb_PN.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this._FM_tb_PN.Size = new System.Drawing.Size(747, 138);
+            this._FM_tb_PN.TabIndex = 11;
+            this._FM_tb_PN.Text = "N1\r\nN2\r\nN3\r\nN4\r\nN5\r\nN6\r\nN7\r\nN8";
+            this._FM_tb_PN.WordWrap = false;
+            this._FM_tb_PN.TextChanged += new System.EventHandler(this._FM_tb_PN_TextChanged);
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label3.Location = new System.Drawing.Point(6, 361);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(223, 15);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "Default names for player controlled ships";
             // 
             // _FM_tb_SN
             // 
@@ -158,7 +173,8 @@
             this._FM_tb_SN.Location = new System.Drawing.Point(9, 84);
             this._FM_tb_SN.Multiline = true;
             this._FM_tb_SN.Name = "_FM_tb_SN";
-            this._FM_tb_SN.Size = new System.Drawing.Size(747, 439);
+            this._FM_tb_SN.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this._FM_tb_SN.Size = new System.Drawing.Size(747, 263);
             this._FM_tb_SN.TabIndex = 9;
             this._FM_tb_SN.TextChanged += new System.EventHandler(this._E_FM_tb_SN_TextChanged);
             // 
@@ -168,9 +184,42 @@
             this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label1.Location = new System.Drawing.Point(6, 66);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(123, 15);
+            this.label1.Size = new System.Drawing.Size(162, 15);
             this.label1.TabIndex = 8;
-            this.label1.Text = "Default start node text";
+            this.label1.Text = "Default text for the Start node";
+            // 
+            // _FM_tb_VD
+            // 
+            this._FM_tb_VD.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._FM_tb_VD.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this._FM_tb_VD.Location = new System.Drawing.Point(9, 31);
+            this._FM_tb_VD.Name = "_FM_tb_VD";
+            this._FM_tb_VD.Size = new System.Drawing.Size(710, 23);
+            this._FM_tb_VD.TabIndex = 5;
+            this._FM_tb_VD.TextChanged += new System.EventHandler(this._E_FM_tb_VD_TextChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.Location = new System.Drawing.Point(6, 13);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(166, 15);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "Default path to vesselData.xml";
+            // 
+            // _FM_b_OpenVesselData
+            // 
+            this._FM_b_OpenVesselData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this._FM_b_OpenVesselData.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this._FM_b_OpenVesselData.Location = new System.Drawing.Point(725, 31);
+            this._FM_b_OpenVesselData.Name = "_FM_b_OpenVesselData";
+            this._FM_b_OpenVesselData.Size = new System.Drawing.Size(31, 23);
+            this._FM_b_OpenVesselData.TabIndex = 7;
+            this._FM_b_OpenVesselData.Text = "...";
+            this._FM_b_OpenVesselData.UseVisualStyleBackColor = true;
+            this._FM_b_OpenVesselData.Click += new System.EventHandler(this._E_FM_b_OpenVesselData_Click);
             // 
             // tabPage4
             // 
@@ -180,7 +229,7 @@
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage4.Size = new System.Drawing.Size(762, 529);
             this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Colors";
+            this.tabPage4.Text = "Map Colors";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // panel3
@@ -206,6 +255,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this._FS_b_LoadSettings);
             this.panel1.Controls.Add(this._FM_b_OK);
             this.panel1.Controls.Add(this._FS_b_SaveSettings);
@@ -216,12 +266,25 @@
             this.panel1.Size = new System.Drawing.Size(770, 38);
             this.panel1.TabIndex = 11;
             // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.button1.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.button1.Location = new System.Drawing.Point(611, 6);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(56, 23);
+            this.button1.TabIndex = 12;
+            this.button1.Text = "Close ";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // _FS_b_LoadSettings
             // 
             this._FS_b_LoadSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this._FS_b_LoadSettings.Font = new System.Drawing.Font("Segoe UI", 9F);
             this._FS_b_LoadSettings.Image = global::ArtemisMissionEditor.Properties.Resources.action_save;
-            this._FS_b_LoadSettings.Location = new System.Drawing.Point(448, 6);
+            this._FS_b_LoadSettings.Location = new System.Drawing.Point(373, 6);
             this._FS_b_LoadSettings.Name = "_FS_b_LoadSettings";
             this._FS_b_LoadSettings.Size = new System.Drawing.Size(113, 23);
             this._FS_b_LoadSettings.TabIndex = 11;
@@ -233,12 +296,13 @@
             // _FM_b_OK
             // 
             this._FM_b_OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this._FM_b_OK.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this._FM_b_OK.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this._FM_b_OK.Location = new System.Drawing.Point(686, 6);
+            this._FM_b_OK.Location = new System.Drawing.Point(673, 6);
             this._FM_b_OK.Name = "_FM_b_OK";
-            this._FM_b_OK.Size = new System.Drawing.Size(75, 23);
+            this._FM_b_OK.Size = new System.Drawing.Size(88, 23);
             this._FM_b_OK.TabIndex = 10;
-            this._FM_b_OK.Text = "OK";
+            this._FM_b_OK.Text = "Save && Close";
             this._FM_b_OK.UseVisualStyleBackColor = true;
             this._FM_b_OK.Click += new System.EventHandler(this._E_FM_b_OK_Click);
             // 
@@ -247,7 +311,7 @@
             this._FS_b_SaveSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this._FS_b_SaveSettings.Font = new System.Drawing.Font("Segoe UI", 9F);
             this._FS_b_SaveSettings.Image = global::ArtemisMissionEditor.Properties.Resources.action_save;
-            this._FS_b_SaveSettings.Location = new System.Drawing.Point(567, 6);
+            this._FS_b_SaveSettings.Location = new System.Drawing.Point(492, 6);
             this._FS_b_SaveSettings.Name = "_FS_b_SaveSettings";
             this._FS_b_SaveSettings.Size = new System.Drawing.Size(113, 23);
             this._FS_b_SaveSettings.TabIndex = 2;
@@ -261,31 +325,14 @@
             this._FS_b_ResetDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this._FS_b_ResetDefaults.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this._FS_b_ResetDefaults.Image = global::ArtemisMissionEditor.Properties.Resources.action_refresh_blue;
-            this._FS_b_ResetDefaults.Location = new System.Drawing.Point(337, 6);
+            this._FS_b_ResetDefaults.Location = new System.Drawing.Point(240, 6);
             this._FS_b_ResetDefaults.Name = "_FS_b_ResetDefaults";
-            this._FS_b_ResetDefaults.Size = new System.Drawing.Size(105, 23);
+            this._FS_b_ResetDefaults.Size = new System.Drawing.Size(127, 23);
             this._FS_b_ResetDefaults.TabIndex = 9;
-            this._FS_b_ResetDefaults.Text = "Reset defaults";
+            this._FS_b_ResetDefaults.Text = "Revert to defaults";
             this._FS_b_ResetDefaults.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this._FS_b_ResetDefaults.UseVisualStyleBackColor = true;
             this._FS_b_ResetDefaults.Click += new System.EventHandler(this._E_FS_b_ResetDefaults_Click);
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.tabControl1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 1);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(776, 607);
-            this.tableLayoutPanel1.TabIndex = 12;
             // 
             // FormSettings
             // 
@@ -300,7 +347,9 @@
             this.Text = "Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this._E_FS_FormClosing);
             this.Load += new System.EventHandler(this._E_FL_Load);
+            this.VisibleChanged += new System.EventHandler(this.FormSettings_VisibleChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this._FormSettings_KeyDown);
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
@@ -309,7 +358,6 @@
             this.tabPage4.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -335,5 +383,8 @@
 		private System.Windows.Forms.TabPage tabPage4;
 		private System.Windows.Forms.Panel panel3;
 		public System.Windows.Forms.PropertyGrid pgColor;
+        private System.Windows.Forms.TextBox _FM_tb_PN;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button button1;
     }
 }

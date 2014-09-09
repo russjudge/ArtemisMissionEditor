@@ -118,58 +118,336 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="textBox1.Text" xml:space="preserve">
-    <value>This tab contains some useful information about mission editing.
+    <value>====================================================================================
+ Video Tutorials
+====================================================================================
+
+ There are videos available at YouTube, describing the functionality of the editor and showing how to use it:
+
+ Introduction:                         www.youtube.com/watch?v=lX69QaoZyRA
+ 01 - Interface and basic editing:     www.youtube.com/watch?v=M14GG6WI5m8
+ 02 - Space map:                       www.youtube.com/watch?v=4nL6tBnoISY
+ 03 - Advanced editing:                www.youtube.com/watch?v=RaW-gu0H33Q
+ 04 - Dependencies:                    www.youtube.com/watch?v=wVcHsntVdk4
 
 
-==========================================
-Video Tutorials
-==========================================
-There are videos available at YouTube, describing the functionality of the editor and showing how to use it:
+====================================================================================
+ Angles
+====================================================================================
 
-Introduction:                         www.youtube.com/watch?v=lX69QaoZyRA
-01 - Interface and basic editing:     www.youtube.com/watch?v=M14GG6WI5m8
-02 - Space map:                       www.youtube.com/watch?v=4nL6tBnoISY
-03 - Advanced editing:                www.youtube.com/watch?v=RaW-gu0H33Q
-04 - Dependencies:                    www.youtube.com/watch?v=wVcHsntVdk4
-
-
-==========================================
-Angles
-==========================================
  - Angles in most mission statements are in degrees, where 0 is looking up, clockwise being positive direction while counter-clockwise is negative. 
-For example, 270 is looking to the left.
+   For example, 270 is looking to the left.
  - Angles in set/add property statements are in radians, where 0 is looking down, clockwise being positive direction while counter-clockwise is negative. 
-For example, 1.57 is looking to the left.
+   For example, 1.57 is looking to the left.
 
 
-==========================================
-Audio
-==========================================
+====================================================================================
+ Audio files
+====================================================================================
+
  - incoming_message:   you need a mono OGG Vorbis file for this command
  - play_sound_now:     you need an uncompressed Wav file for this command
 
 
-==========================================
-Pathing
-==========================================
-1. Paths for the artwork are relative to the Artemis.exe. 
-So, it should look like" \dat\Missions\MISS_XYZ\file.123" if you want to have custom artwork in your mission
-2. Paths for audio files are relative to the script folder.
-So, if you are using a file in your mission folder, you can just type the filename like "sound.wav"
+====================================================================================
+ Pathing
+====================================================================================
 
-==========================================
-Most frequent mistakes in mission scripts
-==========================================
- 1. Unless you want your event to repeat endlessly, make sure that something is changed in the event's body that invalidates the event's condition. You can use a new variable name and compare it to 0, then set it to 1 in the event (undefined variables are considered to have a value of 0).
- 2. "Timer expired" condition does not "fire" once when the timer expires: it is true at any moment after the moment when the timer expres. So, if you have an event that has no other condition except the timer_expires one, the event will repeat endlessly once the timer runs out. 
- 3. Do not attempt to set or add to object's properties in the same event in which it was created. You can only do so for objects that are already created by the time the event happens. If you want to set an object's properties, do it in another event that follows logically right after the event where the object is created.
+ 1. Paths for the artwork are relative to the Artemis executable. 
+    So, it should look like" \dat\Missions\MISS_XYZ\file.123" if you want to have custom artwork in your mission
+ 2. Paths for audio files are relative to the script folder.
+    So, if you are using a file in your mission folder, you can just type the filename like "sound.wav"
 
 
-==========================================
-More Information
-==========================================
+====================================================================================
+ Creating player ships
+====================================================================================
+
+While it may seem that creating player ships is simple, "Create player" statements actually have several peculiarities about them, and it is easy to be taken off guard by them.
+
+  1. Names specified in "Create player" statements have no effect. Player ships are called according to what the players choose when connecting consoles to the server. However, you still have to refer to player ships by their names in the mission script, therefore, you should inform the users of your mission what they should call their ships, if you want to reference player ships in the mission. You can generally expect the players to not alter their ship names (and just tell them to use default names).
+
+  2. Creating more than one player ship will have unintended effect: all the ships created via "Create player" statements will be "linked" to the first ship - they will all be controlled by the consoles connected to the first ship, named as the first ship, and so on. Therefore, you should never create more than one player ship. If you want to have a multi-ship mission, have your users spawn other ships the usual way: joining as a Main Screen console to a ship other than the first. If you need to reposition the ship's starting location, have a one-time event that checks for player ship's existence and moves it to the desired position.
+
+  3. Ship's drive (Jump or Warp) is selected and locked at the moment the ship spawns. Therefore, if you create a player ship in the mission script, it will be locked to the Warp drive. If you want your mission to be played on the Jump drive, or you want to give choice to the players, you shoud not create any player ships. In this case, even the first ship will have to be spawned by joining as a Main Screen console.
+
+
+====================================================================================
+ Creating vessels, and how race and hull keys work
+====================================================================================
+
+Once again, while it may seem that the way hull and race keys work is obvious, there are some peculiarities about it. Following is the current understanding of the algorithm how the game actually parses raceKeys and hullKeys to determine what ship to spawn. It may be wrong, but several experiments seem to confirm its validity.
+
+------------------------------------------------------------------------------------
+ General Algorithm:
+------------------------------------------------------------------------------------
+
+  Step 1) Check input for validity. 
+    If hullKeys is blank, server will simply crash. 
+    If raceKeys is blank, it's actually okay.
+	
+  Step 2) Race of a ship is chosen from amongst all races.
+  
+  Step 3) Hull of a ship is chosen from from amongst the hulls defined for the chosen race.
+  
+------------------------------------------------------------------------------------
+ How raceKeys and hullKeys are treated:
+------------------------------------------------------------------------------------
+
+  For both race keys and hull keys, all case and order is ignored. For example, "Light Carrier carrier" or even "cArRiEr Carrier lIgHt" is treated the same as "light carrier carrier", and the fact that it has the word "carrier" twice actually matters.
+  
+  For both "race name" and "race keys" for race, or "class names" and "broad keys" for hulls, all words are combined into a single list of words, with case and order ignored. For example, "Luxury Liner", "luxury" is treated as "luxury liner luxury", and the fact that it has the word "luxury" twice actually matters.
+  
+------------------------------------------------------------------------------------
+ How the race or hull of a ship is chosen:
+------------------------------------------------------------------------------------
+
+  Step 1) For the race, the choice is done amongst all available races, while for the hull, the choice is done only amongst the ships of the race that was picked.
+  
+  Step 2) For every available choice, for every word present in the combined string, for every time this word is present in the combined string of the relevant attribute, one "point" of priority is awarded.
+  
+  Step 3) Amongst the choices with the highest priority points, one is randomly chosen.
+
+------------------------------------------------------------------------------------
+ Examples:
+------------------------------------------------------------------------------------ 
+
+  1) raceKeys = "TSN", hullKeys = "Bulk Cargo"
+
+Since both the TSN races (player race "TSN", "player" and friendly race "TSN", "friendly") match the raceKeys attribute once, both races are valid. If the player race is randomly chosen, then since there are no player ships that match "Bulk Cargo", a random playable ship is spawned. If the friendly race is chosen, then TSN Bulk Cargo is spawned.
+
+Result: 50% chance to spawn TSN Bulk Cargo, 10% chance each to spawn one of the playable ships
+  
+  2) raceKeys = "Kralien", hullKeys = "small Battleship"
+
+Since only one race matches "Kralien", it is always chosen. Since both Kralien Battleship ("Battleship", "medium") and Kralien Cruiser ("Cruiser", "small") match the "small Battleship" string once, and since Battleship is one-word one of them is randonly spawned.
+
+Result: 50% chance to spawn Kralien Battleship, 50% chance to spawn Kralien Cruiser
+  
+  3) raceKeys = "Kralien", hullKeys = "small small Battleship"
+
+Since only one race matches "Kralien", it is always chosen. Since Kralien Cruiser ("Cruiser", "small") matches the string twice (because it contains the word "small" twice), it gets a priority over Kralien Battleship.
+  
+Result: 100% chance to spawn Kralien Cruiser.
+  
+  4) raceKeys = "TSN friendly", hullKeys = "Luxury Liner Transport"
+
+Since only one race gets two matches, TSN friendly race is chosen. TSN Luxury Liner ("Luxury Liner", "luxury") gets 3 matches, because all three of its words each match once. TSN Transport ("Transport", "transport") gets 2 matches, because both of its words get one match. Therefore, Luxury Liner will get a priority.
+  
+Result: 100% chance to spawn TSN Luxury Liner.
+  
+  5) raceKeys = "TSN friendly", hullKeys = "Escort Transport"
+
+Since only one race gets two matches, TSN friendly race is chosen. TSN Transport ("Transport", "transport") gets 2 matches, because both of its words get matched once. TSN Escort ("Escort", "small warship") gets 1 match, because "Escort" gets matched once. Therefore, TSN Transport will spawn.
+  
+Result: 100% chance to spawn TSN Transport.
+  
+  6) raceKeys = "TSN friendly", hullKeys = "Luxury Liner Liner Transport Transport small small small small"
+
+Since only one race gets two matches, TSN friendly race is chosen. TSN Luxury Liner ("Luxury Liner", "luxury") gets 4 matches, because "Luxury" from class name gets 1 match, "Liner" from class name gets 2 matches, and "luxury" from broad class gets 1 match. TSN Transport ("Transport", "transport") gets 4 matches, because both of its words get matched twice. TSN Escort ("Escort", "small warship") also gets 4 matches, because "small" gets matched four times. Therefore, they all have an identical priority.
+  
+Result: 33.3% chance to spawn TSN Luxury Liner, 33.3% chance to spawn TSN Transport, 33.3% chance to spawn TSN Escort.
+  
+  7) raceKeys = "support whalelover", hullKeys = "carrier"
+
+Since only one race - "Arvonian" - gets two matches with "support whalelover", while other races get one match at best, it is always chosen. Since both Arvonian Light Carrier ("Light Carrier", "carrier") and Arvonian Carrier ("Carrier", "carrier") get one match with the "carrier" string, one of them is randomly spawned.
+  
+Result: 50% chance to spawn Arvonian Light Carrier, 50% chance to spawn Arvonian Carrier
+
+  Note: 
+There is no way to spawn exactly the Arvonian Carrier via hullKeys, you will have to specify it via hullID, because Avronian Light carrier will always get at least as much matches.
+
+------------------------------------------------------------------------------------  
+ Conclusion:
+------------------------------------------------------------------------------------
+
+  In most cases, when you just want to spawn a specific ship, selecting it's class name and broad keys should be enough to guarantee the ship you want always spawns, the only exception being Avronian Carrier. However, if you want to spawn a random ship from a select list of ships, you will have to adjust the number of times specific words are encountered in the hullKeys, so that they match exactly the same amount of times (refer to ex.6 above on how to spawn one of the three pre-determined ships). 
+  
+  An alternative solution would be to assign a random variable and have several different events spawn the ship based on the outcome of the random roll, however, if you want to spawn a fleet of multiple ships, each randomed from a certain pre-defined list, this would require an enormous amount of events. Therefore, this method of duplicating words, even if it looks clunky, is actually viable.
+
+------------------------------------------------------------------------------------
+ How this all works with regards to stations:
+------------------------------------------------------------------------------------
+
+  Everything described above actually ignores the fact that stations are also a valid vessel for their relative races, and are not distinguished in any way in the vesselData file from other vessels. There is no attribute like "isStation". Therefore, stations are treated in a special way.
+  
+  General rule is this: If you do not have "base" as one of the hullKeys, then any vessel that is spawned and has "base" in its broadType will be replaced with TSN Light Cruiser. If you do have "base" as one of the hullKeys, then any vessel that is spawned and has no "base" in its broadType will be replaced with TSN Light Cruiser.
+  
+  What this means in practice first of all is that you must never specify "base" if your create type is set to "enemy" or "neutral", and you must always specify "base" if your create type is "station". However, that's not all. Wierd things can happen even without you willingly inputting wrong values, so read on.
+  
+  Consider creating "enemy" or "neutral" vessel. In order for a vessel with "base" broadType to spawn from a create statement that has no "base" in hullKeys, a vessel that is a station must actually get matched, because only vessels with highest amount of matches get spawned. For example: hullKeys="bulk command" will match TSN Bulk Cargo and TSN Command Base, both getting 1 match. So you either have to deliberately input a word that is present in one of the stations's class name or broad type, or no vessel has to get a match. And the latter is actually not as impossible as you may think! 
+  
+  If you do something as innocent as specifying raceKeys = "enemy", hullKeys = "small", then you will find out that from time to time, TSN Light Cruisers are actually spawning... because Arvonians have no vessel that matches "small"! And therefore, if Avronian race is chosen, then a random Avronian vessel will spawn, and if it's the Avronian Base, then TSN Light Cruiser will spawn.
+  
+  In practice this basically means to you that if you ever plan on spawning a generic enemy ship of random enemy race, you have to include "carrier" or "fighter" in the hullKeys or you will risk seeing TSN Light Cruisers on the enemy side.
+  
+  Now, if creating "enemy" or "neutral" and "base" is present in hullKeys, then any non-station vessel that is spawned is changed into a TSN Light Cruiser (usually with destroyed Primary Beams system), regardless of the race chosen before, and stations can spawn (but will not function properly, see below). The algorithm for spawning priority remains the same - but note that since all stations currently have the word "base" both in their class name and their broad keys, they get 2 matches for each word "base", so for example, "Escort Base" will only spawn stations, because TSN Escort gets 1 match, but "Transport Base" will spawn both bases and TSN Light Cruisers, because TSN Transport gets 2 matches.
+  
+  Stations spawned this way will grossly misbehave. Some will hold position and indefinetly rotate, while others will turn to Heading 225 (positive direction on X and Z axes) and travel at Warp 4, hit the map boundary and stay there. They will mostly have no rear shields (since stations have 360 degree shields, only front shields are usually defined in the vesselData.xml). They will of course offer no base-specific dialogue or docking functionality.
+  
+  Finally, when creating stations, if TSN Light Cruiser (or even other ship if "base" is not present in hullKeys) spawns, it will behave as a station for all purposes: offer docking, talk like a station, and so on. It will of course look like TSN Light Cruiser. Note that in order for this to happen, you have to severely screw up, seeing as every station has "base" both in its classs name and broad keys, so it will get at least 2 matches from having "base" in hullKeys - so you have to add some specific hullKeys that target non-base vessels. Don't do that and you'll be fine.
+
+  
+====================================================================================
+ Most frequent mistakes in mission scripts
+====================================================================================
+
+  1. Unless you want your event to repeat endlessly, make sure that something is changed in the event's body that invalidates the event's condition. You can use a new variable name and compare it to 0, then set it to 1 in the event (undefined variables are considered to have a value of 0).
+
+  2. "Timer expired" condition does not "fire" once when the timer expires: it is true at any moment after the moment when the timer expres. So, if you have an event that has no other condition except the timer_expires one, the event will repeat endlessly once the timer runs out. 
+
+  3. Do not attempt to set or add to object's properties in the same event in which it was created. You can only do so for objects that are already created by the time the event happens. If you want to set an object's properties, do it in another event that follows logically right after the event where the object is created.
+
+
+====================================================================================
+ More Information
+====================================================================================
+
 Additional information in non-video form can be found here:
-http://artemiswiki.pbworks.com/w/page/53390043/Mission%20Editor%20-%20Interface%20Overview
+http://artemiswiki.pbworks.com/w/page/53390043/Mission%20Editor%20-%20Interface%20Overview</value>
+  </data>
+  <data name="textBox2.Text" xml:space="preserve">
+    <value>====================================================================================
+ Map operation
+====================================================================================
+
+ [Shift] + [Up]/[Down]/[Left]/[Right]   : Move the map around
+ Hold and drag with [RMB]               : Move the map around
+ [+]                                    : Zoom map in
+ [-]                                    : Zoom map out
+ [~]                                    : Reset map zoom
+ [Shift] + [MouseWheel]                 : Zoom the map in/out
+ [RMB]                                  : Show context menu
+
+
+====================================================================================
+ Create objects
+====================================================================================
+
+ [1] or [Shift] + [1]                   : Add Anomaly
+ [2] or [Shift] + [2]                   : Add Black Hole
+ [3] or [Shift] + [3]                   : Add Enemy
+ [4] or [Shift] + [4]                   : Add Generic Mesh
+ [5] or [Shift] + [5]                   : Add Neutral
+ [6] or [Shift] + [6]                   : Add Monster
+ [7] or [Shift] + [7]                   : Add Player
+ [8] or [Shift] + [8]                   : Add Station
+ [9] or [Shift] + [9]                   : Add Whale
+    * New object will be added under mouse cursor.
+    * If another object was selected, the newly created object 
+      will copy properties of the selected object (where applicable)
+    * If [Shift] was not pressed, new object will become selected.
+    * If [Shift] was pressed, new object will be added to the current selection.
+ 
+ [I]                                    : Add asteroids
+ [O]                                    : Add mines
+ [P]                                    : Add nebulas
+    * New nameless object will become selected
+    * By default it will be with a radius of 0 and a count of 10
+
+
+====================================================================================
+ Selecting objects
+====================================================================================
+
+ [Ctrl] + [A]                           : Select all named objects
+ [Home] / [End]                         : Select previous / next nameless object
+ [PgUp] / [PgDown]                      : Select previous / next named object
+ [LMB]                                  : Select named object under cursor 
+                                          (will cycle through objects under cursor)
+ 
+ Hold and drag with [LMB]               : Select named objects in a rectangle
+ Click or hold and drag [Shift] + [LMB] : Add named object(s) to selection
+ Click or hold and drag [Ctrl] + [LMB]  : Remove named object(s) from selection
+
+
+====================================================================================
+ Basic operations on selected named/nameless object(s)
+====================================================================================
+
+ [0] / [Del]                            : Delete selected objects
+ [Up]/[Down]/[Left]/[Right]             : Move selection on XZ axis, 10  meters per click
+ [Ctrl] + [Up]/[Down]/[Left]/[Right]    : Move selection on XZ axis, 100 meters per click
+ [MouseWheel]                           : Move selection on Y axis,  10  meters per 1 scroll
+ [Ctrl] + [MouseWheel]                  : Move selection on Y axis,  100 meters per 1 scroll
+    * The whole map is 100'000 x 100'000 meters, a quadrant is 20'000 x 20'000 meters
+
+
+====================================================================================
+ Working with selected named object(s)
+====================================================================================
+
+ [Space]                                : Move selected object(s) to the point under cursor
+ 
+ [Alt] + [LMB]                          : Make selected object(s) face cursor
+ [Ctrl] + [Alt] + [LMB]                 : Make selected object(s) face away from the cursor
+    * Every object will change its angle individually relevant to the cursor.
+ 
+ [Shift] + [Alt] + [LMB]                : Make selected object(s) face cursor
+ [Ctrl] + [Shift] + [Alt] + [LMB]       : Make selected object(s) face away from the cursor
+    * Every object will have its angle set to the same value, 
+      based on the direction from the center of mass to the cursor.
+
+
+====================================================================================
+ Working with selected nameless object
+====================================================================================
+
+ [Space]                                : Move selected object's start position to the point under cursor
+ 
+ [Alt] + [LMB]                          
+    - if this object has a radius       : Change radius to be equal to distance 
+                                          from start position to the cursor's location
+    - if this object has no radius      : Move the object's end position to the cursor's loaction
+ 
+ [Shift] + [Alt] + [LMB]                : Switch object's "mode": 
+                                          if it was a "circle" - it becomes a "line" and vice versa.
+                                          Then preform [Alt] + [LMB] action
+ [Ctrl] + [Alt] + [LMB]                 
+    - if this object has radius         : Set the object's randomRange relative to object's radius
+    - if this object has no radius      : Set the randomRange to the distance from the start position 
+                                          to the cursor's location
+ 
+ [Q]                                    : Set start angle to the angle from the start position 
+                                          to the cursor's location
+ 
+ [Shift] + [Q]                          : Set start angle to the angle from the start position 
+                                          to the cursor's location minus 360
+                                          (ex.: if you point at 270 you'll get -90 instead)
+ 
+ [Ctrl] + [Q]                           : Set start angle to null
+ 
+ [W]                                    : Set end angle to the angle from the start position 
+                                          to the cursor's location
+ 
+ [Shift] + [W]                          : Set end angle to the angle from the start position 
+                                          to the cursor's location minus 360
+                                          (ex.: if you point at 270 you'll get -90 instead)
+ 
+ [Ctrl] + [W]                           : Set end angle to null
 </value>
+  </data>
+  <data name="textBox3.Text" xml:space="preserve">
+    <value>====================================================================================
+ Overview
+====================================================================================
+
+The Mission Editor provides several analysis options to help you with mission scripting. They can be helpful because Artemis scripting is not always easy to comprehend, as sometimes it goes against common sense of normal people, those used to scripting or even programmers. These options are available via the Tools -&gt; Analyze menu option.
+
+
+====================================================================================
+ Compare current state with the source
+====================================================================================
+
+If you are opening a mission script that was edited manually (in a text editor), then this option might be useful for you. It will list all the changes that Mission Editor made to the script after it was parsed. Usually this will indicate excessive attributes that are not supported by the statement or typos in the original script, or even an error in the Mission Editor script parsing logic, in which case please report this as a bug on Artemis forums. 
+
+It is recommended to do this after you open a manually created mission script for the first time with the editor, or after you open a mission script for the first time with an editor version different from the one which was previously used.
+
+
+====================================================================================
+ Find potential problems with the script
+====================================================================================
+
+There are many peculiarities in the Artemis mission scripting system that may catch even experienced scripters or programmers off-guard. This is what "Find potential problems" is for. Using this feature you can check your whole mission script for problematic places - not outright errors like missing attributes, but subtle things like names not matching up or conditions possibly leading to weird results.</value>
   </data>
 </root>

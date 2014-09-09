@@ -1,4 +1,4 @@
-﻿namespace ArtemisMissionEditor
+﻿namespace ArtemisMissionEditor.Forms
 {
     partial class FormSpaceMap
     {
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            ArtemisMissionEditor.SpaceMap spaceMap1 = new ArtemisMissionEditor.SpaceMap();
+            ArtemisMissionEditor.SpaceMap.Space spaceMap1 = new ArtemisMissionEditor.SpaceMap.Space();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSpaceMap));
             this._FSM_sc_Main = new System.Windows.Forms.SplitContainer();
             this.pSpaceMap = new ArtemisMissionEditor._PanelSpaceMap();
@@ -73,6 +73,8 @@
             this._FSM_ms_Main_Settings_UseYNameless = new System.Windows.Forms.ToolStripMenuItem();
             this._FSM_ms_Main_Settings_MarkWhitespaceNames = new System.Windows.Forms.ToolStripMenuItem();
             this._FSM_ms_Main_Settings_s_1 = new System.Windows.Forms.ToolStripSeparator();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showHelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._FSM_ss_Main = new System.Windows.Forms.StatusStrip();
             this._FSM_ss_Main_Coordinates = new System.Windows.Forms.ToolStripStatusLabel();
             this._FSM_ss_Main_s_1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -357,7 +359,8 @@
             this._FSM_ms_Main.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._FSM_ms_Main_SpaceMap,
             this._FSM_ms_Main_Edit,
-            this._FSM_ms_Main_Settings});
+            this._FSM_ms_Main_Settings,
+            this.helpToolStripMenuItem});
             this._FSM_ms_Main.Location = new System.Drawing.Point(0, 0);
             this._FSM_ms_Main.Name = "_FSM_ms_Main";
             this._FSM_ms_Main.Size = new System.Drawing.Size(1264, 24);
@@ -555,13 +558,28 @@
             this._FSM_ms_Main_Settings_MarkWhitespaceNames.CheckOnClick = true;
             this._FSM_ms_Main_Settings_MarkWhitespaceNames.Name = "_FSM_ms_Main_Settings_MarkWhitespaceNames";
             this._FSM_ms_Main_Settings_MarkWhitespaceNames.Size = new System.Drawing.Size(274, 22);
-            this._FSM_ms_Main_Settings_MarkWhitespaceNames.Text = "Make whitespace names";
+            this._FSM_ms_Main_Settings_MarkWhitespaceNames.Text = "Mark whitespace names";
             this._FSM_ms_Main_Settings_MarkWhitespaceNames.CheckStateChanged += new System.EventHandler(this._E_FSM_ms_Main_Settings_MarkWhitespaceNames_CheckStateChanged);
             // 
             // _FSM_ms_Main_Settings_s_1
             // 
             this._FSM_ms_Main_Settings_s_1.Name = "_FSM_ms_Main_Settings_s_1";
             this._FSM_ms_Main_Settings_s_1.Size = new System.Drawing.Size(154, 6);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showHelpToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // showHelpToolStripMenuItem
+            // 
+            this.showHelpToolStripMenuItem.Name = "showHelpToolStripMenuItem";
+            this.showHelpToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.showHelpToolStripMenuItem.Text = "Show Help";
+            this.showHelpToolStripMenuItem.Click += new System.EventHandler(this.showHelpToolStripMenuItem_Click);
             // 
             // _FSM_ss_Main
             // 
@@ -669,6 +687,7 @@
             this.ShowInTaskbar = false;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this._E_FSM_FormClosing);
             this.Load += new System.EventHandler(this._E_FSM_Load);
+            this.VisibleChanged += new System.EventHandler(this.FormSpaceMap_VisibleChanged);
             this._FSM_sc_Main.Panel1.ResumeLayout(false);
             this._FSM_sc_Main.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this._FSM_sc_Main)).EndInit();
@@ -759,6 +778,8 @@
 		private System.Windows.Forms.ToolStripMenuItem _FSM_ms_Main_Edit_RedoList;
 		private System.Windows.Forms.ToolStripMenuItem _FSM_ms_Main_Edit_UndoList;
         private System.Windows.Forms.ToolStripStatusLabel _FSM_ss_Main_Coordinates;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showHelpToolStripMenuItem;
     }
 }
 
