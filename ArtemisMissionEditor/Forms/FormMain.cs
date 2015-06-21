@@ -12,6 +12,9 @@ using System.Reflection;
 
 namespace ArtemisMissionEditor.Forms
 {
+	/// <summary>
+	///  Main window of the application
+	/// </summary>
 	public partial class FormMain : FormSerializeableToRegistry
     {
 		private static string MainFormName = AboutBox.AssemblyTitle + " v" + AboutBox.AssemblyVersion;
