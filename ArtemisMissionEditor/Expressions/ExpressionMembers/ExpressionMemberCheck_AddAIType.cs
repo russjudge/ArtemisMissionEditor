@@ -266,6 +266,19 @@ namespace ArtemisMissionEditor.Expressions
 			____Add_Name(eML);
 
 			#endregion
+
+			#region GUARD_STATION
+
+			eML = this.Add("GUARD_STATION");
+			____Add_Type(eML);
+			eML.Add(new ExpressionMember("using "));
+			eML.Add(new ExpressionMember("magic "));
+			eML.Add(new ExpressionMember("number "));
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Radius, "value1"));
+			eML.Add(new ExpressionMember("\" "));
+			____Add_Name(eML);
+
+			#endregion
 		}
 	}
 }
