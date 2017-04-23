@@ -155,7 +155,7 @@ namespace ArtemisMissionEditor.Expressions
             #region set_gm_button
 
             eML = this.Add("set_gm_button");
-            eML.Add(new ExpressionMember(" with text"));
+            eML.Add(new ExpressionMember("with text "));
             eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Text, "text"));
             eML.Add(new ExpressionMember(". Optional Bits: Position X:"));
             eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.GMX, "x"));
@@ -171,7 +171,7 @@ namespace ArtemisMissionEditor.Expressions
             #region clear_gm
 
             eML = this.Add("clear_gm_button");
-            eML.Add(new ExpressionMember(" with text"));
+            eML.Add(new ExpressionMember("with text "));
             eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Text, "text"));
 
             #endregion
