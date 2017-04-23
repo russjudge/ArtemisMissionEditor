@@ -49,7 +49,7 @@ namespace ArtemisMissionEditor.Expressions
         public static ExpressionMemberValueEditor PlayerSlot;
         public static ExpressionMemberValueEditor AnomalyType;
         public static ExpressionMemberValueEditor SpecialCapitainType;
-         public static ExpressionMemberValueEditor SpecialSpecialState;
+        public static ExpressionMemberValueEditor SpecialSpecialState;
         public static ExpressionMemberValueEditor SpecialSpecialSwitchState;
 
         public static ExpressionMemberValueEditor Side;
@@ -70,6 +70,7 @@ namespace ArtemisMissionEditor.Expressions
         public static ExpressionMemberValueEditor HullID;
         public static ExpressionMemberValueEditor RaceKeys;
         public static ExpressionMemberValueEditor HullKeys;
+        public static ExpressionMemberValueEditor VariableType;
 
         static ExpressionMemberValueEditors()
 		{
@@ -480,6 +481,11 @@ namespace ArtemisMissionEditor.Expressions
             DriveType.AddToDictionary("yes", "Warp");
             DriveType.AddToDictionary("no", "Jump");
             DriveType.PrepareContextMenuStripMethod = ExpressionMemberValueEditor.PrepareContextMenuStrip_DefaultListWithFirstSeparated;
+
+            VariableType = new ExpressionMemberValueEditor();
+            VariableType.AddToDictionary("", "Float");
+            VariableType.AddToDictionary("yes", "Integer");
+            VariableType.PrepareContextMenuStripMethod = ExpressionMemberValueEditor.PrepareContextMenuStrip_DefaultListWithFirstSeparated;
 
             SensorRange = new ExpressionMemberValueEditor();
             SensorRange.AddToDictionary("0", "Unlimited");
