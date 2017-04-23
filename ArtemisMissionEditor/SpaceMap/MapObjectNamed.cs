@@ -1055,7 +1055,6 @@ namespace ArtemisMissionEditor.SpaceMap
         public override bool IsPropertyAvailable(string pName)
         {
             if (pName == "monsterType") return true;
-            return base.IsPropertyAvailable(pName);
             if (pName == "podnumber") return true;
             return base.IsPropertyAvailable(pName);
         }

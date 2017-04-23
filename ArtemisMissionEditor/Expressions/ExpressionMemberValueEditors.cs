@@ -77,7 +77,6 @@ namespace ArtemisMissionEditor.Expressions
 
 			Label = new ExpressionMemberValueEditor(true, false);
 
-            int DefaultZero = 0;
             DefaultInteger = new ExpressionMemberValueEditor();
 			DefaultDouble = new ExpressionMemberValueEditor();
 			DefaultString = new ExpressionMemberValueEditor();
