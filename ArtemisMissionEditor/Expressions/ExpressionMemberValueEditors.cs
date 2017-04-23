@@ -148,8 +148,8 @@ namespace ArtemisMissionEditor.Expressions
             XmlNameActionCheck.AddToDictionary("set_fleet_property", "Set property of Fleet");
             XmlNameActionCheck.NewMenuGroup("Propertys");
 
-            XmlNameActionCheck.AddToDictionary("set_relative_position", "Set Relitive Position");
-            XmlNameActionCheck.AddToDictionary("set_to_gm_position", "Set Relitive to GM Position");
+            XmlNameActionCheck.AddToDictionary("set_relative_position", "Set Relative Position");
+            XmlNameActionCheck.AddToDictionary("set_to_gm_position", "Set Relative to GM Position");
             XmlNameActionCheck.NewMenuGroup("Position");
 
             XmlNameActionCheck.AddToDictionary("clear_ai", "Clear AI command stack");

@@ -161,7 +161,7 @@ namespace ArtemisMissionEditor.Expressions
             eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.GMX, "x"));
             eML.Add(new ExpressionMember(" Position Y:"));
             eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.GMY, "y"));
-            eML.Add(new ExpressionMember(" Button Hight:"));
+            eML.Add(new ExpressionMember(" Button Height:"));
             eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.GMH, "h"));
             eML.Add(new ExpressionMember(" Button Width:"));
             eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.GMW, "w"));
