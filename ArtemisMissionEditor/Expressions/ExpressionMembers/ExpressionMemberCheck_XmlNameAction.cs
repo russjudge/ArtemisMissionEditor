@@ -34,8 +34,10 @@ namespace ArtemisMissionEditor.Expressions
 				case "incoming_comms_text":		
 				case "set_object_property":		
 				case "set_fleet_property":
+                case "set_comms_button":
                 case "set_gm_button":
                 case "gm_button":
+                case "clear_comms_button":
                 case "clear_gm_button":
                 case "addto_object_property":	
 				case "copy_object_property":	
@@ -152,6 +154,24 @@ namespace ArtemisMissionEditor.Expressions
 
             #endregion
 
+            #region set_comms_button
+
+            eML = this.Add("set_comms_button");
+            eML.Add(new ExpressionMember("with text "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Text, "text"));
+            eML.Add(new ExpressionMember(". Optional Bits: Side:"));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.SideValue, "sideValue"));
+
+            #endregion
+
+            #region clear_comms_button
+
+            eML = this.Add("clear_comms_button");
+            eML.Add(new ExpressionMember("with text "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Text, "text"));
+
+            #endregion
+
             #region set_gm_button
 
             eML = this.Add("set_gm_button");
@@ -168,7 +188,7 @@ namespace ArtemisMissionEditor.Expressions
 
             #endregion
 
-            #region clear_gm
+            #region clear_gm_button
 
             eML = this.Add("clear_gm_button");
             eML.Add(new ExpressionMember("with text "));
@@ -357,8 +377,9 @@ namespace ArtemisMissionEditor.Expressions
 			eML = this.Add("incoming_comms_text");
 			eML.Add(new ExpressionMember("from "));
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.MessageFrom, "from"));
-			eML.Add(new ExpressionMember("with "));
-			eML.Add(new ExpressionMember("body: "));
+			eML.Add(new ExpressionMember("with type "));
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.MessageType, "type"));
+			eML.Add(new ExpressionMember("and body: "));
 			eML.Add(new ExpressionMember_Body());
 
 			#endregion

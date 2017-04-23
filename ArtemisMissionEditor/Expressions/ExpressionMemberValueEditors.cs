@@ -118,6 +118,8 @@ namespace ArtemisMissionEditor.Expressions
             XmlNameActionCheck.NewMenuGroup("Create/Destroy");
 
             
+            XmlNameActionCheck.AddToDictionary("set_comms_button", "Set Comms Button");
+            XmlNameActionCheck.AddToDictionary("clear_comms_button", "Clear Comms Button");
             XmlNameActionCheck.AddToDictionary("set_gm_button", "Set GM Button");
             XmlNameActionCheck.AddToDictionary("clear_gm_button", "Clear GM Button");
             XmlNameActionCheck.AddToDictionary("start_getting_keypresses_from", "Start getting keypresses from consoles: ");
@@ -254,6 +256,7 @@ namespace ArtemisMissionEditor.Expressions
             XmlNameConditionCheck.AddToDictionary("if_object_property", "Property");
 			XmlNameConditionCheck.AddToDictionary("if_distance", "Distance");
 			XmlNameConditionCheck.AddToDictionary("if_difficulty", "Difficulty level");
+            XmlNameConditionCheck.AddToDictionary("if_comms_button", "Comms Button pressed");
 			XmlNameConditionCheck.AddToDictionary("if_gm_key", "GM key pressed");
             XmlNameConditionCheck.AddToDictionary("if_gm_button", "GM Button pressed");
             XmlNameConditionCheck.AddToDictionary("if_client_key", "Client pressed");
@@ -264,6 +267,7 @@ namespace ArtemisMissionEditor.Expressions
 			XmlNameConditionCheck.AddToMenuDictionary("if_object_property", "Object property");
 			XmlNameConditionCheck.AddToMenuDictionary("<location>", "Object is located");
 			XmlNameConditionCheck.AddToMenuDictionary("if_distance", "Distance between objects");
+            XmlNameConditionCheck.AddToMenuDictionary("if_comms_button", "Comms Button pressed");
 			XmlNameConditionCheck.AddToMenuDictionary("if_gm_key", "GM pressed a key");
             XmlNameConditionCheck.AddToMenuDictionary("if_gm_button", "GM Button pressed");
             XmlNameConditionCheck.AddToMenuDictionary("if_client_key", "Client pressed a key");
@@ -382,6 +386,7 @@ namespace ArtemisMissionEditor.Expressions
 			PropertyObject.AddToDictionary("energy", "energy");
 			PropertyObject.AddToDictionary("warpState", "warpState");
 			PropertyObject.AddToDictionary("currentRealSpeed", "currentRealSpeed");
+			PropertyObject.AddToDictionary("totalCoolant", "totalCoolant");
 			PropertyObject.NewMenuGroup("Players");
 			PropertyObject.PrepareContextMenuStripMethod = ExpressionMemberValueEditor.PrepareContextMenuStrip_NestedList;
 

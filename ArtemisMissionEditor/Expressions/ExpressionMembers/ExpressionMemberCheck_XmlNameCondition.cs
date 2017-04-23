@@ -30,6 +30,7 @@ namespace ArtemisMissionEditor.Expressions
                 case "if_player_is_targeting":
                 case "if_timer_finished":
                 case "if_object_property":
+                case "if_comms_button":
                 case "if_gm_key":
                 case "if_gm_button":
                 case "if_client_key":
@@ -197,6 +198,13 @@ namespace ArtemisMissionEditor.Expressions
 			#endregion
 
 			AddSeparator();
+
+            #region if_comms_button
+
+            eML = this.Add("if_comms_button");
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.IFcomms_button, "text", true));
+
+            #endregion
 
 			#region if_gm_key
 

@@ -197,6 +197,8 @@ namespace ArtemisMissionEditor.Expressions
         /// <summary> "consoles" from [warning_popup_message, start/end_getting_keypresses] </summary>
         public static EMVD Consoles =                   new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.ConsoleList,null,null,"(",") ");
 
+        /// <summary> [type] from [incoming_comms_text] 
+        public static EMVD MessageType =                new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.DefaultString,null,null,"\"","\" ");
         /// <summary> [body] from [incoming_comms_text] 
         public static EMVD Body =                       new EMVD(EMVT.Body,         EMVB.NotStored,         EMVE.DefaultBody,null,null,"","","");
         /// <summary> "title" from [big_message] </summary>
@@ -286,7 +288,10 @@ namespace ArtemisMissionEditor.Expressions
         /// <summary> Check box/sphere from [if_inside/outside_box/sphere] </summary>
         public static EMVD Check_Box_Sphere =           new EMVD(EMVT.VarString,    EMVB.NotStored,         EMVE.DefaultCheck);
         /// <summary> "name" from [if_gm_button] </summary>
-        public static EMVD IFgm_button = new EMVD(EMVT.VarString, EMVB.StoredWhenFilled, EMVE.DefaultString, null, null, "\"", "\" ");
+        public static EMVD IFgm_button =                new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.DefaultString, null, null, "\"", "\" ");
+
+        /// <summary> "name" from [if_comms_button] </summary>
+        public static EMVD IFcomms_button =             new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.DefaultString, null, null, "\"", "\" ");
 
         /// <summary> "name" from [if_timer] </summary>
         public static EMVD NameTimer =                  new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.TimerName,null,null,"\"","\" ");
