@@ -199,7 +199,7 @@ namespace ArtemisMissionEditor.Expressions
 			____Add_Name(eML, false, ExpressionMemberValueDescriptions.NameCreatePlayer);
             eML.Add(new ExpressionMemberCheck_Side());
             eML.Add(new ExpressionMember("with "));
-            eML.Add(new ExpressionMember("accent colour"));
+            eML.Add(new ExpressionMember("accent colour "));
             eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.accent_color, "accent_color"));
             ____Add_Check_HullID_HullRaceKeysP(eML);
             eML.Add(new ExpressionMember(". Ship uses "));
