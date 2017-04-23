@@ -137,7 +137,7 @@
 
  - Angles in most mission statements are in degrees, where 0 is looking up, clockwise being positive direction while counter-clockwise is negative. 
    For example, 270 is looking to the left.
- - Angles in set/add property statements are in radians, where 0 is looking down, clockwise being positive direction while counter-clockwise is negative. 
+ - Angles in set/ statements are in radians, where 0 is looking down, clockwise being positive direction while counter-clockwise is negative. 
    For example, 1.57 is looking to the left.
 
 

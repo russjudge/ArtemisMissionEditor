@@ -19,7 +19,8 @@ namespace ArtemisMissionEditor
     public enum PanelSpaceMapMode
     {
         /// <summary>
-        /// Normal mode - add create statement objects, named or nameless, or edit them
+        /// Normal mode - add 
+        /// statement objects, named or nameless, or edit them
         /// </summary>
         Normal,
         /// <summary>
@@ -829,7 +830,7 @@ namespace ArtemisMissionEditor
             Brush brushWhale = Settings.Current.GetBrush(MapColors.Whale);
             ListObjectsToDispose.Add(brushWhale);
             Font fontWhale = Settings.Current.GetFont(MapFonts.ObjectText);
-            if (fontWhale.Size > sizeVessel / 2)
+            if (fontWhale.Size > sizeVessel / 1)
             {
                 fontWhale = new Font(fontWhale.FontFamily, sizeVessel / 2.0 < 8.0 ? 8.0f: (float)(sizeVessel / 2.0), fontWhale.Style);
                 ListObjectsToDispose.Add(fontWhale);
@@ -1131,7 +1132,7 @@ namespace ArtemisMissionEditor
 
 				switch (mo.TypeToString)
 				{
-					case "anomaly":
+					case "Anomaly":
 						if (zy < z)
                             DrawSpaceMap_DrawHeightLine(g, penHeight, brushHeight, x, zy, z);
 						g.FillSquare(brushAnomaly, x, zy, sizeAnomaly);
@@ -1305,7 +1306,7 @@ namespace ArtemisMissionEditor
 
 					switch (mo.TypeToString)
 					{
-						case "anomaly":
+						case "Anomaly":
 							g.DrawSquare(penSelection, x, zy, 20 + sizeAnomaly);
 							break;
 						case "blackHole":
@@ -2124,7 +2125,7 @@ namespace ArtemisMissionEditor
 					ExecuteCommand_AddObjectToMap("monster", additive);
 					break;
 				case KeyCommands.AddAnomaly:
-					ExecuteCommand_AddObjectToMap("anomaly", additive);
+					ExecuteCommand_AddObjectToMap("Anomaly", additive);
 					break;
 				case KeyCommands.AddBlackHole:
 					ExecuteCommand_AddObjectToMap("blackHole", additive);
@@ -2135,10 +2136,10 @@ namespace ArtemisMissionEditor
 				case KeyCommands.AddEnemy:
 					ExecuteCommand_AddObjectToMap("enemy", additive);
 					break;
-				case KeyCommands.AddWhales:
-					ExecuteCommand_AddObjectToMap("whale", additive);
-					break;
-				case KeyCommands.AddNebulas:
+                case KeyCommands.AddWhales:
+                    ExecuteCommand_AddObjectToMap("whale", additive);
+                    break;
+                case KeyCommands.AddNebulas:
 					ExecuteCommand_AddObjectToMap("nebulas", additive);
 					break;
 				case KeyCommands.AddAsteroids:
@@ -2926,10 +2927,10 @@ namespace ArtemisMissionEditor
             // 
             // _PSM_cms_Main_New_Whale
             // 
-            this._PSM_cms_Main_New_Whale.Name = "_PSM_cms_Main_New_Whale";
-            this._PSM_cms_Main_New_Whale.Size = new System.Drawing.Size(163, 22);
-            this._PSM_cms_Main_New_Whale.Text = "(&9) Whale";
-            this._PSM_cms_Main_New_Whale.Click += new System.EventHandler(this._E_PSM_cms_Main_New_Whale_Click);
+            //this._PSM_cms_Main_New_Whale.Name = "_PSM_cms_Main_New_Whale";
+            //this._PSM_cms_Main_New_Whale.Size = new System.Drawing.Size(163, 22);
+            //this._PSM_cms_Main_New_Whale.Text = "(&9) Whale";
+            //this._PSM_cms_Main_New_Whale.Click += new System.EventHandler(this._E_PSM_cms_Main_New_Whale_Click);
             // 
             // _PSM_cms_Main_New_s_1
             // 
