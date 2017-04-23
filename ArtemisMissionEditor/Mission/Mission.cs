@@ -3157,7 +3157,7 @@ namespace ArtemisMissionEditor
                     }
                     if (statement.Name == "create" && (statement.GetAttribute("type") == "station" || statement.GetAttribute("type") == "enemy" || statement.GetAttribute("type") == "neutral"))
                     {
-                        if (String.IsNullOrWhiteSpace(statement.GetAttribute("hullID")))
+                        if (String.IsNullOrWhiteSpace(statement.GetAttribute("hullID")) && String.IsNullOrWhiteSpace(statement.GetAttribute("hullKeys")))
                             result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "\"Create " + statement.GetAttribute("type") + "\" statement does not specify a hullID and no hull keys. When this statement is executed the sever will crash.", node, statement));
                     }
                 }
