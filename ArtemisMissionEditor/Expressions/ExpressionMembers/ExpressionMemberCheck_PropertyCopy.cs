@@ -107,6 +107,7 @@ namespace ArtemisMissionEditor.Expressions
 				case "energy": 					return "<DEFAULT>";
 				case "warpState":				return "<DEFAULT>";
 				case "currentRealSpeed":		return "<READ_ONLY>";
+				case "totalCoolant":			return "<DEFAULT>";
 				//DEFAULT CASE
 				default:
 					return "<UNKNOWN_PROPERTY>";
