@@ -150,7 +150,7 @@ namespace ArtemisMissionEditor.Expressions
             XmlNameActionCheck.AddToDictionary("set_special", "Set Special");
             XmlNameActionCheck.AddToDictionary("set_side_value", "Set side");     
             XmlNameActionCheck.AddToDictionary("set_fleet_property", "Set property of Fleet");
-            XmlNameActionCheck.NewMenuGroup("Propertys");
+            XmlNameActionCheck.NewMenuGroup("Properties");
 
             XmlNameActionCheck.AddToDictionary("set_relative_position", "Set Relative Position");
             XmlNameActionCheck.AddToDictionary("set_to_gm_position", "Set Relative to GM Position");
@@ -198,7 +198,7 @@ namespace ArtemisMissionEditor.Expressions
             //XmlNameActionCheck.AddToDictionary("set_object_property", "Set property");
             //XmlNameActionCheck.AddToDictionary("set_fleet_property", "Set property");
             //XmlNameActionCheck.AddToDictionary("set_damcon_members", "Set DamCon members");
-            //XmlNameActionCheck.NewMenuGroup("Object Propertys");
+            //XmlNameActionCheck.NewMenuGroup("Object Properties");
             //XmlNameActionCheck.AddToDictionary("addto_object_property", "Add");
             //XmlNameActionCheck.AddToDictionary("copy_object_property", "Copy property");
             //XmlNameActionCheck.AddToDictionary("set_relative_position", "Set position");
@@ -227,7 +227,7 @@ namespace ArtemisMissionEditor.Expressions
             //XmlNameActionCheck.AddToMenuDictionary("set_object_property", "Set property");
             //XmlNameActionCheck.AddToMenuDictionary("set_fleet_property", "Set property");
             //XmlNameActionCheck.AddToMenuDictionary("set_damcon_members", "Set DamCon members");
-            ////  XmlNameActionCheck.NewMenuGroup("Object Propertys");
+            ////  XmlNameActionCheck.NewMenuGroup("Object Properties");
             //XmlNameActionCheck.AddToMenuDictionary("addto_object_property", "Add");
             //XmlNameActionCheck.AddToMenuDictionary("copy_object_property", "Copy property");
             //XmlNameActionCheck.AddToMenuDictionary("set_relative_position", "Set position");
@@ -306,13 +306,20 @@ namespace ArtemisMissionEditor.Expressions
 			AIType.PrepareContextMenuStripMethod = ExpressionMemberValueEditor.PrepareContextMenuStrip_DefaultList;
 
 			PropertyObject = new ExpressionMemberValueEditor();
-            PropertyObject.AddToDictionary("sensorSetting", "sensor range");
-            PropertyObject.AddToDictionary("nebulaIsOpaque", "Nebular Hides From Sensors");
-            PropertyObject.AddToDictionary("nonPlayerSpeed", "Enemy Speed");
-            PropertyObject.AddToDictionary("nonPlayerShield", "Enemy Shield");
+            PropertyObject.AddToDictionary("coopAdjustmentValue", "Co-op Adjustment Value");
             PropertyObject.AddToDictionary("nonPlayerWeapon", "Enemy Damage");
+            PropertyObject.AddToDictionary("nonPlayerShield", "Enemy Shield");
+            PropertyObject.AddToDictionary("nonPlayerSpeed", "Enemy Speed");
+            PropertyObject.AddToDictionary("commsObjectMasterVolume", "Game Comms Volume");
+            PropertyObject.AddToDictionary("musicObjectMasterVolume", "Game Music Volume");
+            PropertyObject.AddToDictionary("soundFXVolume", "Game Sound Volume");
+            PropertyObject.AddToDictionary("gameTimeLimit", "Game Time Limit");
+            PropertyObject.AddToDictionary("nebulaIsOpaque", "Nebular Hides From Sensors");
+            PropertyObject.AddToDictionary("networkTickSpeed", "Network Tick Speed");
             PropertyObject.AddToDictionary("playerWeapon", "Player Damage");
             PropertyObject.AddToDictionary("playerShields", "Player Shield");
+            PropertyObject.AddToDictionary("sensorSetting", "Sensor Range");
+
             // PropertyObject.AddToDictionary("roll", "roll");
             // PropertyObject.AddToDictionary("", "sideValue");
             PropertyObject.NewMenuGroup("Game Properties");

@@ -32,7 +32,11 @@ namespace ArtemisMissionEditor.Expressions
                 case "playerWeapon":            return "<ENMYSP>";
                 case "playerShields":           return "<ENMYSP>";
                 case "coopAdjustmentValue":     return "<DEFAULT>";
-                // case "gameTimeLimit":           return "<DEFAULT>";
+                case "musicObjectMasterVolume": return "<DEFAULT>";
+                case "commsObjectMasterVolume": return "<DEFAULT>";
+                case "soundFXVolume":           return "<DEFAULT>";
+                case "gameTimeLimit":           return "<DEFAULT>";
+                case "networkTickSpeed":        return "<DEFAULT>";
                 //EVERYTHING
                 case "positionX":				return "<FLT0...100K>";
 				case "positionY": 				return "<FLT-100K...100K>";
