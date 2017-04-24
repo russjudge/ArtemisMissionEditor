@@ -3059,7 +3059,7 @@ namespace ArtemisMissionEditor
                         namesCreatedInThisNode.Add(attName);
                     if (statement.Name == "end_mission")
                         hasEndMission = true;
-                    else
+                    else if (statement.Name != "log")
                         hasNonEndMission = true;
                 }
 
@@ -3078,6 +3078,7 @@ namespace ArtemisMissionEditor
                         bool onlyTimers = true;
                         bool onlyNotExists = true;
                         bool noIfVariable = true;
+                        bool noIfButton = true;
                         List<string> variablesCheckedHere = new List<string>();
                         List<string> timersCheckedHere = new List<string>();
                         List<string> gmButtonsCheckedHere = new List<string>();
@@ -3096,9 +3097,15 @@ namespace ArtemisMissionEditor
                             if (statement.Kind == MissionStatementKind.Condition && statement.Name == "if_timer_finished")
                                 timersCheckedHere.Add(statement.GetAttribute("name"));
                             if (statement.Kind == MissionStatementKind.Condition && statement.Name == "if_gm_button")
+                            {
+                                noIfButton = false;
                                 gmButtonsCheckedHere.Add(statement.GetAttribute("text"));
+                            }
                             if (statement.Kind == MissionStatementKind.Condition && statement.Name == "if_comms_button")
+                            {
+                                noIfButton = false;
                                 commsButtonsCheckedHere.Add(statement.GetAttribute("text"));
+                            }
                         }
                         
                         // Event has only "timer_finished" conditions
@@ -3109,9 +3116,9 @@ namespace ArtemisMissionEditor
                         if (onlyNotExists && !hasEndMission)
                             result.Add(new MissionSearchResult(curNode, 0, "Event contains only \"Object does not exist\" condition(s). While the specified object does not exist, it will keep executing on every tick, potentially introducing performance issues or even crashes.", node, null));
                         
-                        // Event has no "if_variable" conditions
-                        if (noIfVariable && !hasEndMission)
-                            result.Add(new MissionSearchResult(curNode, 0, "Event contains no \"If variable\" condition. While this is not a mistake, it is recommended to have at least one such condition, or ensure that something inside the event always invalidates one of the conditions.", node, null));
+                        // Event has no "if_variable", "if_gm_button", or "if_comms_button" conditions
+                        if (noIfVariable && noIfButton && !hasEndMission)
+                            result.Add(new MissionSearchResult(curNode, 0, "Event contains no \"If variable\", \"If GM button\", or \"If Comms button\" conditions. While this is not a mistake, it is recommended to have at least one such condition, or ensure that something inside the event always invalidates one of the conditions.", node, null));
                         
                         // Event has no set_variable mirroring if_variable
                         if (timersCheckedHere.Count > 0 || variablesCheckedHere.Count > 0)
