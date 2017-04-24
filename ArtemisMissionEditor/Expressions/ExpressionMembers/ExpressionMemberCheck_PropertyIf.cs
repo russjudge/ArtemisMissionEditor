@@ -24,6 +24,14 @@ namespace ArtemisMissionEditor.Expressions
 
 			switch (type)
 			{
+				case "nonPlayerSpeed":			return "<DEFAULT>";
+				case "nebulaIsOpaque":			return "<DEFAULT>";
+				case "sensorSetting":			return "<DEFAULT>";
+				case "nonPlayerShield":			return "<DEFAULT>";
+				case "nonPlayerWeapon":			return "<DEFAULT>";
+				case "playerWeapon":			return "<DEFAULT>";
+				case "playerShields":			return "<DEFAULT>";
+				case "coopAdjustmentValue":		return "<DEFAULT>";
 				//EVERYTHING
 				case "positionX":				return "<DEFAULT>";
 				case "positionY": 				return "<DEFAULT>";
