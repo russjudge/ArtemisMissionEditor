@@ -251,8 +251,8 @@ namespace ArtemisMissionEditor
 		/// Gets the attribute value 
 		/// </summary>
 		/// <param name="name">Name of the value, as in XML</param>
-		/// <param name="valueIfNull">Set value to this if its null</param>
-		/// <returns>Value if attribute exists, null if doesnt</returns>
+		/// <param name="valueIfNull">Set value to this if it's null</param>
+		/// <returns>Value if attribute exists, null if it doesn't</returns>
 		public string GetAttribute(string name, string valueIfNull)
 		{
 			string result = GetAttribute(name);

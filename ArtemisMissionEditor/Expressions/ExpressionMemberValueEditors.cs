@@ -57,6 +57,8 @@ namespace ArtemisMissionEditor.Expressions
         public static ExpressionMemberValueEditor DistanceNebulaCheck;
         public static ExpressionMemberValueEditor ConvertDirectCheck;
         public static ExpressionMemberValueEditor TimerName;
+        public static ExpressionMemberValueEditor GMButtonText;
+        public static ExpressionMemberValueEditor CommsButtonText;
         public static ExpressionMemberValueEditor GMText;
         public static ExpressionMemberValueEditor VariableName;
         public static ExpressionMemberValueEditor NamedAllName;
@@ -124,7 +126,7 @@ namespace ArtemisMissionEditor.Expressions
             XmlNameActionCheck.AddToDictionary("clear_gm_button", "Clear GM Button");
             XmlNameActionCheck.AddToDictionary("start_getting_keypresses_from", "Start getting keypresses from consoles: ");
             XmlNameActionCheck.AddToDictionary("end_getting_keypresses_from", "End getting keypresses from consoles: ");
-            XmlNameActionCheck.NewMenuGroup("GM and Client");
+            XmlNameActionCheck.NewMenuGroup("Buttons");
 
             XmlNameActionCheck.AddToDictionary("incoming_comms_text", "Show incoming text message");
             XmlNameActionCheck.AddToDictionary("incoming_message", "Show incoming audio message");
@@ -575,6 +577,14 @@ namespace ArtemisMissionEditor.Expressions
 			VariableName = new ExpressionMemberValueEditor();
 			VariableName.PrepareContextMenuStripMethod = ExpressionMemberValueEditor.PrepareContextMenuStrip_VariableNameList;
             Mission.NamesListUpdated += new Action(() => { VariableName.InvalidateContextMenuStrip(); });
+
+			GMButtonText = new ExpressionMemberValueEditor();
+			GMButtonText.PrepareContextMenuStripMethod = ExpressionMemberValueEditor.PrepareContextMenuStrip_GMButtonTextList;
+            Mission.NamesListUpdated += new Action(() => { GMButtonText.InvalidateContextMenuStrip(); });
+
+			CommsButtonText = new ExpressionMemberValueEditor();
+			CommsButtonText.PrepareContextMenuStripMethod = ExpressionMemberValueEditor.PrepareContextMenuStrip_CommsButtonTextList;
+            Mission.NamesListUpdated += new Action(() => { CommsButtonText.InvalidateContextMenuStrip(); });
 
 			NamedAllName = new ExpressionMemberValueEditor();
 			NamedAllName.PrepareContextMenuStripMethod = ExpressionMemberValueEditor.PrepareContextMenuStrip_NamedAllNameList;

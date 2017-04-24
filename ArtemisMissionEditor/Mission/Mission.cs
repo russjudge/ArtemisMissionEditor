@@ -51,6 +51,12 @@ namespace ArtemisMissionEditor
         /// <summary> Timer names and headers for context menus</summary>
         public KeyValuePair<List<string>, List<string>> TimerNamesList { get { return new KeyValuePair<List<string>,List<string>>(TimerNames,TimerNameHeaders); } }
         
+        /// <summary> GM button names and headers for context menus</summary>
+        public KeyValuePair<List<string>, List<string>> GMButtonTextsList { get { return new KeyValuePair<List<string>,List<string>>(GMButtonNames,GMButtonNameHeaders); } }
+
+        /// <summary> Comms button names and headers for context menus</summary>
+        public KeyValuePair<List<string>, List<string>> CommsButtonTextsList { get { return new KeyValuePair<List<string>,List<string>>(CommsButtonNames,CommsButtonNameHeaders); } }
+
         /// <summary> Station names and headers for context menus</summary>
         public KeyValuePair<List<string>, List<string>> StationNamesList { get { return new KeyValuePair<List<string>, List<string>>(NamedObjectNames["station"], new List<string>()); } }
         
@@ -72,6 +78,18 @@ namespace ArtemisMissionEditor
         /// <summary> All timers that are checked</summary>
         public List<string> TimerCheckNames { get; private set; }
         
+        /// <summary> All GM buttons that are set</summary>
+        public List<string> GMButtonSetNames { get; private set; }
+        
+        /// <summary> All GM buttons that are checked</summary>
+        public List<string> GMButtonCheckNames { get; private set; }
+        
+        /// <summary> All Comms buttons that are set</summary>
+        public List<string> CommsButtonSetNames { get; private set; }
+        
+        /// <summary> All Comms buttons that are checked</summary>
+        public List<string> CommsButtonCheckNames { get; private set; }
+        
         /// <summary> All objects that are created</summary>
         public List<string> AllCreatedObjectNames { get; private set; }
         
@@ -86,6 +104,18 @@ namespace ArtemisMissionEditor
         
         /// <summary> Timer headers for timer names context menus</summary>
         private List<string> TimerNameHeaders; 
+        
+        /// <summary> All GM buttons set or checked in the mission</summary>
+        private List<string> GMButtonNames;
+        
+        /// <summary> GM button headers for GM button names context menus</summary>
+        private List<string> GMButtonNameHeaders; 
+        
+        /// <summary> All Comms buttons set or checked in the mission</summary>
+        private List<string> CommsButtonNames;
+        
+        /// <summary> Comms button headers for Comms button names context menus</summary>
+        private List<string> CommsButtonNameHeaders; 
         
         /// <summary> All named objects created in the mission</summary>
         private Dictionary<string, List<string>> NamedObjectNames;
@@ -500,11 +530,19 @@ namespace ArtemisMissionEditor
             VariableCheckLocations = new Dictionary<string, List<MissionNode>>();
             TimerSetNames = new List<string>();
             TimerCheckNames = new List<string>();
+            GMButtonSetNames = new List<string>();
+            GMButtonCheckNames = new List<string>();
+            CommsButtonSetNames = new List<string>();
+            CommsButtonCheckNames = new List<string>();
             AllCreatedObjectNames = new List<string>();
             VariableNames = new List<string>();
             VariableNameHeaders = new List<string>();
 			TimerNames = new List<string>();
             TimerNameHeaders = new List<string>();
+			GMButtonNames = new List<string>();
+            GMButtonNameHeaders = new List<string>();
+			CommsButtonNames = new List<string>();
+            CommsButtonNameHeaders = new List<string>();
 			NamedObjectNames = new Dictionary<string,List<string>>();
             NamedObjectNames.Add("Anomaly", new List<string>());
             NamedObjectNames.Add("blackHole", new List<string>());
@@ -2215,16 +2253,26 @@ namespace ArtemisMissionEditor
             VariableCheckNames.Clear();
             VariableCheckLocations.Clear();
             TimerSetNames.Clear();
+            GMButtonSetNames.Clear();
+            CommsButtonSetNames.Clear();
             TimerCheckNames.Clear();
+            GMButtonCheckNames.Clear();
+            CommsButtonCheckNames.Clear();
             AllCreatedObjectNames.Clear();
             AllCreatedObjectNames.AddRange(PlayerShipNames);
             VariableNameHeaders.Clear();
             TimerNames.Clear();
             TimerNameHeaders.Clear();
+            GMButtonNames.Clear();
+            GMButtonNameHeaders.Clear();
+            CommsButtonNames.Clear();
+            CommsButtonNameHeaders.Clear();
 
             foreach (TreeNode node in TreeViewNodes.Nodes)
                 UpdateNamesLists_RecursivelyScan(node);
 
+            CommsButtonNames.Sort();
+            GMButtonNames.Sort();
             TimerNames.Sort();
             VariableNames.Sort();
 
@@ -2258,6 +2306,36 @@ namespace ArtemisMissionEditor
 				//_timerHeaders.Add(_timers[i * Settings.Current.NamesPerSubmenu] + " - " + _timers[_timers.Count - 1][0]);
 				if (TimerNames.Count - 1 >= i * Settings.Current.NamesPerSubmenu)
 					TimerNameHeaders.Add(TimerNames[i * Settings.Current.NamesPerSubmenu] + " - " + TimerNames[TimerNames.Count - 1]);
+			}
+
+			if (GMButtonNames.Count > Settings.Current.NamesPerSubmenu)
+			{
+				int i;
+				for (i = 0; i < GMButtonNames.Count / Settings.Current.NamesPerSubmenu; i++)
+				{
+					string first = GMButtonNames[i * Settings.Current.NamesPerSubmenu];
+					string last = GMButtonNames[(i + 1) * Settings.Current.NamesPerSubmenu - 1];
+					GMButtonNameHeaders.Add(first + " - " + last);
+				}
+				if (GMButtonNames.Count - 1 >= i * Settings.Current.NamesPerSubmenu)
+                {
+					GMButtonNameHeaders.Add(GMButtonNames[i * Settings.Current.NamesPerSubmenu] + " - " + GMButtonNames[GMButtonNames.Count - 1]);
+                }
+			}
+
+			if (CommsButtonNames.Count > Settings.Current.NamesPerSubmenu)
+			{
+				int i;
+				for (i = 0; i < CommsButtonNames.Count / Settings.Current.NamesPerSubmenu; i++)
+				{
+					string first = CommsButtonNames[i * Settings.Current.NamesPerSubmenu];
+					string last = CommsButtonNames[(i + 1) * Settings.Current.NamesPerSubmenu - 1];
+					CommsButtonNameHeaders.Add(first + " - " + last);
+				}
+				if (CommsButtonNames.Count - 1 >= i * Settings.Current.NamesPerSubmenu)
+                {
+					CommsButtonNameHeaders.Add(CommsButtonNames[i * Settings.Current.NamesPerSubmenu] + " - " + CommsButtonNames[CommsButtonNames.Count - 1]);
+                }
 			}
 
             if (this == Current)
@@ -2309,6 +2387,30 @@ namespace ArtemisMissionEditor
                             TimerCheckNames.Add(var_timer);
                     }
                 }
+
+                if (statement.Name == "if_gm_button")
+                {
+                    string var_text = statement.GetAttribute("text");
+                    if (var_text != null)
+                    {
+                        if (!GMButtonNames.Contains(var_text))
+                            GMButtonNames.Add(var_text);
+                        if (!GMButtonCheckNames.Contains(var_text))
+                            GMButtonCheckNames.Add(var_text);
+                    }
+                }
+
+                if (statement.Name == "if_comms_button")
+                {
+                    string var_text = statement.GetAttribute("text");
+                    if (var_text != null)
+                    {
+                        if (!CommsButtonNames.Contains(var_text))
+                            CommsButtonNames.Add(var_text);
+                        if (!CommsButtonCheckNames.Contains(var_text))
+                            CommsButtonCheckNames.Add(var_text);
+                    }
+                }
             }
 
             //Fill lists based on Actions
@@ -2354,6 +2456,30 @@ namespace ArtemisMissionEditor
                             TimerNames.Add(var_timer);
                         if (!TimerSetNames.Contains(var_timer))
                             TimerSetNames.Add(var_timer);
+                    }
+                }
+
+                if (statement.Name == "set_gm_button")
+                {
+                    string var_text = statement.GetAttribute("text");
+                    if (var_text != null)
+                    {
+                        if (!GMButtonNames.Contains(var_text))
+                            GMButtonNames.Add(var_text);
+                        if (!GMButtonSetNames.Contains(var_text))
+                            GMButtonSetNames.Add(var_text);
+                    }
+                }
+
+                if (statement.Name == "set_comms_button")
+                {
+                    string var_text = statement.GetAttribute("text");
+                    if (var_text != null)
+                    {
+                        if (!CommsButtonNames.Contains(var_text))
+                            CommsButtonNames.Add(var_text);
+                        if (!CommsButtonSetNames.Contains(var_text))
+                            CommsButtonSetNames.Add(var_text);
                     }
                 }
 
@@ -2954,6 +3080,8 @@ namespace ArtemisMissionEditor
                         bool noIfVariable = true;
                         List<string> variablesCheckedHere = new List<string>();
                         List<string> timersCheckedHere = new List<string>();
+                        List<string> gmButtonsCheckedHere = new List<string>();
+                        List<string> commsButtonsCheckedHere = new List<string>();
                         foreach (MissionStatement statement in mNode.Conditions)
                         {
                             if (statement.Kind == MissionStatementKind.Condition && statement.Name != "if_timer_finished")
@@ -2967,6 +3095,10 @@ namespace ArtemisMissionEditor
                             }
                             if (statement.Kind == MissionStatementKind.Condition && statement.Name == "if_timer_finished")
                                 timersCheckedHere.Add(statement.GetAttribute("name"));
+                            if (statement.Kind == MissionStatementKind.Condition && statement.Name == "if_gm_button")
+                                gmButtonsCheckedHere.Add(statement.GetAttribute("text"));
+                            if (statement.Kind == MissionStatementKind.Condition && statement.Name == "if_comms_button")
+                                commsButtonsCheckedHere.Add(statement.GetAttribute("text"));
                         }
                         
                         // Event has only "timer_finished" conditions
@@ -2986,12 +3118,18 @@ namespace ArtemisMissionEditor
                         {
                             List<string> variablesSetHere = new List<string>();
                             List<string> timersSetHere = new List<string>();
+                            List<string> gmButtonsSetHere = new List<string>();
+                            List<string> commsButtonsSetHere = new List<string>();
                             for (int i = 0; i < mNode.Actions.Count; i++)
                             {
                                 if (mNode.Actions[i].Kind == MissionStatementKind.Action && mNode.Actions[i].Name == "set_variable")
                                     variablesSetHere.Add(mNode.Actions[i].GetAttribute("name"));
                                 if (mNode.Actions[i].Kind == MissionStatementKind.Action && mNode.Actions[i].Name == "set_timer")
                                     timersSetHere.Add(mNode.Actions[i].GetAttribute("name"));
+                                if (mNode.Actions[i].Kind == MissionStatementKind.Action && mNode.Actions[i].Name == "set_gm_button")
+                                    gmButtonsSetHere.Add(mNode.Actions[i].GetAttribute("text"));
+                                if (mNode.Actions[i].Kind == MissionStatementKind.Action && mNode.Actions[i].Name == "set_comms_button")
+                                    commsButtonsSetHere.Add(mNode.Actions[i].GetAttribute("text"));
                             }
                             bool noCorrespondingSet = true;
                             foreach (string checkedVar in variablesCheckedHere)
@@ -3003,6 +3141,30 @@ namespace ArtemisMissionEditor
                                     if (String.IsNullOrEmpty(setVar))
                                         continue;
                                     if (setVar == checkedVar)
+                                        noCorrespondingSet = false;
+                                }
+                            }
+                            foreach (string checkedGMButton in gmButtonsCheckedHere)
+                            {
+                                if (String.IsNullOrEmpty(checkedGMButton))
+                                    continue;
+                                foreach (string setGMButton in gmButtonsSetHere)
+                                {
+                                    if (String.IsNullOrEmpty(setGMButton))
+                                        continue;
+                                    if (setGMButton == checkedGMButton)
+                                        noCorrespondingSet = false;
+                                }
+                            }
+                            foreach (string checkedCommsButton in commsButtonsCheckedHere)
+                            {
+                                if (String.IsNullOrEmpty(checkedCommsButton))
+                                    continue;
+                                foreach (string setCommsButton in commsButtonsSetHere)
+                                {
+                                    if (String.IsNullOrEmpty(setCommsButton))
+                                        continue;
+                                    if (setCommsButton == checkedCommsButton)
                                         noCorrespondingSet = false;
                                 }
                             }
@@ -3043,6 +3205,14 @@ namespace ArtemisMissionEditor
                             // Reference to a timer that is never set
                             if (statement.Name == "if_timer_finished" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && !TimerSetNames.Contains(attName))
                                 result.Add(new MissionSearchResult(curNode, i + 1, "Timer named \"" + attName + "\" is checked for, but never set.", node, statement));
+
+                            // Reference to a GM button that is never set
+                            if (statement.Name == "if_gm_button" && !String.IsNullOrEmpty(attName = statement.GetAttribute("text")) && !GMButtonSetNames.Contains(attName))
+                                result.Add(new MissionSearchResult(curNode, i + 1, "GM button named \"" + attName + "\" is checked for, but never set.", node, statement));
+
+                            // Reference to a Comms button that is never set
+                            if (statement.Name == "if_comms_button" && !String.IsNullOrEmpty(attName = statement.GetAttribute("text")) && !CommsButtonSetNames.Contains(attName))
+                                result.Add(new MissionSearchResult(curNode, i + 1, "Comms button named \"" + attName + "\" is checked for, but never set.", node, statement));
 
                             // Distance equality check (hardly ever happens)
                             if (statement.Name == "if_distance" && (statement.GetAttribute("comparator") == "EQUALS" || statement.GetAttribute("comparator") == "NOT"))
@@ -3085,8 +3255,24 @@ namespace ArtemisMissionEditor
                     if (statement.Name == "set_timer" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && !TimerCheckNames.Contains(attName))
                         result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Timer named \"" + attName + "\" is set, but never checked.", node, statement));
                     
+                    // Reference to a GM button that is never checked
+                    if (statement.Name == "set_gm_button" && !String.IsNullOrEmpty(attName = statement.GetAttribute("text")) && !GMButtonCheckNames.Contains(attName))
+                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "GM button named \"" + attName + "\" is set, but never checked.", node, statement));
+                    
+                    // Reference to clearing a GM button that is never set
+                    if (statement.Name == "clear_gm_button" && !String.IsNullOrEmpty(attName = statement.GetAttribute("text")) && !GMButtonSetNames.Contains(attName))
+                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "GM button named \"" + attName + "\" is cleared, but never set.", node, statement));
+                    
+                    // Reference to a Comms button that is never checked
+                    if (statement.Name == "set_comms_button" && !String.IsNullOrEmpty(attName = statement.GetAttribute("text")) && !CommsButtonCheckNames.Contains(attName))
+                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Comms button named \"" + attName + "\" is set, but never checked.", node, statement));
+                    
+                    // Reference to clearing a Comms button that is never set
+                    if (statement.Name == "clear_comms_button" && !String.IsNullOrEmpty(attName = statement.GetAttribute("text")) && !CommsButtonSetNames.Contains(attName))
+                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Comms button named \"" + attName + "\" is cleared, but never set.", node, statement));
+                    
                     // Add/set_property for object which name figures in the list of objects created in the same statement
-                    //TODO: Confirm or denyt this problem exists and fix this statement (also maybe copy_object_property?
+                    //TODO: Confirm or deny that this problem exists and fix this statement (also maybe copy_object_property?)
                     //if ((statement.Name == "addto_object_property" || statement.Name == "set_object_property"|| statement.Name == "add_ai"|| statement.Name == "clear_ai") && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && listCreatedInThisNode.Contains(attName))
                     //    result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Changing properties of an object \"" + attName + "\" in the event where it was just created will not work correctly.", node, statement));
                     

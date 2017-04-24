@@ -289,11 +289,11 @@ namespace ArtemisMissionEditor.Expressions
         public static EMVD Check_In_Out =               new EMVD(EMVT.VarString,    EMVB.NotStored,         EMVE.DefaultCheck);
         /// <summary> Check box/sphere from [if_inside/outside_box/sphere] </summary>
         public static EMVD Check_Box_Sphere =           new EMVD(EMVT.VarString,    EMVB.NotStored,         EMVE.DefaultCheck);
-        /// <summary> "name" from [if_gm_button] </summary>
-        public static EMVD IFgm_button =                new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.DefaultString, null, null, "\"", "\" ");
+        /// <summary> "text" from [if_gm_button,clear_gm_button] </summary>
+        public static EMVD TextGMButton =               new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.GMButtonText, null, null, "\"", "\" ");
 
-        /// <summary> "name" from [if_comms_button] </summary>
-        public static EMVD IFcomms_button =             new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.DefaultString, null, null, "\"", "\" ");
+        /// <summary> "text" from [if_comms_button,clear_comms_button] </summary>
+        public static EMVD TextCommsButton = new EMVD(EMVT.VarString, EMVB.StoredWhenFilled, EMVE.CommsButtonText, null, null, "\"", "\" ");
 
         /// <summary> "name" from [if_timer] </summary>
         public static EMVD NameTimer =                  new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.TimerName,null,null,"\"","\" ");

@@ -202,7 +202,7 @@ namespace ArtemisMissionEditor.Expressions
             #region if_comms_button
 
             eML = this.Add("if_comms_button");
-            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.IFcomms_button, "text", true));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.TextCommsButton, "text", true));
 
             #endregion
 
@@ -217,8 +217,7 @@ namespace ArtemisMissionEditor.Expressions
             #region if_gm_button
 
             eML = this.Add("if_gm_button");
-           // eML.Add(new ExpressionMember("the "));
-            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.IFgm_button, "text", true));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.TextGMButton, "text", true));
 
             #endregion
 
