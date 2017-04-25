@@ -55,6 +55,7 @@ namespace ArtemisMissionEditor.Expressions
 				case "set_ship_text":
                 case "set_special":
                 case "set_side_value":
+                case "spawn_external_program":
 					return container.Statement.Name;
                 case "destroy":
                 case "destroy_near":
@@ -503,6 +504,18 @@ namespace ArtemisMissionEditor.Expressions
 
 			eML = this.Add("log");
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Text, "text"));
+
+			#endregion
+
+			#region spawn_external_program
+
+			eML = this.Add("spawn_external_program");
+			eML.Add(new ExpressionMember("with id "));
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Text, "id"));
+			eML.Add(new ExpressionMember("using executable "));
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Text, "name"));
+			eML.Add(new ExpressionMember("and command line "));
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Text, "arguments"));
 
 			#endregion
 

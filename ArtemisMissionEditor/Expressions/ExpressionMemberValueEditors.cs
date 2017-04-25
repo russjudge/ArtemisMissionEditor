@@ -112,6 +112,7 @@ namespace ArtemisMissionEditor.Expressions
            // XmlNameActionCheck.AddToDictionary("set_difficulty_level", "Set difficulty");
             XmlNameActionCheck.AddToDictionary("end_mission", "End Mission");
             XmlNameActionCheck.AddToDictionary("log", "Log new entry");
+            XmlNameActionCheck.AddToDictionary("spawn_external_program", "Spawn External Program");
 
             //XmlNameActionCheck.AddToDictionary("<destroy>", "Destroy");
             XmlNameActionCheck.NewMenuGroup("Game Options");
