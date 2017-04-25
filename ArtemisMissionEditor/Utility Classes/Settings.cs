@@ -81,7 +81,7 @@ namespace ArtemisMissionEditor
         public bool _dragIntoFolderToLastPosition;
 
 		/// <summary>
-		/// Wether the default (`) map scale will be padded or zommed in 100%
+		/// Whether the default (`) map scale will be padded or zommed in 100%
 		/// </summary>
         [DisplayName("Space map is padded by default"), Description("If true, space map will be padded (fully zoomed out) when reset key is pressed or space map is opened.\r\nIf false, space map will instead be fit into window ."), DefaultValue(true)]
         public bool DefaultSpaceMapScalePadded { get { return _defaultSpaceMapScalePadded; } set { _defaultSpaceMapScalePadded = value; } }
@@ -151,7 +151,7 @@ namespace ArtemisMissionEditor
         public bool _showStartStatementsInBackground;
 
 		/// <summary>
-		/// Wether top use generic mesh's color when drawing it on space map
+		/// Whether top use generic mesh's color when drawing it on space map
 		/// </summary>
 		[DisplayName("Use generic mesh color"), Description("Use generic mesh color when drawing generic mesh on space map."), DefaultValue(true)]
         public bool UseGenericMeshColor { get { return _useGenericMeshColor; } set { _useGenericMeshColor = value; } }

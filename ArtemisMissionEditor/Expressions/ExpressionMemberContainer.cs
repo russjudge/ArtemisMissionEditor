@@ -36,7 +36,7 @@ namespace ArtemisMissionEditor.Expressions
         private string _checkValue;
 		
         /// <summary>
-        /// Wether this member of the statement is valid.
+        /// Whether this member of the statement is valid.
         /// </summary>
         public bool IsValid
         {

@@ -246,7 +246,7 @@ namespace ArtemisMissionEditor
 				//Highlight previous node if it exists and...
 				if (_dropNode.PrevNode != null)
 				{
-					//If previous node has no nodes or isnt expanded then this node is a single node and should be visible
+					//If previous node has no nodes or isn't expanded then this node is a single node and should be visible
 					if (_dropNode.PrevNode.Nodes.Count == 0 || !_dropNode.PrevNode.IsExpanded)
 						_dropNode.PrevNode.EnsureVisible();
 					//If previous node has nodes and is expanded then its last visible child should be made visible
@@ -268,7 +268,7 @@ namespace ArtemisMissionEditor
 				//Highlight next node if it exists and...
 				if (_dropNode.NextNode != null)
 				{
-					//If this node has no nodes or isnt expanded then it is single, and next node should be visible
+					//If this node has no nodes or isn't expanded then it is single, and next node should be visible
 					if (_dropNode.Nodes.Count == 0 || !_dropNode.IsExpanded)
 						_dropNode.NextNode.EnsureVisible();
 					//If this node has nodes and is expanded then we should select its first child

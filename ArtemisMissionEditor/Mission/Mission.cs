@@ -120,7 +120,7 @@ namespace ArtemisMissionEditor
         /// <summary> All named objects created in the mission</summary>
         private Dictionary<string, List<string>> NamedObjectNames;
         
-        /// <summary> Wether or not the mission contains an "End Mission" statement (and how many of them)</summary>
+        /// <summary> Whether or not the mission contains an "End Mission" statement (and how many of them)</summary>
         public int AmountOfMissionEndStatements { get; private set; }
 
         /// <summary> How many "Create player" statements there are in the mission</summary>
@@ -389,8 +389,8 @@ namespace ArtemisMissionEditor
             if (relation == NodeRelationship.ChildGoesInside && !TreeViewNodes.IsFolder(parent))
 				return false;
 
-			//Everything except comments cant go above Start (which can only occur in root)
-			//Therefore, for each node that isnt a comment, and is trying to fit on one level with something that is in root...
+			//Everything except comments can't go above Start (which can only occur in root)
+			//Therefore, for each node that isn't a comment, and is trying to fit on one level with something that is in root...
             if (relation != NodeRelationship.ChildGoesInside && parent.Parent == null && !(child.Tag.GetType() == typeof(MissionNode_Comment) || child.Tag.GetType() == typeof(MissionNode_Start)))
 			{
 				//Check that we are not inserting directly above Start node...
@@ -401,7 +401,7 @@ namespace ArtemisMissionEditor
 					return false;
 			}
 
-			//Start, Comment and Unknown cannot go inside anything, start because it must stay on top and other two because they cant have Parent_ID attribute added to them
+			//Start, Comment and Unknown cannot go inside anything, start because it must stay on top and other two because they can't have Parent_ID attribute added to them
 			if (child.Tag.GetType() == typeof(MissionNode_Start) || child.Tag.GetType() == typeof(MissionNode_Comment) || child.Tag.GetType() == typeof(MissionNode_Unknown))
 			{
 				//Refuse to go inside anything...
@@ -412,7 +412,7 @@ namespace ArtemisMissionEditor
 					return false;
 			}
 
-			//Start additionally cannot go below anything that isnt a comment
+			//Start additionally cannot go below anything that isn't a comment
 			if (child.Tag.GetType() == typeof(MissionNode_Start))
 			{
 				//Never go under anything other than a comment or yourself
@@ -452,7 +452,7 @@ namespace ArtemisMissionEditor
 			if (child.Tag == null || parent.Tag == null) // This might be a comment or a folder
 				return false;
 
-			//You cannot go inside something that isnt a folder
+			//You cannot go inside something that isn't a folder
             if (relation == NodeRelationship.ChildGoesInside && !TreeViewStatements.IsFolder(parent))
 				return false;
 
@@ -1175,7 +1175,7 @@ namespace ArtemisMissionEditor
         /// <summary>
         /// Save mission by forcing a save dialog and then saving it to file
         /// </summary>
-        /// <returns>Wether mission was saved</returns>
+        /// <returns>Whether mission was saved</returns>
 		public bool SaveAs()
 		{
             using (SaveFileDialog sfd = new SaveFileDialog())
@@ -1198,7 +1198,7 @@ namespace ArtemisMissionEditor
         /// <summary>
         /// Save mission automatically (if already saved once) or pop a dialog and save (if new mission)
         /// </summary>
-        /// <returns>Wether mission was saved</returns>
+        /// <returns>Whether mission was saved</returns>
 		public bool Save()
 		{
             if (String.IsNullOrEmpty(FilePath))
@@ -2614,7 +2614,7 @@ namespace ArtemisMissionEditor
 		}
 		
         /// <summary>
-        /// Selects the specified label by it's number (used when pressing a number hotkey)
+        /// Selects the specified label by its number (used when pressing a number hotkey)
         /// </summary>
         /// <param name="index">One-based index of the label</param>
 		private void SelectExpressionLabelByNumber(int index)
@@ -2754,7 +2754,7 @@ namespace ArtemisMissionEditor
         /// <summary>
         /// Show event dependency form
         /// </summary>
-        /// <param name="recalculate">Wether dependencies should be recalcualted for the current node</param>
+        /// <param name="recalculate">Whether dependencies should be recalcualted for the current node</param>
 		public void ShowEventDependencyForm(bool recalculate = false)
 		{
 			Program.FormDependencyInstance.OpenEventDependency(TreeViewNodes.SelectedNode, recalculate);
@@ -2944,7 +2944,7 @@ namespace ArtemisMissionEditor
                 if (FindAll_RecursivelyFind(node.Nodes[forward ? i : node.Nodes.Count - 1 - i], ref curNode, list, msc, forward, firstOnly, ref limitNode, ref limitStatement)) 
                     return true;
 
-            //Skip node in we are only looking in the current node and this isnt current node
+            //Skip node in we are only looking in the current node and this isn't current node
             if (msc.OnlyInCurrentNode && !TreeViewNodes.NodeIsInsideNode(node, TreeViewNodes.SelectedNode))
                 return false;
 
@@ -3551,7 +3551,7 @@ namespace ArtemisMissionEditor
             for (int i = 0; i < node.Nodes.Count; i++)
                 replacements += ReplaceAll_RecursiveReplace(node.Nodes[i], ref curNode, list, msc);
 
-            //Skip node in we are only looking in the current node and this isnt current node
+            //Skip node in we are only looking in the current node and this isn't current node
             if (msc.OnlyInCurrentNode && !TreeViewNodes.NodeIsInsideNode(node, TreeViewNodes.SelectedNode))
                 return replacements;
 
@@ -4231,7 +4231,7 @@ namespace ArtemisMissionEditor
             }
         }
 
-        /// <summary> Wether or not user can "Edit statement on space map" </summary>
+        /// <summary> Whether or not user can "Edit statement on space map" </summary>
         public bool CanInvokeSpaceMapStatement()
         {
             if (TreeViewNodes.SelectedNode == null || TreeViewStatements.SelectedNode == null)

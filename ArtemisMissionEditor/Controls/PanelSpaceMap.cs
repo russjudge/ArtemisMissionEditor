@@ -1547,7 +1547,7 @@ namespace ArtemisMissionEditor
 		/// <summary>
 		/// Assign current selection from the listbox control
 		/// </summary>
-		/// <param name="named">Wether it was named or nameless object that was selected</param>
+		/// <param name="named">Whether it was named or nameless object that was selected</param>
 		public void Selection_FromControl(bool named)
 		{
 			int i;

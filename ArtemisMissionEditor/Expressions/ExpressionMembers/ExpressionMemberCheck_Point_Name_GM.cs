@@ -58,7 +58,7 @@ namespace ArtemisMissionEditor.Expressions
         /// Represents a single member in an expression, which provides branching via checking a condition.
         /// This check is for specified point vs name vs gm position in multiple statements that require a position as one of parameters.
         /// </summary>
-        /// <param name="unbound">Wether the coordinates are bound by map boundaries.</param>
+        /// <param name="unbound">Whether the coordinates are bound by map boundaries.</param>
         public ExpressionMemberCheck_Point_Name_GM(bool unbound = false)
             : base("", ExpressionMemberValueDescriptions.Check_Point_Name_GM)
         {
