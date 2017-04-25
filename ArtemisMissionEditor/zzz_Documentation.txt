@@ -1,4 +1,4 @@
-﻿  1. Wierd programming style and the idea behind it.
+﻿  1. Weird programming style and the idea behind it.
 
 Certain interactions in this editor were done in a way that, looking back, was not that well thought out.
 For example, MainForm's two main TreeViews's interaction with the Mission class, 
@@ -8,7 +8,7 @@ The classes link directly to the UI elements (tooltips, labels, menustrips) and 
 
 The idea was that the logic that belongs to the class stays in the class. 
 So, for example, instead of writing the code to Save the Mission in the "OnClick", it's written in the Mission.
-However, this logic cannot be easilly separated from the UI. 
+However, this logic cannot be easily separated from the UI. 
 For example, when amount of object on SpaceMap changes, it must be reflected in the UI tooltip. 
 Therefore, class logic had to operate on UI, and therefore, it was done the way it is done.
 
@@ -30,7 +30,7 @@ or something else, but I am clueless as to how to rewrite this better.
 
   2. How is the Mission stored and edited?
 
-After mission file is read from Xml, it is separated into Nodes. 
+After the mission file is read from XML, it is separated into Nodes. 
 Nodes in turn are separated into Statements.
 Mission-level Commentaries, Start, Event and Folder Xml Elements are all Nodes. 
 MissionNode and inherited classes are used to represent the Nodes. 
@@ -56,8 +56,8 @@ When you edit statements themselves, the referenced MissionStatement class is ed
 
 In order to Undo/Redo the same technique is used as in order to Copy/Paste: Xml.
 
-When change is done, mission is saved to Xml and compressed and stored. 
-When you Undo/Redo, mission is simply read from this Xml, and then gui stuff is applied: 
+When change is done, the mission is saved to XML and compressed and stored. 
+When you Undo/Redo, mission is simply read from this XML, and then gui stuff is applied: 
 for example, what node and statement was selected etc.
 
 Copy places all selected nodes/statements into buffer as text. 
@@ -159,7 +159,7 @@ The constructor of these two classes contains the bulk of the syntax logic. It b
 The constructor defines the exact ExpressionMembers added by the check, 
 the Decide() method defines how the check makes it's choice, 
 while SetValueInternal() defines how does the check enforce it's choice if it's a user-changeable.
-For example, in case of "point or GM pos" choice, when the user choses "point", 
+For example, in case of "point or GM pos" choice, when the user chooses "point", 
 SetValueInternal() will clear the "use_gm_position" variable,
 while if the user choses "gm pos", then it will set that variable.
 
@@ -208,7 +208,7 @@ defines the syntax and the parsing logic.
    This time it's not a check, so it just adds it and goes on to next on the list.
 
 11) ExpressionParser.Append() is called (for the "at ").
-    Again, not a check, go to the next on the list,
+    Again, not a check, go to the next on the list.
 
 12) ExpressionParser.Append() is called (for the ExpressionMemberCheck_Point_x_GMPos)
     This time, decision will be made that again adds multiple ExpressionMembers. 
@@ -219,7 +219,7 @@ And so on...
 
   7. So, where is the parsing logic defined?
 
-Most of the logic is defined in the constructors of the revelant ExpressionMemberChecks.
+Most of the logic is defined in the constructors of the relevant ExpressionMemberChecks.
 
 The most of it is contained in the two main checks:
 - ExpressionMemberCheck_XmlNameAction's constructor contains all expressions for actions. 

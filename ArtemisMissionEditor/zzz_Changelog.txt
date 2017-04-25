@@ -1,4 +1,21 @@
-﻿Version 2.3.1.0B [2016-April-02] (Fish Evans)
+Version 2.5.101 [2017-April-24] (Dave Thaler)
+* Updated for Version 2.5.107 of Artemis:
+  - Added support for Comms buttons
+  - Added support for volume properties
+  - Added support for int vs float variables
+  - Added support for spawn_external_program
+  - Added support for Comms message types
+* Allowed picking GM Buttons from a list
+* Fixed several bugs in "Find potential problems"
+  - if_property should not warn about use of legal global variables
+  - create was incorrectly generating warnings when hullKeys was used
+  - Added check for problems with GM and Comms buttons
+* Fixed some bugs with properties
+  - Couldn't copy totalCoolant property
+  - Added networkTickSpeed and gameTimeLimit
+* Fixed various typos
+----------------------
+Version 2.3.1.0B [2016-April-02] (Fish Evans)
 * Updated for Version 2.3.1? of Artemis.
 * Added Pods for all monsters (TODO: future fix, only for Whale and Pahrina)
 * Added newplayer slot, accent warp hull info to Player Create Command
@@ -6,8 +23,8 @@
 ----------------------
 Version 2.3.0.1 [20015-Dec-08] (Fish Evans)
 * Updated for Version 2.3.0 of Artemis.
-*Fixed Bugs Reguarding Anomalys and Monster Types and the Map
-*added tauntImmunityIndex Property
+* Fixed Bugs Reguarding Anomalys and Monster Types and the Map
+* Added tauntImmunityIndex Property
 ----------------------
 Version B2.2.0 [20015-Dec-08] (Fish Evans)
 * Updated for Version 2.2.0 of Artemis.
