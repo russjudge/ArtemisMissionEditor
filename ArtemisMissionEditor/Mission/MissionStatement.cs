@@ -107,7 +107,7 @@ namespace ArtemisMissionEditor
             return IsCreateNamedStatement() || IsCreateNamelessStatement();
         }
 
-        private string[] _listNamedTypes = new string[9] { "anomaly", "blackHole", "neutral", "enemy", "monster", "player", "station", "genericMesh", "whale" };
+        private string[] _listNamedTypes = new string[8] { "Anomaly", "blackHole", "neutral", "enemy", "monster", "player", "station", "genericMesh" };
         private string[] _listNamelessTypes = new string[3] { "asteroids", "nebulas", "mines" };
 
         public bool CanBeCreateNamedStatement()

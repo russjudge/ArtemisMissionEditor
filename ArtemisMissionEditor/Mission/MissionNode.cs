@@ -214,7 +214,7 @@ namespace ArtemisMissionEditor
             xElem = xDoc.CreateElement(Enabled ? "event" : "disabled_event");
             if (!HasDefaultName || full)
             {
-                xAttr = xDoc.CreateAttribute("name_arme");
+                xAttr = xDoc.CreateAttribute("name");
                 xAttr.Value = Name;
                 xElem.Attributes.Append(xAttr);
 
@@ -258,7 +258,7 @@ namespace ArtemisMissionEditor
                     ID = Helper.GuidTryRead(att.Value, true);
                 if (att.Name == "parent_id_arme")
                     ParentID = Helper.GuidTryRead(att.Value, true);
-				if (att.Name == "name_arme" || att.Name == "name")
+				if (att.Name == "name" || att.Name == "name")
 				{
 					Name = att.Value;
 					if (Name.Contains("Event") && Helper.IntTryParse(Name.Substring(5, Name.Length - 5)))
@@ -340,7 +340,7 @@ namespace ArtemisMissionEditor
             xElem = xDoc.CreateElement("folder_arme");
             if (!HasDefaultName)
             {
-                xAttr = xDoc.CreateAttribute("name_arme");
+                xAttr = xDoc.CreateAttribute("name");
                 xAttr.Value = Name;
                 xElem.Attributes.Append(xAttr);
 
@@ -383,7 +383,7 @@ namespace ArtemisMissionEditor
                     ID = Helper.GuidTryRead(att.Value, true);
                 else if (att.Name == "parent_id_arme")
                     ParentID = Helper.GuidTryRead(att.Value, true);
-                else if (att.Name == "name_arme")
+                else if (att.Name == "name")
                     Name = att.Value;
                 else
                     ExtraAttributes.Add(att.Name);
@@ -431,7 +431,7 @@ namespace ArtemisMissionEditor
             xElem = xDoc.CreateElement("start");
             if (!HasDefaultName)
             {
-                xAttr = xDoc.CreateAttribute("name_arme");
+                xAttr = xDoc.CreateAttribute("name");
                 xAttr.Value = Name;
                 xElem.Attributes.Append(xAttr);
 
@@ -478,7 +478,7 @@ namespace ArtemisMissionEditor
                 // Start node should not have parent id
                 //if (att.Name == "parent_id_arme")
                 //    ParentID = new Guid(att.Value);
-				if (att.Name == "name_arme" || att.Name == "name")
+				if (att.Name == "name" || att.Name == "name")
                     Name = att.Value;
             }
 

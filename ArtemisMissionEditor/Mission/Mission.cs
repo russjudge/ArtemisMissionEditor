@@ -506,7 +506,7 @@ namespace ArtemisMissionEditor
 			TimerNames = new List<string>();
             TimerNameHeaders = new List<string>();
 			NamedObjectNames = new Dictionary<string,List<string>>();
-            NamedObjectNames.Add("anomaly", new List<string>());
+            NamedObjectNames.Add("Anomaly", new List<string>());
             NamedObjectNames.Add("blackHole", new List<string>());
             NamedObjectNames.Add("enemy", new List<string>());
             NamedObjectNames.Add("neutral", new List<string>());
@@ -4022,7 +4022,7 @@ namespace ArtemisMissionEditor
             }
         }
 
-        /// <summary>
+        /// <summary>MonsterType
         /// Insert "Create Nameless" statement to the node. Called from ParseSpaceMapCreateResults.
         /// </summary>
         private void ParseSpaceMapCreateResults_InsertNameless(ref int i, MissionNode curNode, int position, SpaceMap.Space result, XmlDocument xDoc, List<string> missingProperties)
