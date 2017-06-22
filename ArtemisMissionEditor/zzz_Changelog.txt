@@ -1,4 +1,19 @@
-﻿----------------------
+﻿Version 2.3.1.0B [2016-April-02] (Fish Evans)
+* Updated for Version 2.3.1? of Artemis.
+* Added Pods for all monsters (TODO: future fix, only for Whale and Pahrina)
+* Added newplayer slot, accent warp hull info to Player Create Command
+* Added New GM buttons and if GM Button Statments
+----------------------
+Version 2.3.0.1 [20015-Dec-08] (Fish Evans)
+* Updated for Version 2.3.0 of Artemis.
+*Fixed Bugs Reguarding Anomalys and Monster Types and the Map
+*added tauntImmunityIndex Property
+----------------------
+Version B2.2.0 [20015-Dec-08] (Fish Evans)
+* Updated for Version 2.2.0 of Artemis.
+* Allowed use of GM_Selection in add/set Propertys
+* Fixed Crash when usinng AI_GuardStation (Alice)
+----------------------
 Version 2.1.1.13 [2014-09-08] (Alexey Andronov)
 * CODE: More commentary
 * CODE: Rewritten ExpressionMemberValueDescription from using dictionary by name to static members. 

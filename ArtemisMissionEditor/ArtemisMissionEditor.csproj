@@ -14,7 +14,7 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>publish\</PublishUrl>
+    <PublishUrl>C:\ArtemisEditor\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -24,9 +24,14 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>2</ApplicationRevision>
-    <ApplicationVersion>1.7.3.2</ApplicationVersion>
+    <TargetCulture>en-GB</TargetCulture>
+    <WebPage>publish.htm</WebPage>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>2.5.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -56,6 +61,30 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>64AD28DCAD00767A349B2F0E221AD5A89F794ACB</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>ArtemisMissionEditor_1_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>Internet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>ArtemisMissionEditor_1_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -74,6 +103,9 @@
     <Compile Include="DependencyGraph\DependencyEvent.cs" />
     <Compile Include="DependencyGraph\DependencyGraph.cs" />
     <Compile Include="DependencyGraph\DependencyPrecursor.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Slot_GM.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Name_GM_Slot.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Point_Name_GM.cs" />
     <Compile Include="Expressions\ExpressionMemberValueDescriptions.cs" />
     <Compile Include="Expressions\ExpressionMemberValueEditors.cs" />
     <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_BadShipSystem.cs" />
@@ -97,7 +129,6 @@
     <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_PropertySet.cs" />
     <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_AddAIType.cs" />
     <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_SetVariable.cs" />
-    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Point_Name_GM.cs" />
     <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Named_Nameless.cs" />
     <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Name_GM.cs" />
     <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Line_Circle.cs" />
@@ -116,6 +147,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="SpaceMap\GrahpicsExtention.cs" />
     <Compile Include="Expressions\ExpressionMembers\ExpressionMember_Unknown.cs" />
@@ -272,6 +308,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DialogRHKeys.resx">
       <DependentUpon>DialogRHKeys.cs</DependentUpon>
@@ -295,9 +332,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormDependency.resx">
       <DependentUpon>FormDependency.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormFindReplace.resx">
       <DependentUpon>FormFindReplace.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormHelp.resx">
       <DependentUpon>FormHelp.cs</DependentUpon>
@@ -305,15 +344,19 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormMissionProperties.resx">
       <DependentUpon>FormMissionProperties.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormNotepad.resx">
       <DependentUpon>FormNotepad.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormSearchResults.resx">
       <DependentUpon>FormSearchResults.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormLog.resx">
       <DependentUpon>FormLog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
@@ -321,6 +364,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormSerializeableToRegistry.resx">
       <DependentUpon>FormSerializeableToRegistry.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormSpaceMap.resx">
       <DependentUpon>FormSpaceMap.cs</DependentUpon>
@@ -328,6 +372,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormSettings.resx">
       <DependentUpon>FormSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -390,14 +435,31 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+    <None Include="ArtemisMissionEditor_1_TemporaryKey.pfx" />
+    <None Include="ArtemisMissionEditor_TemporaryKey.pfx" />
+    <None Include="Properties\app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Resources\icons.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <FileAssociation Include=".ae.xml">
+      <Visible>False</Visible>
+      <Description>XML</Description>
+      <Progid>ArtMISSFile</Progid>
+      <DefaultIcon>Resources\Maps-Earth.ico</DefaultIcon>
+    </FileAssociation>
+    <FileAssociation Include=".xml">
+      <Visible>False</Visible>
+      <Description>XML</Description>
+      <Progid>ArtMISSFile</Progid>
+      <DefaultIcon>Resources\Maps-Earth.ico</DefaultIcon>
+    </FileAssociation>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
