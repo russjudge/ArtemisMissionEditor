@@ -131,8 +131,8 @@ namespace ArtemisMissionEditor.SpaceMap
                 case "monster":
                     mo = new MapObjectNamed_monster(posX, posY, posZ, makeSelected, angle);
                     break;
-                case "anomaly":
-                    mo = new MapObjectNamed_anomaly(posX, posY, posZ, "", makeSelected);
+                case "Anomaly":
+                    mo = new MapObjectNamed_Anomaly(posX, posY, posZ, "", makeSelected);
                     break;
                 case "blackHole":
                     mo = new MapObjectNamed_blackHole(posX, posY, posZ, "", makeSelected);
