@@ -24,8 +24,17 @@ namespace ArtemisMissionEditor.Expressions
 
 			switch (type)
 			{
-				//EVERYTHING
-				case "positionX":				return "<DEFAULT>";
+                //GAME
+                case "nonPlayerSpeed": return "<DEFAULT>";
+                case "nebulaIsOpaque": return "<NEBULAROP>";
+                case "sensorSetting": return "<SENSOR>";
+                case "nonPlayerShield": return "<DEFAULT>";
+                case "nonPlayerWeapon": return "<DEFAULT>";
+                case "playerWeapon": return "<DEFAULT>";
+                case "playerShields": return "<DEFAULT>";
+                case "coopAdjustmentValue": return "<DEFAULT>";
+                //EVERYTHING
+                case "positionX":				return "<DEFAULT>";
 				case "positionY": 				return "<DEFAULT>";
 				case "positionZ": 				return "<DEFAULT>";
 				case "deltaX": 					return "<DEFAULT>";
@@ -49,8 +58,9 @@ namespace ArtemisMissionEditor.Expressions
 				case "missileStoresNuke": 		return "<DEFAULT>";
 				case "missileStoresMine": 		return "<DEFAULT>";
 				case "missileStoresECM": 		return "<DEFAULT>";
-				//VALUES FOR SHIELDED SHIPS		
-				case "throttle": 				return "<DEFAULT>";
+                case "missileStoresPShock":     return "<DEFAULT>";
+                //VALUES FOR SHIELDED SHIPS		
+                case "throttle": 				return "<DEFAULT>";
 				case "steering": 				return "<DEFAULT>";
 				case "topSpeed": 				return "<DEFAULT>";
 				case "turnRate": 				return "<DEFAULT>";
@@ -78,7 +88,8 @@ namespace ArtemisMissionEditor.Expressions
 				case "targetPointY": 			return "<DEFAULT>";
 				case "targetPointZ": 			return "<DEFAULT>";
 				case "hasSurrendered": 			return "<DEFAULT>";
-				case "eliteAIType": 			return "<DEFAULT>";
+                case "tauntImmunityIndex":      return "<DEFAULT>";
+                case "eliteAIType": 			return "<DEFAULT>";
 				case "eliteAbilityBits": 		return "<DEFAULT>";
 				case "eliteAbilityState": 		return "<DEFAULT>";
 				case "surrenderChance":			return "<DEFAULT>";
@@ -92,7 +103,7 @@ namespace ArtemisMissionEditor.Expressions
 				case "countMine": 				return "<DEFAULT>";
 				case "countECM": 				return "<DEFAULT>";
 				case "energy": 					return "<DEFAULT>";
-				case "warpState":				return "<DEFAULT>";
+                case "warpState":				return "<DEFAULT>";
 				case "currentRealSpeed":		return "<READ_ONLY>";
                 case "totalCoolant":            return "<DEFAULT>";
 				//DEFAULT CASE
@@ -137,9 +148,10 @@ namespace ArtemisMissionEditor.Expressions
 		{
 			eML.Add(new ExpressionMember("for "));
 			eML.Add(new ExpressionMember("object "));
-			eML.Add(new ExpressionMember("with "));
-			eML.Add(new ExpressionMember("name "));
-			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NameAll, "name"));
+            eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NameAll));
+          //  eML.Add(new ExpressionMember("with "));
+		//	eML.Add(new ExpressionMember("name "));
+			//eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NameAll, "name"));
 			//eML.Add(new ExpressionMemberCheck_Name_x_GMSel());
 		}
 

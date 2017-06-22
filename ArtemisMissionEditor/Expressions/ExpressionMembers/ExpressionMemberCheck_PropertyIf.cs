@@ -49,8 +49,9 @@ namespace ArtemisMissionEditor.Expressions
 				case "missileStoresNuke": 		return "<DEFAULT>";
 				case "missileStoresMine": 		return "<DEFAULT>";
 				case "missileStoresECM": 		return "<DEFAULT>";
-				//VALUES FOR SHIELDED SHIPS		
-				case "throttle": 				return "<DEFAULT>";
+                case "missileStoresPShock":     return "<DEFAULT>";
+                //VALUES FOR SHIELDED SHIPS		
+                case "throttle": 				return "<DEFAULT>";
 				case "steering": 				return "<DEFAULT>";
 				case "topSpeed": 				return "<DEFAULT>";
 				case "turnRate": 				return "<DEFAULT>";
@@ -65,7 +66,7 @@ namespace ArtemisMissionEditor.Expressions
 				case "systemDamageTactical": 	return "<DEFAULT>";
 				case "systemDamageTurning": 	return "<DEFAULT>";
 				case "systemDamageImpulse": 	return "<DEFAULT>";
-				case "systemDamageWarp": 		return "<DEFAULT>";
+				case "systemDamgeWarp": 		return "<DEFAULT>";
 				case "systemDamageFrontShield":	return "<DEFAULT>";
 				case "systemDamageBackShield": 	return "<DEFAULT>";
 				case "shieldBandStrength0": 	return "<DEFAULT>";
@@ -78,6 +79,7 @@ namespace ArtemisMissionEditor.Expressions
 				case "targetPointY": 			return "<DEFAULT>";
 				case "targetPointZ": 			return "<DEFAULT>";
 				case "hasSurrendered": 			return "<DEFAULT>";
+                case "tauntImmunityIndex":      return "<DEFAULT>";
 				case "eliteAIType": 			return "<DEFAULT>";
 				case "eliteAbilityBits": 		return "<DEFAULT>";
 				case "eliteAbilityState": 		return "<DEFAULT>";
@@ -126,11 +128,18 @@ namespace ArtemisMissionEditor.Expressions
 		{
             name = name ?? ExpressionMemberValueDescriptions.NameAll;
             value = value ?? ExpressionMemberValueDescriptions.ValueF;
-            
+         // if_property Statment starts here   
 			eML.Add(new ExpressionMember("<property>", ExpressionMemberValueDescriptions.Property, "property"));
-			eML.Add(new ExpressionMember("of "));
-			eML.Add(new ExpressionMember("<>", name, "name", true));
-			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Comparator, "comparator"));
+         // Below is Commented out for when using slot type gets fixed!
+
+            //   eML.Add(new ExpressionMember("for "));
+         //   eML.Add(new ExpressionMember("object "));
+         //   eML.Add(new ExpressionMemberCheck_Name_GM_Slot(name));
+         
+            //Comment out next two Line when uncommeting the above three lines
+            	eML.Add(new ExpressionMember("of "));
+            	eML.Add(new ExpressionMember("<>", name, "name", true));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Comparator, "comparator"));
 			eML.Add(new ExpressionMember("<>", value, "value", true));
 		}
 

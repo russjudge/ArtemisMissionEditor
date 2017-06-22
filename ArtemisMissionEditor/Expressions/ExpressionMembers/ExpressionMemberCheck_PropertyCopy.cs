@@ -24,8 +24,18 @@ namespace ArtemisMissionEditor.Expressions
 
 			switch (type)
 			{
-				//EVERYTHING
-				case "positionX":				return "<DEFAULT>";
+                case "nonPlayerSpeed": return "<DEFAULT>";
+                case "nebulaIsOpaque": return "<DEFAULT>";
+                case "sensorSetting": return "<DEFAULT>";
+                case "nonPlayerShield": return "<DEFAULT>";
+                case "nonPlayerWeapon": return "<DEFAULT>";
+                case "playerWeapon": return "<DEFAULT>";
+                case "playerShields": return "<DEFAULT>";
+                case "coopAdjustmentValue": return "<DEFAULT>";
+
+
+                //EVERYTHING
+                case "positionX":				return "<DEFAULT>";
 				case "positionY": 				return "<DEFAULT>";
 				case "positionZ": 				return "<DEFAULT>";
 				case "deltaX": 					return "<DEFAULT>";
@@ -49,8 +59,9 @@ namespace ArtemisMissionEditor.Expressions
 				case "missileStoresNuke": 		return "<DEFAULT>";
 				case "missileStoresMine": 		return "<DEFAULT>";
 				case "missileStoresECM": 		return "<DEFAULT>";
-				//VALUES FOR SHIELDED SHIPS		
-				case "throttle": 				return "<DEFAULT>";
+                case "missileStoresPShock":     return "<DEFAULT>";
+                //VALUES FOR SHIELDED SHIPS		
+                case "throttle": 				return "<DEFAULT>";
 				case "steering": 				return "<DEFAULT>";
 				case "topSpeed": 				return "<DEFAULT>";
 				case "turnRate": 				return "<DEFAULT>";
@@ -78,7 +89,9 @@ namespace ArtemisMissionEditor.Expressions
 				case "targetPointY": 			return "<DEFAULT>";
 				case "targetPointZ": 			return "<DEFAULT>";
 				case "hasSurrendered": 			return "<DEFAULT>";
-				case "eliteAIType": 			return "<DEFAULT>";
+                case "tauntImmunityIndex":      return "<DEFAULT>";
+
+                case "eliteAIType": 			return "<DEFAULT>";
 				case "eliteAbilityBits": 		return "<DEFAULT>";
 				case "eliteAbilityState": 		return "<DEFAULT>";
 				case "surrenderChance":			return "<DEFAULT>";
@@ -89,7 +102,8 @@ namespace ArtemisMissionEditor.Expressions
 				//VALUES FOR PLAYERS			
 				case "countHoming": 			return "<DEFAULT>";
 				case "countNuke": 				return "<DEFAULT>";
-				case "countMine": 				return "<DEFAULT>";
+                case "totalCoolant":            return "<DEFAULT>";
+                case "countMine": 				return "<DEFAULT>";
 				case "countECM": 				return "<DEFAULT>";
 				case "energy": 					return "<DEFAULT>";
 				case "warpState":				return "<DEFAULT>";

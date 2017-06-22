@@ -70,17 +70,24 @@ namespace ArtemisMissionEditor.Expressions
 			List<ExpressionMember> eML;
 
 			eML = this.Add("<to>"); //Choices[0]
-			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Value, "value")); 
-			
-			eML = this.Add("to a random integer"); //Choices[1]
-			eML.Add(new ExpressionMember("within "));
+            eML.Add(new ExpressionMember(" "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Value, "value"));
+            eML.Add(new ExpressionMember(". Variable is a (blank = float) : "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.IsVarInteger, "integer"));
+            
+
+            eML = this.Add("to a random integer"); //Choices[1]
+            eML.Add(new ExpressionMember("within "));
 			eML.Add(new ExpressionMember("the ")); 
 			eML.Add(new ExpressionMember("range ")); 
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.RandInt, "randomIntLow"));
 			eML.Add(new ExpressionMember("... "));
-			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.RandInt, "randomIntHigh")); 
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.RandInt, "randomIntHigh"));
+            eML.Add(new ExpressionMember(". NEEDS TO BE AN INTEGER! >> "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.IsVarInteger, "integer"));
+            eML.Add(new ExpressionMember(".  Will fix soon(TM)"));
 
-			eML = this.Add("to a random float"); //Choices[2]
+            eML = this.Add("to a random float"); //Choices[2]
 			eML.Add(new ExpressionMember("within "));
 			eML.Add(new ExpressionMember("the ")); 
 			eML.Add(new ExpressionMember("range "));

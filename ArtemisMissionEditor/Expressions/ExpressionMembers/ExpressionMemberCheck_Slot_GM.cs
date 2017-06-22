@@ -11,7 +11,7 @@ namespace ArtemisMissionEditor.Expressions
     /// Represents a single member in an expression, which provides branching via checking a condition.
     /// This check is for name vs gm selection in multiple statements that do something to/with an object.
     /// </summary>
-    public sealed class ExpressionMemberCheck_Name_GM : ExpressionMemberCheck
+    public sealed class ExpressionMemberCheck_Slot_GM : ExpressionMemberCheck
     {
         /// <summary>
         /// This function is called when check needs to decide which list of ExpressionMembers to output. 
@@ -34,7 +34,10 @@ namespace ArtemisMissionEditor.Expressions
         protected override void SetValueInternal(ExpressionMemberContainer container, string value)
         {
             if (value == Choices[0]) //name
-                container.SetAttribute("use_gm_selection", null);
+            { 
+            container.SetAttribute("use_gm_selection", null);
+            container.SetAttributeIfNull("player_slot", "");
+        }
             else // use_gm_sel
                 container.SetAttribute("use_gm_selection", "");
 
@@ -45,18 +48,20 @@ namespace ArtemisMissionEditor.Expressions
         /// Represents a single member in an expression, which provides branching via checking a condition.
         /// This check is for name vs gm selection in multiple statements that do something to/with an object.
         /// </summary>
-        public ExpressionMemberCheck_Name_GM(ExpressionMemberValueDescription name = null)
+        public ExpressionMemberCheck_Slot_GM(ExpressionMemberValueDescription name = null)
             : base("", ExpressionMemberValueDescriptions.Check_Name_GMSelection)
         {
             name = name ?? ExpressionMemberValueDescriptions.Name;
 
             List<ExpressionMember> eML;
+            //eML = this.Add("with name"); //Choices[0]
+           // eML.Add(new ExpressionMember("<>", name, "name"));
 
-            eML = this.Add("with name"); //Choices[0]
-            eML.Add(new ExpressionMember("<>", name, "name"));
-
-            eML = this.Add("selected by GM"); //Choices[1]
+            eML = this.Add("selected by GM "); //Choices[0]
             eML.Add(new ExpressionMember("", ExpressionMemberValueDescriptions.UseGM, "use_gm_selection"));
+
+            eML = this.Add("in player slot "); //Choices[1]
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.UseSlot, "player_slot"));
         }
     }
 }

@@ -24,8 +24,17 @@ namespace ArtemisMissionEditor.Expressions
 
 			switch (type)
 			{
-				//EVERYTHING
-				case "positionX":				return "<FLT0...100K>";
+                case "nonPlayerSpeed":          return "<ENMYSP>";
+                case "nebulaIsOpaque":          return "<NEBULAROP>";
+                case "sensorSetting":           return "<SENSOR>";
+                case "nonPlayerShield":         return "<ENMYSP>";
+                case "nonPlayerWeapon":         return "<ENMYSP>";
+                case "playerWeapon":            return "<ENMYSP>";
+                case "playerShields":           return "<ENMYSP>";
+                case "coopAdjustmentValue":     return "<DEFAULT>";
+                // case "gameTimeLimit":           return "<DEFAULT>";
+                //EVERYTHING
+                case "positionX":				return "<FLT0...100K>";
 				case "positionY": 				return "<FLT-100K...100K>";
 				case "positionZ": 				return "<FLT0...100K>";
 				case "deltaX": 					return "<FLT-100K...100K>";
@@ -49,8 +58,9 @@ namespace ArtemisMissionEditor.Expressions
 				case "missileStoresNuke": 		return "<INT0...+INF>";
 				case "missileStoresMine": 		return "<INT0...+INF>";
 				case "missileStoresECM": 		return "<INT0...+INF>";
-				//VALUES FOR SHIELDED SHIPS		
-				case "throttle": 				return "<DEFAULT>";
+                case "missileStoresPShock":     return "<INT0...+INF>";
+                //VALUES FOR SHIELDED SHIPS		
+                case "throttle": 				return "<DEFAULT>";
 				case "steering": 				return "<DEFAULT>";
 				case "topSpeed": 				return "<DEFAULT>";
 				case "turnRate": 				return "<DEFAULT>";
@@ -78,6 +88,7 @@ namespace ArtemisMissionEditor.Expressions
 				case "targetPointY": 			return "<FLT-100K...100K>";
 				case "targetPointZ": 			return "<FLT0...100K>";
 				case "hasSurrendered": 			return "<BOOLYESNO>";
+                case "tauntImmunityIndex":      return "<tII1_3>";
 				case "eliteAIType": 			return "<ELITEAITYPE>";
 				case "eliteAbilityBits": 		return "<ELITEABILITYBITS>";
 				case "eliteAbilityState": 		return "<DEFAULT>";
@@ -119,11 +130,11 @@ namespace ArtemisMissionEditor.Expressions
 					container.SetAttribute("value", "0");
             }
             //if (value == "<INVALID_PROPERTY>")
-			//{
-			//    value = "<DEFAULT>";
-			//    container.SetAttribute("property", "positionX");
-			//}
-			if (Mission.Current.Loading && value == "<READ_ONLY>")
+            //{
+            //    value = "<DEFAULT>";
+            //    container.SetAttribute("property", "positionX");
+            //}
+            if (Mission.Current.Loading && value == "<READ_ONLY>")
 				Log.Add("Warning! Attempt to set read-only property " + container.GetAttribute("property") + " detected in event: " + container.Statement.Parent.Name + "!");
 			if (Mission.Current.Loading && value == "<UNKNOWN_PROPERTY>")
 				Log.Add("Warning! Unknown property " + container.GetAttribute("property") + " detected in event: "+container.Statement.Parent.Name+"!");
@@ -142,14 +153,28 @@ namespace ArtemisMissionEditor.Expressions
 		/// <summary>
 		/// Adds "
 		/// </summary>
-		private void ____Add_Name(List<ExpressionMember> eML)
-		{
-			eML.Add(new ExpressionMember("for "));
-			eML.Add(new ExpressionMember("object "));
-			eML.Add(new ExpressionMember("with "));
-			eML.Add(new ExpressionMember("name "));
-			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NameAll, "name"));
-		}
+        /// 
+        /// <summary>
+        /// Adds "for object [selected by gm or named]"
+        /// </summary>
+        private void ____Add_Name(List<ExpressionMember> eML, ExpressionMemberValueDescription name = null)
+        {
+            name = name ?? ExpressionMemberValueDescriptions.NameAll;
+
+            eML.Add(new ExpressionMember("for "));
+            eML.Add(new ExpressionMember("object "));
+            eML.Add(new ExpressionMemberCheck_Name_GM_Slot(name));
+        }
+		//private void ____Add_Name(List<ExpressionMember> eML)
+		//{
+  //          name = name ?? ExpressionMemberValueDescriptions.NameAll;
+
+  //          eML.Add(new ExpressionMember("for "));
+		//	eML.Add(new ExpressionMember("object "));
+  //          eML.Add(new ExpressionMemberCheck_Name_GM(name));
+  //          eML.Add(new ExpressionMember("name "));
+		//	eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NameAll, "name"));
+		//}
 
         /// <summary>
         /// Represents a single member in an expression, which provides branching via checking a condition.
@@ -158,7 +183,40 @@ namespace ArtemisMissionEditor.Expressions
         public ExpressionMemberCheck_PropertySet()
 			: base()
 		{
-			List<ExpressionMember> eML;
+            List<ExpressionMember> eML;
+
+            eML = this.Add("<SENSOR>");
+            ____Add_Property(eML);
+            eML.Add(new ExpressionMember("to "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.SensorRange, "value"));
+            //____Add_Name(eML);
+
+            eML = this.Add("<NEBULAROP>");
+            ____Add_Property(eML);
+            eML.Add(new ExpressionMember("to "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Bool_Yes_No, "value"));
+            //____Add_Name(eML);
+
+            eML = this.Add("<ENMYSP>");
+            ____Add_Property(eML);
+            eML.Add(new ExpressionMember("to "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Int_0_PosInf, "value"));
+            eML.Add(new ExpressionMember("%.  (valid appears to be 40% - 300%)"));
+            //____Add_Name(eML);
+
+            eML = this.Add("<ENMYSH>");
+            ____Add_Property(eML);
+            eML.Add(new ExpressionMember("to "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Int_0_PosInf, "value"));
+            //____Add_Name(eML);
+
+            eML = this.Add("<ENMYWP>");
+            ____Add_Property(eML);
+            eML.Add(new ExpressionMember("to "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Int_0_PosInf, "value"));
+            //____Add_Name(eML);
+
+
 
             #region <INT-+INF>    (push radius)
 
@@ -229,10 +287,18 @@ namespace ArtemisMissionEditor.Expressions
             ____Add_Name(eML);
 
             #endregion
+            eML = this.Add("<tII1_3>");
+            ____Add_Property(eML);
+            eML.Add(new ExpressionMember("to "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.tII1_3, "value"));
+            ____Add_Name(eML);
+
+//#endregion
+           
 
             #region <FLT-100K...100K>    (coordinate y, delta)
 
-			eML = this.Add("<FLT-100K...100K>");
+            eML = this.Add("<FLT-100K...100K>");
             ____Add_Property(eML);
             eML.Add(new ExpressionMember("to "));
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Flt_Minus100k_100k, "value"));
