@@ -70,7 +70,7 @@ namespace ArtemisMissionEditor.Forms
                 Location = new Point(x, y);
 			}
 
-			//Size of windows 
+			//Size of windows 6
 			if (key.GetValue("W") != null)
 			{
 				Size = new Size((int)key.GetValue("W"), (int)key.GetValue("H"));

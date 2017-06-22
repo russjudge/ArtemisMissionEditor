@@ -182,5 +182,10 @@ namespace ArtemisMissionEditor.Forms
                 " + Alt to set the state of all abilities to OFF.",
                 "How to use");
         }
-	}
+
+        private void cbITMS_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
 }

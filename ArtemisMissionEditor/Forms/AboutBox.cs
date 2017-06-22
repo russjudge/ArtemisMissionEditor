@@ -108,5 +108,10 @@ namespace ArtemisMissionEditor.Forms
 			if (e.KeyData == Keys.Escape)
 				Close();
 		}
-	}
+
+        private void textBoxDescription_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
 }
