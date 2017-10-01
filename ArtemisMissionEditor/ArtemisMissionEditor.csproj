@@ -68,7 +68,7 @@
     <ManifestKeyFile>ArtemisMissionEditor_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -191,6 +191,7 @@
     <Compile Include="Utility Classes\Settings.cs" />
     <Compile Include="SpaceMap\Space.cs" />
     <Compile Include="SpaceMap\MapObjectNamed_UIEditors.cs" />
+    <Compile Include="Utility Classes\VersionHelper.cs" />
     <Compile Include="Utility Classes\VesselData.cs" />
     <Compile Include="SpaceMap\MapObjectSpecial.cs" />
     <Compile Include="Forms\AboutBox.cs">

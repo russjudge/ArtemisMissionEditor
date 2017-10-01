@@ -31,6 +31,8 @@ namespace ArtemisMissionEditor
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            VersionHelper.CheckVersion();
+
             //MY INIT:
             if (!Settings.Load())
             {
