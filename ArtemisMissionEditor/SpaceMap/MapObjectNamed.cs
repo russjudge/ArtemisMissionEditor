@@ -1104,7 +1104,10 @@ namespace ArtemisMissionEditor.SpaceMap
             else
             {
                 __AddNewAttribute(xDoc, create, "monsterType", _monsterType.ToString());
-                __AddNewAttribute(xDoc, create, "podnumber", _podnumber.ToString());
+                if (!String.IsNullOrEmpty(_podnumber))
+                {
+                    __AddNewAttribute(xDoc, create, "podnumber", _podnumber.ToString());
+                }
             }
             return create;
         }

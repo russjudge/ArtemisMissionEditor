@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Artemis Mission Editor BETA")]
+[assembly: AssemblyTitle("Artemis Mission Editor")]
 [assembly: AssemblyDescription("Complete mission editor suite for Artemis: SBS\r\n\r\nGet the lastest version on Artemis Wiki:\r\nhttp://artemiswiki.pbworks.com/w/page/53389687/Mission_Editor\r\n\r\nUpdated for Artemis 2.1.1 by Russ Judge\r\n\r\nUpdated for Artemis 2.3.0 by Fish\r\n\r\nBug fixes and tweeking by David Wolfe, Alice and Gomeric\r\n\r\nUpdated for Artemis 2.5.1 by Dave Thaler\r\n\r\nReport bugs on the forum thread at: http://www.artemis.eochu.com/?page_id=28#/20130130/artemis-mission-editor-2347979/")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ARME Corporation :-)")]
-[assembly: AssemblyProduct("Artemis Mission Editor BETA")]
+[assembly: AssemblyProduct("Artemis Mission Editor")]
 [assembly: AssemblyCopyright("Copyleft © 2012 Alexey Andronov")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -32,7 +32,7 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.5.1.0")]
+[assembly: AssemblyVersion("2.6.0.0")]
 
 
 //R. Judge: Code analysis also not done--I tried it and it scared me.  Lots of problems.
