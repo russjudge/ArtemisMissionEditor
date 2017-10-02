@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DOCUMENT Type="Advanced Installer" CreateVersion="10.0" version="10.0" Modules="update" RootPath="." Language="en" Id="{774D23D6-BFFA-4854-BD9B-BC777CE64C3D}">
+  <COMPONENT cid="caphyon.advinst.msicomp.DictionaryComponent">
+    <ROW Path="&lt;AI_DICTS&gt;aiu-ue.ail"/>
+    <ROW Path="&lt;AI_DICTS&gt;aiu-ue_en.ail"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.UpdaterEditorComponent">
+    <ROW Section="Update 2.6" Key="Name" Value="Artemis Mission Editor 2.6"/>
+    <ROW Section="Update 2.6" Key="ProductVersion" Value="2.6.0.0"/>
+    <ROW Section="Update 2.6" Key="URL" Value="http://www.example.com/downloads/ArtemisMissionEditorInstaller.2.6.msi"/>
+    <ROW Section="Update 2.6" Key="Size" Value="ArtemisMissionEditorInstaller.2.6.msi"/>
+    <ROW Section="Update 2.6" Key="MD5" Value="ArtemisMissionEditorInstaller.2.6.msi"/>
+    <ROW Section="Update 2.6" Key="ServerFileName" Value="ArtemisMissionEditorInstaller.2.6.msi"/>
+    <ROW Section="Update 2.6" Key="Flags" Value="Critical"/>
+    <ROW Section="Update 2.6" Key="FilePath" Value="[APPDIR]ArtemisMissionEditor.exe"/>
+    <ROW Section="Update 2.6" Key="Version" Value="2.6.0.0"/>
+    <ROW Section="Update 2.6" Key="Description" Value="Updated to support Artemis 2.6"/>
+    <ATTRIBUTE name="OutputFileName" value="ArtemisMissionEditorUpdates.txt"/>
+    <ATTRIBUTE name="OutputFolder" value="."/>
+  </COMPONENT>
+</DOCUMENT>
