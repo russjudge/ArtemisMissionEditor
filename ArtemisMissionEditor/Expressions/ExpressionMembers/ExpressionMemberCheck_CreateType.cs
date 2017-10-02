@@ -215,7 +215,7 @@ namespace ArtemisMissionEditor.Expressions
             eML.Add(new ExpressionMember("pod "));
             eML.Add(new ExpressionMember("number "));
             eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.PodNumber, "podnumber"));
-            eML.Add(new ExpressionMember(" THIS STILL WORKS BUT HAS BEEN DEPRECIATED AS OF 2.2.0 USE MONSTER"));
+            eML.Add(new ExpressionMember(" THIS STILL WORKS BUT HAS BEEN DEPRECATED AS OF 2.2.0 USE MONSTER"));
 
             #endregion
 

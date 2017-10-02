@@ -372,7 +372,7 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// In this method we check wether a node can get placed near another node. 
+        /// In this method we check whether a node can get placed near another node. 
         /// </summary>
         /// <param name="parent">Node being the receiver</param>
         /// <param name="child">Node that is trying to get attached</param>
@@ -440,7 +440,7 @@ namespace ArtemisMissionEditor
 		}
 
 		/// <summary>
-        /// In this method we check wether a statement can get placed near another statement. 
+        /// In this method we check whether a statement can get placed near another statement. 
         /// </summary>
         /// <param name="parent">Node being the receiver</param>
         /// <param name="child">Node that is trying to get attached</param>
@@ -1453,7 +1453,7 @@ namespace ArtemisMissionEditor
 		}
         
         /// <summary>
-        /// Check wether selected statement has source Xml (meaning it was read from file rather than added in the editor)
+        /// Check whether selected statement has source Xml (meaning it was read from file rather than added in the editor)
         /// </summary>
 		public bool StatementHasSourceXml()
 		{
@@ -1894,7 +1894,7 @@ namespace ArtemisMissionEditor
 		}
 
         /// <summary>
-        /// Find out wether a node with specified GUI exists in the mission. 
+        /// Find out whether a node with specified GUI exists in the mission. 
         /// Called from NodePaste.
         /// </summary>
         private bool NodePaste_Exists(Guid? ID)
@@ -1905,7 +1905,7 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// Find out wether a node with specified GUI exists in the current node's children list. 
+        /// Find out whether a node with specified GUI exists in the current node's children list. 
         /// Called from NodePaste_Exists, recursively calls itself.
         /// </summary>
         private bool NodePaste_Exists_RecursivelySearch(TreeNode node, Guid? ID)
@@ -3406,7 +3406,7 @@ namespace ArtemisMissionEditor
         }
         
         /// <summary>
-        /// Highlights statement if it's erroneous and returns wether or not it was highlighted
+        /// Highlights statement if it's erroneous and returns whether or not it was highlighted
         /// </summary>
         /// <param name="statement"></param>
         /// <returns></returns>
@@ -3941,7 +3941,7 @@ namespace ArtemisMissionEditor
         #region Space map interaction
 
         /// <summary>
-        /// Returns wether or not the user can invoke "Add via space map" 
+        /// Returns whether or not the user can invoke "Add via space map" 
         /// or "Edit on space map" options on the specified node. 
         /// If not specified, selected node from Nodes TreeView is used.
         /// </summary>
@@ -3952,7 +3952,7 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// Returns wether or not the user can invoke "Edit on space map" option on the specified node. 
+        /// Returns whether or not the user can invoke "Edit on space map" option on the specified node. 
         /// If not specified, selected node from Nodes TreeView is used.
         /// </summary>
         /// <param name="node">Node from Nodes Treeview. If null - selected node is used.</param>
@@ -3962,7 +3962,7 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// Returns wether or not the user can invoke "Add via space map" 
+        /// Returns whether or not the user can invoke "Add via space map" 
         /// but not "Edit on space map" option on the specified node. 
         /// If not specified, selected node from Nodes TreeView is used.
         /// </summary>

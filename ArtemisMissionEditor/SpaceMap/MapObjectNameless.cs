@@ -157,7 +157,7 @@ namespace ArtemisMissionEditor.SpaceMap
             }
         }
         private int _randomSeed;
-        [DisplayName("Random seed"), Description("Indicates random seed used to produce nameless entities's individual coordinates. NOTE: Using same random seed with same other parameters will create same nameless object distribution over every mission playthrough. However, editor cannot accurately recreate random position generation algorithm that Artemis uses, therefore nameless entities's position you will see in the editor will not be identical to what you will see ingame."), DefaultValue(0)]
+        [DisplayName("Random seed"), Description("Indicates random seed used to produce nameless entities' individual coordinates. NOTE: Using same random seed with same other parameters will create same nameless object distribution over every mission playthrough. However, editor cannot accurately recreate random position generation algorithm that Artemis uses, therefore nameless entities' positions you will see in the editor will not be identical to what you will see in-game."), DefaultValue(0)]
         public int randomSeed { get { return _randomSeed; } set { if (value < 0) _randomSeed = 0; else _randomSeed = value; } }
 
         //TYPE

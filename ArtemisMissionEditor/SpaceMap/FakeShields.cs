@@ -69,7 +69,7 @@ namespace ArtemisMissionEditor.SpaceMap
         public int Rear { get { return _Rear; } set { _Rear = value; } }
 
         private bool _hasFrequency;
-        [DisplayName("Has frequency"), Description("Indicates wether fake shields have a frequency graph (phaser resistance)"), DefaultValue(false)]
+        [DisplayName("Has frequency"), Description("Indicates whether fake shields have a frequency graph (phaser resistance)"), DefaultValue(false)]
         public bool hasFrequency { get { return _hasFrequency; } set { _hasFrequency = value; } }
 
         public static bool operator ==(FakeShields c1, FakeShields c2) { return c1._Front == c2._Front && c1._Rear == c2._Rear && c1._hasFrequency == c2._hasFrequency; }

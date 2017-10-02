@@ -1450,7 +1450,7 @@ namespace ArtemisMissionEditor.SpaceMap
 
         [Browsable(false)]
         public FakeShields _fakeShields;
-        [DisplayName("Fake shields"), Description("Describes wether the generic mesh has fake shields")]
+        [DisplayName("Fake shields"), Description("Describes whether the generic mesh has fake shields")]
         public FakeShields fakeShields { get { return _fakeShields; } set { _fakeShields = value; } }
         private bool ShouldSerializefakeShields()
         {
@@ -1458,7 +1458,7 @@ namespace ArtemisMissionEditor.SpaceMap
         }
 
         private Color _color;
-        [DisplayName("Color"), Description("Describes what color the mesh and its name will have ingame")]
+        [DisplayName("Color"), Description("Describes what color the mesh and its name will have in-game")]
         public Color Color { get { return _color; } set { _color = value; } }
         [Browsable(false)]
         public double Color_Red
