@@ -1,3 +1,10 @@
+Version 2.6 [2017-October-01] (Dave Thaler
+* Add MSI installer files
+* Add automatic version update available check
+* Show command line syntax help if given -? or -h
+* Fixed some more typos
+* Fixed bug with podnumber in Space Map
+----------------------
 Version 2.5.101 [2017-April-24] (Dave Thaler)
 * Updated for Version 2.5.107 of Artemis:
   - Added support for Comms buttons
