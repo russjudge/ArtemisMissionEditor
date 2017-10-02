@@ -12,15 +12,34 @@ using System.Reflection;
 
 namespace ArtemisMissionEditor.Forms
 {
+	/// <summary>
+	///  Main window of the application
+	/// </summary>
 	public partial class FormMain : FormSerializeableToRegistry
     {
 		private static string MainFormName = AboutBox.AssemblyTitle + " v" + AboutBox.AssemblyVersion;
         
         public void UpdateFormText()
 		{
-            string missionVersionDashed = String.IsNullOrEmpty(Mission.Current.VersionNumber) ? "" : " version " + Mission.Current.VersionNumber;
+            string missionVersionDashed;
+            if(String.IsNullOrEmpty(Mission.Current.VersionNumber) == true)
+            {
+                missionVersionDashed = " version ???";
+            }
+            else
+            {
+                missionVersionDashed = " version " + Mission.Current.VersionNumber;
+            }
 
-            string missionName = String.IsNullOrEmpty(Mission.Current.FilePath) ? "Unnamed" : Path.GetFileNameWithoutExtension(Mission.Current.FilePath) + missionVersionDashed;
+            string missionName;
+            if(String.IsNullOrEmpty(Mission.Current.FilePath) == true)
+            {
+                missionName = "Unnamed";
+            }
+            else
+            {
+                missionName = Path.GetFileNameWithoutExtension(Mission.Current.FilePath) + missionVersionDashed;
+            }
 
             Text = (Mission.Current.ChangesPending ? "* " : "") + missionName + " - " + MainFormName;
 		}

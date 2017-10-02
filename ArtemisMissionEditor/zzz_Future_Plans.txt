@@ -1,7 +1,7 @@
 ﻿* CODE rework ~ Work-work!
   * In multiple places we modify something in other classes directly instead of properly employing events. Switch to events!
     For classes like Settings and Mission (where only Class.Current's event matters) we should make event itself static, and fire only for Current class.
-  * COMMEN-FUCKING-TARY EVERYWHERE IT's MISSING! ESPECIALLY METHODS!
+  * COMMENTARY EVERYWHERE IT's MISSING! ESPECIALLY METHODS!
     * TreeView still needs comments?
 	* SpaceMap (whole namespace)
 	* PanelSpaceMap

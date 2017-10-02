@@ -14,7 +14,7 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>publish\</PublishUrl>
+    <PublishUrl>C:\Users\Fish\Desktop\ArtemisMissionEditor241\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -24,9 +24,14 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>2</ApplicationRevision>
-    <ApplicationVersion>1.7.3.2</ApplicationVersion>
+    <TargetCulture>en-GB</TargetCulture>
+    <WebPage>publish.htm</WebPage>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationVersion>2.4.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -56,6 +61,27 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>66B1A322837CFDBDE5453BE19622AC80B47E926E</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>ArtemisMissionEditor_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>Internet</TargetZone>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -74,6 +100,9 @@
     <Compile Include="DependencyGraph\DependencyEvent.cs" />
     <Compile Include="DependencyGraph\DependencyGraph.cs" />
     <Compile Include="DependencyGraph\DependencyPrecursor.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Slot_GM.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Name_GM_Slot.cs" />
+    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Point_Name_GM.cs" />
     <Compile Include="Expressions\ExpressionMemberValueDescriptions.cs" />
     <Compile Include="Expressions\ExpressionMemberValueEditors.cs" />
     <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_BadShipSystem.cs" />
@@ -97,7 +126,6 @@
     <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_PropertySet.cs" />
     <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_AddAIType.cs" />
     <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_SetVariable.cs" />
-    <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Point_Name_GM.cs" />
     <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Named_Nameless.cs" />
     <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Name_GM.cs" />
     <Compile Include="Expressions\ExpressionMembers\ExpressionMemberCheck_Line_Circle.cs" />
@@ -116,6 +144,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="SpaceMap\GrahpicsExtention.cs" />
     <Compile Include="Expressions\ExpressionMembers\ExpressionMember_Unknown.cs" />
@@ -158,6 +191,7 @@
     <Compile Include="Utility Classes\Settings.cs" />
     <Compile Include="SpaceMap\Space.cs" />
     <Compile Include="SpaceMap\MapObjectNamed_UIEditors.cs" />
+    <Compile Include="Utility Classes\VersionHelper.cs" />
     <Compile Include="Utility Classes\VesselData.cs" />
     <Compile Include="SpaceMap\MapObjectSpecial.cs" />
     <Compile Include="Forms\AboutBox.cs">
@@ -390,14 +424,30 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+    <None Include="ArtemisMissionEditor_TemporaryKey.pfx" />
+    <None Include="Properties\app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Resources\icons.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <FileAssociation Include=".ae.xml">
+      <Visible>False</Visible>
+      <Description>XML</Description>
+      <Progid>ArtMISSFile</Progid>
+      <DefaultIcon>Resources\Maps-Earth.ico</DefaultIcon>
+    </FileAssociation>
+    <FileAssociation Include=".xml">
+      <Visible>False</Visible>
+      <Description>XML</Description>
+      <Progid>ArtMISSFile</Progid>
+      <DefaultIcon>Resources\Maps-Earth.ico</DefaultIcon>
+    </FileAssociation>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

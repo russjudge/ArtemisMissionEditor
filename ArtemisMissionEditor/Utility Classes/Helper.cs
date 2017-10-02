@@ -62,10 +62,10 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// Outputs double to string without different stupid shit M$ does by default
+        /// Outputs double to string
         /// </summary>
         /// <param name="input"></param>
-        /// <param name="decimalZero">Wether a decimal zero must be present.</param>
+        /// <param name="decimalZero">Whether a decimal zero must be present.</param>
         public static string DoubleToString(double input, bool decimalZero = true)
         {
 			if (decimalZero)

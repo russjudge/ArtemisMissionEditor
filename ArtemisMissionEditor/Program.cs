@@ -31,6 +31,8 @@ namespace ArtemisMissionEditor
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            VersionHelper.CheckVersion();
+
             //MY INIT:
             if (!Settings.Load())
             {
@@ -46,7 +48,13 @@ namespace ArtemisMissionEditor
                 customVesselDataFileName = argList[2];
             else if (argList.Length > 3 && argList[2] == "-v")
                 customVesselDataFileName = argList[3];
-            if (argList.Length > 1 && argList[1] != "-v")
+            if ((argList.Length > 1) &&
+                (argList[1] == "-?" || argList[1] == "/?" || argList[1] == "-h" || argList[1] == "/h"))
+            {
+                MessageBox.Show("ArtemisMissionEditor.exe [missionfilename] [-v vesseldatafilename]", "Command-line syntax");
+                return;
+            }
+            else if (argList.Length > 1 && argList[1] != "-v")
                 missionFileName = argList[1];
 
             FormLogInstance = new FormLog();

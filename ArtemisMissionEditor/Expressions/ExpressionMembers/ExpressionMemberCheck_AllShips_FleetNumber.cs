@@ -57,5 +57,8 @@ namespace ArtemisMissionEditor.Expressions
 			//In case this is using GM pos, it looks like: "... at GM position"
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.FleetNumberIf, "fleetnumber"));
 		}
-	}
+       }
+
+
+
 }

@@ -55,7 +55,7 @@ namespace ArtemisMissionEditor.SpaceMap
                             countFound++;
                     if (countFound < words.Length)
                         continue;
-                    // If we found whole class name - remove it's occurances (once!) and check it
+                    // If we found whole class name - remove its occurrences (once!) and check it
                     foreach (string word in words)
                         keys.Remove(word);
                     cbx.SetItemChecked(VesselData.Current.VesselClassNames.IndexOf(curName), true);

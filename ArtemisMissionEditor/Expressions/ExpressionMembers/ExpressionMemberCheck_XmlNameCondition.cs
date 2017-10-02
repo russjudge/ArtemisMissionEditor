@@ -30,7 +30,9 @@ namespace ArtemisMissionEditor.Expressions
                 case "if_player_is_targeting":
                 case "if_timer_finished":
                 case "if_object_property":
+                case "if_comms_button":
                 case "if_gm_key":
+                case "if_gm_button":
                 case "if_client_key":
                 case "if_distance":
                     return container.Statement.Name;
@@ -105,10 +107,11 @@ namespace ArtemisMissionEditor.Expressions
 
 			AddSeparator();
 
-			#region if_damcon_members
+            #region if_damcon_members
 
-			eML = this.Add("if_damcon_members");
-			eML.Add(new ExpressionMember("in "));
+            eML = this.Add("if_damcon_members");
+            eML.Add(new ExpressionMemberCheck_Slot_GM(ExpressionMemberValueDescriptions.NameAll));
+            eML.Add(new ExpressionMember("in "));
 			eML.Add(new ExpressionMember("team "));
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Teamindex, "team_index"));
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Comparator, "comparator"));
@@ -163,8 +166,9 @@ namespace ArtemisMissionEditor.Expressions
 			#region if_inside/outside_box/sphere
 
 			eML = this.Add("<location>");
-			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NameAll, "name", true));
-			eML.Add(new ExpressionMember("is "));
+            eML.Add(new ExpressionMember(" "));
+            eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NameAll));
+            eML.Add(new ExpressionMember("is "));
 			eML.Add(new ExpressionMemberCheck_Inside_Outside());
 			eML.Add(new ExpressionMember("the "));
 			eML.Add(new ExpressionMemberCheck_Box_Sphere());
@@ -195,13 +199,27 @@ namespace ArtemisMissionEditor.Expressions
 
 			AddSeparator();
 
+            #region if_comms_button
+
+            eML = this.Add("if_comms_button");
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.TextCommsButton, "text", true));
+
+            #endregion
+
 			#region if_gm_key
 
 			eML = this.Add("if_gm_key");
 			eML.Add(new ExpressionMember("the "));
 			eML.Add(new ExpressionMemberCheck_Letter_ID());
 
-			#endregion
+            #endregion
+
+            #region if_gm_button
+
+            eML = this.Add("if_gm_button");
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.TextGMButton, "text", true));
+
+            #endregion
 
             #region if_client_key
 

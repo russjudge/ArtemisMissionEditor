@@ -274,6 +274,22 @@ namespace ArtemisMissionEditor.Expressions
         }
 
         /// <summary>
+        /// Context menu strip for GM button names
+        /// </summary>
+        internal static ContextMenuStrip PrepareContextMenuStrip_GMButtonTextList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode)
+        {
+            return PrepareContextMenuStrip_SpecifiedListPlusDialog(container, editor, mode, Mission.Current.GMButtonTextsList);
+        }
+
+        /// <summary>
+        /// Context menu strip for Comms button names
+        /// </summary>
+        internal static ContextMenuStrip PrepareContextMenuStrip_CommsButtonTextList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode)
+        {
+            return PrepareContextMenuStrip_SpecifiedListPlusDialog(container, editor, mode, Mission.Current.CommsButtonTextsList);
+        }
+
+        /// <summary>
         /// Context menu strip for variable names
         /// </summary>
         internal static ContextMenuStrip PrepareContextMenuStrip_VariableNameList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode)

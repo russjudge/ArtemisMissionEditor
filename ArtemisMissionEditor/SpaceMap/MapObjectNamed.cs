@@ -86,8 +86,8 @@ namespace ArtemisMissionEditor.SpaceMap
 
             switch (type)
             {
-                case "anomaly":
-                    mo = new MapObjectNamed_anomaly();
+                case "Anomaly":
+                    mo = new MapObjectNamed_Anomaly();
                     break;
                 case "blackHole":
                     mo = new MapObjectNamed_blackHole();
@@ -623,7 +623,7 @@ namespace ArtemisMissionEditor.SpaceMap
         }
         public override bool IsPropertyMandatory(string pName) { return base.IsPropertyMandatory(pName); }
 
-        //TYPE
+        //
         public override string TypeToString { get { return base.TypeToString; } }
         public override string TypeToStringShort { get { return base.TypeToString; } }
 
@@ -901,8 +901,13 @@ namespace ArtemisMissionEditor.SpaceMap
         #endregion
     }
 
-    public sealed class MapObjectNamed_anomaly : MapObjectNamed
+    public sealed class MapObjectNamed_Anomaly : MapObjectNamed
     {
+        //MONSTER TYPE
+        private string _pickupType;
+        [DisplayName("pickupType"), Description("Anomaly Type 0=Energy")]
+        public string pickupType { get { return _pickupType; } set { _pickupType = value; } }
+
         #region INHERITANCE
 
         //SELECTION
@@ -911,21 +916,53 @@ namespace ArtemisMissionEditor.SpaceMap
 
         //PROPERTIES
         public override bool IsPropertyAvailable(string pName) { return base.IsPropertyAvailable(pName); }
-        public override bool IsPropertyMandatory(string pName) { return base.IsPropertyMandatory(pName); }
+        public override bool IsPropertyMandatory(string pName) {
+            if (pName == "pickupType") return true;
+            return base.IsPropertyMandatory(pName); }
 
         //TYPE
-        public override string TypeToString { get { return "anomaly"; } }
+        public override string TypeToString { get { return "Anomaly"; } }
         public override string TypeToStringShort { get { return "ANM"; } }
 
         //COPIER
-        public override void Copy(bool excludeCoordinates, params MapObjectNamed[] source) { base.Copy(excludeCoordinates, source); }
+        public override void Copy(bool excludeCoordinates, params MapObjectNamed[] source)
+        {
+            base.Copy(excludeCoordinates, source);
+            //{
+            bool same, found;
+            if (source.Count() == 0)
+                return;
+
+            //monsterType
+            string tmp1 = "";
+            same = true; found = false;
+            foreach (MapObjectNamed item in source)
+                if (item.IsPropertyAvailable("pickupType"))
+                    if (!found)
+                    {
+                        found = true;
+                        tmp1 = ((MapObjectNamed_Anomaly)item)._pickupType;
+                    }
+                    else
+                        same = same && (((MapObjectNamed_Anomaly)item)._pickupType != tmp1);
+            if (found && same)
+                this._pickupType = tmp1;
+
+
+            base.Copy(excludeCoordinates, source);
+        }
 
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
             if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
-
+            if (String.IsNullOrEmpty(_pickupType))
+            { __AddNewAttribute(xDoc, create, "pickupType", "0"); }
+            else
+            {
+                __AddNewAttribute(xDoc, create, "pickupType", _pickupType.ToString());
+            }
             return create;
         }
 
@@ -933,17 +970,19 @@ namespace ArtemisMissionEditor.SpaceMap
         public override void FromXml(XmlNode item)
         {
             base.FromXml(item);
-            //foreach (XmlAttribute att in item.Attributes)
-            //    switch (att.Name)
-            //    {
-
-            //    }
+            foreach (XmlAttribute att in item.Attributes)
+                switch (att.Name)
+                {
+                 case "pickupType":
+                        _pickupType = att.Value;
+                break;
+                }
         }
 
         //CONSTRUCTOR
-        public MapObjectNamed_anomaly(int posX = 0, int posY = 0, int posZ = 0, string name = "", bool makeSelected = false)
+        public MapObjectNamed_Anomaly(int posX = 0, int posY = 0, int posZ = 0, string name = "", bool makeSelected = false)
             : base(posX, posY, posZ, name, makeSelected)
-        { }
+        { _pickupType = pickupType; }
 
         #endregion
     }
@@ -997,6 +1036,15 @@ namespace ArtemisMissionEditor.SpaceMap
 
     public sealed class MapObjectNamed_monster : MapObjectNamedA
     {
+
+        //MONSTER TYPE
+        private string _monsterType;
+        [DisplayName("Monster Type"), Description("Monster Type 0=Classic")]
+        public string monsterType { get { return _monsterType; } set { _monsterType = value; } }
+
+        private string _podnumber;
+        [DisplayName("Pod Number"), Description("Whale pod number, identifies packs of whales that travel together")]
+        public string podnumber { get { return _podnumber; } set { _podnumber = value; } }
         #region INHERITANCE
 
         //SELECTION
@@ -1004,40 +1052,85 @@ namespace ArtemisMissionEditor.SpaceMap
         public override int _selectionSize { get { return base._selectionSize; } }
 
         //PROPERTIES
-        public override bool IsPropertyAvailable(string pName) { return base.IsPropertyAvailable(pName); }
-        public override bool IsPropertyMandatory(string pName) { return base.IsPropertyMandatory(pName); }
+        public override bool IsPropertyAvailable(string pName)
+        {
+            if (pName == "monsterType") return true;
+            if (pName == "podnumber") return true;
+            return base.IsPropertyAvailable(pName);
+        }
+
+        public override bool IsPropertyMandatory(string pName) {
+            if (pName == "monsterType") return true;
+            return base.IsPropertyMandatory(pName);
+        }
 
         //TYPE
         public override string TypeToString { get { return "monster"; } }
         public override string TypeToStringShort { get { return "MON"; } }
-
+ 
+        
         //COPIER
-        public override void Copy(bool excludeCoordinates, params MapObjectNamed[] source) { base.Copy(excludeCoordinates, source); }
+        public override void Copy(bool excludeCoordinates, params MapObjectNamed[] source) { base.Copy(excludeCoordinates, source);
+               //{
+            bool same, found;
+            if (source.Count() == 0)
+                return;
 
+                //monsterType
+                string tmp1 = "";
+        same = true; found = false;
+            foreach (MapObjectNamed item in source)
+                if (item.IsPropertyAvailable("monsterType"))
+                    if (!found)
+                    {
+                        found = true;
+                        tmp1 = ((MapObjectNamed_monster)item)._monsterType;
+                    }
+                    else
+                        same = same && (((MapObjectNamed_monster)item)._monsterType != tmp1);
+            if (found && same)
+                this._monsterType = tmp1;
+            
+                        
+            base.Copy(excludeCoordinates, source);
+    }
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
             if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
-
+            if (String.IsNullOrEmpty(_monsterType))
+            { __AddNewAttribute(xDoc, create, "monsterType", "0"); }
+            else
+            {
+                __AddNewAttribute(xDoc, create, "monsterType", _monsterType.ToString());
+                if (!String.IsNullOrEmpty(_podnumber))
+                {
+                    __AddNewAttribute(xDoc, create, "podnumber", _podnumber.ToString());
+                }
+            }
             return create;
         }
-
         //FROM XML
         public override void FromXml(XmlNode item)
         {
             base.FromXml(item);
-            //foreach (XmlAttribute att in item.Attributes)
-            //    switch (att.Name)
-            //    {
-
-            //    }
+            foreach (XmlAttribute att in item.Attributes)
+                switch (att.Name)
+                {
+                    case "monsterType":
+                        _monsterType = att.Value;
+                        break;
+                    case "podnumber":
+                        _podnumber = att.Value;
+                        break;
+                }
         }
 
         //CONSTRUCTOR
         public MapObjectNamed_monster(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int angle = 0, string name = "")
             : base(posX, posY, posZ, makeSelected, angle, name)
-        { }
+        { _monsterType = monsterType; }
 
         #endregion
     }
@@ -1087,6 +1180,7 @@ namespace ArtemisMissionEditor.SpaceMap
         { }
 
         #endregion
+
     }
 
 	public sealed class MapObjectNamed_whale : MapObjectNamedA
@@ -1356,7 +1450,7 @@ namespace ArtemisMissionEditor.SpaceMap
 
         [Browsable(false)]
         public FakeShields _fakeShields;
-        [DisplayName("Fake shields"), Description("Describes wether the generic mesh has fake shields")]
+        [DisplayName("Fake shields"), Description("Describes whether the generic mesh has fake shields")]
         public FakeShields fakeShields { get { return _fakeShields; } set { _fakeShields = value; } }
         private bool ShouldSerializefakeShields()
         {
@@ -1364,7 +1458,7 @@ namespace ArtemisMissionEditor.SpaceMap
         }
 
         private Color _color;
-        [DisplayName("Color"), Description("Describes what color the mesh and its name will have ingame")]
+        [DisplayName("Color"), Description("Describes what color the mesh and its name will have in-game")]
         public Color Color { get { return _color; } set { _color = value; } }
         [Browsable(false)]
         public double Color_Red

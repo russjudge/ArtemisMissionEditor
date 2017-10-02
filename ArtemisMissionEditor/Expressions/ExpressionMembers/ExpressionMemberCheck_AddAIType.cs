@@ -37,7 +37,7 @@ namespace ArtemisMissionEditor.Expressions
 				case "FOLLOW_COMMS_ORDERS": return "<NOTHING>";
 				//case "FOLLOW_NEUTRAL_PATH": return "<NOTHING>";
 				case "LEADER_LEADS":		return "<NOTHING>";
-				case "ELITE_AI":			return "<NOTHING>";
+				case "SPCL_AI":			return "<NOTHING>";
 				case "DIR_THROTTLE":		return "DIR_THROTTLE";
 				case "POINT_THROTTLE":		return "POINT_THROTTLE";
 				case "TARGET_THROTTLE":		return "TARGET_THROTTLE";
@@ -98,7 +98,7 @@ namespace ArtemisMissionEditor.Expressions
 		{
 			List<ExpressionMember> eML;
 
-			#region <NOTHING>		(TRY_TO_BECOME_LEADER, CHASE_ANGER, FOLLOW_LEADER, FOLLOW_COMMS_ORDERS, FOLLOW_NEUTRAL_PATH, LEADER_LEADS, ELITE_AI, PROCEED_TO_EXIT)
+			#region <NOTHING>		(TRY_TO_BECOME_LEADER, CHASE_ANGER, FOLLOW_LEADER, FOLLOW_COMMS_ORDERS, FOLLOW_NEUTRAL_PATH, LEADER_LEADS, SPCL_AI, PROCEED_TO_EXIT)
 
 			eML = this.Add("<NOTHING>");
 			____Add_Type(eML);
@@ -263,6 +263,19 @@ namespace ArtemisMissionEditor.Expressions
 			eML.Add(new ExpressionMember("closer "));
 			eML.Add(new ExpressionMember("than "));
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.ValueRadius, "value1"));
+			____Add_Name(eML);
+
+			#endregion
+
+			#region GUARD_STATION
+
+			eML = this.Add("GUARD_STATION");
+			____Add_Type(eML);
+			eML.Add(new ExpressionMember("using "));
+			eML.Add(new ExpressionMember("magic "));
+			eML.Add(new ExpressionMember("number "));
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Radius, "value1"));
+			eML.Add(new ExpressionMember("\" "));
 			____Add_Name(eML);
 
 			#endregion

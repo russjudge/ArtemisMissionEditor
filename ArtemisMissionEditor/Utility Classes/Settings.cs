@@ -27,7 +27,7 @@ namespace ArtemisMissionEditor
     public sealed partial class Settings
     {
         private static readonly string FileName = "settings.binary";
-        private static readonly int LastVersion = 7;
+        private static readonly int LastVersion = 8;
         
         public static readonly string ProgramDataFolder = @"%appdata%\ArtemisMissionEditor\";
         
@@ -81,7 +81,7 @@ namespace ArtemisMissionEditor
         public bool _dragIntoFolderToLastPosition;
 
 		/// <summary>
-		/// Wether the default (`) map scale will be padded or zommed in 100%
+		/// Whether the default (`) map scale will be padded or zommed in 100%
 		/// </summary>
         [DisplayName("Space map is padded by default"), Description("If true, space map will be padded (fully zoomed out) when reset key is pressed or space map is opened.\r\nIf false, space map will instead be fit into window ."), DefaultValue(true)]
         public bool DefaultSpaceMapScalePadded { get { return _defaultSpaceMapScalePadded; } set { _defaultSpaceMapScalePadded = value; } }
@@ -151,7 +151,7 @@ namespace ArtemisMissionEditor
         public bool _showStartStatementsInBackground;
 
 		/// <summary>
-		/// Wether top use generic mesh's color when drawing it on space map
+		/// Whether top use generic mesh's color when drawing it on space map
 		/// </summary>
 		[DisplayName("Use generic mesh color"), Description("Use generic mesh color when drawing generic mesh on space map."), DefaultValue(true)]
         public bool UseGenericMeshColor { get { return _useGenericMeshColor; } set { _useGenericMeshColor = value; } }
@@ -578,7 +578,6 @@ namespace ArtemisMissionEditor
 						MinimalLuminance = 0.05;
 						MinimalSpaceMapSize = 100;
 						MaximalSpaceMapSize = 15000;
-						NewMissionStartBlock = "<create type=\"player\" name = \"Artemis\" x=\"50000\" y=\"0\" z=\"50000\"/>\r\n<set_difficulty_level value=\"5\"/>\r\n<set_skybox_index index=\"9\"/><big_message title=\"Unnamed mission\" subtitle1=\"by Unknown Author\" subtitle2=\"adventure for Artemis 2.1\"/>\r\n<set_timer name=\"start_mission_timer_1\" seconds=\"10\"/>\r\n<set_variable name=\"chapter_1\" value=\"1\"/>";
 						UseYForSelection = true;
                         break;
 					case 2:
@@ -612,6 +611,9 @@ namespace ArtemisMissionEditor
                         _labelFont = (Font)TypeDescriptor.GetConverter(typeof(Font)).ConvertFromInvariantString(DefaultLabelFont);
                         break;
                     case 7:
+                        NewMissionStartBlock = "<create type=\"player\" player_slot=\"\" x=\"50000\" y=\"0\" z=\"50000\" name=\"Artemis\" />\r\n<set_difficulty_level value=\"5\" />\r\n<set_skybox_index index=\"10\" />\r\n<set_object_property property=\"nebulaIsOpaque\" value=\"0\" />\r\n<set_object_property property=\"sensorSetting\" value=\"1\" />\r\n<set_object_property property=\"nonPlayerSpeed\" value=\"100\" />\r\n<set_object_property property=\"nonPlayerShield\" value=\"100\" />\r\n<set_object_property property=\"nonPlayerWeapon\" value=\"100\" />\r\n<set_object_property property=\"playerWeapon\" value=\"100\" />\r\n<set_object_property property=\"playerShields\" value=\"100\" />\r\n<big_message title=\"Unnamed mission\" subtitle1=\"by Unknown Author\" subtitle2=\"adventure for Artemis 2.6\" /><set_timer name=\"start_mission_timer_1\" seconds=\"10\" />\r\n<set_variable name=\"chapter_1\" value=\"1\" />";
+                        break;
+                    case 8:
                         // Transition from old format
                         break;
                 }

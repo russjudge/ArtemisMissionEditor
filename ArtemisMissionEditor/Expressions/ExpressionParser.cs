@@ -50,7 +50,9 @@ namespace ArtemisMissionEditor.Expressions
 				if (item as ExpressionMemberCheck == null)
 					continue;
 
-				Append(statement, ((ExpressionMemberCheck)item).PossibleExpressions[nEMC.Decide()], where);
+				string key = nEMC.Decide();
+				List<ExpressionMember> toAppend = ((ExpressionMemberCheck)item).PossibleExpressions[key];
+				Append(statement, toAppend, where);
 			}
 		}
 	}

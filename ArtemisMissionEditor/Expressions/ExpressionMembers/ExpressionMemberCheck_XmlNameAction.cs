@@ -33,8 +33,13 @@ namespace ArtemisMissionEditor.Expressions
 				case "end_mission":				
 				case "incoming_comms_text":		
 				case "set_object_property":		
-				case "set_fleet_property":		
-				case "addto_object_property":	
+				case "set_fleet_property":
+                case "set_comms_button":
+                case "set_gm_button":
+                case "gm_button":
+                case "clear_comms_button":
+                case "clear_gm_button":
+                case "addto_object_property":	
 				case "copy_object_property":	
 				case "set_relative_position":	
 				case "set_to_gm_position":		
@@ -50,6 +55,7 @@ namespace ArtemisMissionEditor.Expressions
 				case "set_ship_text":
                 case "set_special":
                 case "set_side_value":
+                case "spawn_external_program":
 					return container.Statement.Name;
                 case "destroy":
                 case "destroy_near":
@@ -147,11 +153,53 @@ namespace ArtemisMissionEditor.Expressions
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.FleetIndex, "fleetIndex"));
 			eML.Add(new ExpressionMemberCheck_BadFleetProperty());
 
-			#endregion
+            #endregion
 
-			#region set_relative_position
+            #region set_comms_button
 
-			eML = this.Add("set_relative_position");
+            eML = this.Add("set_comms_button");
+            eML.Add(new ExpressionMember("with text "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.TextCommsButton, "text"));
+            eML.Add(new ExpressionMember(". Optional Bits: Side:"));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.SideValue, "sideValue"));
+
+            #endregion
+
+            #region clear_comms_button
+
+            eML = this.Add("clear_comms_button");
+            eML.Add(new ExpressionMember("with text "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.TextCommsButton, "text"));
+
+            #endregion
+
+            #region set_gm_button
+
+            eML = this.Add("set_gm_button");
+            eML.Add(new ExpressionMember("with text "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.TextGMButton, "text"));
+            eML.Add(new ExpressionMember(". Optional Bits: Position X:"));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.GMX, "x"));
+            eML.Add(new ExpressionMember(" Position Y:"));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.GMY, "y"));
+            eML.Add(new ExpressionMember(" Button Height:"));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.GMH, "h"));
+            eML.Add(new ExpressionMember(" Button Width:"));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.GMW, "w"));
+
+            #endregion
+
+            #region clear_gm_button
+
+            eML = this.Add("clear_gm_button");
+            eML.Add(new ExpressionMember("with text "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.TextGMButton, "text"));
+
+            #endregion
+
+            #region set_relative_position
+
+            eML = this.Add("set_relative_position");
 			eML.Add(new ExpressionMember("of "));
 			eML.Add(new ExpressionMember("object "));
 			eML.Add(new ExpressionMember("with "));
@@ -184,7 +232,7 @@ namespace ArtemisMissionEditor.Expressions
 			eML = this.Add("set_to_gm_position");
 			eML.Add(new ExpressionMember("of "));
 			eML.Add(new ExpressionMember("object "));
-			eML.Add(new ExpressionMemberCheck_Name_GM(ExpressionMemberValueDescriptions.NameAll));
+			eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NameAll));
 			eML.Add(new ExpressionMember("to "));
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Radius, "distance"));
 			eML.Add(new ExpressionMember("meters "));
@@ -257,9 +305,8 @@ namespace ArtemisMissionEditor.Expressions
             eML.Add(new ExpressionMember("for "));
             eML.Add(new ExpressionMember("object "));
             eML.Add(new ExpressionMember("with "));
-            eML.Add(new ExpressionMember("name "));
+            eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NameAll));
 
-            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NameAllWithColon, "name", true));
             eML.Add(new ExpressionMember("change name to "));
             eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NameWithComma, "newname"));
             eML.Add(new ExpressionMember("change race to "));
@@ -280,30 +327,31 @@ namespace ArtemisMissionEditor.Expressions
             eML.Add(new ExpressionMember("to "));
             eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.SideValue, "value", true));
             eML.Add(new ExpressionMember("for "));
-            eML.Add(new ExpressionMember("object "));
-            eML.Add(new ExpressionMember("with "));
-            eML.Add(new ExpressionMember("name "));
-            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NameAll, "name", true));
+             eML.Add(new ExpressionMember("object "));
+            eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NameAll));
+         //   eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NameAll, "name", true));
             #endregion
 
             #region set_special
             eML = this.Add("set_special");
-            eML.Add(new ExpressionMember("ship's "));
-            eML.Add(new ExpressionMember("special "));
-            eML.Add(new ExpressionMember("type "));
-            eML.Add(new ExpressionMember("to "));
-            eML.Add(new ExpressionMember("<unspecified>", ExpressionMemberValueDescriptions.ShipState, "ship"));
-            eML.Add(new ExpressionMember("and "));
-            eML.Add(new ExpressionMember("captain's "));
-            eML.Add(new ExpressionMember("special "));
-            eML.Add(new ExpressionMember("type "));
-            eML.Add(new ExpressionMember("to "));
-            eML.Add(new ExpressionMember("<unspecified>", ExpressionMemberValueDescriptions.CaptainState, "captain"));
-            eML.Add(new ExpressionMember("for "));
-            eML.Add(new ExpressionMember("AI ship "));
+            eML.Add(new ExpressionMember("for AI ship "));
             eML.Add(new ExpressionMember("with "));
             eML.Add(new ExpressionMember("name "));
             eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NameAll, "name", true));
+            eML.Add(new ExpressionMember(". Set ship"));
+            eML.Add(new ExpressionMember(" sub "));
+            eML.Add(new ExpressionMember("type "));
+            eML.Add(new ExpressionMember("as "));
+            eML.Add(new ExpressionMember("<unspecified>", ExpressionMemberValueDescriptions.ShipState, "ship"));
+            eML.Add(new ExpressionMember(", with "));
+            eML.Add(new ExpressionMember("captain "));
+            eML.Add(new ExpressionMember("personality "));
+            eML.Add(new ExpressionMember("<unspecified>", ExpressionMemberValueDescriptions.CaptainState, "captain"));
+            eML.Add(new ExpressionMember("and "));
+            eML.Add(new ExpressionMember("Add", ExpressionMemberValueDescriptions.SpecialSwitchState, "clear"));
+            eML.Add(new ExpressionMember(" special ability "));
+            eML.Add(new ExpressionMember("<unspecified>", ExpressionMemberValueDescriptions.SpecialState, "ability"));
+
 
             #endregion
 
@@ -330,8 +378,9 @@ namespace ArtemisMissionEditor.Expressions
 			eML = this.Add("incoming_comms_text");
 			eML.Add(new ExpressionMember("from "));
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.MessageFrom, "from"));
-			eML.Add(new ExpressionMember("with "));
-			eML.Add(new ExpressionMember("body: "));
+			eML.Add(new ExpressionMember("with type "));
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.MessageType, "type"));
+			eML.Add(new ExpressionMember("and body: "));
 			eML.Add(new ExpressionMember_Body());
 
 			#endregion
@@ -345,13 +394,15 @@ namespace ArtemisMissionEditor.Expressions
 			eML.Add(new ExpressionMember("to "));
 			eML.Add(new ExpressionMember("consoles: "));
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Consoles, "consoles"));
-			
-			
-			#endregion
+            eML.Add(new ExpressionMember(". On ship "));
+            eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NameAll));
 
-			#region start_getting_keypresses_from
 
-			eML = this.Add("start_getting_keypresses_from");
+            #endregion
+
+            #region start_getting_keypresses_from
+
+            eML = this.Add("start_getting_keypresses_from");
 			
             eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Consoles, "consoles"));
 			
@@ -414,7 +465,9 @@ namespace ArtemisMissionEditor.Expressions
 			eML.Add(new ExpressionMember("value "));
 			eML.Add(new ExpressionMember("to "));
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Damage, "value"));
-			eML.Add(new ExpressionMember("for "));
+            eML.Add(new ExpressionMember("on ship "));
+            eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NameAll));
+            eML.Add(new ExpressionMember(", "));
 			eML.Add(new ExpressionMember("node "));
 			eML.Add(new ExpressionMember("number "));
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NodeIndex, "index"));
@@ -440,15 +493,29 @@ namespace ArtemisMissionEditor.Expressions
 			eML.Add(new ExpressionMember("team "));
 			eML.Add(new ExpressionMember("number "));
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Teamindex, "team_index"));
+            eML.Add(new ExpressionMember(". On Ship "));
+            eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NameAll));
 
-			#endregion
+            #endregion
 
-			AddSeparator();
+            AddSeparator();
 
 			#region log
 
 			eML = this.Add("log");
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Text, "text"));
+
+			#endregion
+
+			#region spawn_external_program
+
+			eML = this.Add("spawn_external_program");
+			eML.Add(new ExpressionMember("with id "));
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Text, "id"));
+			eML.Add(new ExpressionMember("using executable "));
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Text, "name"));
+			eML.Add(new ExpressionMember("and command line "));
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Text, "arguments"));
 
 			#endregion
 

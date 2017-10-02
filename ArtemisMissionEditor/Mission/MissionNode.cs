@@ -23,7 +23,7 @@ namespace ArtemisMissionEditor
         /// <summary> Extra attributes of the node. Used to store states such as "collapsed/expanded" state of the folder</summary>
         public List<string> ExtraAttributes { get; set; }
 
-        /// <summary> Wether the node is using it's default name or not.</summary>
+        /// <summary> Whether the node is using its default name or not.</summary>
         public bool HasDefaultName { get { return _hasDefaultName; } protected set { _hasDefaultName = value; } }
         protected bool _hasDefaultName;
 		
@@ -187,7 +187,7 @@ namespace ArtemisMissionEditor
     [Serializable]
 	public sealed class MissionNode_Event : MissionNode
     {
-		/// <summary> Wether this event is enabled or not.</summary>
+		/// <summary> Whether this event is enabled or not.</summary>
         public bool Enabled;
 
         /// <summary> Serial number of this event.</summary>

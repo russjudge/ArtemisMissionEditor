@@ -81,6 +81,7 @@
             this.cbITMS.TabIndex = 2;
             this.cbITMS.Text = "INVISIBLE TO MAIN SCREEN";
             this.cbITMS.UseVisualStyleBackColor = true;
+            this.cbITMS.CheckedChanged += new System.EventHandler(this.cbITMS_CheckedChanged);
             // 
             // cbITLT
             // 

@@ -17,12 +17,12 @@ namespace ArtemisMissionEditor
         public int Number;
 
         /// <summary>
-        /// Wether this label was selected by keyboard (number press) or other means.
+        /// Whether this label was selected by keyboard (number press) or other means.
         /// </summary>
         public bool SelectedByKeyboard;
 
         /// <summary>
-        /// Wether linebreak is required after this label.
+        /// Whether linebreak is required after this label.
         /// </summary>
         public bool RequiresLinebreak;
 
@@ -33,7 +33,7 @@ namespace ArtemisMissionEditor
 		}
 
 		/// <summary>
-		/// THIS MEMBER IS FUCKING MEANINGFUL!
+		/// THIS MEMBER IS MEANINGFUL!
 		/// </summary>
 		public override string Text
 		{

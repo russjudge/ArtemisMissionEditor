@@ -82,17 +82,27 @@ namespace ArtemisMissionEditor.Expressions
         /// <summary> "use_gm_position/selection"    from [create, destroy, ...] </summary>
         public static EMVD UseGM =                      new EMVD(EMVT.VarString,    EMVB.StoredAsIs,        EMVE.Nothing);
         /// <summary> "type" from [create]  </summary>
+                 public static EMVD UseSlot = new EMVD(EMVT.VarInteger, EMVB.StoredWhenFilled, EMVE.DefaultInteger, 0, 7);
+        /// <summary> "type" from [create]  </summary>
         public static EMVD Type =                       new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.CreateType);
         /// <summary> "name" from [create, destroy, ...] </summary>
         public static EMVD Name =                       new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.DefaultString,null,null,"\"","\" ");
         /// <summary> "name" from [create, destroy, ...] </summary>    
         public static EMVD NameWithComma =              new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.DefaultString,null,null,"\"","\", ");
         /// <summary> "angle" from [create, ...] </summary>
-        public static EMVD Angle =                      new EMVD(EMVT.VarDouble,    EMVB.StoredWhenFilled,  EMVE.DefaultDouble, 0.0, 360.0);
+        public static EMVD Angle =                      new EMVD(EMVT.VarInteger,    EMVB.StoredWhenFilled,  EMVE.DefaultInteger, 0, 360);
         /// <summary> "fleetnumber" from [create, ...] </summary>
-        public static EMVD FleetNumber =                new EMVD(EMVT.VarInteger,   EMVB.StoredWhenFilled,  EMVE.DefaultInteger, -1, 99);
+        public static EMVD FleetNumber =                new EMVD(EMVT.VarInteger,   EMVB.StoredWhenFilled,  EMVE.DefaultInteger, 0, 99);
         /// <summary> "podnumber" from [create] </summary>
         public static EMVD PodNumber =                  new EMVD(EMVT.VarInteger,   EMVB.StoredWhenFilled,  EMVE.DefaultInteger, 0, 9);
+        public static EMVD accent_color = new EMVD(EMVT.VarInteger, EMVB.StoredWhenFilled, EMVE.DefaultInteger, 0, 99);
+        public static EMVD DriveType = new EMVD(EMVT.VarString, EMVB.StoredWhenFilled, EMVE.DriveType, null, null, "\"", "\" ");
+        public static EMVD player_slot = new EMVD(EMVT.VarInteger, EMVB.StoredAsIs, EMVE.DefaultInteger, 0, 7);
+        /// <summary> "MonsterType" from [create] </summary>
+        public static EMVD MonsterType =                new EMVD(EMVT.VarInteger,   EMVB.StoredAsIs,        EMVE.MonsterType, 0, 7, "", "");
+        public static EMVD SensorRange = new EMVD(EMVT.VarInteger, EMVB.StoredAsIs, EMVE.SensorRange, 0, 5, "", "");
+        /// <summary> "AnomalyType" from [create] </summary>
+        public static EMVD AnomalyType =                new EMVD(EMVT.VarInteger,   EMVB.StoredAsIs,        EMVE.AnomalyType, 0, 7, "", "");
         /// <summary> "meshFileName" from [create] </summary>
         public static EMVD MeshFileName =               new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.PathEditor,
                                                         "DeleD Mesh Files|*.dxs|All Files|*.*;Select Delgine mesh file",
@@ -135,6 +145,14 @@ namespace ArtemisMissionEditor.Expressions
         /// <summary> "text" from [log, ...] </summary>
         public static EMVD Text =                       new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.DefaultString,null,null,"\"","\" ");
 
+        public static EMVD GMX = new EMVD(EMVT.VarInteger, EMVB.StoredWhenFilled, EMVE.DefaultInteger, 0);
+
+        public static EMVD GMY = new EMVD(EMVT.VarInteger, EMVB.StoredWhenFilled, EMVE.DefaultInteger, 0);
+
+        public static EMVD GMH = new EMVD(EMVT.VarInteger, EMVB.StoredWhenFilled, EMVE.DefaultInteger, 0);
+
+        public static EMVD GMW = new EMVD(EMVT.VarInteger, EMVB.StoredWhenFilled, EMVE.DefaultInteger, 0);
+
         /// <summary> Check exact/rndInt/rndFloat from [set_variable] </summary>
         public static EMVD Check_SetVariable =          new EMVD(EMVT.VarString,    EMVB.NotStored,         EMVE.SetVariableCheck);
         /// <summary> "value" from [set_variable,if_variable] </summary>
@@ -143,6 +161,8 @@ namespace ArtemisMissionEditor.Expressions
         public static EMVD RandInt =                    new EMVD(EMVT.VarInteger,   EMVB.StoredWhenFilled,  EMVE.DefaultInteger,0);
         /// <summary> "randFloatLow/High" from [set_variable] </summary>
         public static EMVD RandFloat =                  new EMVD(EMVT.VarDouble,    EMVB.StoredWhenFilled,  EMVE.DefaultDouble,0.0);
+        /// <summary> "integer" from [set_variable] </summary>
+        public static EMVD VariableType =               new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.VariableType);
 
         /// <summary> "type" from [add_ai] </summary>
         public static EMVD TypeAI =                     new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.AIType,null,null,"","");
@@ -179,6 +199,8 @@ namespace ArtemisMissionEditor.Expressions
         /// <summary> "consoles" from [warning_popup_message, start/end_getting_keypresses] </summary>
         public static EMVD Consoles =                   new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.ConsoleList,null,null,"(",") ");
 
+        /// <summary> [type] from [incoming_comms_text] 
+        public static EMVD MessageType =                new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.DefaultString,null,null,"\"","\" ");
         /// <summary> [body] from [incoming_comms_text] 
         public static EMVD Body =                       new EMVD(EMVT.Body,         EMVB.NotStored,         EMVE.DefaultBody,null,null,"","","");
         /// <summary> "title" from [big_message] </summary>
@@ -189,6 +211,10 @@ namespace ArtemisMissionEditor.Expressions
         /// <summary> "property" from [set_object_property] </summary>
         public static EMVD Property =                   new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.PropertyObject,null,null,"\"","\" ","angle");
         // values from [set_object_property]
+
+
+  //      public static EMVD SensorRange = new EMVD(EMVT.VarInteger, EMVB.StoredWhenFilled, EMVE.DefaultInteger, 0, 5, "", " ");
+        
         public static EMVD Int_NegInf_PosInf =          new EMVD(EMVT.VarInteger,   EMVB.StoredWhenFilled,  EMVE.DefaultInteger,null,null,""," ");
         public static EMVD Int_0_PosInf =               new EMVD(EMVT.VarInteger,   EMVB.StoredWhenFilled,  EMVE.DefaultInteger,0,null,""," ");
         public static EMVD Int_0_100k =                 new EMVD(EMVT.VarInteger,   EMVB.StoredWhenFilled,  EMVE.DefaultInteger,0,100000,""," ");
@@ -198,6 +224,7 @@ namespace ArtemisMissionEditor.Expressions
         public static EMVD Flt_NegInf_PosInf =          new EMVD(EMVT.VarDouble,    EMVB.StoredWhenFilled,  EMVE.DefaultDouble,null,null,""," ");
         public static EMVD Flt_0_PosInf =               new EMVD(EMVT.VarDouble,    EMVB.StoredWhenFilled,  EMVE.DefaultDouble,0.0,null,""," ");
         public static EMVD Flt_0_100k =                 new EMVD(EMVT.VarDouble,    EMVB.StoredWhenFilled,  EMVE.DefaultDouble,0.0,100000.0,""," ");
+        public static EMVD tII1_3 =                     new EMVD(EMVT.VarInteger,   EMVB.StoredWhenFilled,  EMVE.DefaultInteger, 0, 2, "", " ");
         public static EMVD Flt_0_100 =                  new EMVD(EMVT.VarDouble,    EMVB.StoredWhenFilled,  EMVE.DefaultDouble,0.0,100.0,""," ");
         public static EMVD Flt_Minus100k_100k =         new EMVD(EMVT.VarDouble,    EMVB.StoredWhenFilled,  EMVE.DefaultDouble,-100000.0,100000.0,""," ");
         public static EMVD Bool_Yes_No =                new EMVD(EMVT.VarBool,      EMVB.StoredWhenFilled,  EMVE.DefaultBool,"no","yes",""," ");
@@ -214,6 +241,9 @@ namespace ArtemisMissionEditor.Expressions
 
         /// <summary> "fleetIndex" from [set_fleet_property] </summary>
         public static EMVD FleetIndex =                 new EMVD(EMVT.VarInteger,   EMVB.StoredWhenFilled,  EMVE.DefaultInteger, 0, 99,""," ","0");
+       // public static EMVD GMButtontext = new EMVD(EMVT.VarInteger, EMVB.StoredWhenFilled, EMVE.DefaultInteger, 0, 99, "", " ", "0");
+
+       // eML.Add(new ExpressionMember("<>",, ExpressionMemberValueDescriptions.GMButtontext, "text"));
 
         /// <summary> "index" from [set_skybox_index] </summary>
         public static EMVD Index =                      new EMVD(EMVT.VarInteger,   EMVB.StoredWhenFilled,  EMVE.SkyboxIndex, 0, null,""," ","0");
@@ -250,6 +280,7 @@ namespace ArtemisMissionEditor.Expressions
         public static EMVD KeyID =                      new EMVD(EMVT.VarInteger,   EMVB.StoredWhenFilled,  EMVE.DefaultInteger, 0, 128,""," ");
         /// <summary> keyText from [if_gm_key] </summary>
         public static EMVD Letter =                     new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.DefaultString,null,null,"\"","\" ");
+        public static EMVD GMTextIF = new EMVD(EMVT.VarString, EMVB.StoredWhenFilled, EMVE.DefaultString, null, null, "\"", "\" ");
 
         /// <summary> Check if_(not)_exists from [if_exists,if_not_exists] </summary>
         public static EMVD Check_Existance =            new EMVD(EMVT.VarString,    EMVB.NotStored,         EMVE.DefaultCheck);
@@ -258,11 +289,18 @@ namespace ArtemisMissionEditor.Expressions
         public static EMVD Check_In_Out =               new EMVD(EMVT.VarString,    EMVB.NotStored,         EMVE.DefaultCheck);
         /// <summary> Check box/sphere from [if_inside/outside_box/sphere] </summary>
         public static EMVD Check_Box_Sphere =           new EMVD(EMVT.VarString,    EMVB.NotStored,         EMVE.DefaultCheck);
+        /// <summary> "text" from [if_gm_button,clear_gm_button] </summary>
+        public static EMVD TextGMButton =               new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.GMButtonText, null, null, "\"", "\" ");
+
+        /// <summary> "text" from [if_comms_button,clear_comms_button] </summary>
+        public static EMVD TextCommsButton = new EMVD(EMVT.VarString, EMVB.StoredWhenFilled, EMVE.CommsButtonText, null, null, "\"", "\" ");
 
         /// <summary> "name" from [if_timer] </summary>
         public static EMVD NameTimer =                  new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.TimerName,null,null,"\"","\" ");
         /// <summary> "name" from [if_variable] </summary>
         public static EMVD NameVariable =               new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.VariableName,null,null,"\"","\" ");
+       // public static EMVD GMText = new EMVD(EMVT.VarString, EMVB.StoredWhenFilled, EMVE.VariableName, null, null, "\"", "\" ");
+
         /// <summary> "name" from many places </summary>
         public static EMVD NameAll =                    new EMVD(EMVT.VarString,    EMVB.StoredWhenFilled,  EMVE.NamedAllName,null,null,"\"","\" ");
         /// <summary> "name" from many places </summary>
@@ -276,6 +314,9 @@ namespace ArtemisMissionEditor.Expressions
         public static EMVD ShipState =                  new EMVD(EMVT.VarInteger,   EMVB.StoredWhenFilled,  EMVE.SpecialShipType, -1, 3,"\"","\" ");
         /// <summary> "capitain" from set_special </summary>
         public static EMVD CaptainState =               new EMVD(EMVT.VarInteger,   EMVB.StoredWhenFilled,  EMVE.SpecialCapitainType, -1, 5, "\"", "\" ");
+        public static EMVD SpecialState = new EMVD(EMVT.VarString, EMVB.StoredWhenFilled, EMVE.SpecialSpecialState, null, null, "\"", "\" ");
+        public static EMVD SpecialSwitchState = new EMVD(EMVT.VarString, EMVB.StoredWhenFilled, EMVE.SpecialSpecialSwitchState, null, null, "\"", "\" ");
+
         /// <summary> "sideValue" from set_side_value </summary>
         public static EMVD SideValue =                  new EMVD(EMVT.VarInteger,   EMVB.StoredWhenFilled,  EMVE.Side, 0, 31);
     }

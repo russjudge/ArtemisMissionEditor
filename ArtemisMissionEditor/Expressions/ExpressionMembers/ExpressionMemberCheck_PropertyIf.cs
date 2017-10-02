@@ -24,6 +24,19 @@ namespace ArtemisMissionEditor.Expressions
 
 			switch (type)
 			{
+				case "nonPlayerSpeed":			return "<DEFAULT>";
+				case "nebulaIsOpaque":			return "<DEFAULT>";
+				case "sensorSetting":			return "<DEFAULT>";
+				case "nonPlayerShield":			return "<DEFAULT>";
+				case "nonPlayerWeapon":			return "<DEFAULT>";
+				case "playerWeapon":			return "<DEFAULT>";
+				case "playerShields":			return "<DEFAULT>";
+				case "coopAdjustmentValue":		return "<DEFAULT>";
+				case "musicObjectMasterVolume":	return "<DEFAULT>";
+				case "commsObjectMasterVolume":	return "<DEFAULT>";
+				case "soundFXVolume":			return "<DEFAULT>";
+				case "networkTickSpeed":		return "<DEFAULT>";
+				case "gameTimeLimit":			return "<DEFAULT>";
 				//EVERYTHING
 				case "positionX":				return "<DEFAULT>";
 				case "positionY": 				return "<DEFAULT>";
@@ -49,8 +62,9 @@ namespace ArtemisMissionEditor.Expressions
 				case "missileStoresNuke": 		return "<DEFAULT>";
 				case "missileStoresMine": 		return "<DEFAULT>";
 				case "missileStoresECM": 		return "<DEFAULT>";
-				//VALUES FOR SHIELDED SHIPS		
-				case "throttle": 				return "<DEFAULT>";
+                case "missileStoresPShock":     return "<DEFAULT>";
+                //VALUES FOR SHIELDED SHIPS		
+                case "throttle": 				return "<DEFAULT>";
 				case "steering": 				return "<DEFAULT>";
 				case "topSpeed": 				return "<DEFAULT>";
 				case "turnRate": 				return "<DEFAULT>";
@@ -65,7 +79,7 @@ namespace ArtemisMissionEditor.Expressions
 				case "systemDamageTactical": 	return "<DEFAULT>";
 				case "systemDamageTurning": 	return "<DEFAULT>";
 				case "systemDamageImpulse": 	return "<DEFAULT>";
-				case "systemDamageWarp": 		return "<DEFAULT>";
+				case "systemDamgeWarp": 		return "<DEFAULT>";
 				case "systemDamageFrontShield":	return "<DEFAULT>";
 				case "systemDamageBackShield": 	return "<DEFAULT>";
 				case "shieldBandStrength0": 	return "<DEFAULT>";
@@ -78,6 +92,7 @@ namespace ArtemisMissionEditor.Expressions
 				case "targetPointY": 			return "<DEFAULT>";
 				case "targetPointZ": 			return "<DEFAULT>";
 				case "hasSurrendered": 			return "<DEFAULT>";
+                case "tauntImmunityIndex":      return "<DEFAULT>";
 				case "eliteAIType": 			return "<DEFAULT>";
 				case "eliteAbilityBits": 		return "<DEFAULT>";
 				case "eliteAbilityState": 		return "<DEFAULT>";

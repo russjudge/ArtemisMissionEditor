@@ -101,10 +101,10 @@ namespace ArtemisMissionEditor
         private static List<string> ParserLog;
 
         private static VesselData _current = new VesselData();
-        public static VesselData Current { get { return _current; } set { _current = value; OnVesselDataChaged(); } }
+        public static VesselData Current { get { return _current; } set { _current = value; OnVesselDataChanged(); } }
 
         public static event Action VesselDataChanged;
-        private static void OnVesselDataChaged()
+        private static void OnVesselDataChanged()
         {
             if (VesselDataChanged != null)
                 VesselDataChanged();
@@ -760,7 +760,7 @@ namespace ArtemisMissionEditor
                 Log.Add("Unable to open file: " + path );
                 Log.Add("Error message: ");
                 Log.Add(ex);
-                OnVesselDataChaged(); 
+                OnVesselDataChanged(); 
 				Log.Add("There were problems when loading vesselData.xml");
                 return;
             }
@@ -790,7 +790,7 @@ namespace ArtemisMissionEditor
                 foreach (string item in ParserLog)
                     Log.Add(item);
             }
-            OnVesselDataChaged();
+            OnVesselDataChanged();
 
 			if (error)
 				Log.Add("There were problems when loading vesselData.xml");
