@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using System.Drawing;
 using System.Xml;
+using ArtemisMissionEditor.Expressions;
 
 namespace ArtemisMissionEditor.SpaceMap
 {
@@ -28,7 +29,11 @@ namespace ArtemisMissionEditor.SpaceMap
 
             return new StandardValuesCollection(tmp.ToArray());
         }
+    }
 
+    public sealed class NebulaTypeConverter : ExpressionMemberValueEditorConverter
+    {
+        public NebulaTypeConverter() : base(ExpressionMemberValueEditors.NebulaType) { }
     }
 
     public enum MapObjectNamelessType
@@ -39,7 +44,7 @@ namespace ArtemisMissionEditor.SpaceMap
         mines
     }
 
-    public sealed class MapObjectNameless
+    public sealed class MapObjectNameless : MapObjectBase
     {
         public static readonly int _minRadius = 0;
         public static readonly int _maxRadius = 100000;
@@ -48,7 +53,7 @@ namespace ArtemisMissionEditor.SpaceMap
         public static readonly int _maxCount = 100000;
 
         //IMPORTED
-		[Browsable(false)]
+        [Browsable(false)]
         public bool Imported { get; set; }
 
         //COORDINATES
@@ -58,7 +63,7 @@ namespace ArtemisMissionEditor.SpaceMap
 
         public Coordinates3DUnbound _coordinatesEnd;
         [DisplayName("\tEnd Coordinates"), Description("The coordinates of the object's end point on the space map"), Category("\t\t\tPosition")]
-		public Coordinates3DUnbound CoordinatesEnd { get { return _coordinatesEnd; } set { _coordinatesEnd = value; if (_coordinatesEnd != null && _coordinatesEnd != _coordinatesStart) _radius = 0; } }
+        public Coordinates3DUnbound CoordinatesEnd { get { return _coordinatesEnd; } set { _coordinatesEnd = value; if (_coordinatesEnd != null && _coordinatesEnd != _coordinatesStart) _radius = 0; } }
         private bool ShouldSerializeCoordinatesEnd()
         {
             return _radius ==0;
@@ -67,7 +72,7 @@ namespace ArtemisMissionEditor.SpaceMap
 
         private double? _aStart;
         [DisplayName("\t\tStart Angle"), Description("Indicates object's start angle in degrees relative to the upright position, clockwise rotation considered positive"), Category("\t\t\tPosition"), DefaultValue(0)]
-		public double? A_Start_deg
+        public double? A_Start_deg
         {
             get { return _aStart; }
             set
@@ -83,13 +88,13 @@ namespace ArtemisMissionEditor.SpaceMap
             set
             {
                 if (value == null) { _aStart = null; return; }
-				_aStart = Math.Round((value ?? 0) / 2.0 / Math.PI * 3600.0) / 10.0;
+                _aStart = Math.Round((value ?? 0) / 2.0 / Math.PI * 3600.0) / 10.0;
             }
         }
 
-		private double? _aEnd;
+        private double? _aEnd;
         [DisplayName("\tEnd Angle"), Description("Indicates object's end angle in degrees relative to the upright position, clockwise rotation considered positive"), Category("\t\t\tPosition"), DefaultValue(0)]
-		public double? A_End_deg
+        public double? A_End_deg
         {
             get { return _aEnd; }
             set
@@ -105,7 +110,7 @@ namespace ArtemisMissionEditor.SpaceMap
             set
             {
                 if (value == null) { _aEnd = null; return; }
-				_aEnd = Math.Round((value ?? 0) / 2.0 / Math.PI * 3600.0) / 10.0;
+                _aEnd = Math.Round((value ?? 0) / 2.0 / Math.PI * 3600.0) / 10.0;
             }
         }
 
@@ -157,8 +162,16 @@ namespace ArtemisMissionEditor.SpaceMap
             }
         }
         private int _randomSeed;
-        [DisplayName("Random seed"), Description("Indicates random seed used to produce nameless entities's individual coordinates. NOTE: Using same random seed with same other parameters will create same nameless object distribution over every mission playthrough. However, editor cannot accurately recreate random position generation algorithm that Artemis uses, therefore nameless entities's position you will see in the editor will not be identical to what you will see ingame."), DefaultValue(0)]
+        [DisplayName("Random seed"), Description("Indicates random seed used to produce nameless entities' individual coordinates. NOTE: Using the same random seed with same other parameters will create the same nameless object distribution over every mission playthrough. However, the editor cannot accurately recreate the random position generation algorithm that Artemis uses, therefore nameless entities' positions you will see in the editor will not be identical to what you will see in-game."), DefaultValue(0)]
         public int randomSeed { get { return _randomSeed; } set { if (value < 0) _randomSeed = 0; else _randomSeed = value; } }
+
+        private int _nebType;
+        [DisplayName("Color"), Browsable(false), Description("Indicates the nebula color."), DefaultValue(0), TypeConverter(typeof(NebulaTypeConverter))]
+        public string NebulaTypeToString_Display
+        {
+            get { return IntToStandardValue(MethodBase.GetCurrentMethod(), _nebType); }
+            set { _nebType = StandardValueToInt(MethodBase.GetCurrentMethod(), value, 0); }
+        }
 
         //TYPE
         public MapObjectNamelessType _type;
@@ -181,31 +194,16 @@ namespace ArtemisMissionEditor.SpaceMap
                         return "";
                 }
             }
-
         }
+
         [DisplayName("Type"), Description("Indicates object's type (nebula, asteroid etc.)"), Category("ID"), TypeConverter(typeof(NamelessTypeConverter))]
         public string TypeToString_Display
         {
-            get
-            {
-                int i;
-                string s = TypeToString;
-
-                if (string.IsNullOrEmpty(s)) return string.Empty;
-
-                for (i = s.Length - 1; i >= 0; i--)
-                {
-                    if (char.IsUpper(s[i]))
-                    {
-                        s = s.Insert(i, " ");
-                    }
-                }
-                return char.ToUpper(s[0]) + s.Substring(1);
-
-            }
+            get { return ConvertPascalToDisplay(TypeToString); }
 
             set
             {
+                SetBrowsableProperty(nameof(NebulaTypeToString_Display), false);
                 switch (value.ToLower())
                 {
                     case "asteroids":
@@ -215,6 +213,7 @@ namespace ArtemisMissionEditor.SpaceMap
                         _type = MapObjectNamelessType.mines;
                         break;
                     case "nebulas":
+                        SetBrowsableProperty(nameof(NebulaTypeToString_Display), true);
                         _type = MapObjectNamelessType.nebulas;
                         break;
                     case "nothing":
@@ -249,38 +248,11 @@ namespace ArtemisMissionEditor.SpaceMap
 
         #region SHARED
 
-        public object GetPropertyByName(string pName)
-        {
-            Type t = GetType();
-            PropertyInfo p = t.GetProperty(pName);
-            return p.GetValue(this, null);
-        }
-
-        public void SetPropertyByName(string pName, object value)
-        {
-            Type t = GetType();
-            PropertyInfo p = t.GetProperty(pName);
-            p.SetValue(this, value, null);
-        }
-
-        private static void __AddNewAttribute(XmlDocument doc, XmlElement element, string name, string value)
-        {
-            XmlAttribute att = doc.CreateAttribute(name);
-            att.Value = value;
-            element.Attributes.Append(att);
-        }
-
-        private static void __RememberPropertyIfMissing(List<string> missingProperties, string pName, bool required)
-        {
-            if (!required) return;
-            missingProperties.Add(pName);
-        }
-
         public static MapObjectNameless NewFromXml(XmlNode item)
         {
-			if (!(item is XmlElement))
-				return null;
-			string type = "";
+            if (!(item is XmlElement))
+                return null;
+            string type = "";
             MapObjectNameless mo = null;
             foreach (XmlAttribute att in item.Attributes)
                 if (att.Name == "type") type = att.Value.ToString();
@@ -340,12 +312,12 @@ namespace ArtemisMissionEditor.SpaceMap
             __AddNewAttribute(xDoc, create, "startY", Helper.DoubleToString(_coordinatesStart.Y));
             __AddNewAttribute(xDoc, create, "startZ", Helper.DoubleToString(_coordinatesStart.Z));
 
-			if (radius == 0)
-			{
-				__AddNewAttribute(xDoc, create, "endX", Helper.DoubleToString(_coordinatesEnd.X));
-				__AddNewAttribute(xDoc, create, "endY", Helper.DoubleToString(_coordinatesEnd.Y));
-				__AddNewAttribute(xDoc, create, "endZ", Helper.DoubleToString(_coordinatesEnd.Z));
-			}
+            if (radius == 0)
+            {
+                __AddNewAttribute(xDoc, create, "endX", Helper.DoubleToString(_coordinatesEnd.X));
+                __AddNewAttribute(xDoc, create, "endY", Helper.DoubleToString(_coordinatesEnd.Y));
+                __AddNewAttribute(xDoc, create, "endZ", Helper.DoubleToString(_coordinatesEnd.Z));
+            }
 
             if (A_Start_deg != null || A_End_deg != null)
             {
@@ -363,6 +335,9 @@ namespace ArtemisMissionEditor.SpaceMap
 
             if (_randomRange > 0)
                 __AddNewAttribute(xDoc, create, "randomRange", _randomRange.ToString());
+
+            if (_nebType > 0)
+                __AddNewAttribute(xDoc, create, "nebType", _nebType.ToString());
 
             return create;
         }
@@ -405,6 +380,9 @@ namespace ArtemisMissionEditor.SpaceMap
                         A_End_deg = Helper.StringToDouble(att.Value);
                         end_A_specified = true;
                         break;
+                    case "nebType":
+                        _nebType = Helper.StringToInt(att.Value);
+                        break;
                     case "randomSeed":
                         _randomSeed = Helper.StringToInt(att.Value);
                         break;
@@ -421,21 +399,19 @@ namespace ArtemisMissionEditor.SpaceMap
                 }
             }
             if (!end_A_specified) _aEnd = _aStart;
-			if (!end_C_specified) _coordinatesEnd = _coordinatesStart;
+            if (!end_C_specified) _coordinatesEnd = _coordinatesStart;
         }
 
         //CONSTRUCTOR
-        public MapObjectNameless(int? nposX = null, int posY=0, int posZ = 0, string type = "")
+        public MapObjectNameless(int? nposX = null, int posY = 0, int posZ = 0, string type = "")
         {
             int posX = nposX ?? Space.MaxX;
-			_type = MapObjectNamelessType.nothing;
+            _type = MapObjectNamelessType.nothing;
             TypeToString_Display = type;
             _coordinatesStart = new Coordinates3DUnbound(true, posX, posY, posZ, true);
             _coordinatesEnd = this._coordinatesStart;
             _count = 1;
             Imported = false;
         }
-
-
     }
 }

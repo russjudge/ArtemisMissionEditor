@@ -467,7 +467,7 @@ namespace ArtemisMissionEditor.SpaceMap
         [DisplayName("Name"), Description("Name of the object that will be checked by the condition."), Category("ID")]
         public string Name { get { return _name; } set { _name = value; } }
 
-        [DisplayName("In/Out"), Description("Indicates wether the object should be located inside or outside for the condition to evaluate as TRUE")]
+        [DisplayName("In/Out"), Description("Indicates whether the object should be located inside or outside for the condition to evaluate as TRUE")]
         public InsideOutside InOut
         {
             get
@@ -492,7 +492,7 @@ namespace ArtemisMissionEditor.SpaceMap
             }
         }
 
-        [DisplayName("Sphere/Box"), Description("Indicates wether we are using a sphere or a box in this statement")]
+        [DisplayName("Sphere/Box"), Description("Indicates whether we are using a sphere or a box in this statement")]
         public SphereBox SphereBox
         {
             get

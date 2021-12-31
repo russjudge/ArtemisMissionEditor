@@ -34,14 +34,17 @@ namespace ArtemisMissionEditor.SpaceMap
         BlackHole,
         GenericMesh,
         GenericMeshBG,
-        Nebula,
-        NebulaBG,
+        PurpleNebula,
+        PurpleNebulaBG,
         Asteroid,
         AsteroidBG,
         AsteroidBright,
         Mine,
         MineBG,
         MineDark,
+        BlueNebula,
+        BlueNebulaBG,
+        YellowNebula,
+        YellowNebulaBG,
     }
-
 }

@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using System.Drawing;
 using System.Xml;
+using ArtemisMissionEditor.Expressions;
 
 namespace ArtemisMissionEditor.SpaceMap
 {
@@ -23,66 +24,48 @@ namespace ArtemisMissionEditor.SpaceMap
             List<string> tmp = new List<string>();
 
             tmp.Add("None");
-			foreach (string id in VesselData.Current.VesselList.Keys)
-				tmp.Add(VesselData.Current.VesselToString(id));
+            foreach (string id in VesselData.Current.VesselList.Keys)
+                tmp.Add(VesselData.Current.VesselToString(id));
 
             return new StandardValuesCollection(tmp.ToArray());
         }
     }
 
-    public class MapObjectNamed
+    public interface IMapObjectNamedA
+    {
+        double A_deg { get; set; }
+        double A_rad { get; set; }
+    }
+
+    public class MapObjectNamed : MapObjectBase
     {
         //IMPORTED
-		[Browsable(false)]
+        [Browsable(false)]
         public bool Imported { get; set; }
-        
+
         //COORDINATES
         public Coordinates3D _coordinates;
         [DisplayName("Coordinates"), Description("The coordinates of the object's center on the space map"), Category("\t\t\tPosition")]
         public virtual Coordinates3D Coordinates { get { return _coordinates; } set { _coordinates = value; } }
 
-		//NAME
-		private string _name;
-		[DisplayName("Name"), Description("Indicates object's name, if any"), Category("ID")]
-		public string name { get { return _name; } set { _name = value; } }
+        //NAME
+        private string _name;
+        [DisplayName("Name"), Description("Indicates object's name, if any"), Category("ID")]
+        public string name { get { return _name; } set { _name = value; } }
 
         #region SHARED
-        
-        public object GetPropertyByName(string pName)
-        {
-            Type t = GetType();
-            PropertyInfo p = t.GetProperty(pName);
-            return p.GetValue(this, null);
-        }
-
-        public void SetPropertyByName(string pName, object value)
-        {
-            Type t = GetType();
-            PropertyInfo p = t.GetProperty(pName);
-            p.SetValue(this, value, null);
-        }
-
-        protected static void __AddNewAttribute(XmlDocument doc, XmlElement element, string name, string value)
-        {
-            XmlAttribute att = doc.CreateAttribute(name);
-            att.Value = value;
-            element.Attributes.Append(att);
-        }
-
-        protected static void __RememberPropertyIfMissing(List<string> missingProperties, string pName, bool required)
-        {
-            if (!required) return;
-            missingProperties.Add(pName);
-        }
 
         public static MapObjectNamed NewFromXml(XmlNode item)
         {
-			if (!(item is XmlElement))
-				return null;
-			string type = "";
+            if (!(item is XmlElement))
+                return null;
+            string type = "";
             MapObjectNamed mo = null;
             foreach (XmlAttribute att in item.Attributes)
-                if (att.Name == "type") type = att.Value.ToString();
+            {
+                if (att.Name == "type")
+                    type = att.Value.ToString();
+            }
 
             switch (type)
             {
@@ -110,10 +93,10 @@ namespace ArtemisMissionEditor.SpaceMap
                 case "monster":
                     mo = new MapObjectNamed_monster();
                     break;
-				case "whale":
-					mo = new MapObjectNamed_whale();
-					break;
-				case "nebulas":
+                case "whale":
+                    mo = new MapObjectNamed_whale();
+                    break;
+                case "nebulas":
                     return null;
                 case "asteroids":
                     return null;
@@ -122,7 +105,7 @@ namespace ArtemisMissionEditor.SpaceMap
                 default:
                     return null;
             }
-            
+
             mo.FromXml(item);
             return mo;
         }
@@ -130,8 +113,10 @@ namespace ArtemisMissionEditor.SpaceMap
         public static bool IsPropertyPresent(string pName, MapObjectNamed[] selection)
         {
             foreach (MapObjectNamed item in selection)
+            {
                 if (item.IsPropertyAvailable(pName))
                     return true;
+            }
             return false;
         }
 
@@ -149,10 +134,20 @@ namespace ArtemisMissionEditor.SpaceMap
 
         //PROPERTIES
         //Is property available for this type of object
-        public virtual bool IsPropertyAvailable(string pName) { if (pName == "x" || pName == "y" || pName == "z" || pName == "coordinates" || pName == "name") return true; return false; }
+        public virtual bool IsPropertyAvailable(string pName)
+        {
+            if (pName == "x" || pName == "y" || pName == "z" || pName == "coordinates" || pName == "name")
+                return true;
+            return false;
+        }
         //Is property mandatory for this type of object (server crash w/o this property)
-        public virtual bool IsPropertyMandatory(string pName) { if (pName == "x" || pName == "y" || pName == "z" || pName == "coordinates") return true; return false; }
-        
+        public virtual bool IsPropertyMandatory(string pName)
+        {
+            if (pName == "x" || pName == "y" || pName == "z" || pName == "coordinates")
+                return true;
+            return false;
+        }
+
         //TYPE
         [Browsable(false)]
         public virtual string TypeToString { get { return "null"; } }
@@ -166,7 +161,8 @@ namespace ArtemisMissionEditor.SpaceMap
                 int i;
                 string s = TypeToString;
 
-                if (string.IsNullOrEmpty(s)) return string.Empty;
+                if (string.IsNullOrEmpty(s))
+                    return string.Empty;
 
                 for (i = s.Length-1; i >=0; i--)
                 {
@@ -176,7 +172,6 @@ namespace ArtemisMissionEditor.SpaceMap
                     }
                 }
                 return char.ToUpper(s[0]) + s.Substring(1);
-                
             }
         }
 
@@ -186,14 +181,17 @@ namespace ArtemisMissionEditor.SpaceMap
             bool same, found;
             if (source.Count() == 0)
                 return;
-            
+
             //Coordinates
             if (!excludeCoordinates)
             {
                 Coordinates3D tmp1 = new Coordinates3D();
-                same = true; found = false;
+                same = true;
+                found = false;
                 foreach (MapObjectNamed item in source)
+                {
                     if (item.IsPropertyAvailable("coordinates"))
+                    {
                         if (!found)
                         {
                             found = true;
@@ -201,26 +199,31 @@ namespace ArtemisMissionEditor.SpaceMap
                         }
                         else
                             same = same && (item.Coordinates != tmp1);
+                    }
+                }
                 if (found && same)
                     this._coordinates = tmp1;
             }
 
-			//Name
-			string tmp2 = "";
-			same = true; found = false;
-			foreach (MapObjectNamed item in source)
-				if (item.IsPropertyAvailable("name"))
-					if (!found)
-					{
-						found = true;
-						tmp2 = item.name;
-					}
-					else
-						same = same && (item.name != tmp2);
-			if (found && same)
-				this.name = tmp2;
-
-
+            //Name
+            string tmp2 = "";
+            same = true;
+            found = false;
+            foreach (MapObjectNamed item in source)
+            {
+                if (item.IsPropertyAvailable("name"))
+                {
+                    if (!found)
+                    {
+                        found = true;
+                        tmp2 = item.name;
+                    }
+                    else
+                        same = same && (item.name != tmp2);
+                }
+            }
+            if (found && same)
+                this.name = tmp2;
         }
 
         //TO XML
@@ -234,10 +237,10 @@ namespace ArtemisMissionEditor.SpaceMap
             __AddNewAttribute(xDoc, create, "y", Helper.DoubleToString(_coordinates.Y));
             __AddNewAttribute(xDoc, create, "z", Helper.DoubleToString(_coordinates.Z));
 
-			if (!String.IsNullOrEmpty(name))
-				__AddNewAttribute(xDoc, create, "name", name);
-			else
-				__RememberPropertyIfMissing(missingProperties, "name", IsPropertyMandatory("name"));
+            if (!String.IsNullOrEmpty(name))
+                __AddNewAttribute(xDoc, create, "name", name);
+            else
+                __RememberPropertyIfMissing(missingProperties, "name", IsPropertyMandatory("name"));
 
             return create;
         }
@@ -246,36 +249,39 @@ namespace ArtemisMissionEditor.SpaceMap
         public virtual void FromXml(XmlNode item)
         {
             foreach (XmlAttribute att in item.Attributes)
+            {
                 switch (att.Name)
                 {
                     case "x":
                         _coordinates.X = Helper.StringToDouble(att.Value);
                         break;
                     case "y":
-						_coordinates.Y = Helper.StringToDouble(att.Value);
+                        _coordinates.Y = Helper.StringToDouble(att.Value);
                         break;
                     case "z":
-						_coordinates.Z = Helper.StringToDouble(att.Value);
+                        _coordinates.Z = Helper.StringToDouble(att.Value);
                         break;
-					case "name":
-						_name = att.Value;
-						break;
+                    case "name":
+                        _name = att.Value;
+                        break;
                 }
+            }
         }
 
         //CONSTRUCTOR
         public MapObjectNamed(int posX = 0, int posY = 0, int posZ = 0, string name = "", bool makeSelected = false)
         { _coordinates = new Coordinates3D(true, posX, posY, posZ); Selected = makeSelected; _name = name; Imported = false; }
-        
+
         #endregion
     }
 
-    public class MapObjectNamedA : MapObjectNamed
+    // A named map object with an angle property.
+    public class MapObjectNamedA : MapObjectNamed, IMapObjectNamedA
     {
         //ANGLE
         private double _a;
         [DisplayName("Angle"), Description("Indicates object's angle in degrees relative to the upright position, clockwise rotation considered positive"), Category("\t\t\tPosition"), DefaultValue(0)]
-		public double A_deg
+        public double A_deg
         {
             get { return _a; }
             set
@@ -306,7 +312,8 @@ namespace ArtemisMissionEditor.SpaceMap
         //PROPERTIES
         public override bool IsPropertyAvailable(string pName)
         {
-            if (pName == "angle") return true;
+            if (pName == "angle")
+                return true;
             return base.IsPropertyAvailable(pName);
         }
         public override bool IsPropertyMandatory(string pName) { return base.IsPropertyMandatory(pName); }
@@ -318,33 +325,47 @@ namespace ArtemisMissionEditor.SpaceMap
         //COPIER
         public override void Copy(bool excludeCoordinates, params MapObjectNamed[] source)
         {
-            bool same, found;
             if (source.Count() == 0)
                 return;
 
             //Angle
             double tmp1 = 0;
-            same = true; found = false;
+            bool same = true;
+            bool found = false;
             foreach (MapObjectNamed item in source)
+            {
                 if (item.IsPropertyAvailable("angle"))
+                {
                     if (!found)
                     {
-                        found = true;
-                        tmp1 = ((MapObjectNamedA)item).A_deg;
+                        if (item is IMapObjectNamedA)
+                        {
+                            found = true;
+                            tmp1 = ((IMapObjectNamedA)item).A_deg;
+                        }
                     }
                     else
-                        same = same && (((MapObjectNamedA)item).A_deg != tmp1);
+                    {
+                        double tmp2 = 0;
+                        if (item is IMapObjectNamedA)
+                            tmp2 = ((IMapObjectNamedA)item).A_deg;
+
+                        same = same && (tmp2 != tmp1);
+                    }
+                }
+            }
             if (found && same)
                 this.A_deg = tmp1;
 
-            
             base.Copy(excludeCoordinates, source);
         }
 
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
+            //If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type))
+                type = TypeToString;
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
             __AddNewAttribute(xDoc, create, "angle", A_deg.ToString());
@@ -357,23 +378,26 @@ namespace ArtemisMissionEditor.SpaceMap
         {
             base.FromXml(item);
             foreach (XmlAttribute att in item.Attributes)
+            {
                 switch (att.Name)
                 {
                     case "angle":
                         A_deg = Helper.StringToDouble(att.Value);
                         break;
                 }
+            }
         }
 
         //CONSTRUCTOR
         public MapObjectNamedA(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int angle = 0, string name = "")
             : base(posX, posY, posZ, name, makeSelected)
         { this.A_rad = angle; }
-        
+
         #endregion
     }
 
-    public class MapObjectNamedAS : MapObjectNamedA
+    // A named map object with side property.
+    public class MapObjectNamedS : MapObjectNamed
     {
         //Side
         private int? _sideValue;
@@ -401,25 +425,25 @@ namespace ArtemisMissionEditor.SpaceMap
         //COPIER
         public override void Copy(bool excludeCoordinates, params MapObjectNamed[] source)
         {
-            bool same, found;
             if (source.Count() == 0)
                 return;
 
             //Side
             int tmp1 = 0;
-            same = true; found = false;
+            bool same = true;
+            bool found = false;
             foreach (MapObjectNamed item in source)
             {
                 if (item.IsPropertyAvailable("sideValue"))
                 {
                     if (!found)
                     {
-                        if (item as MapObjectNamedAS != null && ((MapObjectNamedAS)item).sideValue.HasValue)
+                        if (item as MapObjectNamedS != null && ((MapObjectNamedS)item).sideValue.HasValue)
                         {
                             found = true;
-                            tmp1 = ((MapObjectNamedAS)item).sideValue.Value;
+                            tmp1 = ((MapObjectNamedS)item).sideValue.Value;
                         }
-                        if (item as MapObjectNamedArhK != null && ((MapObjectNamedArhKS)item).sideValue.HasValue)
+                        if (item as MapObjectNamedArhKS != null && ((MapObjectNamedArhKS)item).sideValue.HasValue)
                         {
                             found = true;
                             tmp1 = ((MapObjectNamedArhKS)item).sideValue.Value;
@@ -428,9 +452,9 @@ namespace ArtemisMissionEditor.SpaceMap
                     else
                     {
                         int tmp2 = 0;
-                        if (item as MapObjectNamedAS != null && ((MapObjectNamedAS)item).sideValue.HasValue)
-                            tmp2 = ((MapObjectNamedAS)item).sideValue.Value;
-                        if (item as MapObjectNamedArhK != null && ((MapObjectNamedArhKS)item).sideValue.HasValue)
+                        if (item as MapObjectNamedS != null && ((MapObjectNamedS)item).sideValue.HasValue)
+                            tmp2 = ((MapObjectNamedS)item).sideValue.Value;
+                        if (item as MapObjectNamedArhKS != null && ((MapObjectNamedArhKS)item).sideValue.HasValue)
                             tmp2 = ((MapObjectNamedArhKS)item).sideValue.Value;
 
                         same = same && (tmp2 != tmp1);
@@ -446,7 +470,9 @@ namespace ArtemisMissionEditor.SpaceMap
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
+            //If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type))
+                type = TypeToString;
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
             if (sideValue.HasValue)
@@ -460,23 +486,26 @@ namespace ArtemisMissionEditor.SpaceMap
         {
             base.FromXml(item);
             foreach (XmlAttribute att in item.Attributes)
+            {
                 switch (att.Name)
                 {
                     case "sideValue":
                         sideValue = Helper.StringToInt(att.Value);
                         break;
                 }
+            }
         }
 
         //CONSTRUCTOR
-        public MapObjectNamedAS(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int angle = 0, string name = "", int? _sideValue = null)
-            : base(posX, posY, posZ, makeSelected, angle, name)
+        public MapObjectNamedS(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, string name = "", int? _sideValue = null)
+            : base(posX, posY, posZ, name, makeSelected)
         { sideValue = _sideValue; }
-        
+
         #endregion
     }
 
-    public class MapObjectNamedArhK : MapObjectNamedA
+    // A named map object with side and race/hull keys/ID properties.
+    public class MapObjectNamedSrhK : MapObjectNamedS
     {
         #region raceKeys
 
@@ -491,7 +520,7 @@ namespace ArtemisMissionEditor.SpaceMap
         [Browsable(false)]
         public string RaceKeys { get { return _race_Keys; } set { _race_Keys = value; ReassignRaceKeys(); } }
         private string _race_Keys;
-        
+
         [DisplayName("unrecognised"), Category("\t\traceKeys"), Description("Race names and keys that were not recognised by the program (not present in current vesselData.xml) are put here."), DefaultValue("")]
         public string RaceUnrecognised { get { return _race_Unrecognised; } set { _race_Unrecognised = value; ReassignRaceKeys(); } }
         private string _race_Unrecognised;
@@ -509,7 +538,7 @@ namespace ArtemisMissionEditor.SpaceMap
             _race_Keys = parsedKeys.Item2.Count == 0 ? "" : parsedKeys.Item2.Aggregate((i, j) => i + " " + j);
             _race_Unrecognised = parsedKeys.Item3.Count == 0 ? "" : parsedKeys.Item3.Aggregate((i, j) => i + " " + j);
         }
-        
+
         public string GetRaceKeysForXml()
         {
             List<string> tmp = new List<string>();
@@ -528,23 +557,23 @@ namespace ArtemisMissionEditor.SpaceMap
         #endregion raceKeys
 
         #region hullKeys
-        
+
         [DisplayName("classNames"), Category("\thullKeys"), Description("List of object's vessel class names (from vesselData.xml)"), DefaultValue("< none >"), EditorAttribute(typeof(CheckedListBoxUITypeEditor_vesselClassNames), typeof(System.Drawing.Design.UITypeEditor))]
         public string VesselClassNames_Display { get { if (String.IsNullOrEmpty(_vessel_ClassNames)) return "< none >"; return _vessel_ClassNames; } set { VesselClassNames = value.Replace("< none >", ""); } }
         [Browsable(false)]
         public string VesselClassNames { get { return _vessel_ClassNames; } set { _vessel_ClassNames = value; ReassignHullKeys(); } }
         private string _vessel_ClassNames;
-        
+
         [DisplayName("broadTypes"), Category("\thullKeys"), Description("List of object's vessel broad types (from vesselData.xml)"), DefaultValue("< none >"), EditorAttribute(typeof(CheckedListBoxUITypeEditor_vesselBroadTypes), typeof(System.Drawing.Design.UITypeEditor))]
         public string VesselBroadTypes_Display { get { if (String.IsNullOrEmpty(_vessel_BroadTypes)) return "< none >"; return _vessel_BroadTypes; } set { VesselBroadTypes = value.Replace("< none >", ""); } }
         [Browsable(false)]
         public string VesselBroadTypes { get { return _vessel_BroadTypes; } set { _vessel_BroadTypes = value; ReassignHullKeys(); } }
         private string _vessel_BroadTypes;
-        
+
         [DisplayName("unrecognised"), Category("\thullKeys"), Description("Hull types and keys that were not recognised by the program (not present in current vesselData.xml) are put here."), DefaultValue("")]
         public string VesselUnrecognised { get { return _vessel_Unrecognised; } set { _vessel_Unrecognised = value; ReassignHullKeys(); } }
         private string _vessel_Unrecognised;
-        
+
         private void ReassignHullKeys()
         {
             AssignHullKeys(GetHullKeysForXml());
@@ -583,8 +612,8 @@ namespace ArtemisMissionEditor.SpaceMap
         [DisplayName("Hull ID"), Description("Indicates object's exact vessel ID (from vesselData.xml)"), DefaultValue("< none >"), TypeConverter(typeof(HullIDConverter))]
         public string hullID_Display
         {
-            get 
-            { 
+            get
+            {
                 if (String.IsNullOrEmpty(_hullID))
                     return "< none >";
                 if (!VesselData.Current.VesselList.ContainsKey(_hullID))
@@ -596,14 +625,22 @@ namespace ArtemisMissionEditor.SpaceMap
             {
                 int tmp;
                 _hullID = value;
-                if (String.IsNullOrEmpty(_hullID)) return;
-                if (_hullID == null) throw new ArgumentNullException("value", "Attempt to assign null to hullID!");
-                
-                if (Helper.IntTryParse(_hullID, out tmp)) return;
+                if (String.IsNullOrEmpty(_hullID))
+                    return;
+                if (_hullID == null)
+                    throw new ArgumentNullException("value", "Attempt to assign null to hullID!");
+
+                if (Helper.IntTryParse(_hullID, out tmp))
+                    return;
                 _hullID = _hullID.Replace("[", "").Replace(" ","");
-                if (_hullID.IndexOf("]") == -1) { _hullID = ""; return; }
+                if (_hullID.IndexOf("]") == -1)
+                {
+                    _hullID = "";
+                    return;
+                }
                 _hullID = _hullID.Substring(0,_hullID.IndexOf("]"));
-                if (Helper.IntTryParse(_hullID, out tmp)) return;
+                if (Helper.IntTryParse(_hullID, out tmp))
+                    return;
                 _hullID = "";
             }
         }
@@ -615,11 +652,12 @@ namespace ArtemisMissionEditor.SpaceMap
         public override int _selectionSize { get { return base._selectionSize; } }
 
         //PROPERTIES
-        public override bool IsPropertyAvailable(string pName) { 
+        public override bool IsPropertyAvailable(string pName)
+        {
             if (pName == "raceKeys") return true;
             if (pName == "hullKeys") return true;
             if (pName == "hullID") return true;
-            return base.IsPropertyAvailable(pName); 
+            return base.IsPropertyAvailable(pName);
         }
         public override bool IsPropertyMandatory(string pName) { return base.IsPropertyMandatory(pName); }
 
@@ -636,108 +674,143 @@ namespace ArtemisMissionEditor.SpaceMap
             //racekeys
             {
                 string tmp1 = "";
-                bool same = true, found = false;
+                bool same = true;
+                bool found = false;
                 foreach (MapObjectNamed item in source)
+                {
                     if (item.IsPropertyAvailable("raceKeys"))
+                    {
                         if (!found)
                         {
                             found = true;
-                            tmp1 = ((MapObjectNamedArhK)item)._race_Keys;
+                            tmp1 = ((MapObjectNamedSrhK)item)._race_Keys;
                         }
                         else
-                            same = same && (((MapObjectNamedArhK)item)._race_Keys != tmp1);
+                            same = same && (((MapObjectNamedSrhK)item)._race_Keys != tmp1);
+                    }
+                }
                 if (found && same)
                     this._race_Keys = tmp1;
             }
             {
                 string tmp1 = "";
-                bool same = true, found = false;
+                bool same = true;
+                bool found = false;
                 foreach (MapObjectNamed item in source)
+                {
                     if (item.IsPropertyAvailable("raceKeys"))
+                    {
                         if (!found)
                         {
                             found = true;
-                            tmp1 = ((MapObjectNamedArhK)item)._race_Names;
+                            tmp1 = ((MapObjectNamedSrhK)item)._race_Names;
                         }
                         else
-                            same = same && (((MapObjectNamedArhK)item)._race_Names != tmp1);
+                            same = same && (((MapObjectNamedSrhK)item)._race_Names != tmp1);
+                    }
+                }
                 if (found && same)
                     this._race_Names = tmp1;
             }
             {
                 string tmp1 = "";
-                bool same = true, found = false;
+                bool same = true;
+                bool found = false;
                 foreach (MapObjectNamed item in source)
+                {
                     if (item.IsPropertyAvailable("raceKeys"))
+                    {
                         if (!found)
                         {
                             found = true;
-                            tmp1 = ((MapObjectNamedArhK)item)._race_Unrecognised;
+                            tmp1 = ((MapObjectNamedSrhK)item)._race_Unrecognised;
                         }
                         else
-                            same = same && (((MapObjectNamedArhK)item)._race_Unrecognised != tmp1);
+                            same = same && (((MapObjectNamedSrhK)item)._race_Unrecognised != tmp1);
+                    }
+                }
                 if (found && same)
                     this._race_Unrecognised = tmp1;
             }
             //hullkeys
             {
                 string tmp1 = "";
-                bool same = true, found = false;
+                bool same = true;
+                bool found = false;
                 foreach (MapObjectNamed item in source)
+                {
                     if (item.IsPropertyAvailable("hullKeys"))
+                    {
                         if (!found)
                         {
                             found = true;
-                            tmp1 = ((MapObjectNamedArhK)item)._vessel_BroadTypes;
+                            tmp1 = ((MapObjectNamedSrhK)item)._vessel_BroadTypes;
                         }
                         else
-                            same = same && (((MapObjectNamedArhK)item)._vessel_BroadTypes != tmp1);
+                            same = same && (((MapObjectNamedSrhK)item)._vessel_BroadTypes != tmp1);
+                    }
+                }
                 if (found && same)
                     this._vessel_BroadTypes = tmp1;
             }
             {
                 string tmp1 = "";
-                bool same = true, found = false;
+                bool same = true;
+                bool found = false;
                 foreach (MapObjectNamed item in source)
+                {
                     if (item.IsPropertyAvailable("hullKeys"))
+                    {
                         if (!found)
                         {
                             found = true;
-                            tmp1 = ((MapObjectNamedArhK)item)._vessel_ClassNames;
+                            tmp1 = ((MapObjectNamedSrhK)item)._vessel_ClassNames;
                         }
                         else
-                            same = same && (((MapObjectNamedArhK)item)._vessel_ClassNames != tmp1);
+                            same = same && (((MapObjectNamedSrhK)item)._vessel_ClassNames != tmp1);
+                    }
+                }
                 if (found && same)
                     this._vessel_ClassNames = tmp1;
             }
             {
                 string tmp1 = "";
-                bool same = true, found = false;
+                bool same = true;
+                bool found = false;
                 foreach (MapObjectNamed item in source)
+                {
                     if (item.IsPropertyAvailable("hullKeys"))
+                    {
                         if (!found)
                         {
                             found = true;
-                            tmp1 = ((MapObjectNamedArhK)item)._vessel_Unrecognised;
+                            tmp1 = ((MapObjectNamedSrhK)item)._vessel_Unrecognised;
                         }
                         else
-                            same = same && (((MapObjectNamedArhK)item)._vessel_Unrecognised != tmp1);
+                            same = same && (((MapObjectNamedSrhK)item)._vessel_Unrecognised != tmp1);
+                    }
+                }
                 if (found && same)
                     this._vessel_Unrecognised = tmp1;
             }
             //hullID
             {
                 string tmp1 = "";
-                bool same = true, found = false;
+                bool same = true;
+                bool found = false;
                 foreach (MapObjectNamed item in source)
+                {
                     if (item.IsPropertyAvailable("hullID"))
+                    {
                         if (!found)
                         {
                             found = true;
-                            tmp1 = ((MapObjectNamedArhK)item)._hullID;
+                            tmp1 = ((MapObjectNamedSrhK)item)._hullID;
                         }
                         else
-                            same = same && (((MapObjectNamedArhK)item)._hullID != tmp1);
+                            same = same && (((MapObjectNamedSrhK)item)._hullID != tmp1);
+                    }
+                }
                 if (found && same)
                     this._hullID = tmp1;
             }
@@ -747,7 +820,9 @@ namespace ArtemisMissionEditor.SpaceMap
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
+            //If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type))
+                type = TypeToString;
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
             string keys;
@@ -789,19 +864,40 @@ namespace ArtemisMissionEditor.SpaceMap
         }
 
         //CONSTRUCTOR
-        public MapObjectNamedArhK(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int angle = 0, string name = "", string _race_Keys = "", string _race_Names = "", string _vessel_ClassNames = "", string _vessel_BroadTypes = "")
-            : base(posX, posY, posZ, makeSelected, angle, name)
+        public MapObjectNamedSrhK(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int? sideValue = null, string name = "", string _race_Keys = "", string _race_Names = "", string _vessel_ClassNames = "", string _vessel_BroadTypes = "")
+            : base(posX, posY, posZ, makeSelected, name, sideValue)
         { this._race_Keys = _race_Keys; this._race_Names = _race_Names; this._race_Unrecognised = ""; this._vessel_ClassNames = _vessel_ClassNames; this._vessel_BroadTypes = _vessel_BroadTypes; this._vessel_Unrecognised = ""; this._hullID = ""; }
-        
+
         #endregion
     }
 
-    public class MapObjectNamedArhKS : MapObjectNamedArhK
+    // A named map object with angle, race/hull keys/ID, and side properties.
+    public class MapObjectNamedArhKS : MapObjectNamedSrhK, IMapObjectNamedA
     {
-        //Side
-        private int? _sideValue;
-        [DisplayName("Side"), Description("Side the entity is allied with (0 = none, 1 = enemy, 2+ = player)")]
-        public int? sideValue { get { return _sideValue; } set { _sideValue = value; } }
+        //ANGLE
+        private double _a;
+        [DisplayName("Angle"), Description("Indicates object's angle in degrees relative to the upright position, clockwise rotation considered positive"), Category("\t\t\tPosition"), DefaultValue(0)]
+        public double A_deg
+        {
+            get { return _a; }
+            set
+            {
+                while (value < 0) value += 360;
+                while (value >= 360) value -= 360;
+                _a = value;
+            }
+        }
+        [Browsable(false)]
+        public double A_rad
+        {
+            get { return (_a) / 360.0 * Math.PI * 2.0; }
+            set
+            {
+                while (value < 0.0) value += 2.0 * Math.PI;
+                while (value > 2.0 * Math.PI) value -= 2.0 * Math.PI;
+                _a = Math.Round(value / 2.0 / Math.PI * 3600.0) / 10.0;
+            }
+        }
 
         #region INHERITANCE
 
@@ -812,7 +908,8 @@ namespace ArtemisMissionEditor.SpaceMap
         //PROPERTIES
         public override bool IsPropertyAvailable(string pName)
         {
-            if (pName == "sideValue") return true;
+            if (pName == "angle")
+                return true;
             return base.IsPropertyAvailable(pName);
         }
         public override bool IsPropertyMandatory(string pName) { return base.IsPropertyMandatory(pName); }
@@ -824,44 +921,37 @@ namespace ArtemisMissionEditor.SpaceMap
         //COPIER
         public override void Copy(bool excludeCoordinates, params MapObjectNamed[] source)
         {
-            bool same, found;
             if (source.Count() == 0)
                 return;
 
-            //Side
-            int tmp1 = 0;
-            same = true; found = false;
+            //Angle
+            double tmp1 = 0;
+            bool same = true;
+            bool found = false;
             foreach (MapObjectNamed item in source)
             {
-                if (item.IsPropertyAvailable("sideValue"))
+                if (item.IsPropertyAvailable("angle"))
                 {
                     if (!found)
                     {
-                        if (item as MapObjectNamedAS != null && ((MapObjectNamedAS)item).sideValue.HasValue)
+                        if (item is IMapObjectNamedA)
                         {
                             found = true;
-                            tmp1 = ((MapObjectNamedAS)item).sideValue.Value;
-                        }
-                        if (item as MapObjectNamedArhK != null && ((MapObjectNamedArhKS)item).sideValue.HasValue)
-                        {
-                            found = true;
-                            tmp1 = ((MapObjectNamedArhKS)item).sideValue.Value;
+                            tmp1 = ((IMapObjectNamedA)item).A_deg;
                         }
                     }
                     else
                     {
-                        int tmp2 = 0;
-                        if (item as MapObjectNamedAS != null && ((MapObjectNamedAS)item).sideValue.HasValue)
-                            tmp2 = ((MapObjectNamedAS)item).sideValue.Value;
-                        if (item as MapObjectNamedArhK != null && ((MapObjectNamedArhKS)item).sideValue.HasValue)
-                            tmp2 = ((MapObjectNamedArhKS)item).sideValue.Value;
+                        double tmp2 = 0;
+                        if (item is IMapObjectNamedA)
+                            tmp2 = ((IMapObjectNamedA)item).A_deg;
 
                         same = same && (tmp2 != tmp1);
                     }
                 }
             }
             if (found && same)
-                this.sideValue = tmp1;
+                this.A_deg = tmp1;
 
             base.Copy(excludeCoordinates, source);
         }
@@ -869,11 +959,12 @@ namespace ArtemisMissionEditor.SpaceMap
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
+            //If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type))
+                type = TypeToString;
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
-            if (sideValue.HasValue)
-                __AddNewAttribute(xDoc, create, "sideValue", sideValue.ToString());
+            __AddNewAttribute(xDoc, create, "angle", A_deg.ToString());
 
             return create;
         }
@@ -883,42 +974,132 @@ namespace ArtemisMissionEditor.SpaceMap
         {
             base.FromXml(item);
             foreach (XmlAttribute att in item.Attributes)
+            {
                 switch (att.Name)
                 {
-                    case "sideValue":
-                        sideValue = Helper.StringToInt(att.Value);
+                    case "angle":
+                        A_deg = Helper.StringToDouble(att.Value);
                         break;
                 }
+            }
         }
 
         //CONSTRUCTOR
-        public MapObjectNamedArhKS(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int angle = 0, string name = "", string _race_Keys = "", string _race_Names = "", string _vessel_ClassNames = "", string _vessel_BroadTypes = "", int? _sideValue = null)
-            : base(posX, posY, posZ, makeSelected, angle, name, _race_Keys, _race_Names, _vessel_ClassNames, _vessel_BroadTypes)
+        public MapObjectNamedArhKS(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int angle = 0, string name = "", string _race_Keys = "", string _race_Names = "", string _vessel_ClassNames = "", string _vessel_BroadTypes = "", int? sideValue = null)
+            : base(posX, posY, posZ, makeSelected, sideValue, name, _race_Keys, _race_Names, _vessel_ClassNames, _vessel_BroadTypes)
         {
-            sideValue = _sideValue;
+            this.A_rad = angle;
         }
-        
+
         #endregion
+    }
+
+    public sealed class BeaconEffectConverter : StringConverter
+    {
+        public override bool GetStandardValuesSupported(ITypeDescriptorContext context) { return true; }
+        public override bool GetStandardValuesExclusive(ITypeDescriptorContext context) { return true; }
+
+        public override TypeConverter.StandardValuesCollection
+        GetStandardValues(ITypeDescriptorContext context)
+        {
+            List<string> tmp = new List<string>();
+            tmp.Add("Attract");
+            tmp.Add("Repel");
+            return new StandardValuesCollection(tmp.ToArray());
+        }
+    }
+
+    public sealed class DriveTypeConverter : StringConverter
+    {
+        public override bool GetStandardValuesSupported(ITypeDescriptorContext context) { return true; }
+        public override bool GetStandardValuesExclusive(ITypeDescriptorContext context) { return true; }
+
+        public override TypeConverter.StandardValuesCollection
+        GetStandardValues(ITypeDescriptorContext context)
+        {
+            List<string> tmp = new List<string>();
+            foreach (string key in ExpressionMemberValueEditors.DriveType.DisplayValueToXml.Keys)
+            {
+                tmp.Add(key);
+            }
+            return new StandardValuesCollection(tmp.ToArray());
+        }
     }
 
     public sealed class MapObjectNamed_Anomaly : MapObjectNamed
     {
-        //MONSTER TYPE
-        private string _pickupType;
-        [DisplayName("pickupType"), Description("Anomaly Type 0=Energy")]
-        public string pickupType { get { return _pickupType; } set { _pickupType = value; } }
+        private int _beaconEffect;
+        [DisplayName("Beacon Effect"), Browsable(false), Description("Indicates the beacon effect."), DefaultValue(0), TypeConverter(typeof(BeaconEffectConverter))]
+        public string BeaconEffectToString_Display
+        {
+            get
+            {
+                switch (_beaconEffect)
+                {
+                    case 1:
+                        return "Repel";
+                    default:
+                        return "Attract";
+                }
+            }
+            set
+            {
+                switch (value.ToLower())
+                {
+                    case "repel":
+                        _beaconEffect = 1;
+                        break;
+                    default:
+                        _beaconEffect = 0;
+                        break;
+                }
+            }
+        }
 
-        #region INHERITANCE
+        private int _beaconMonsterType;
+        [DisplayName("Beacon Monster Type"), Browsable(false), Description("Indicates the monster type affected by the beacon."), DefaultValue(0), TypeConverter(typeof(MonsterTypeConverter))]
+        public string BeaconMonsterTypeToString_Display
+        {
+            get { return IntToStandardValue(MethodBase.GetCurrentMethod(), _beaconMonsterType); }
+            set { _beaconMonsterType = StandardValueToInt(MethodBase.GetCurrentMethod(), value, 0); }
+        }
+
+        private int _pickupType;
+        [DisplayName("Anomaly Type"), Description("Indicates the type of pickup"), DefaultValue(0), TypeConverter(typeof(AnomalyTypeConverter))]
+        public string pickupType {
+            get { return IntToStandardValue(MethodBase.GetCurrentMethod(), PickupType); }
+            set { PickupType = StandardValueToInt(MethodBase.GetCurrentMethod(), value, 0); }
+        }
+        [Browsable(false)]
+        public int PickupType
+        {
+            get { return _pickupType; }
+            set
+            {
+                _pickupType = value;
+                SetBrowsableProperty(nameof(BeaconEffectToString_Display), value == 8);
+                SetBrowsableProperty(nameof(BeaconMonsterTypeToString_Display), value == 8);
+            }
+        }
+
+#region INHERITANCE
 
         //SELECTION
         public override bool _selectionAbsolute { get { return base._selectionAbsolute; } }
         public override int _selectionSize { get { return 10; } }
 
         //PROPERTIES
-        public override bool IsPropertyAvailable(string pName) { return base.IsPropertyAvailable(pName); }
-        public override bool IsPropertyMandatory(string pName) {
+        public override bool IsPropertyAvailable(string pName)
+        {
+            if (pName == "beaconEffect") return true;
+            if (pName == "beaconMonsterType") return true;
+            return base.IsPropertyAvailable(pName);
+        }
+        public override bool IsPropertyMandatory(string pName)
+        {
             if (pName == "pickupType") return true;
-            return base.IsPropertyMandatory(pName); }
+            return base.IsPropertyMandatory(pName);
+        }
 
         //TYPE
         public override string TypeToString { get { return "Anomaly"; } }
@@ -928,16 +1109,17 @@ namespace ArtemisMissionEditor.SpaceMap
         public override void Copy(bool excludeCoordinates, params MapObjectNamed[] source)
         {
             base.Copy(excludeCoordinates, source);
-            //{
-            bool same, found;
+
             if (source.Count() == 0)
                 return;
 
-            //monsterType
-            string tmp1 = "";
-            same = true; found = false;
+            int tmp1 = 0;
+            bool same = true;
+            bool found = false;
             foreach (MapObjectNamed item in source)
+            {
                 if (item.IsPropertyAvailable("pickupType"))
+                {
                     if (!found)
                     {
                         found = true;
@@ -945,9 +1127,10 @@ namespace ArtemisMissionEditor.SpaceMap
                     }
                     else
                         same = same && (((MapObjectNamed_Anomaly)item)._pickupType != tmp1);
+                }
+            }
             if (found && same)
                 this._pickupType = tmp1;
-
 
             base.Copy(excludeCoordinates, source);
         }
@@ -955,13 +1138,15 @@ namespace ArtemisMissionEditor.SpaceMap
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
+            //If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type))
+                type = TypeToString;
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
-            if (String.IsNullOrEmpty(_pickupType))
-            { __AddNewAttribute(xDoc, create, "pickupType", "0"); }
-            else
+            __AddNewAttribute(xDoc, create, "pickupType", _pickupType.ToString());
+            if (_pickupType == 8) // Beacon
             {
-                __AddNewAttribute(xDoc, create, "pickupType", _pickupType.ToString());
+                __AddNewAttribute(xDoc, create, "beaconEffect", _beaconEffect.ToString());
+                __AddNewAttribute(xDoc, create, "beaconMonsterType", _beaconMonsterType.ToString());
             }
             return create;
         }
@@ -971,25 +1156,33 @@ namespace ArtemisMissionEditor.SpaceMap
         {
             base.FromXml(item);
             foreach (XmlAttribute att in item.Attributes)
+            {
                 switch (att.Name)
                 {
-                 case "pickupType":
-                        _pickupType = att.Value;
-                break;
+                    case "beaconEffect":
+                        _beaconEffect = Helper.StringToInt(att.Value);
+                        break;
+                    case "beaconMonsterType":
+                        _beaconMonsterType = Helper.StringToInt(att.Value);
+                        break;
+                    case "pickupType":
+                        PickupType = Helper.StringToInt(att.Value);
+                        break;
                 }
+            }
         }
 
         //CONSTRUCTOR
         public MapObjectNamed_Anomaly(int posX = 0, int posY = 0, int posZ = 0, string name = "", bool makeSelected = false)
             : base(posX, posY, posZ, name, makeSelected)
-        { _pickupType = pickupType; }
+        { }
 
-        #endregion
+#endregion
     }
 
     public sealed class MapObjectNamed_blackHole : MapObjectNamed
     {
-        #region INHERITANCE
+#region INHERITANCE
 
         //SELECTION
         public override bool _selectionAbsolute { get { return true; } }
@@ -1009,7 +1202,9 @@ namespace ArtemisMissionEditor.SpaceMap
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
+            //If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type))
+                type = TypeToString;
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
             return create;
@@ -1031,21 +1226,83 @@ namespace ArtemisMissionEditor.SpaceMap
             : base(posX, posY, posZ, name, makeSelected)
         { }
 
-        #endregion
+#endregion
+    }
+
+    public class ExpressionMemberValueEditorConverter : StringConverter
+    {
+        public readonly ExpressionMemberValueEditor Editor;
+
+        public ExpressionMemberValueEditorConverter(ExpressionMemberValueEditor editor)
+            : base()
+        {
+            this.Editor = editor;
+        }
+
+        public string IntToStandardValue(int intValue)
+        {
+            string strValue = intValue.ToString();
+            if (this.Editor.XmlValueToMenu.ContainsKey(strValue))
+            {
+                return this.Editor.XmlValueToMenu[strValue];
+            }
+            return "";
+        }
+
+        public override bool GetStandardValuesSupported(ITypeDescriptorContext context) { return true; }
+        public override bool GetStandardValuesExclusive(ITypeDescriptorContext context) { return true; }
+
+        public override TypeConverter.StandardValuesCollection
+        GetStandardValues(ITypeDescriptorContext context)
+        {
+            List<string> tmp = new List<string>();
+            foreach (string key in this.Editor.MenuValueToXml.Keys)
+            {
+                tmp.Add(key);
+            }
+            return new StandardValuesCollection(tmp.ToArray());
+        }
+    }
+
+    public sealed class AgeConverter : ExpressionMemberValueEditorConverter
+    {
+        public AgeConverter() : base(ExpressionMemberValueEditors.MonsterAge) { }
+    }
+
+    public sealed class MonsterTypeConverter : ExpressionMemberValueEditorConverter
+    {
+        public MonsterTypeConverter() : base(ExpressionMemberValueEditors.MonsterType) { }
+    }
+
+    public sealed class AnomalyTypeConverter : ExpressionMemberValueEditorConverter
+    {
+        public AnomalyTypeConverter() : base(ExpressionMemberValueEditors.AnomalyType) { }
     }
 
     public sealed class MapObjectNamed_monster : MapObjectNamedA
     {
 
-        //MONSTER TYPE
-        private string _monsterType;
-        [DisplayName("Monster Type"), Description("Monster Type 0=Classic")]
-        public string monsterType { get { return _monsterType; } set { _monsterType = value; } }
+        private int _age;
+        [DisplayName("Age"), Description("Indicates the monster age."), DefaultValue(0), TypeConverter(typeof(AgeConverter))]
+        public string AgeToString_Display
+        {
+            get { return IntToStandardValue(MethodBase.GetCurrentMethod(), _age); }
+            set { _age = StandardValueToInt(MethodBase.GetCurrentMethod(), value, 0); }
+        }
+
+        private int _monsterType;
+        [DisplayName("Monster Type"), Description("Indicates the monster type."), DefaultValue(0), TypeConverter(typeof(MonsterTypeConverter))]
+        public string MonsterTypeToString_Display
+        {
+            get { return IntToStandardValue(MethodBase.GetCurrentMethod(), _monsterType); }
+            set { _monsterType = StandardValueToInt(MethodBase.GetCurrentMethod(), value, 0); }
+        }
 
         private string _podnumber;
         [DisplayName("Pod Number"), Description("Whale pod number, identifies packs of whales that travel together")]
         public string podnumber { get { return _podnumber; } set { _podnumber = value; } }
-        #region INHERITANCE
+
+#region INHERITANCE
 
         //SELECTION
         public override bool _selectionAbsolute { get { return base._selectionAbsolute; } }
@@ -1054,13 +1311,14 @@ namespace ArtemisMissionEditor.SpaceMap
         //PROPERTIES
         public override bool IsPropertyAvailable(string pName)
         {
+            if (pName == "age") return true;
             if (pName == "monsterType") return true;
-            return base.IsPropertyAvailable(pName);
             if (pName == "podnumber") return true;
             return base.IsPropertyAvailable(pName);
         }
 
-        public override bool IsPropertyMandatory(string pName) {
+        public override bool IsPropertyMandatory(string pName)
+        {
             if (pName == "monsterType") return true;
             return base.IsPropertyMandatory(pName);
         }
@@ -1068,20 +1326,23 @@ namespace ArtemisMissionEditor.SpaceMap
         //TYPE
         public override string TypeToString { get { return "monster"; } }
         public override string TypeToStringShort { get { return "MON"; } }
- 
-        
+
         //COPIER
-        public override void Copy(bool excludeCoordinates, params MapObjectNamed[] source) { base.Copy(excludeCoordinates, source);
-               //{
-            bool same, found;
+        public override void Copy(bool excludeCoordinates, params MapObjectNamed[] source)
+        {
+            base.Copy(excludeCoordinates, source);
+
             if (source.Count() == 0)
                 return;
 
-                //monsterType
-                string tmp1 = "";
-        same = true; found = false;
+            //monsterType
+            int tmp1 = 0;
+            bool same = true;
+            bool found = false;
             foreach (MapObjectNamed item in source)
+            {
                 if (item.IsPropertyAvailable("monsterType"))
+                {
                     if (!found)
                     {
                         found = true;
@@ -1089,22 +1350,28 @@ namespace ArtemisMissionEditor.SpaceMap
                     }
                     else
                         same = same && (((MapObjectNamed_monster)item)._monsterType != tmp1);
+                }
+            }
             if (found && same)
                 this._monsterType = tmp1;
-            
-                        
+
             base.Copy(excludeCoordinates, source);
-    }
+        }
+
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
+            //If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type))
+                type = TypeToString;
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
-            if (String.IsNullOrEmpty(_monsterType))
-            { __AddNewAttribute(xDoc, create, "monsterType", "0"); }
-            else
+            __AddNewAttribute(xDoc, create, "monsterType", _monsterType.ToString());
+            if (_age > 0)
             {
-                __AddNewAttribute(xDoc, create, "monsterType", _monsterType.ToString());
+                __AddNewAttribute(xDoc, create, "age", _age.ToString());
+            }
+            if (!String.IsNullOrEmpty(_podnumber))
+            {
                 __AddNewAttribute(xDoc, create, "podnumber", _podnumber.ToString());
             }
             return create;
@@ -1114,35 +1381,61 @@ namespace ArtemisMissionEditor.SpaceMap
         {
             base.FromXml(item);
             foreach (XmlAttribute att in item.Attributes)
+            {
                 switch (att.Name)
                 {
+                    case "age":
+                        _age = Helper.StringToInt(att.Value);
+                        break;
                     case "monsterType":
-                        _monsterType = att.Value;
+                        _monsterType = Helper.StringToInt(att.Value);
                         break;
                     case "podnumber":
                         _podnumber = att.Value;
                         break;
                 }
+            }
         }
 
         //CONSTRUCTOR
         public MapObjectNamed_monster(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int angle = 0, string name = "")
             : base(posX, posY, posZ, makeSelected, angle, name)
-        { _monsterType = monsterType; }
+        { }
 
-        #endregion
+#endregion
     }
 
-    public sealed class MapObjectNamed_player : MapObjectNamedAS
+    public sealed class MapObjectNamed_player : MapObjectNamedArhKS
     {
+        //POD NUMBER
+        private string _playerslot;
+        [DisplayName("Player Slot"), Description("Player slot number"), DefaultValue("")]
+        public string playerslot { get { return _playerslot; } set { _playerslot = value; } }
+
+        //DRIVE TYPE
+        private string _drivetype;
+        [DisplayName("Drive Type"), Description("Drive type"), DefaultValue(""), TypeConverter(typeof(DriveTypeConverter))]
+        public string drivetype { get { return _drivetype; } set { _drivetype = value; } }
+
+        //ACCENT COLOR
+        private string _accentcolor;
+        [DisplayName("Accent Color"), Description("Accent color"), DefaultValue("")]
+        public string accentcolor { get { return _accentcolor; } set { _accentcolor = value; } }
+
         #region INHERITANCE
-        
+
         //SELECTION
         public override bool _selectionAbsolute { get { return base._selectionAbsolute; } }
         public override int _selectionSize { get { return 30; } }
 
         //PROPERTIES
-        public override bool IsPropertyAvailable(string pName) { return base.IsPropertyAvailable(pName); }
+        public override bool IsPropertyAvailable(string pName)
+        {
+            if (pName == "player_slot") return true;
+            if (pName == "jump") return true;
+            if (pName == "warp") return true;
+            return base.IsPropertyAvailable(pName);
+        }
         public override bool IsPropertyMandatory(string pName) { return base.IsPropertyMandatory(pName); }
 
         //TYPE
@@ -1155,8 +1448,34 @@ namespace ArtemisMissionEditor.SpaceMap
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
+            //If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type))
+                type = TypeToString;
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
+
+            if (!string.IsNullOrEmpty(playerslot))
+            {
+                __AddNewAttribute(xDoc, create, "player_slot", playerslot.ToString());
+            }
+            if (!string.IsNullOrEmpty(accentcolor))
+            {
+                __AddNewAttribute(xDoc, create, "accent_color", accentcolor.ToString());
+            }
+
+            string warp = null;
+            string jump = null;
+            if (_drivetype == "Warp")
+            {
+                warp = "yes";
+                jump = "no";
+            }
+            else if (_drivetype == "Jump")
+            {
+                warp = "no";
+                jump = "yes";
+            }
+            __AddNewAttribute(xDoc, create, "warp", warp);
+            __AddNewAttribute(xDoc, create, "jump", jump);
 
             return create;
         }
@@ -1165,11 +1484,25 @@ namespace ArtemisMissionEditor.SpaceMap
         public override void FromXml(XmlNode item)
         {
             base.FromXml(item);
-            //foreach (XmlAttribute att in item.Attributes)
-            //    switch (att.Name)
-            //    {
-
-            //    }
+            _drivetype = "Any";
+            foreach (XmlAttribute att in item.Attributes)
+            {
+                switch (att.Name)
+                {
+                    case "player_slot":
+                        _playerslot = att.Value;
+                        break;
+                    case "accent_color":
+                        _accentcolor = att.Value;
+                        break;
+                    case "warp":
+                        _drivetype = (att.Value == "yes") ? "Warp" : "Jump";
+                        break;
+                    case "jump":
+                        _drivetype = (att.Value == "yes") ? "Jump" : "Warp";
+                        break;
+                }
+            }
         }
 
         //CONSTRUCTOR
@@ -1177,83 +1510,87 @@ namespace ArtemisMissionEditor.SpaceMap
             : base(posX, posY, posZ, makeSelected, angle, name)
         { }
 
-        #endregion
-
+#endregion
     }
 
-	public sealed class MapObjectNamed_whale : MapObjectNamedA
-	{
-		//POD NUMBER
-		private string _podnumber;
-		[DisplayName("Pod Number"), Description("Whale pod number, identifies packs of whales that travel together")]
+    public sealed class MapObjectNamed_whale : MapObjectNamedA
+    {
+        //POD NUMBER
+        private string _podnumber;
+        [DisplayName("Pod Number"), Description("Whale pod number, identifies packs of whales that travel together")]
         public string podnumber { get { return _podnumber; } set { _podnumber = value; } }
 
-		#region INHERITANCE
+#region INHERITANCE
 
-		//SELECTION
-		public override bool _selectionAbsolute { get { return base._selectionAbsolute; } }
-		public override int _selectionSize { get { return 30; } }
+        //SELECTION
+        public override bool _selectionAbsolute { get { return base._selectionAbsolute; } }
+        public override int _selectionSize { get { return 30; } }
 
-		//PROPERTIES
-		public override bool IsPropertyAvailable(string pName)
-		{
-			if (pName == "podnumber") return true;
-			return base.IsPropertyAvailable(pName);
-		}
-		public override bool IsPropertyMandatory(string pName) { return base.IsPropertyMandatory(pName); }
+        //PROPERTIES
+        public override bool IsPropertyAvailable(string pName)
+        {
+            if (pName == "podnumber") return true;
+            return base.IsPropertyAvailable(pName);
+        }
+        public override bool IsPropertyMandatory(string pName) { return base.IsPropertyMandatory(pName); }
 
-		//TYPE
-		public override string TypeToString { get { return "whale"; } }
-		public override string TypeToStringShort { get { return "WHL"; } }
+        //TYPE
+        public override string TypeToString { get { return "whale"; } }
+        public override string TypeToStringShort { get { return "WHL"; } }
 
-		//COPIER
-		public override void Copy(bool excludeCoordinates, params MapObjectNamed[] source) { base.Copy(excludeCoordinates, source); }
+        //COPIER
+        public override void Copy(bool excludeCoordinates, params MapObjectNamed[] source) { base.Copy(excludeCoordinates, source); }
 
-		//TO XML
-		public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
-		{
-			if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
-			XmlElement create = base.ToXml(xDoc, missingProperties, type);
+        //TO XML
+        public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
+        {
+            //If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type))
+                type = TypeToString;
+            XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
-			__AddNewAttribute(xDoc, create, "podnumber", _podnumber.ToString());
+            __AddNewAttribute(xDoc, create, "podnumber", _podnumber.ToString());
 
-			return create;
-		}
+            return create;
+        }
 
-		//FROM XML
-		public override void FromXml(XmlNode item)
-		{
-			base.FromXml(item);
-			foreach (XmlAttribute att in item.Attributes)
-				switch (att.Name)
-				{
-					case "podnumber":
-						_podnumber = att.Value;
-						break;
-				}
-		}
+        //FROM XML
+        public override void FromXml(XmlNode item)
+        {
+            base.FromXml(item);
+            foreach (XmlAttribute att in item.Attributes)
+            {
+                switch (att.Name)
+                {
+                    case "podnumber":
+                        _podnumber = att.Value;
+                        break;
+                }
+            }
+        }
 
-		//CONSTRUCTOR
-		public MapObjectNamed_whale(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int angle = 0, string name = "", string podnumber = "0")
-			: base(posX, posY, posZ, makeSelected, angle, name)
-		{ _podnumber = podnumber; }
+        //CONSTRUCTOR
+        public MapObjectNamed_whale(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int angle = 0, string name = "", string podnumber = "0")
+            : base(posX, posY, posZ, makeSelected, angle, name)
+        { _podnumber = podnumber; }
 
-		#endregion
-	}
+#endregion
+    }
 
-    public sealed class MapObjectNamed_station : MapObjectNamedArhKS
+    public sealed class MapObjectNamed_station : MapObjectNamedSrhK
     {
-        #region INHERITANCE
-        
+#region INHERITANCE
+
         //SELECTION
         public override bool _selectionAbsolute { get { return base._selectionAbsolute; } }
         public override int _selectionSize { get { return base._selectionSize; } }
 
         //PROPERTIES
         public override bool IsPropertyAvailable(string pName) { return base.IsPropertyAvailable(pName); }
-        public override bool IsPropertyMandatory(string pName) { 
+        public override bool IsPropertyMandatory(string pName)
+        {
             if (pName == "name") return true;
-            return base.IsPropertyMandatory(pName); 
+            return base.IsPropertyMandatory(pName);
         }
 
         //TYPE
@@ -1266,7 +1603,9 @@ namespace ArtemisMissionEditor.SpaceMap
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
+            //If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type))
+                type = TypeToString;
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
             return create;
@@ -1284,27 +1623,28 @@ namespace ArtemisMissionEditor.SpaceMap
         }
 
         //CONSTRUCTOR
-        public MapObjectNamed_station(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int angle = 0, string name = "", string _race_Keys = "", string _race_Names = "", string _vessel_ClassNames = "", string _vessel_BroadTypes = "")
-            : base(posX, posY, posZ, makeSelected, angle, name, _race_Keys, _race_Names, _vessel_ClassNames, _vessel_BroadTypes)
+        public MapObjectNamed_station(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, string name = "", string _race_Keys = "", string _race_Names = "", string _vessel_ClassNames = "", string _vessel_BroadTypes = "")
+            : base(posX, posY, posZ, makeSelected, 0, name, _race_Keys, _race_Names, _vessel_ClassNames, _vessel_BroadTypes)
         { }
 
-        #endregion
+#endregion
     }
 
     public sealed class MapObjectNamed_neutral : MapObjectNamedArhKS
     {
-        #region INHERITANCE
-        
+#region INHERITANCE
+
         //SELECTION
         public override bool _selectionAbsolute { get { return base._selectionAbsolute; } }
         public override int _selectionSize { get { return 30; } }
 
         //PROPERTIES
         public override bool IsPropertyAvailable(string pName) { return base.IsPropertyAvailable(pName); }
-        public override bool IsPropertyMandatory(string pName) { 
+        public override bool IsPropertyMandatory(string pName)
+        {
             if (pName == "raceKeys") return true;
             if (pName == "hullKeys") return true;
-            return base.IsPropertyMandatory(pName); 
+            return base.IsPropertyMandatory(pName);
         }
 
         //TYPE
@@ -1317,7 +1657,9 @@ namespace ArtemisMissionEditor.SpaceMap
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
+            //If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type))
+                type = TypeToString;
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
             return create;
@@ -1339,7 +1681,7 @@ namespace ArtemisMissionEditor.SpaceMap
             : base(posX, posY, posZ, makeSelected, angle, name, _race_Keys, _race_Names, _vessel_ClassNames, _vessel_BroadTypes)
         { }
 
-        #endregion
+#endregion
     }
 
     public sealed class MapObjectNamed_enemy : MapObjectNamedArhKS
@@ -1349,21 +1691,23 @@ namespace ArtemisMissionEditor.SpaceMap
         [DisplayName("Fleet Number"), Description("Enemy fleet number, identifies packs of ships that travel together, following fleet leader")]
         public string fleetnumber { get { return _fleetnumber; } set {_fleetnumber = value; } }
 
-        #region INHERITANCE
-        
+#region INHERITANCE
+
         //SELECTION
         public override bool _selectionAbsolute { get { return base._selectionAbsolute; } }
         public override int _selectionSize { get { return 30; } }
 
         //PROPERTIES
-        public override bool IsPropertyAvailable(string pName) { 
-            if (pName == "fleetnumber") return true; 
-            return base.IsPropertyAvailable(pName); 
+        public override bool IsPropertyAvailable(string pName)
+        {
+            if (pName == "fleetnumber") return true;
+            return base.IsPropertyAvailable(pName);
         }
-        public override bool IsPropertyMandatory(string pName) { 
+        public override bool IsPropertyMandatory(string pName)
+        {
             if (pName == "raceKeys") return true;
             if (pName == "hullKeys") return true;
-            return base.IsPropertyMandatory(pName); 
+            return base.IsPropertyMandatory(pName);
         }
 
         //TYPE
@@ -1373,15 +1717,17 @@ namespace ArtemisMissionEditor.SpaceMap
         //COPIER
         public override void Copy(bool excludeCoordinates, params MapObjectNamed[] source)
         {
-            bool same, found;
             if (source.Count() == 0)
                 return;
 
             //fleetnumber
             string tmp1 = "";
-            same = true; found = false;
+            bool same = true;
+            bool found = false;
             foreach (MapObjectNamed item in source)
+            {
                 if (item.IsPropertyAvailable("fleetnumber"))
+                {
                     if (!found)
                     {
                         found = true;
@@ -1389,17 +1735,20 @@ namespace ArtemisMissionEditor.SpaceMap
                     }
                     else
                         same = same && (((MapObjectNamed_enemy)item)._fleetnumber != tmp1);
+                }
+            }
             if (found && same)
                 this._fleetnumber = tmp1;
-            
-                        
+
             base.Copy(excludeCoordinates, source);
         }
 
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
+            //If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type))
+                type = TypeToString;
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
             __AddNewAttribute(xDoc, create, "fleetnumber", _fleetnumber.ToString());
@@ -1412,12 +1761,14 @@ namespace ArtemisMissionEditor.SpaceMap
         {
             base.FromXml(item);
             foreach (XmlAttribute att in item.Attributes)
+            {
                 switch (att.Name)
                 {
                     case "fleetnumber":
                         _fleetnumber = att.Value;
                         break;
                 }
+            }
         }
 
         //CONSTRUCTOR
@@ -1425,10 +1776,10 @@ namespace ArtemisMissionEditor.SpaceMap
             : base(posX, posY, posZ, makeSelected, angle, name, _race_Keys, _race_Names, _vessel_ClassNames, _vessel_BroadTypes)
         { _fleetnumber = fleetnumber; }
 
-        #endregion
+#endregion
     }
 
-    public sealed class MapObjectNamed_genericMesh : MapObjectNamedA
+    public sealed class MapObjectNamed_genericMesh : MapObjectNamed
     {
         private string _meshFileName;
         [DisplayName("Mesh Filename"), Description("Path to the mesh file, relative to the game directory")]
@@ -1438,17 +1789,17 @@ namespace ArtemisMissionEditor.SpaceMap
         [DisplayName("Texture Filename"), Description("Path to the texture file, relative to the game directory)")]
         public string textureFileName { get { return _textureFileName; } set { _textureFileName = value; } }
 
-		private string _hullRace;
-		[DisplayName("Hull Race"), Category("ID"), Description("(unknown what this means, probably not used yet)")]
-		public string hullRace { get { return _hullRace; } set { _hullRace = value; } }
+        private string _hullRace;
+        [DisplayName("Hull Race"), Category("ID"), Description("(unknown what this means, probably not used yet)")]
+        public string hullRace { get { return _hullRace; } set { _hullRace = value; } }
 
-		private string _hullType;
+        private string _hullType;
         [DisplayName("Hull Type"), Category("ID"), Description("(unknown what this means, probably not used yet)")]
-		public string hullType { get { return _hullType; } set { _hullType = value; } }
+        public string hullType { get { return _hullType; } set { _hullType = value; } }
 
         [Browsable(false)]
         public FakeShields _fakeShields;
-        [DisplayName("Fake shields"), Description("Describes wether the generic mesh has fake shields")]
+        [DisplayName("Fake shields"), Description("Describes whether the generic mesh has fake shields")]
         public FakeShields fakeShields { get { return _fakeShields; } set { _fakeShields = value; } }
         private bool ShouldSerializefakeShields()
         {
@@ -1456,7 +1807,7 @@ namespace ArtemisMissionEditor.SpaceMap
         }
 
         private Color _color;
-        [DisplayName("Color"), Description("Describes what color the mesh and its name will have ingame")]
+        [DisplayName("Color"), Description("Describes what color the mesh and its name will have in-game")]
         public Color Color { get { return _color; } set { _color = value; } }
         [Browsable(false)]
         public double Color_Red
@@ -1477,19 +1828,20 @@ namespace ArtemisMissionEditor.SpaceMap
             set { _color = Color.FromArgb(_color.R, _color.G, (int)Math.Round(255 * value)); }
         }
 
-        #region INHERITANCE
-        
+#region INHERITANCE
+
         //SELECTION
         public override bool _selectionAbsolute { get { return base._selectionAbsolute; } }
         public override int _selectionSize { get { return base._selectionSize; } }
 
         //PROPERTIES
-        public override bool IsPropertyAvailable(string pName) { 
+        public override bool IsPropertyAvailable(string pName)
+        {
             if (pName == "meshFileName") return true;
             if (pName == "textureFileName") return true;
-			if (pName == "hullRace") return true;
-			if (pName == "hullType") return true;
-			if (pName == "fakeShields") return true;
+            if (pName == "hullRace") return true;
+            if (pName == "hullType") return true;
+            if (pName == "fakeShields") return true;
             if (pName == "fakeShieldsFront") return true;
             if (pName == "fakeShieldsRear") return true;
             if (pName == "hasFakeShldFreq") return true;
@@ -1497,12 +1849,13 @@ namespace ArtemisMissionEditor.SpaceMap
             if (pName == "colorRed") return true;
             if (pName == "colorGreen") return true;
             if (pName == "colorBlue") return true;
-            return base.IsPropertyAvailable(pName); 
+            return base.IsPropertyAvailable(pName);
         }
-        public override bool IsPropertyMandatory(string pName) { 
+        public override bool IsPropertyMandatory(string pName)
+        {
             if (pName == "meshFileName") return true;
             if (pName == "textureFileName") return true;
-            return base.IsPropertyMandatory(pName); 
+            return base.IsPropertyMandatory(pName);
         }
 
         //TYPE
@@ -1512,15 +1865,17 @@ namespace ArtemisMissionEditor.SpaceMap
         //COPIER
         public override void Copy(bool excludeCoordinates, params MapObjectNamed[] source)
         {
-            bool same, found;
             if (source.Count() == 0)
                 return;
 
             //meshFileName
             string tmp1 = "";
-            same = true; found = false;
+            bool same = true;
+            bool found = false;
             foreach (MapObjectNamed item in source)
+            {
                 if (item.IsPropertyAvailable("meshFileName"))
+                {
                     if (!found)
                     {
                         found = true;
@@ -1528,14 +1883,19 @@ namespace ArtemisMissionEditor.SpaceMap
                     }
                     else
                         same = same && (((MapObjectNamed_genericMesh)item)._meshFileName != tmp1);
+                }
+            }
             if (found && same)
                 this._meshFileName = tmp1;
 
             //textureFileName
             string tmp2 = "";
-            same = true; found = false;
+            same = true;
+            found = false;
             foreach (MapObjectNamed item in source)
+            {
                 if (item.IsPropertyAvailable("textureFileName"))
+                {
                     if (!found)
                     {
                         found = true;
@@ -1543,44 +1903,59 @@ namespace ArtemisMissionEditor.SpaceMap
                     }
                     else
                         same = same && (((MapObjectNamed_genericMesh)item)._textureFileName != tmp2);
+                }
+            }
             if (found && same)
                 this._textureFileName = tmp2;
 
-			//hullRace
-			string tmp5 = "";
-			same = true; found = false;
-			foreach (MapObjectNamed item in source)
-				if (item.IsPropertyAvailable("hullRace"))
-					if (!found)
-					{
-						found = true;
-						tmp5 = ((MapObjectNamed_genericMesh)item)._hullRace;
-					}
-					else
-						same = same && (((MapObjectNamed_genericMesh)item)._hullRace != tmp5);
-			if (found && same)
-				this._hullRace = tmp5;
+            //hullRace
+            string tmp5 = "";
+            same = true;
+            found = false;
+            foreach (MapObjectNamed item in source)
+            {
+                if (item.IsPropertyAvailable("hullRace"))
+                {
+                    if (!found)
+                    {
+                        found = true;
+                        tmp5 = ((MapObjectNamed_genericMesh)item)._hullRace;
+                    }
+                    else
+                        same = same && (((MapObjectNamed_genericMesh)item)._hullRace != tmp5);
+                }
+            }
+            if (found && same)
+                this._hullRace = tmp5;
 
-			//hullType
-			string tmp6 = "";
-			same = true; found = false;
-			foreach (MapObjectNamed item in source)
-				if (item.IsPropertyAvailable("hullType"))
-					if (!found)
-					{
-						found = true;
-						tmp6 = ((MapObjectNamed_genericMesh)item)._hullType;
-					}
-					else
-						same = same && (((MapObjectNamed_genericMesh)item)._hullType != tmp6);
-			if (found && same)
-				this._hullType = tmp6;
+            //hullType
+            string tmp6 = "";
+            same = true;
+            found = false;
+            foreach (MapObjectNamed item in source)
+            {
+                if (item.IsPropertyAvailable("hullType"))
+                {
+                    if (!found)
+                    {
+                        found = true;
+                        tmp6 = ((MapObjectNamed_genericMesh)item)._hullType;
+                    }
+                    else
+                        same = same && (((MapObjectNamed_genericMesh)item)._hullType != tmp6);
+                }
+            }
+            if (found && same)
+                this._hullType = tmp6;
 
             //fakeShields
             FakeShields tmp3 = new FakeShields(true);
-            same = true; found = false;
+            same = true;
+            found = false;
             foreach (MapObjectNamed item in source)
+            {
                 if (item.IsPropertyAvailable("fakeShields"))
+                {
                     if (!found)
                     {
                         found = true;
@@ -1588,14 +1963,19 @@ namespace ArtemisMissionEditor.SpaceMap
                     }
                     else
                         same = same && (((MapObjectNamed_genericMesh)item)._fakeShields != tmp3);
+                }
+            }
             if (found && same)
                 this._fakeShields = tmp3;
 
             //Color
             Color tmp4 = new Color();
-            same = true; found = false;
+            same = true;
+            found = false;
             foreach (MapObjectNamed item in source)
+            {
                 if (item.IsPropertyAvailable("color"))
+                {
                     if (!found)
                     {
                         found = true;
@@ -1603,16 +1983,20 @@ namespace ArtemisMissionEditor.SpaceMap
                     }
                     else
                         same = same && (((MapObjectNamed_genericMesh)item)._color != tmp4);
+                }
+            }
             if (found && same)
                 this._color = tmp4;
-            
+
             base.Copy(excludeCoordinates, source);
         }
 
         //TO XML
         public override XmlElement ToXml(XmlDocument xDoc, List<string> missingProperties, string type = "")
         {
-            if (String.IsNullOrEmpty(type)) type = TypeToString;//If this was the first called ToXml - set this object's type
+            //If this was the first called ToXml - set this object's type
+            if (String.IsNullOrEmpty(type))
+                type = TypeToString;
             XmlElement create = base.ToXml(xDoc, missingProperties, type);
 
             __AddNewAttribute(xDoc, create, "colorBlue", Helper.DoubleFormatToString("{0:0.0}",Color_Blue));
@@ -1636,17 +2020,17 @@ namespace ArtemisMissionEditor.SpaceMap
             else
                 __RememberPropertyIfMissing(missingProperties, "hasFakeShldFreq", IsPropertyMandatory("hasFakeShldFreq"));
 
-			if (!String.IsNullOrEmpty(hullRace))
-				__AddNewAttribute(xDoc, create, "hullRace", String.Format("{0}", hullRace));
-			else
-				__RememberPropertyIfMissing(missingProperties, "hullRace", IsPropertyMandatory("hullRace"));
+            if (!String.IsNullOrEmpty(hullRace))
+                __AddNewAttribute(xDoc, create, "hullRace", String.Format("{0}", hullRace));
+            else
+                __RememberPropertyIfMissing(missingProperties, "hullRace", IsPropertyMandatory("hullRace"));
 
-			if (!String.IsNullOrEmpty(hullType))
-				__AddNewAttribute(xDoc, create, "hullType", String.Format("{0}", hullType));
-			else
-				__RememberPropertyIfMissing(missingProperties, "hullType", IsPropertyMandatory("hullType"));
-			
-			if (!String.IsNullOrEmpty(meshFileName))
+            if (!String.IsNullOrEmpty(hullType))
+                __AddNewAttribute(xDoc, create, "hullType", String.Format("{0}", hullType));
+            else
+                __RememberPropertyIfMissing(missingProperties, "hullType", IsPropertyMandatory("hullType"));
+
+            if (!String.IsNullOrEmpty(meshFileName))
                 __AddNewAttribute(xDoc, create, "meshFileName", String.Format("{0}", meshFileName));
             else
                 __RememberPropertyIfMissing(missingProperties, "meshFileName", IsPropertyMandatory("meshFileName"));
@@ -1663,6 +2047,7 @@ namespace ArtemisMissionEditor.SpaceMap
         {
             base.FromXml(item);
             foreach (XmlAttribute att in item.Attributes)
+            {
                 switch (att.Name)
                 {
                     case "meshFileName":
@@ -1690,15 +2075,21 @@ namespace ArtemisMissionEditor.SpaceMap
                         Color_Blue = Helper.StringToDouble(att.Value);
                         break;
                 }
+            }
         }
 
         //CONSTRUCTOR
-        public MapObjectNamed_genericMesh(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, int angle = 0, string name = "", string _hull_Race = "", string _hull_Type="")
-            : base(posX, posY, posZ, makeSelected, angle, name)
-		{ this._meshFileName = ""; this._textureFileName = ""; this._hullRace = _hull_Race; this._hullType = _hull_Type; this._fakeShields = new FakeShields(true); this._color = Color.FromArgb(255,0,255); }
+        public MapObjectNamed_genericMesh(int posX = 0, int posY = 0, int posZ = 0, bool makeSelected = false, string name = "", string _hull_Race = "", string _hull_Type="")
+            : base(posX, posY, posZ, name, makeSelected)
+        {
+            this._meshFileName = "";
+            this._textureFileName = "";
+            this._hullRace = _hull_Race;
+            this._hullType = _hull_Type;
+            this._fakeShields = new FakeShields(true);
+            this._color = Color.FromArgb(255,0,255);
+        }
 
-        #endregion
+#endregion
     }
-
-
 }

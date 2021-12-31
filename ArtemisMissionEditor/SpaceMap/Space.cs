@@ -120,7 +120,7 @@ namespace ArtemisMissionEditor.SpaceMap
             switch (type)
             {
                 case "station":
-                    mo = new MapObjectNamed_station(posX, posY, posZ, makeSelected, angle);
+                    mo = new MapObjectNamed_station(posX, posY, posZ, makeSelected);
                     break;
                 case "neutral":
                     mo = new MapObjectNamed_neutral(posX, posY, posZ, makeSelected, angle);
@@ -141,7 +141,7 @@ namespace ArtemisMissionEditor.SpaceMap
                     mo = new MapObjectNamed_enemy(posX, posY, posZ, makeSelected, angle);
                     break;
                 case "genericMesh":
-                    mo = new MapObjectNamed_genericMesh(posX, posY, posZ, makeSelected, angle);
+                    mo = new MapObjectNamed_genericMesh(posX, posY, posZ, makeSelected);
                     break;
 				case "whale":
 					mo = new MapObjectNamed_whale(posX, posY, posZ, makeSelected, angle);
@@ -704,7 +704,7 @@ namespace ArtemisMissionEditor.SpaceMap
                 {
                     if (!item.IsPropertyAvailable("angle"))
                         continue;
-                    ((MapObjectNamedA)item).A_rad = angle + (controlPressed ? -Math.PI / 2 : Math.PI / 2);
+                    ((IMapObjectNamedA)item).A_rad = angle + (controlPressed ? -Math.PI / 2 : Math.PI / 2);
                 }
                 return true;
             }
@@ -715,7 +715,8 @@ namespace ArtemisMissionEditor.SpaceMap
                     continue;
 
                 double angle = Helper.CalcaulateAngle(item.Coordinates.X_Scr, item.Coordinates.Z_Scr, x, z);
-                ((MapObjectNamedA)item).A_rad = angle + (controlPressed ? -Math.PI / 2 : Math.PI / 2);
+                double rad = angle + (controlPressed ? -Math.PI / 2 : Math.PI / 2);
+                ((IMapObjectNamedA)item).A_rad = rad;
             }
             return true;
         }
