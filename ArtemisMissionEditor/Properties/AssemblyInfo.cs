@@ -1,12 +1,11 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Artemis Mission Editor")]
-[assembly: AssemblyDescription("Complete mission editor suite for Artemis: SBS\r\n\r\nGet the lastest version on Artemis Wiki:\r\nhttp://artemiswiki.pbworks.com/w/page/53389687/Mission_Editor\r\n\r\nUpdated for Artemis v 2.1.1 by Russ Judge\r\n\r\nBug fixes and tweeking by David Wolfe\r\n\r\nReport bugs on the forum thread at: http://www.artemis.eochu.com/?page_id=28#/20130130/artemis-mission-editor-2347979/")]
+[assembly: AssemblyTitle("TEST BUILD Artemis Mission Editor")]
+[assembly: AssemblyDescription("!!TEST BUILD!!\r\nComplete mission editor suite for Artemis SBS\r\n\r\nGet the latest version on Artemis Wiki:\r\nhttp://artemiswiki.pbworks.com/w/page/53389687/Mission_Editor\r\n\r\nUpdated for Artemis 2.8.0 by Russ Judge\r\n\r\nUpdated for Artemis 2.8.0 by Fish\r\n\r\nBug fixes and tweaking by David Wolfe, Alice and Gomeric\r\n\r\nUpdated for Artemis 2.5.1 and later by Dave Thaler, including contributions by Fish Evans, Scott Nalley, and Stoo Johnston\r\n\r\nReport bugs on the forum thread at: https://artemis.forumchitchat.com/post/artemis-mission-editor-8115862")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ARME Corporation :-)")]
 [assembly: AssemblyProduct("Artemis Mission Editor")]
@@ -32,8 +31,4 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.1.1.13")]
-
-
-//R. Judge: Code analysis also not done--I tried it and it scared me.  Lots of problems.
-//R. Wolfe: Same here... Found some bugs though and fixed them. Also, added updated help page and info page.
+[assembly: AssemblyVersion("2.8.00")]
