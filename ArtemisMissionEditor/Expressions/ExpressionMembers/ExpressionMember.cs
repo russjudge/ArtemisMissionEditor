@@ -40,7 +40,7 @@ namespace ArtemisMissionEditor.Expressions
         public string Name { get; protected set; }
 
 		/// <summary>
-		/// Wether line break is required after this member.
+		/// Whether line break is required after this member.
 		/// </summary>
 		public virtual bool RequiresLinebreak { get { return false; } }
 

@@ -77,7 +77,7 @@ namespace ArtemisMissionEditor.Expressions
 			eML.Add(new ExpressionMember("closer "));
 			eML.Add(new ExpressionMember("than "));
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.ValueRadius, "value2"));
-			eML.Add(new ExpressionMember("inside"));
+			eML.Add(new ExpressionMember("inside "));
 			eML.Add(new ExpressionMember("a "));
 			eML.Add(new ExpressionMember("nebula\" "));
 						

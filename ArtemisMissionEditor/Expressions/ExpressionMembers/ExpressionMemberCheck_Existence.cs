@@ -8,10 +8,10 @@ using System.Windows.Forms;
 namespace ArtemisMissionEditor.Expressions
 {
     /// <summary>
-    /// Represents a single member in an expression, which provides branching via checking a condition. 
-    /// This check is for "fleetnumber" versus "all ships" from [if_fleet_count]
+    /// Represents a single member in an expression, which provides branching via checking a condition.
+    /// This check is for [if_exists] vs [if_not_exists].
     /// </summary>
-    public sealed class ExpressionMemberCheck_AllShips_FleetNumber : ExpressionMemberCheck
+    public sealed class ExpressionMemberCheck_Existence : ExpressionMemberCheck
 	{
         /// <summary>
         /// This function is called when check needs to decide which list of ExpressionMembers to output. 
@@ -20,10 +20,10 @@ namespace ArtemisMissionEditor.Expressions
         /// <example>If input is wrong, decide will choose something, and then the input will be corrected in the SetValue function</example>
         public override string Decide(ExpressionMemberContainer container)
 		{
-			if (container.GetAttribute("fleetnumber") == null)
-				return Choices[0]; // all ships 
+			if (container.Statement.Name == "if_exists")
+				return Choices[0]; // if object exists
 			else
-				return Choices[1]; // fleetnumber
+				return Choices[1]; // if object doesn't exist
 		}
 
         /// <summary>
@@ -33,32 +33,27 @@ namespace ArtemisMissionEditor.Expressions
         /// </summary>
         protected override void SetValueInternal(ExpressionMemberContainer container, string value)
 		{
-			if (value == Choices[0]) //point
-				container.SetAttribute("fleetnumber", null);
-			else
-				container.SetAttributeIfNull("fleetnumber", "0");
+			if (value == Choices[0]) 
+				container.Statement.Name = "if_exists";
+			else 
+				container.Statement.Name = "if_not_exists";
 
 			base.SetValueInternal(container, value);
 		}
 
         /// <summary>
-        /// Represents a single member in an expression, which provides branching via checking a condition. 
-        /// This check is for "fleetnumber" versus "all ships" from [if_fleet_count]
+        /// Represents a single member in an expression, which provides branching via checking a condition.
+        /// This check is for [if_exists] vs [if_not_exists].
         /// </summary>
-        public ExpressionMemberCheck_AllShips_FleetNumber()
-			: base("", ExpressionMemberValueDescriptions.Check_AllShips_FleetNumber)
+        public ExpressionMemberCheck_Existence()
+			: base("", ExpressionMemberValueDescriptions.Check_Existence)
 		{
 			List<ExpressionMember> eML;
+			eML = Add("exists"); //Choices[0]
+			eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NameAll, true, "name", useGMSelectionAttributeName:"<none>"));
 
-			eML = this.Add("when counting all ships"); //Choices[0]
-			//In case this is point, it looks like this : "... at point (x, y, z)"
-
-			eML = this.Add("in fleet number"); //Choices[1]
-			//In case this is using GM pos, it looks like: "... at GM position"
-			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.FleetNumberIf, "fleetnumber"));
+			eML = Add("does not exist"); //Choices[1]
+			eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NameAll, true, "name", useGMSelectionAttributeName:"<none>"));
 		}
-       }
-
-
-
+	}
 }

@@ -30,15 +30,21 @@ namespace ArtemisMissionEditor.Expressions
                 case "if_player_is_targeting":
                 case "if_timer_finished":
                 case "if_object_property":
+                case "if_comms_button":
                 case "if_gm_key":
                 case "if_gm_button":
-                case "if_comms_button":
                 case "if_client_key":
                 case "if_distance":
+                case "if_external_program_active":
+                case "if_external_program_finished":
+                case "if_scan_level":
+                case "if_monster_tag_matches":
+                case "if_object_tag_matches":
+                case "if_in_nebula":
                     return container.Statement.Name;
                 case "if_exists":
                 case "if_not_exists":
-                    return "<existance>";
+                    return "<existence>";
                 case "if_inside_sphere":
                 case "if_outside_sphere":
                 case "if_inside_box":
@@ -67,9 +73,9 @@ namespace ArtemisMissionEditor.Expressions
 				//{
 				//}
 				//For all many-to-one
-				if (value == "<existance>")
-				    if (container.Statement.Name != "if_exists" && container.Statement.Name != "if_not_exists")
-				        container.Statement.Name = "if_exists";
+				if (value == "<existence>")
+					if (container.Statement.Name != "if_exists" && container.Statement.Name != "if_not_exists")
+						container.Statement.Name = "if_exists";
 				if (value == "<location>")
 					if (container.Statement.Name != "if_inside_sphere" && container.Statement.Name != "if_outside_sphere" && container.Statement.Name != "if_inside_box" && container.Statement.Name != "if_outside_box")
 						container.Statement.Name = "if_inside_sphere";
@@ -92,7 +98,7 @@ namespace ArtemisMissionEditor.Expressions
 			eML = this.Add("if_variable");
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NameVariable, "name", true));
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Comparator, "comparator"));
-			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.ValueF, "value",true));
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Flt_NegInf_PosInf, "value",true));
 
 			#endregion
 
@@ -105,12 +111,30 @@ namespace ArtemisMissionEditor.Expressions
 
 			#endregion
 
+			#region if_external_program_active
+
+			eML = this.Add("if_external_program_active");
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.ExternalProgramID, "id", true));
+			eML.Add(new ExpressionMember("is "));
+			eML.Add(new ExpressionMember("running"));
+
+			#endregion
+
+			#region if_external_program_finished
+
+			eML = this.Add("if_external_program_finished");
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.ExternalProgramID, "id", true));
+			eML.Add(new ExpressionMember("has "));
+			eML.Add(new ExpressionMember("finished"));
+
+			#endregion
+
 			AddSeparator();
 
             #region if_damcon_members
 
             eML = this.Add("if_damcon_members");
-            eML.Add(new ExpressionMemberCheck_Slot_GM(ExpressionMemberValueDescriptions.NameAll));
+            eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NamePlayer));
             eML.Add(new ExpressionMember("in "));
 			eML.Add(new ExpressionMember("team "));
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Teamindex, "team_index"));
@@ -123,26 +147,55 @@ namespace ArtemisMissionEditor.Expressions
 
 			eML = this.Add("if_fleet_count");
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Comparator, "comparator"));
-			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.ValueF, "value", true));
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Flt_0_100k, "value", true));
 			eML.Add(new ExpressionMemberCheck_AllShips_FleetNumber());
+            eML.Add(new ExpressionMember("on "));
+            eML.Add(new ExpressionMember("side "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.SideValue, "sideValue"));
+            eML.Add(new ExpressionMember("and "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Bool_Do_Dont, "countSurrendered"));
+            eML.Add(new ExpressionMember("count "));
+            eML.Add(new ExpressionMember("surrendered "));
+            eML.Add(new ExpressionMember("ships "));
 			
 			#endregion
 
 			AddSeparator();
-			
+
 			#region if_docked
 
 			eML = this.Add("if_docked");
-			eML.Add(new ExpressionMember("to "));
+			eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NamePlayer, false, "player_name"));
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Bool_Is_Isnt, "not"));
+			eML.Add(new ExpressionMember("docked "));
+			eML.Add(new ExpressionMember("with "));
 			eML.Add(new ExpressionMember("station "));
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NameStation, "name", true));
 
 			#endregion
 
+			#region if_in_nebula
+
+			eML = this.Add("if_in_nebula");
+			eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NamePlayer));
+			eML.Add(new ExpressionMember("is "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NebulaTypeOrNone, "compare", true));
+            eML.Add(new ExpressionMember("nebula"));
+
+            #endregion
+
             #region if_player_is_targeting
 
             eML = this.Add("if_player_is_targeting");
-			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NameAll, "name", true));
+			eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NamePlayer,
+				mandatory:false,
+				nameAttributeName:"player_name"));
+			eML.Add(new ExpressionMember("is "));
+			eML.Add(new ExpressionMember("targeting "));
+			eML.Add(new ExpressionMember("object "));
+			eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NameAll,
+				useGMSelectionAttributeName: "<none>",
+				playerSlotAttributeName:"target_slot"));
 
 			#endregion
 
@@ -150,9 +203,8 @@ namespace ArtemisMissionEditor.Expressions
 
 			#region if_exists / if_not_exists
 
-			eML = this.Add("<existance>");
-			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NameAll, "name", true));
-			eML.Add(new ExpressionMemberCheck_Existance());
+			eML = this.Add("<existence>");
+			eML.Add(new ExpressionMemberCheck_Existence());
 
 			#endregion
 
@@ -160,6 +212,40 @@ namespace ArtemisMissionEditor.Expressions
 
 			eML = this.Add("if_object_property");
 			eML.Add(new ExpressionMemberCheck_PropertyIf());
+
+			#endregion
+
+			#region if_monster_tag_matches
+
+			eML = this.Add("if_monster_tag_matches");
+			eML.Add(new ExpressionMember("named "));
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NameMonster, "name", true));
+			eML.Add(new ExpressionMember("has "));
+			eML.Add(new ExpressionMember("tag "));
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Text, "string"));
+
+			#endregion
+
+			#region if_object_tag_matches
+
+			eML = this.Add("if_object_tag_matches");
+			eML.Add(new ExpressionMember("named "));
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NameAIShip, "objectName", true));
+			eML.Add(new ExpressionMember("has "));
+			eML.Add(new ExpressionMember("tag "));
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Text, "string"));
+
+			#endregion
+			
+			#region if_scan_level
+
+			eML = this.Add("if_scan_level");
+            eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NameScannableObject));
+            eML.Add(new ExpressionMember("for "));
+            eML.Add(new ExpressionMember("side "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.SideValue, "side"));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Comparator, "comparator"));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.ScanLevel, "value", true));
 
 			#endregion
 
@@ -179,11 +265,13 @@ namespace ArtemisMissionEditor.Expressions
 
             eML = this.Add("if_distance");
             eML.Add(new ExpressionMember("between "));
-			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NameAll, "name1", true));
+            eML.Add(new ExpressionMember("object "));
+            eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NameAll, true, "name1", "<none>", "player_slot1"));
             eML.Add(new ExpressionMember("and "));
-			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NameAll, "name2", true));
+            eML.Add(new ExpressionMember("object "));
+            eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NameAll, true, "name2", "<none>", "player_slot2"));
             eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Comparator, "comparator"));
-            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.ValueF, "value", true));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Flt_0_PosInf, "value", true));
 
             #endregion
 
@@ -193,11 +281,18 @@ namespace ArtemisMissionEditor.Expressions
 
 			eML = this.Add("if_difficulty");
 			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Comparator, "comparator"));
-			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.ValueF, "value", true));
+			eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.Int_0_100, "value", true));
 
 			#endregion
 
 			AddSeparator();
+
+            #region if_comms_button
+
+            eML = this.Add("if_comms_button");
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.TextCommsButton, "text", true));
+
+            #endregion
 
 			#region if_gm_key
 
@@ -210,15 +305,7 @@ namespace ArtemisMissionEditor.Expressions
             #region if_gm_button
 
             eML = this.Add("if_gm_button");
-           // eML.Add(new ExpressionMember("the "));
-            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.IFgm_button, "text", true));
-
-            #endregion
-            #region if_comms_button
-
-            eML = this.Add("if_comms_button");
-            // eML.Add(new ExpressionMember("the "));
-            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.IFgm_button, "text", true));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.TextGMButton, "text", true));
 
             #endregion
 

@@ -35,7 +35,7 @@ namespace ArtemisMissionEditor.Expressions
         {
             if (value == Choices[0]) //name
                 container.SetAttribute("use_gm_selection", null);
-            else // use_gm_sel
+            else if (container.GetAttribute("use_gm_selection") == null) // use_gm_sel
                 container.SetAttribute("use_gm_selection", "");
 
             base.SetValueInternal(container, value);
@@ -45,7 +45,7 @@ namespace ArtemisMissionEditor.Expressions
         /// Represents a single member in an expression, which provides branching via checking a condition.
         /// This check is for name vs gm selection in multiple statements that do something to/with an object.
         /// </summary>
-        public ExpressionMemberCheck_Name_GM(ExpressionMemberValueDescription name = null)
+        public ExpressionMemberCheck_Name_GM(ExpressionMemberValueDescription name = null, bool mandatory = false)
             : base("", ExpressionMemberValueDescriptions.Check_Name_GMSelection)
         {
             name = name ?? ExpressionMemberValueDescriptions.Name;
@@ -53,7 +53,7 @@ namespace ArtemisMissionEditor.Expressions
             List<ExpressionMember> eML;
 
             eML = this.Add("with name"); //Choices[0]
-            eML.Add(new ExpressionMember("<>", name, "name"));
+            eML.Add(new ExpressionMember("<>", name, "name", mandatory));
 
             eML = this.Add("selected by GM"); //Choices[1]
             eML.Add(new ExpressionMember("", ExpressionMemberValueDescriptions.UseGM, "use_gm_selection"));

@@ -9,9 +9,9 @@ namespace ArtemisMissionEditor.Expressions
 {
     /// <summary>
     /// Represents a single member in an expression, which provides branching via checking a condition.
-    /// This check is for default/specified side for [create] statement.
+    /// This check is providing options for distance checks in [add_ai]'s CHASE entries.
     /// </summary>
-    public sealed class ExpressionMemberCheck_Side : ExpressionMemberCheck
+    public sealed class ExpressionMemberCheck_DistanceNoNebula : ExpressionMemberCheck
     {
         /// <summary>
         /// This function is called when check needs to decide which list of ExpressionMembers to output. 
@@ -20,30 +20,26 @@ namespace ArtemisMissionEditor.Expressions
         /// <example>If input is wrong, decide will choose something, and then the input will be corrected in the SetValue function</example>
         public override string Decide(ExpressionMemberContainer container)
         {
-            if (container.GetAttribute("sideValue") != null)
-                return Choices[1]; // "... side #"
-
-            // The attribute on incoming_comms_text was called "side" prior to Artemis 2.6.
-            if (container.GetAttribute("side") != null)
-            {
-                return "<OBSOLETE_SIDE>";
-            }
-
-            return Choices[0]; // "... default side" 
+            if (container.GetAttribute("value1") == null)
+                return Choices[0]; // anywhere
+            if (true)
+                return Choices[1]; //limited
         }
 
         /// <summary>
         /// Called after Decide has made its choice, or, as usual for ExpressionMembers, after user edited the value through a Dialog.
         /// For checks, SetValue must change the attributes/etc of the statement according to the newly chosen value
         /// <example>If you chose "Use GM ...", SetValue will set "use_gm_..." attribute to ""</example>
-        /// </summary> 
+        /// </summary>
         protected override void SetValueInternal(ExpressionMemberContainer container, string value)
         {
-            if (value == "<OBSOLETE_SIDE>")
+            if (value == Choices[0])  // anywhere
             {
-                // Convert "side" attribute to "sideValue" attribute.
-                value = Choices[1]; // "... side #"
-                container.SetAttribute("sideValue", container.GetAttribute("side"));
+                container.SetAttribute("value1", null);
+            }
+            if (value == Choices[1])  // limited
+            {
+                container.SetAttributeIfNull("value1", "0");
             }
 
             base.SetValueInternal(container, value);
@@ -51,20 +47,21 @@ namespace ArtemisMissionEditor.Expressions
 
         /// <summary>
         /// Represents a single member in an expression, which provides branching via checking a condition.
-        /// This check is for default/specified side for [create] statement.
+        /// This check is providing options for distance checks in [add_ai]'s CHASE entries.
         /// </summary>
-        public ExpressionMemberCheck_Side()
-            : base("", ExpressionMemberValueDescriptions.Blank)
+        public ExpressionMemberCheck_DistanceNoNebula()
+            : base("", ExpressionMemberValueDescriptions.Check_DistanceNoNebula)
         {
             List<ExpressionMember> eML;
             
-            eML = this.Add("default"); //Choices[0]
-            eML.Add(new ExpressionMember("default", ExpressionMemberValueDescriptions.SideValue, "sideValue"));
-            eML.Add(new ExpressionMember("side "));
+            eML = this.Add("anywhere"); //Choices[0]
+            eML.Add(new ExpressionMember("on "));
+            eML.Add(new ExpressionMember("the "));
+            eML.Add(new ExpressionMember("map\" ")); 
 
-            eML = this.Add("specified"); //Choices[1]
-            eML.Add(new ExpressionMember("side "));
-            eML.Add(new ExpressionMember("default", ExpressionMemberValueDescriptions.SideValue, "sideValue"));
+            eML = this.Add("closer than"); //Choices[1]
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.ValueRadiusQ, "value1"));
+            eML.Add(new ExpressionMember("\" "));
         }
     }
 }

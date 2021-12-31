@@ -9,17 +9,20 @@ namespace ArtemisMissionEditor.Expressions
 {
     /// <summary>
     /// Represents a single member in an expression, which provides branching via checking a condition.
-    /// This check is for name vs gm selection in multiple statements that do something to/with an object.
+    /// This check is for name vs gm vs Player Ship slot vs Side choice selection in multiple statements that do something to/with an object.
     /// </summary>
-    public sealed class ExpressionMemberCheck_Name_GM_Slot : ExpressionMemberCheck
+    public sealed class ExpressionMemberCheck_Name_GM_Slot_Side : ExpressionMemberCheck
     {
         private static readonly string NameChoice = "with name";
         private static readonly string UseGMChoice = "selected by GM ";
         private static readonly string PlayerSlotChoice = "in player slot";
+        private static readonly string SideValueChoice = "On Side";
 
         private string NameAttributeName { get; set; }
-        private string PlayerSlotAttributeName { get; set; }
         private string UseGMSelectionAttributeName { get; set; }
+        private string PlayerSlotAttributeName { get; set; }
+        private string SideValueAttributeName { get; set; }
+        
 
         /// <summary>
         /// This function is called when check needs to decide which list of ExpressionMembers to output.
@@ -42,6 +45,10 @@ namespace ArtemisMissionEditor.Expressions
             {
                 return PlayerSlotChoice;
             }
+            if (container.GetAttribute("sideValue") != null)
+            {
+                return SideValueChoice;
+            }
 
             // Default is name.
             return NameChoice;
@@ -58,19 +65,30 @@ namespace ArtemisMissionEditor.Expressions
             {
                 container.SetAttribute(UseGMSelectionAttributeName, null);
                 container.SetAttribute(PlayerSlotAttributeName, null);
+                container.SetAttribute("sideValue", null);
                 container.SetAttributeIfNull(NameAttributeName, "");
             }
             if (value == UseGMChoice)
             {
                 container.SetAttribute(NameAttributeName, null);
                 container.SetAttribute(PlayerSlotAttributeName, null);
+                container.SetAttribute("sideValue", null);
                 container.SetAttributeIfNull(UseGMSelectionAttributeName, "");
+              
             }
             if (value == PlayerSlotChoice)
             {
                 container.SetAttribute(UseGMSelectionAttributeName, null);
                 container.SetAttribute(NameAttributeName, null);
+                container.SetAttribute("sideValue", null);
                 container.SetAttributeIfNull(PlayerSlotAttributeName, "");
+            }
+            if (value == SideValueChoice)
+            {
+                container.SetAttribute(UseGMSelectionAttributeName, null);
+                container.SetAttribute(NameAttributeName, null);
+                container.SetAttribute(PlayerSlotAttributeName, null);
+                container.SetAttributeIfNull("sideValue", "");
             }
             base.SetValueInternal(container, value);
         }
@@ -79,12 +97,13 @@ namespace ArtemisMissionEditor.Expressions
         /// Represents a single member in an expression, which provides branching via checking a condition.
         /// This check is for name vs gm selection in multiple statements that do something to/with an object.
         /// </summary>
-        public ExpressionMemberCheck_Name_GM_Slot(
+        public ExpressionMemberCheck_Name_GM_Slot_Side(
             ExpressionMemberValueDescription name = null,
             bool mandatory = true,
             string nameAttributeName = "name",
             string useGMSelectionAttributeName = "use_gm_selection",
-            string playerSlotAttributeName = "player_slot")
+            string playerSlotAttributeName = "player_slot",
+            string sideValueAttributeName = "side_value")
             : base("", ExpressionMemberValueDescriptions.Check_Name_GMSelection)
         {
             name = name ?? ExpressionMemberValueDescriptions.Name;
@@ -92,6 +111,7 @@ namespace ArtemisMissionEditor.Expressions
             NameAttributeName = nameAttributeName;
             PlayerSlotAttributeName = playerSlotAttributeName;
             UseGMSelectionAttributeName = useGMSelectionAttributeName;
+            SideValueAttributeName = sideValueAttributeName;
 
             List<ExpressionMember> eML;
 
@@ -111,6 +131,11 @@ namespace ArtemisMissionEditor.Expressions
             {
                 eML = this.Add(PlayerSlotChoice);
                 eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.UseSlot, PlayerSlotAttributeName, true));
+            }
+            if (SideValueChoice != "<none>")
+            {
+                eML = this.Add(SideValueChoice);
+                eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.UseSlot, SideValueAttributeName, true));
             }
         }
     }

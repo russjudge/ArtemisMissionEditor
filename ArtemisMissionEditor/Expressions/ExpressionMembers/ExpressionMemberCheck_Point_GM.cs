@@ -35,7 +35,7 @@ namespace ArtemisMissionEditor.Expressions
 		{
 			if (value == Choices[0]) //point
 				container.SetAttribute("use_gm_position", null);
-			else
+			else if (container.GetAttribute("use_gm_position") == null)
 				container.SetAttribute("use_gm_position", "");
 
 			base.SetValueInternal(container, value);
@@ -47,7 +47,7 @@ namespace ArtemisMissionEditor.Expressions
         /// </summary>
         /// <param name="prefix">Prefix in front of x/y/z parameters.</param>
         /// <param name="pointCaption">Internal value of little significance.</param>
-        /// <param name="unbound">Wether the coordinates are bound by map boundaries.</param>
+        /// <param name="unbound">Whether the coordinates are bound by map boundaries.</param>
         public ExpressionMemberCheck_Point_GM(string prefix = "", string pointCaption = "point", bool unbound = false)
 			: base("", ExpressionMemberValueDescriptions.Check_Point_GMPos)
 		{

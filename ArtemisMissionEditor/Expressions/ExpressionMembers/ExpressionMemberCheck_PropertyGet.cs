@@ -9,9 +9,9 @@ namespace ArtemisMissionEditor.Expressions
 {
     /// <summary>
     /// Represents a single member in an expression, which provides branching via checking a condition.
-    /// This check is for "type" in [copy_property] statement, it is hidden since "add to property" statement has property name as a member.
+    /// This check is for "type" in [get_property] statement, it is hidden since "add to property" statement has property name as a member.
     /// </summary>
-    public sealed class ExpressionMemberCheck_PropertyCopy : ExpressionMemberCheck
+    public sealed class ExpressionMemberCheck_PropertyGet : ExpressionMemberCheck
 	{
         /// <summary>
         /// This function is called when check needs to decide which list of ExpressionMembers to output. 
@@ -20,7 +20,7 @@ namespace ArtemisMissionEditor.Expressions
         /// <example>If input is wrong, decide will choose something, and then the input will be corrected in the SetValue function</example>
         public override string Decide(ExpressionMemberContainer container)
 		{
-			string type = container.GetAttribute("property", ExpressionMemberValueDescriptions.WritableProperty.DefaultIfNull);
+			string type = container.GetAttribute("property", ExpressionMemberValueDescriptions.ReadableProperty.DefaultIfNull);
 
             ExpressionMemberObjectProperty property = ExpressionMemberObjectProperty.Find(type);
             if (property != null)
@@ -38,7 +38,7 @@ namespace ArtemisMissionEditor.Expressions
         /// </summary>
         protected override void SetValueInternal(ExpressionMemberContainer container, string value)
 		{
-            string type = container.GetAttribute("property", ExpressionMemberValueDescriptions.WritableProperty.DefaultIfNull);
+            string type = container.GetAttribute("property", ExpressionMemberValueDescriptions.ReadableProperty.DefaultIfNull);
             ExpressionMemberObjectProperty property = ExpressionMemberObjectProperty.Find(type);
             if (property != null)
             {
@@ -55,11 +55,6 @@ namespace ArtemisMissionEditor.Expressions
                     value = property.Name;
                     container.SetAttribute("property", property.Name);
                 }
-
-                if (Mission.Current.Loading && property.IsReadOnly)
-                {
-    				Log.Add("Warning! Attempt to copy read-only property " + container.GetAttribute("property") + " detected in event: " + container.Statement.Parent.Name + "!");
-                }
             }
 
 			if (Mission.Current.Loading && value == "<UNKNOWN_PROPERTY>")
@@ -68,24 +63,28 @@ namespace ArtemisMissionEditor.Expressions
 			base.SetValueInternal(container, value);
 		}
 
-		/// <summary>
-		/// Adds "
-		/// </summary>
+		private void ____Add_Variable(List<ExpressionMember> eML)
+        {
+			eML.Add(new ExpressionMember("to "));
+			eML.Add(new ExpressionMember("variable "));
+			eML.Add(new ExpressionMember("with "));
+			eML.Add(new ExpressionMember("name "));
+            eML.Add(new ExpressionMember("<>", ExpressionMemberValueDescriptions.NameVariable, "variable", true));
+        }
+
 		private void ____Add_Name(List<ExpressionMember> eML, ExpressionMemberValueDescription type)
 		{
 			eML.Add(new ExpressionMember("from "));
 			eML.Add(new ExpressionMember("object "));
-			eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NameAll, true, "name1", "<none>", "player_slot1"));
-			eML.Add(new ExpressionMember("to "));
-			eML.Add(new ExpressionMember("object "));
-			eML.Add(new ExpressionMemberCheck_Name_GM_Slot(ExpressionMemberValueDescriptions.NameAll, true, "name2", "<none>", "player_slot2"));
-		}
+            eML.Add(new ExpressionMemberCheck_Name_GM_Slot(type));
+            ____Add_Variable(eML);
+        }
 
         /// <summary>
         /// Represents a single member in an expression, which provides branching via checking a condition.
-        /// This check is for "type" in [copy_property] statement, it is hidden since "add to property" statement has property name as a member.
+        /// This check is for "type" in [get_property] statement, it is hidden since "add to property" statement has property name as a member.
         /// </summary>
-        public ExpressionMemberCheck_PropertyCopy()
+        public ExpressionMemberCheck_PropertyGet()
 			: base()
 		{
 			List<ExpressionMember> eML;
@@ -94,25 +93,21 @@ namespace ArtemisMissionEditor.Expressions
             {
                 eML = this.Add(property.Name);
 
-    			eML.Add(new ExpressionMember("<property>", ExpressionMemberValueDescriptions.WritableObjectProperty, "property"));
+    			eML.Add(new ExpressionMember("<property>", ExpressionMemberValueDescriptions.ReadableProperty, "property"));
                 if (property.ObjectDescription != null)
                 {
                     ____Add_Name(eML, property.ObjectDescription);
                 }
                 else
                 {
-                    eML.Add(new ExpressionMember("(WARNING! THIS PROPERTY IS GLOBAL!)"));
-                }
-                if (property.IsReadOnly)
-                {
-        			eML.Add(new ExpressionMember("(WARNING! THIS PROPERTY IS READ ONLY!)"));
+            		____Add_Variable(eML);
                 }
             }
 
 			#region <UNKNOWN_PROPERTY>
 
 			eML = this.Add("<UNKNOWN_PROPERTY>");
-  			eML.Add(new ExpressionMember("<property>", ExpressionMemberValueDescriptions.WritableProperty, "property"));
+  			eML.Add(new ExpressionMember("<property>", ExpressionMemberValueDescriptions.ReadableProperty, "property"));
 			____Add_Name(eML, ExpressionMemberValueDescriptions.NameAll);
 			eML.Add(new ExpressionMember("(WARNING! UNKNOWN PROPERTY NAME)"));
 
