@@ -1,4 +1,4 @@
-﻿  1. Wierd programming style and the idea behind it.
+﻿  1. Weird programming style and the idea behind it.
 
 Certain interactions in this editor were done in a way that, looking back, was not that well thought out.
 For example, MainForm's two main TreeViews's interaction with the Mission class, 
@@ -8,7 +8,7 @@ The classes link directly to the UI elements (tooltips, labels, menustrips) and 
 
 The idea was that the logic that belongs to the class stays in the class. 
 So, for example, instead of writing the code to Save the Mission in the "OnClick", it's written in the Mission.
-However, this logic cannot be easilly separated from the UI. 
+However, this logic cannot be easily separated from the UI. 
 For example, when amount of object on SpaceMap changes, it must be reflected in the UI tooltip. 
 Therefore, class logic had to operate on UI, and therefore, it was done the way it is done.
 
@@ -30,7 +30,7 @@ or something else, but I am clueless as to how to rewrite this better.
 
   2. How is the Mission stored and edited?
 
-After mission file is read from Xml, it is separated into Nodes. 
+After the mission file is read from XML, it is separated into Nodes. 
 Nodes in turn are separated into Statements.
 Mission-level Commentaries, Start, Event and Folder Xml Elements are all Nodes. 
 MissionNode and inherited classes are used to represent the Nodes. 
@@ -56,8 +56,8 @@ When you edit statements themselves, the referenced MissionStatement class is ed
 
 In order to Undo/Redo the same technique is used as in order to Copy/Paste: Xml.
 
-When change is done, mission is saved to Xml and compressed and stored. 
-When you Undo/Redo, mission is simply read from this Xml, and then gui stuff is applied: 
+When change is done, the mission is saved to XML and compressed and stored. 
+When you Undo/Redo, mission is simply read from this XML, and then gui stuff is applied: 
 for example, what node and statement was selected etc.
 
 Copy places all selected nodes/statements into buffer as text. 
@@ -83,10 +83,10 @@ Now we can edit the value or the name separately, and present it in a humanly re
 The way this is done:
 
 Each statement is parsed by doing a series of branching decisions:
-- first we decide, wether the statement is a condition, action or a comment (in our case it's an action)
+- first we decide, whether the statement is a condition, action or a comment (in our case it's an action)
 - next we decide, what kind of action the statement is (it's a "create" action)
 - next we decide, what kind of create action it is (it's a "create anomaly" action)
-- next we decide, wether we create anomaly at location or at GM position (it's GM position)
+- next we decide, whether we create anomaly at location or at GM position (it's GM position)
 
 Finally, we arrive at a parsed statement (called "Expression"). 
 It contains an array of expression members, which can be all be put one next to another 
@@ -123,7 +123,7 @@ For example, in the above example, "anomaly" is an Expression member, as well as
 An ExpressionMember can either be a "Check" or not.
 - If not, it's somehow used as a building block in an expression 
 (either just filler text, like "with name", or editable value, like "x")
-- If it's a check, then it is not acutally stored in XML, and sometimes is not even displayed 
+- If it's a check, then it is not actually stored in XML, and sometimes is not even displayed 
 in the text representation of the statement, but rather used to branch.
 In this case it's a ExpressionMemberCheck class which as a list of PossibleExpressions and a Decide method. 
 PossibleExpressions contain the possible List<ExpressionMembers> that can branch from this check. 
@@ -134,7 +134,7 @@ For example, in ExpressionMemberCheck_Point_GM, a check for point or GM position
   that sets the flag in xml).
 Decide() method makes the decision which of the possible expressions is used. 
 It contains the logic that tells it how to make the decision.
-For example, in case of point or GM position check, it will look at wether the "selected_by_GM" value is set.
+For example, in case of point or GM position check, it will look at whether the "selected_by_GM" value is set.
 If the value is set, it decides that this is a "selected by GM" case, and if not, "at point" case.
 
 ExpressionMember class is used in the structure that defines the allowed mission xml syntax. 
@@ -144,12 +144,12 @@ For that purpose, ExpressionMemberContainer class is used.
 The way ExpressionMembers define the allowed mission syntax is as follows:
 
 * ExpressionParser.Root contains the root ExpressionMember, of the ExpressionMemberCheck_XmlNode_H class. 
-This class is a check responsible for deciding wether the expression is a Commentary, Action or Condition. 
-Therefore, it's PossibleExpressions (defined in the constructor) contain three lists of one check each:
+This class is a check responsible for deciding whether the expression is a Commentary, Action or Condition. 
+Therefore, its PossibleExpressions (defined in the constructor) contain three lists of one check each:
  - Commentary
  - Action 
  - Condition
-It's Decide simply looks at what Type the statement has and thus decides wether it's a commentary or action.
+Its Decide simply looks at what Type the statement has and thus decides whether it's a commentary or action.
 
 * Every "main" check class for Action and Condition has a big list of PossibleExpressions. 
 They are called ExpressionMemberCheck_XmlNameAction and ExpressionMemberCheck_XmlNameCondition
@@ -157,11 +157,11 @@ The constructor of these two classes contains the bulk of the syntax logic. It b
 
 * Every additional branching is done through other classes that also inherit ExpressionMemberCheck. 
 The constructor defines the exact ExpressionMembers added by the check, 
-the Decide() method defines how the check makes it's choice, 
-while SetValueInternal() defines how does the check enforce it's choice if it's a user-changeable.
-For example, in case of "point or GM pos" choice, when the user choses "point", 
+the Decide() method defines how the check makes its choice, 
+while SetValueInternal() defines how the check enforces its choice if it's user-changeable.
+For example, in case of "point or GM pos" choice, when the user chooses "point", 
 SetValueInternal() will clear the "use_gm_position" variable,
-while if the user choses "gm pos", then it will set that variable.
+while if the user chooses "gm pos", then it will set that variable.
 
 Therefore, code in constructors, Decide and SetValueInternal method of all the ExpressionMember classes together 
 defines the syntax and the parsing logic. 
@@ -180,7 +180,7 @@ defines the syntax and the parsing logic.
    Since it is a check, it will decide what to add next.
 
 4) ExpressionMemberCheck.Decide() is called on Root (class ExpressionMemberCheck_XmlNode_H).
-   It decides wether the Statement is a Comment, Condition or Action.
+   It decides whether the Statement is a Comment, Condition or Action.
    Depending on what it is, next check is added.
 
 5) ExpressionParser.Append() is called for the second time.
@@ -208,7 +208,7 @@ defines the syntax and the parsing logic.
    This time it's not a check, so it just adds it and goes on to next on the list.
 
 11) ExpressionParser.Append() is called (for the "at ").
-    Again, not a check, go to the next on the list,
+    Again, not a check, go to the next on the list.
 
 12) ExpressionParser.Append() is called (for the ExpressionMemberCheck_Point_x_GMPos)
     This time, decision will be made that again adds multiple ExpressionMembers. 
@@ -219,7 +219,7 @@ And so on...
 
   7. So, where is the parsing logic defined?
 
-Most of the logic is defined in the constructors of the revelant ExpressionMemberChecks.
+Most of the logic is defined in the constructors of the relevant ExpressionMemberChecks.
 
 The most of it is contained in the two main checks:
 - ExpressionMemberCheck_XmlNameAction's constructor contains all expressions for actions. 

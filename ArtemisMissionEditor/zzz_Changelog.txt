@@ -1,4 +1,281 @@
-﻿Version 2.3.1.0B [2016-April-02] (Fish Evans)
+Version 2.7.23 [2020-September-20] (Dave Thaler)
+* Fixed potential exception opening space map
+----------------------
+Version 2.7.22 [2020-September-19] (Dave Thaler)
+* Fixed exception doing "Turn to cursor" on space map
+----------------------
+Version 2.7.21 [2020-May-6] (Dave Thaler)
+* Removed bogus warning about using an old vesselData.xml file
+* Fixed crash in space map when viewing properties of an object with an arc
+  of size 0
+* Removed bogus warning about variable never checked if the variable name
+  contained an underscore
+* Removed bogus warning about variable never checked when the variable was
+  checked in an if_object_property condition
+* Added warning if script tries to set angle when creating a genericMesh or
+  station since Artemis does not support it
+* Added ability to convert setting angle when creating a genericMesh or
+  station to the set_object_property method that Artemis supports
+* Display monsters on spacemap with a pointer indicating direction, as
+  was previously only done with whale objects
+* Podnumber is now displayed on spacemap for whales and piranhas, where
+  previously it was only displayed for type whale objects before whales
+  were converted to monster types
+* Fixed bug where the whale color configured in settings wasn't being
+  used for whales, where now it is used for whales and jellies
+* Added warning if the mission version is left at the default of 1.0
+----------------------
+Version 2.7.20 [2020-April-7] (Dave Thaler)
+* Added ability to use variables with  warpState, difficulty, damcon 
+  team number, and damcon member counts
+* Added a warning if blocksShotFlag or triggersMines properties are used
+  since they do not work with any recent version of Artemis
+* Added a warning if the same variable name is set as an int and a float
+* Added a warning if get_object_property is used with an int variable
+  since it get_object_property only supports float variables
+* Removed warning about multiple player ships in the Start block not working
+  since that was fixed in an earlier version of Artemis
+* Fixed bug where ship special value 3 wasn't disallowed even though
+  Artemis removed it long ago
+* Fixed bug where "from" attribute wasn't required in incoming_comms_text
+* Fixed spurious warning about a variable never being checked when it was
+  just used in an incoming comms message, big_message, or comms or GM button,
+  or referenced inside text strings in various statements
+* Fixed bug where player ship race/hull keys were lost from create statements
+  after accepting changes made from the Space Map 
+* Fixed bug where set_player_station_carried didn't show race/hull information
+  as required but the server will crash without it
+----------------------
+Version 2.7.19 [2020-March-17] (Dave Thaler)
+* Added use_gm_selection and target_slot attributes to if_player_is_targeting
+* Added player_slot, accent color, and drive type to player ship properties
+  on space map
+* Fixed bug where player_slot, accent color, and drive type would be lost
+  from create commands after accepting space map changes
+* Fixed bug where if_player_is_targeting didn't treat player_name as optional
+* Fixed spurious warning about warning_popup_message with no ship name
+----------------------
+Version 2.7.18 [2020-February-22] (Dave Thaler)
+* Added player_slot support for if_player_is_targeting, if_not_exists,
+  set_damcon_members, set_player_grid_damage, and warning_popup_message 
+* Fixed crashing bug when pasting invalid XML
+----------------------
+Version 2.7.17 [2020-February-4] (Dave Thaler)
+* Added player_slot support for destroy, copy_object_property, and 
+  set_relative_position    
+----------------------
+Version 2.7.16 [2020-January-28] (Dave Thaler)
+* Added support for get_object_property command added for Artemis 2.7.5
+* Added player_slot support for {get,set,if}_object_property added in Artemis 2.7.5
+----------------------
+Version 2.7.15 [2020-January-4] (Dave Thaler)
+* Added TeleBack and ShldReset elite abilities added in Artemis 2.7.2
+* Make set_variable default to integer when adding a new statement
+----------------------
+Version 2.7.14 [2020-January-4] (Dave Thaler)
+* Added canLaunchFighters and canShoot as station properties added in Artemis 2.7.4
+----------------------
+Version 2.7.13 [2019-July-2] (Dave Thaler)
+* Added monster age, beacon effect, and beacon monster type properties to space map
+* Updated nebula color, monster type, and anomaly type properties on space map
+  to use a combo box to select values instead of having to type in values
+----------------------
+Version 2.7.12 [2019-May-14] (Dave Thaler, Stoo Johnston)
+* Added age, health, maxHealth, size, speed, and turnRate as monster properties
+  added in Artemis 2.7.2
+* Added warning if use condition if_gm_button and action with use_gm_position
+  since the GM console cannot a click button and have a position at same time
+* Added warning if warning_popup_message is used with a ship name other than Artemis
+* Fixed bogus warning if use set_side_value in an event with sideValue as condition
+* Updated default script when using New to say Artemis 2.7 instead of 2.6
+* Updated README file to render Youtube links as absolute paths in github UI
+----------------------
+Version 2.7.11 [2019-January-5] (Dave Thaler)
+* Fixed bug where scrollbar wasn't visible in statement editor
+* Fixed bogus warning when using AI blocks on an object with variables in its name
+* Fixed bug in "recent files" list where the latest file might not be listed
+* Fixed bug where button list wasn't listing buttons only seen in a clear command
+* Updated CHASE_{STATION,FLEET,OTHER_MONSTERS,WHALE,MONSTER} text to say "anywhere"
+  instead of "closer than 0", for consistency with CHASE_{AI_SHIP,PLAYER}
+----------------------
+Version 2.7.10 [2018-December-7] (Dave Thaler)
+* Added ability to easily find recent files, from File menu
+* Added ability to easily find recent autosaved versions, from File menu
+* When an autosaved version is newer than the most recent file, starting
+  the editor will now ask you if you want to resume from where it saved
+* Fixed bug where the potential problems check would incorrectly complain
+  about missing a set_variable command when using if_client_key
+* Fixed bug where autosaving would happen when nothing was actually changed
+----------------------
+Version 2.7.9 [2018-October-10] (Dave Thaler)
+* Fixed bug where nebula colors were lost by the space map
+* Made nebula color (nebType) property be editable in the space map
+* Made nebula display colors used by space map be editable in Settings
+----------------------
+Version 2.7.8 [2018-August-25] (Dave Thaler)
+* Don't allow selecting global properties with "copy_object_property"
+* Add a Potential Problems warning if a neutral ship is created and 
+  FOLLOW_COMMS_ORDERS is never added to it
+* Require either a non-empty object name or use_gm_selection when object
+  properties are used with copy/set/addto_object_property
+* Fixed bug where if_docked incorrectly required a ship name
+----------------------
+Version 2.7.7 [2018-July-7] (Dave Thaler)
+* Added ability to get to the wiki page Help for a command via the right 
+  click context menu on a mission statement, or by hitting F1
+* Added "sideValue" attribute on clear_comms_button
+* Added warning if keypress commands are used to recommend converting to
+  comms buttons
+* Removed "player_slot" option from set/addto numeric property, since those
+  commands don't support player slot
+----------------------
+Version 2.7.6 [2018-April-14] (Dave Thaler)
+* Automatically fix play_sound_now paths when checking for Potential Problems
+* Automatically convert obsolete CHASE_NEUTRAL and CHASE_ENEMY to CHASE_AI_SHIP
+* Automatically convert scandesc property to scan_desc on set_ship_text since
+  various missions have it wrong
+* Automatically convert targetPointX/Y/Z attributes on direct command to
+  pointX/Y/Z since at least one mission had it wrong
+* Added ability to automatically convert set specialAbilityBits to set_special
+  in one click
+* Added warning if obsolete incoming_message statement is used
+* Added warning if obsolete eliteAIType property is used
+* Added warning if obsolete willAcceptCommsOrders property is used
+* Added potential problems check for references to missing files
+* Added warning if obsolete direct statement is used on anything other than a
+  generic mesh
+* Added warning for an event with no actions
+* Added Potential Problems recommendation to convert if_gm_key to if_gm_button
+* Fixed bug where fleetnumber of -1 wasn't allowed
+* Fixed bug where a Potential Problems warning was incorrectly shown when
+  if_comms_button and if_variable conditions were used without a set_variable
+----------------------
+Version 2.7.5 [2018-April-5] (Dave Thaler)
+* Added pirateRepWithStations player object property
+* Added monster "age" as a create attribute (not an object property)
+* Added "not" attribute on if_docked
+* Added RELEASE_PIRANHAS parameters
+* Made play_sound_now file path be relative to Artemis directory now
+* List numeric properties in alphabetical order in menus
+----------------------
+Version 2.7.4 [2018-March-24] (Dave Thaler, Scott Nalley)
+* Added Fighter console for popups and keypresses
+* Added ability to select monster names from a list when configuring AI commands
+* Added monster "age" property
+* Added player_slot attribute to if_exists (but not if_not_exists, which doesn't work)
+* Added specialAbility{Bits,State} properties which were renamed from eliteAbility{Bits,State}
+* Added ShldVamp to special ability bit choices
+* Added Potential Problems check for writing to a read-only object property
+* Added Potential Problems check for monster AI commands added to ships, and vice versa
+* Made addto/copy/if_object_property commands correct property name casing if needed
+* Improved the display wording of several commands, including displaying units on some properties
+* Don't lose bad AI command names, just flag them as invalid
+* Updated object property commands to only allow choosing object types that the property applies to
+* Only allow selecting "with player slot" on properties that can affect players
+* Reorganized brain stack block selection by type for easier navigation
+* Fixed crash if configure incoming_comms_text without a type
+* Fixed bug where named objects positions weren't up to date on space map after saving / opening mission
+* Updated the forum link in the About dialog
+* Fixed some typos in the Help dialog
+----------------------
+Version 2.7.3 [2018-March-14] (Dave Thaler)
+* Added Drones ability to set_special
+* Added isTagged and tagOwnerSide object properties
+* Added a "Potential Problems" warning for unknown property names 
+* Fixed bug where set_variable showed negative values as invalid
+* Fixed bug where addto_object_property didn't work with some global properties
+* Fixed bug where {set,if}_object_property wanted an object name for global properties
+* Fixed bug where "Potential Problems" would treat expressions with unary "-" operator as invalid
+----------------------
+Version 2.7.2 [2018-March-5] (Dave Thaler)
+* Added if_in_nebula
+* Added player_slot1 and player_slot2 attributes to if_distance
+* Added space junk anomaly type
+* Added jump attribute value on create player
+* Added beaconMonsterType and beaconEffect attributes on create beacon
+* Added "Potential Problems" warning if a mandatory attribute is missing
+* Fixed set_special command display
+* set_ship_text now works with generic meshes and can rename other types
+* Make property name in set_object_property case insensitive per Artemis behavior
+* More improvements to "Potential Problems" checking
+* Fixed bug where "hasSurrendered" values > 1 were treated same as "0" instead of "1"
+* Fixed display of if_fleet_count when countSurrendered is absent
+* Removed player_slot from set_player_grid_damage and warning_popup_message and made name optional
+* Don't allow configuring pod number on monsters other than whales and piranhas
+----------------------
+Version 2.7.1 [2018-February-24] (Dave Thaler)
+* Added tag commands set_monster_tag_data, set_named_object_tag_state
+* Added tag conditions if_monster_tag_matches, if_object_tag_matches
+* Added nebType attribute to create/destroy nebulae
+* For actions/conditions that affect AI ships or scannable objects, only show the object types that are allowed
+* Remove player_slot from set_damcon_members since it doesn't work
+* Convert obsolete values: ELITE_AI to SPCL_AI, countECM to countEMP, missileStoresECM to missileStoresEMP
+* Convert incoming_comms_text "side" to "sideValue"
+* More improvements to "Potential Problems" checking
+----------------------
+Version 2.7.0 [2018-February-19] (Dave Thaler)
+* Added new brain stack blocks for Artemis 2.7
+* Added new monster names for Artemis 2.7
+* Added new player & station properties for beacons, probes, and tags
+* Added systemCur* player ship properties added in Artemis 2.6.3
+* Added mission_description and gm_instructions commands
+* Added conditions if_scan_level, if_external_program_active, if_external_program_finished
+* Added player_name attribute to if_docked and if_player_is_targeting
+* Added menu_w attribute to set_gm_button
+* Added sideValue attribute to incoming_comms_text
+* Subtitles are now correctly marked as optional in big_message
+* Preserve the string values of use_gm_position and use_gm_selection attributes
+* More improvements to "Potential Problems" checking
+* Corrected display of DEFEND ai block arguments
+* Don't lose integer attribute when setting a variable to a random int
+----------------------
+Version 2.6.2 [2018-February-6] (Dave Thaler)
+* Added add_ai support for monster AI blocks
+* Many improvements to "Potential Problems" checking
+* Fixed some more typos
+* Cleaned up code so it builds without any compiler warnings
+----------------------
+Version 2.6.1 [2018-January-16] (Dave Thaler)
+* Added sideValue and countSurrendered arguments to if_fleet_count
+* Added value2 argument to TARGET_THROTTLE AI block
+* Added support for multiple message types in the same comms message
+* Fixed some more typos 
+----------------------
+Version 2.6.0.1 [2017-December-26] (Dave Thaler, Fish Evans)
+* Changed events to use "name" instead of "name_arme" to fix F7 debug screen event display
+* Added support for set_player_carried_type to force fighter name/type carried by a playership
+* Added support for set_player_station_carried to force a fighter name/type 
+  that will be picked up as a replacement from a station by player ships
+* Added a drop down list for selecting comms types
+* Added support for clear_player_station_carried
+* Fixed some more typos
+* Fixed bug in update available detection
+----------------------
+Version 2.6 [2017-October-01] (Dave Thaler)
+* Add MSI installer files
+* Add automatic version update available check
+* Show command line syntax help if given -? or -h
+* Fixed some more typos
+* Fixed bug with podnumber in Space Map
+----------------------
+Version 2.5.101 [2017-April-24] (Dave Thaler)
+* Updated for Version 2.5.107 of Artemis:
+  - Added support for Comms buttons
+  - Added support for volume properties
+  - Added support for int vs float variables
+  - Added support for spawn_external_program
+  - Added support for Comms message types
+* Allowed picking GM Buttons from a list
+* Fixed several bugs in "Find potential problems"
+  - if_property should not warn about use of legal global variables
+  - create was incorrectly generating warnings when hullKeys was used
+  - Added check for problems with GM and Comms buttons
+* Fixed some bugs with properties
+  - Couldn't copy totalCoolant property
+  - Added networkTickSpeed and gameTimeLimit
+* Fixed various typos
+----------------------
+Version 2.3.1.0B [2016-April-02] (Fish Evans)
 * Updated for Version 2.3.1? of Artemis.
 * Added Pods for all monsters (TODO: future fix, only for Whale and Pahrina)
 * Added newplayer slot, accent warp hull info to Player Create Command
@@ -6,8 +283,8 @@
 ----------------------
 Version 2.3.0.1 [20015-Dec-08] (Fish Evans)
 * Updated for Version 2.3.0 of Artemis.
-*Fixed Bugs Reguarding Anomalys and Monster Types and the Map
-*added tauntImmunityIndex Property
+* Fixed Bugs Reguarding Anomalys and Monster Types and the Map
+* Added tauntImmunityIndex Property
 ----------------------
 Version B2.2.0 [20015-Dec-08] (Fish Evans)
 * Updated for Version 2.2.0 of Artemis.
@@ -137,7 +414,7 @@ Version 2.1.1.4 [2014-07-21] (Alexey Andronov)
 * CODE: Rewritten ExceptionMember/ExceptionMemberCheck code a bit
 * CODE: Reworked DrawSpaceMap code a bit to make it more readable
 * CODE: Fixed and improved code here and there for the sake of it...
-* CODE: Introduced better way of checking for wether a statement should be edited on space map
+* CODE: Introduced better way of checking for whether a statement should be edited on space map
 * Small fix to information form
 * Removed log warning for opening vesselData file with version 2.1 (which is parsed quite fine)
 * Fixed side appearing for create statements that cannot have a side (like anomaly)

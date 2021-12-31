@@ -1,0 +1,52 @@
+0. Retest the error checker on any missions that ship with Artemis.
+1. Update AssemblyVersion in Properties\AssemblyInfo.cs.  The current convention is
+   x.x.y where 'x.x' is the Artemis version, and 'y' counts up from 0 for each
+   Artemis Mission Editor release that supports that Artemis version.
+2. Build the release as follows:
+    2.1. Launch Visual Studio 2019
+    2.2. Build the Release x86 configuration.
+    2.3. Do "Analyze->Run Code Analysis->On Solution" and look for any warnings.
+3. Update ArtemisMissionEditor\zzz_Changelog.txt with release notes.
+4. Generate MSI as follows:
+    4.1. Launch Advanced Installer 10.0
+    4.2. Open the Installer file for Artemis Mission Editor (ArtemisMissionEditor.aip)
+    4.3. Click Product Details and change Product Version
+    4.4. Click Files and Folders and select Major Upgrade
+    4.5. Verify that Version column displayed matches what is expected
+    4.6. Click Media and change MSI Name to have new version
+    4.7. Click brick wall icon (or hit F7) to Build
+5. Generate txt updater file (still from within Advanced Installer 10.0) as follows:
+    5.1. Open the Updater file for Artemis Mission Editor (UpdaterArtemisMissionEditor.aip)
+    5.2. Click the "Updates" button in the menu bar and select Duplicate
+    5.3. Update Duplicate description to include new version number
+    5.4. Right click current update description and select Add Update -> Replaces
+         Check all updates, click OK.
+    5.5  Select the Properites Tab.
+    5.6. Update Download URL to point to current msi file name
+    5.7. Update Product Version
+    5.8. Set Release Date to today
+    5.9. Update Display `Name' to include current version number
+    5.10. Click the ... next to File Path to select current msi file
+    5.11. Click ... after "Expected Value" file version
+    5.12. Select ArtemisMissionEditor\bin\Release\ArtemisMissionEditor.exe click Open
+    5.13. Click Descriptions tab
+    5.14. Update Features/Bug fixes
+    5.15. Click the brick wall icon (or hit F7) to Build
+6. Upload MSI as follows:
+    6.1. Launch FileZilla (an ftp application)
+    6.2. Click leftmost icon to open site manager
+    6.3. Connect to ArmidaleSoftware.com
+    6.4. In right pane, navigate into public_html/Artemis
+    6.5. In left pane, right click on new MSI file (in the Installer folder) and select Upload
+7. Test installing it manually from the web
+8. Upload txt file as follows:
+    8.1. Go back into FileZilla
+    8.2. In right pane, right click ArtemisMissionEditorUpdates.txt rename with
+         old version
+    8.3. In left pane, right click on ArtemisMissionEditorUpdates.txt and
+         select Upload
+9. Test installing it by launching an older copy and making sure it prompts to install the new version
+10. Check in updated aip files
+11. Add a git tag for the release version (e.g., "git tag 2.6.1", "git push --tags")
+12. Update wiki page at http://artemiswiki.pbworks.com/w/page/53389687/Mission%20Editor
+13. Announce release in Artemis forums
