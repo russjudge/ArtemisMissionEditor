@@ -38,6 +38,7 @@ namespace ArtemisMissionEditor.Expressions
 		/// <summary>
 		/// Appends expression members from the specified list of ExpressionMemebers to the specified list of ExpressionMemberContainers
 		/// </summary>
+		/// <param name="statement"></param>
 		/// <param name="what"></param>
 		/// <param name="where"></param>
 		private static void Append(MissionStatement statement, List<ExpressionMember> what, List<ExpressionMemberContainer> where)

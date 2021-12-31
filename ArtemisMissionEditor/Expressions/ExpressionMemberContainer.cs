@@ -36,7 +36,7 @@ namespace ArtemisMissionEditor.Expressions
         private string _checkValue;
 		
         /// <summary>
-        /// Wether this member of the statement is valid.
+        /// Whether this member of the statement is valid.
         /// </summary>
         public bool IsValid
         {
@@ -131,7 +131,7 @@ namespace ArtemisMissionEditor.Expressions
         /// <summary> 
         /// Gets the value of the attribute associated with this ExpressionMember.
         /// </summary>
-        /// <returns>Value if attribute exists, null if doesnt</returns>
+        /// <returns>Value if attribute exists, null if doesn't</returns>
 		public string GetAttribute()											
         { return Statement.GetAttribute(Member.Name, Member.ValueDescription.DefaultIfNull); }
 
@@ -139,7 +139,7 @@ namespace ArtemisMissionEditor.Expressions
         /// Gets the attribute value.
         /// </summary>
         /// <param name="name">Name of the value, as in XML</param>
-        /// <returns>Value if attribute exists, null if doesnt</returns>
+        /// <returns>Value if attribute exists, null if doesn't</returns>
 		public string GetAttribute(string name)									
         { return Statement.GetAttribute(name); }
 
@@ -148,7 +148,7 @@ namespace ArtemisMissionEditor.Expressions
         /// </summary>
         /// <param name="name">Name of the value, as in XML</param>
         /// <param name="valueIfNull">Set value to this if its null</param>
-        /// <returns>Value if attribute exists, null if doesnt</returns>
+        /// <returns>Value if attribute exists, null if doesn't</returns>
         public string GetAttribute(string name, string valueIfNull)				
         { return Statement.GetAttribute(name, valueIfNull); }
 

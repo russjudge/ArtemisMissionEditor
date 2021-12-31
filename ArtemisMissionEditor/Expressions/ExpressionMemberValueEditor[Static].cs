@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace ArtemisMissionEditor.Expressions
@@ -111,13 +110,13 @@ namespace ArtemisMissionEditor.Expressions
         /// <summary>
         /// Default context menu strip, with Dialog option and separator for the first value.
         /// </summary>
-        internal static ContextMenuStrip PrepareContextMenuStrip_DefaultListPlusDialogWithFirstSepearted(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode)
+        internal static ContextMenuStrip PrepareContextMenuStrip_DefaultListPlusDialogWithFirstSeparated(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode)
         {
             return PrepareContextMenuStrip_DefaultListWithOptions(container, editor, mode, true, true);
         }
 
         /// <summary>
-        /// Default context menu strip, providing a choice of Dialog and first value separator options
+        /// Default context menu strip, providing a choice of Dialog and first value separator options.
         /// </summary>
         private static ContextMenuStrip PrepareContextMenuStrip_DefaultListWithOptions(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode, bool plusDialogItem, bool firstSeparated)
         {
@@ -177,6 +176,7 @@ namespace ArtemisMissionEditor.Expressions
                 editor.ValueSelectorContextMenuStrip.Tag = false;
 
                 int i = 0;
+                string[] choices = editor.XmlValueToMenu.Keys.ToArray();
                 foreach (KeyValuePair<int, string> kvp in editor.MenuGroups.OrderBy((KeyValuePair<int, string> x) => x.Key))
                 {
                     ToolStripMenuItem tsm = new ToolStripMenuItem(kvp.Value);
@@ -184,7 +184,10 @@ namespace ArtemisMissionEditor.Expressions
 
                     while (i < kvp.Key)
                     {
-                        string item = editor.MenuItems[i++];
+                        string choice = choices[i++];
+                        string item = (editor.XmlValueToMenu.ContainsKey(choice)) ? editor.XmlValueToMenu[choice] : container.Member.ValueToDisplay(choice);
+                        if (item == null)
+                            continue;
 
                         ToolStripItem tsi = tsm.DropDownItems.Add(item);
 
@@ -251,6 +254,35 @@ namespace ArtemisMissionEditor.Expressions
                 editor.ValueSelectorContextMenuStrip.Items.Clear();
                 editor.ValueSelectorContextMenuStrip.Tag = false;
 
+                foreach (string item in new string[3] { "Default", container.Member.ValueToDisplay("1"), container.Member.ValueToDisplay("0") })
+                {
+                    ToolStripItem tsi = editor.ValueSelectorContextMenuStrip.Items.Add(item);
+                    tsi.Tag = container;
+                    tsi.Click += ContextMenuClickChoose;
+                }
+
+                editor.ShowHideContextMenuStrip();
+            }
+
+            AssignContainerToContextMenuStrip(editor.ValueSelectorContextMenuStrip, container, value);
+            return editor.ValueSelectorContextMenuStrip;
+        }
+
+        /// <summary>
+        /// Default context menu strip for a value that is either absent or present.
+        /// </summary>
+        internal static ContextMenuStrip PrepareContextMenuStrip_DefaultPresent(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode)
+        {
+            string value = container.GetValue();
+
+            if (editor.ValueSelectorContextMenuStrip == null || editor.LastUser != container.Member.ValueDescription || editor.ForceRecreateMenu)
+            {
+                editor.ValueSelectorContextMenuStrip = new ContextMenuStrip(); 
+                editor.InitContextMenuStrip(); 
+                editor.LastUser = container.Member.ValueDescription;
+                editor.ValueSelectorContextMenuStrip.Items.Clear();
+                editor.ValueSelectorContextMenuStrip.Tag = false;
+
                 foreach (string item in new string[2] { container.Member.ValueToDisplay("1"), container.Member.ValueToDisplay("0") })
                 {
                     ToolStripItem tsi = editor.ValueSelectorContextMenuStrip.Items.Add(item);
@@ -274,11 +306,35 @@ namespace ArtemisMissionEditor.Expressions
         }
 
         /// <summary>
+        /// Context menu strip for GM button names
+        /// </summary>
+        internal static ContextMenuStrip PrepareContextMenuStrip_GMButtonTextList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode)
+        {
+            return PrepareContextMenuStrip_SpecifiedListPlusDialog(container, editor, mode, Mission.Current.GMButtonTextsList);
+        }
+
+        /// <summary>
+        /// Context menu strip for Comms button names
+        /// </summary>
+        internal static ContextMenuStrip PrepareContextMenuStrip_CommsButtonTextList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode)
+        {
+            return PrepareContextMenuStrip_SpecifiedListPlusDialog(container, editor, mode, Mission.Current.CommsButtonTextsList);
+        }
+
+        /// <summary>
         /// Context menu strip for variable names
         /// </summary>
         internal static ContextMenuStrip PrepareContextMenuStrip_VariableNameList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode)
         {
             return PrepareContextMenuStrip_SpecifiedListPlusDialog(container, editor, mode, Mission.Current.VariableNamesList);
+        }
+
+        /// <summary>
+        /// Context menu strip for external program IDs
+        /// </summary>
+        internal static ContextMenuStrip PrepareContextMenuStrip_ExternalProgramIDList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode)
+        {
+            return PrepareContextMenuStrip_SpecifiedListPlusDialog(container, editor, mode, Mission.Current.ExternalProgramIDsList);
         }
 
         /// <summary>
@@ -290,7 +346,79 @@ namespace ArtemisMissionEditor.Expressions
         }
 
         /// <summary>
-        /// Context menu strip for specified list (used by timers, variables and stations)
+        /// Context menu strip for monster names
+        /// </summary>
+        internal static ContextMenuStrip PrepareContextMenuStrip_NamedMonsterNameList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode)
+        {
+            return PrepareContextMenuStrip_SpecifiedListPlusDialog(container, editor, mode, Mission.Current.MonsterNamesList);
+        }
+
+        /// <summary>
+        /// Context menu strip for generic mesh names
+        /// </summary>
+        internal static ContextMenuStrip PrepareContextMenuStrip_NamedGenericMeshNameList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode)
+        {
+            return PrepareContextMenuStrip_SpecifiedListPlusDialog(container, editor, mode, Mission.Current.GenericMeshNamesList);
+        }
+
+        /// <summary>
+        /// Context menu strip for enemy names
+        /// </summary>
+        internal static ContextMenuStrip PrepareContextMenuStrip_NamedEnemyNameList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode)
+        {
+            return PrepareContextMenuStrip_SpecifiedListPlusDialog(container, editor, mode, Mission.Current.EnemyNamesList);
+        }
+
+        /// <summary>
+        /// Context menu strip for neutral names
+        /// </summary>
+        internal static ContextMenuStrip PrepareContextMenuStrip_NamedNeutralNameList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode)
+        {
+            return PrepareContextMenuStrip_SpecifiedListPlusDialog(container, editor, mode, Mission.Current.NeutralNamesList);
+        }
+
+        /// <summary>
+        /// Context menu strip for ships
+        /// </summary>
+        internal static ContextMenuStrip PrepareContextMenuStrip_NamedShipNameList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode)
+        {
+            return PrepareContextMenuStrip_SpecifiedNestedListPlusDialog(container, editor, mode, Mission.Current.ShipNamesLists);
+        }
+
+        /// <summary>
+        /// Context menu strip for AI ships
+        /// </summary>
+        internal static ContextMenuStrip PrepareContextMenuStrip_NamedAIShipNameList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode)
+        {
+            return PrepareContextMenuStrip_SpecifiedNestedListPlusDialog(container, editor, mode, Mission.Current.AIShipNamesLists);
+        }
+
+        /// <summary>
+        /// Context menu strip for AI ships or monsters
+        /// </summary>
+        internal static ContextMenuStrip PrepareContextMenuStrip_NamedAIShipOrMonsterNameList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode)
+        {
+            return PrepareContextMenuStrip_SpecifiedNestedListPlusDialog(container, editor, mode, Mission.Current.AIShipOrMonsterNamesLists);
+        }
+
+        /// <summary>
+        /// Context menu strip for ships or monsters
+        /// </summary>
+        internal static ContextMenuStrip PrepareContextMenuStrip_NamedShipOrMonsterNameList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode)
+        {
+            return PrepareContextMenuStrip_SpecifiedNestedListPlusDialog(container, editor, mode, Mission.Current.ShipOrMonsterNamesLists);
+        }
+
+        /// <summary>
+        /// Context menu strip for scannable objects
+        /// </summary>
+        internal static ContextMenuStrip PrepareContextMenuStrip_ScannableObjectNameList(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode)
+        {
+            return PrepareContextMenuStrip_SpecifiedNestedListPlusDialog(container, editor, mode, Mission.Current.ScannableObjectNamesLists);
+        }
+
+        /// <summary>
+        /// Context menu strip for specified list (used by timers, variables, etc.)
         /// </summary>
         private static ContextMenuStrip PrepareContextMenuStrip_SpecifiedListPlusDialog(ExpressionMemberContainer container, ExpressionMemberValueEditor editor, ExpressionMemberValueEditorActivationMode mode, KeyValuePair<List<string>, List<string>> list)
         {
@@ -559,7 +687,6 @@ namespace ArtemisMissionEditor.Expressions
             {
                 editor.XmlValueToDisplay.Clear();
                 editor.DisplayValueToXml.Clear();
-                editor.MenuItems.Clear();
                 foreach (string playerShipName in Mission.Current.PlayerShipNames)
                     editor.AddToDictionary(playerShipName, playerShipName);
 

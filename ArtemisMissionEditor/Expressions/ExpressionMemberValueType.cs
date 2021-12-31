@@ -11,7 +11,7 @@ namespace ArtemisMissionEditor.Expressions
 	public enum ExpressionMemberValueType
 	{
 		/// <summary>
-		/// Means it doesnt have a value assigned to it
+		/// Means it doesn't have a value assigned to it
 		/// </summary>
 		Nothing,
 		VarInteger,
@@ -19,7 +19,11 @@ namespace ArtemisMissionEditor.Expressions
 		VarDouble,
 		VarString,
 		/// <summary>
-		/// Means its a multiline string
+		/// Means it's a string whose value must be in its dictionary
+		/// </summary>
+		VarEnumString,
+		/// <summary>
+		/// Means it's a multiline string
 		/// </summary>
 		Body
 	}

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 	
@@ -61,9 +59,9 @@ namespace ArtemisMissionEditor.Expressions
     /// - what editor is used for the value (like, damcon count, consoles list, generic integer input?)
     /// 
     /// We need to create another ExpressionMemberValueDescription if we need to add another different kind of value 
-    /// (like, "capitainType" which has specific preset text values to choose from), or we need to have a value 
+    /// (like, "captainType" which has specific preset text values to choose from), or we need to have a value 
     /// that works a bit differently than any other currently used value 
-    /// (for example, have a colon after it when put in the expresion, or offer dropdown menu of some kind).
+    /// (for example, have a colon after it when put in the expression, or offer dropdown menu of some kind).
     ///
     /// Otherwise, we can reuse an existing description.
     /// 
@@ -263,7 +261,6 @@ namespace ArtemisMissionEditor.Expressions
 						((ToolStripMenuItem)curCMS.Items[0]).DropDownItems[0].PerformClick();
 					else
 						curCMS.Items[0].PerformClick();
-					curCMS.Close();
 					return;
 				}
 				if (mode == ExpressionMemberValueEditorActivationMode.PreviousMenuItem)
@@ -373,6 +370,9 @@ namespace ArtemisMissionEditor.Expressions
                     return new ValidateResult(valid, false, warning);
                 case ExpressionMemberValueType.VarString:
                     return ValidateResult.True;
+                case ExpressionMemberValueType.VarEnumString:
+                    valid = Editor.XmlValueToDisplay.ContainsKey(value);
+                    return new ValidateResult(valid, false, warning);
                 case ExpressionMemberValueType.Body:
                     return ValidateResult.True;
                 case ExpressionMemberValueType.Nothing:
@@ -437,8 +437,12 @@ namespace ArtemisMissionEditor.Expressions
                     }
                     if (!nextMustBeOperator)
                     {
-                        isValid = false;
-                        AddError(i, "Unexpected operator (expected literal or variable)");
+                        // Allow the unary '-' operator.
+                        if (curChar != '-')
+                        {
+                            isValid = false;
+                            AddError(i, "Unexpected operator (expected literal or variable)");
+                        }
                     }
                     nextMustBeOperator = false;
                     while (operatorStack.Count > 0 && ValidateExpression_GetOperatorPrecedence(operatorStack.Peek().Item2[0]) > ValidateExpression_GetOperatorPrecedence(curChar))
@@ -588,8 +592,8 @@ namespace ArtemisMissionEditor.Expressions
                     double xd = Helper.StringToDouble(value1);
                     double yd = Helper.StringToDouble(value2);
                     return xd == yd;
+                case ExpressionMemberValueType.VarEnumString:
                 case ExpressionMemberValueType.VarString:
-                    return value1.Trim() == value2.Trim();
                 case ExpressionMemberValueType.Body:
                     return value1.Trim() == value2.Trim();
                 case ExpressionMemberValueType.Nothing:
