@@ -64,7 +64,7 @@
             // 
             // tabMiscellaneous
             // 
-            this.tabMiscellaneous.Location = new System.Drawing.Point(4, 22);
+            this.tabMiscellaneous.Location = new System.Drawing.Point(4, 25);
             this.tabMiscellaneous.Name = "tabMiscellaneous";
             this.tabMiscellaneous.Padding = new System.Windows.Forms.Padding(3);
             this.tabMiscellaneous.Size = new System.Drawing.Size(836, 0);
@@ -74,7 +74,7 @@
             // 
             // tabSpaceMapHotkeys
             // 
-            this.tabSpaceMapHotkeys.Location = new System.Drawing.Point(4, 22);
+            this.tabSpaceMapHotkeys.Location = new System.Drawing.Point(4, 25);
             this.tabSpaceMapHotkeys.Name = "tabSpaceMapHotkeys";
             this.tabSpaceMapHotkeys.Padding = new System.Windows.Forms.Padding(3);
             this.tabSpaceMapHotkeys.Size = new System.Drawing.Size(836, 0);
@@ -84,7 +84,7 @@
             // 
             // tabAnalysis
             // 
-            this.tabAnalysis.Location = new System.Drawing.Point(4, 22);
+            this.tabAnalysis.Location = new System.Drawing.Point(4, 25);
             this.tabAnalysis.Name = "tabAnalysis";
             this.tabAnalysis.Size = new System.Drawing.Size(836, 0);
             this.tabAnalysis.TabIndex = 2;

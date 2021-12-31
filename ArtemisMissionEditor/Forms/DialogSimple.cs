@@ -32,7 +32,7 @@ namespace ArtemisMissionEditor.Forms
         private string OpenFileHeader;
         private PathRelativityMode PathRelativity;
         
-		/// <summary> Wether the input value is considered to be null (distinguishes between null and empty string)</summary>
+		/// <summary> Whether the input value is considered to be null (distinguishes between null and empty string)</summary>
 		private bool NullMode { get { return _nullMode; } set { _nullMode = value; UpdateNullStatus(); } }
         /// <summary> NEVER ACCESS THIS! </summary>
         private bool _nullMode;
@@ -285,7 +285,7 @@ namespace ArtemisMissionEditor.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("The box will display in gray if the value is null, or in red if the value is invalid.\r\nYou can use Alt + Del to set the value to null (meaning it will not be present in xml), or to default value, if null value isnt allowed for this attribute", "How to use");
+            MessageBox.Show("The box will display in gray if the value is null, or in red if the value is invalid.\r\nYou can use Alt + Del to set the value to null (meaning it will not be present in xml), or to default value, if null value isn't allowed for this attribute", "How to use");
             input.Focus();
         }
 

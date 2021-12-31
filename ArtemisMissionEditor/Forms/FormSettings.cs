@@ -16,10 +16,10 @@ namespace ArtemisMissionEditor.Forms
             InitializeComponent();
 
             Settings.SettingsCurrentChanged += Settings_SettingsChanged;
-            Settings_SettingsChanged();
+            Settings_SettingsChanged(this, null);
         }
 
-        void Settings_SettingsChanged()
+        void Settings_SettingsChanged(object sender, SettingsCurrentChangedEventArgs e)
         {
             pgMisc.SelectedObject = Settings.Current;
             pgColor.SelectedObject = Settings.Current.GetAdaptedBrushColorDictionary();

@@ -66,6 +66,7 @@ namespace ArtemisMissionEditor.Forms
             Mission.Current.CommentsBeforeRoot =_FMP_tb_Before.Text;
 			Mission.Current.CommentsAfterRoot = _FMP_tb_After.Text;
             Mission.Current.VersionNumber = _FMP_tb_Version.Text;
+            Mission.Current.Description = _FMP_tb_Description.Text;
 			Mission.Current.BackgroundNode = (TreeNode)_FMP_tb_Node.Tag;
             Mission.Current.PlayerShipNames = _FMP_tb_PN.Lines;
 			Mission.Current.RegisterChange("Changed mission properties");
@@ -90,6 +91,7 @@ namespace ArtemisMissionEditor.Forms
 			_FMP_tb_Before.Text = Mission.Current.CommentsBeforeRoot;
 			_FMP_tb_After.Text = Mission.Current.CommentsAfterRoot;
             _FMP_tb_Version.Text = Mission.Current.VersionNumber;
+            _FMP_tb_Description.Text = Mission.Current.Description;
 			_FMP_tb_Node.Tag = Mission.Current.BackgroundNode;
             _FMP_tb_PN.Lines = Mission.Current.PlayerShipNames;
 			UpdateBgNode();

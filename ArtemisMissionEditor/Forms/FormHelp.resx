@@ -183,12 +183,12 @@ Once again, while it may seem that the way hull and race keys work is obvious, t
 ------------------------------------------------------------------------------------
 
   Step 1) Check input for validity. 
-    If hullKeys is blank, server will simply crash. 
+    If hullKeys is blank, the server will simply crash. 
     If raceKeys is blank, it's actually okay.
 	
-  Step 2) Race of a ship is chosen from amongst all races.
+  Step 2) The race of a ship is chosen from amongst all races.
   
-  Step 3) Hull of a ship is chosen from from amongst the hulls defined for the chosen race.
+  Step 3) The hull of a ship is chosen from from amongst the hulls defined for the chosen race.
   
 ------------------------------------------------------------------------------------
  How raceKeys and hullKeys are treated:
@@ -220,7 +220,7 @@ Result: 50% chance to spawn TSN Bulk Cargo, 10% chance each to spawn one of the 
   
   2) raceKeys = "Kralien", hullKeys = "small Battleship"
 
-Since only one race matches "Kralien", it is always chosen. Since both Kralien Battleship ("Battleship", "medium") and Kralien Cruiser ("Cruiser", "small") match the "small Battleship" string once, and since Battleship is one-word one of them is randonly spawned.
+Since only one race matches "Kralien", it is always chosen. Since both Kralien Battleship ("Battleship", "medium") and Kralien Cruiser ("Cruiser", "small") match the "small Battleship" string once, and since Battleship is one-word one of them is randomly spawned.
 
 Result: 50% chance to spawn Kralien Battleship, 50% chance to spawn Kralien Cruiser
   
@@ -238,7 +238,7 @@ Result: 100% chance to spawn TSN Luxury Liner.
   
   5) raceKeys = "TSN friendly", hullKeys = "Escort Transport"
 
-Since only one race gets two matches, TSN friendly race is chosen. TSN Transport ("Transport", "transport") gets 2 matches, because both of its words get matched once. TSN Escort ("Escort", "small warship") gets 1 match, because "Escort" gets matched once. Therefore, TSN Transport will spawn.
+Since only one race gets two matches, TSN friendly race is chosen. TSN Transport ("Transport", "transport") gets 2 matches, because both of its words get matched once. TSN Escort ("Escort", "small warship") gets 1 match, because "Escort" gets matched once. Therefore, a TSN Transport will spawn.
   
 Result: 100% chance to spawn TSN Transport.
   
@@ -261,7 +261,7 @@ There is no way to spawn exactly the Arvonian Carrier via hullKeys, you will hav
  Conclusion:
 ------------------------------------------------------------------------------------
 
-  In most cases, when you just want to spawn a specific ship, selecting it's class name and broad keys should be enough to guarantee the ship you want always spawns, the only exception being Avronian Carrier. However, if you want to spawn a random ship from a select list of ships, you will have to adjust the number of times specific words are encountered in the hullKeys, so that they match exactly the same amount of times (refer to ex.6 above on how to spawn one of the three pre-determined ships). 
+  In most cases, when you just want to spawn a specific ship, selecting its class name and broad keys should be enough to guarantee the ship you want always spawns, the only exception being Avronian Carrier. However, if you want to spawn a random ship from a select list of ships, you will have to adjust the number of times specific words are encountered in the hullKeys, so that they match exactly the same amount of times (refer to ex.6 above on how to spawn one of the three pre-determined ships). 
   
   An alternative solution would be to assign a random variable and have several different events spawn the ship based on the outcome of the random roll, however, if you want to spawn a fleet of multiple ships, each randomed from a certain pre-defined list, this would require an enormous amount of events. Therefore, this method of duplicating words, even if it looks clunky, is actually viable.
 
@@ -275,17 +275,17 @@ There is no way to spawn exactly the Arvonian Carrier via hullKeys, you will hav
   
   What this means in practice first of all is that you must never specify "base" if your create type is set to "enemy" or "neutral", and you must always specify "base" if your create type is "station". However, that's not all. Wierd things can happen even without you willingly inputting wrong values, so read on.
   
-  Consider creating "enemy" or "neutral" vessel. In order for a vessel with "base" broadType to spawn from a create statement that has no "base" in hullKeys, a vessel that is a station must actually get matched, because only vessels with highest amount of matches get spawned. For example: hullKeys="bulk command" will match TSN Bulk Cargo and TSN Command Base, both getting 1 match. So you either have to deliberately input a word that is present in one of the stations's class name or broad type, or no vessel has to get a match. And the latter is actually not as impossible as you may think! 
+  Consider creating an "enemy" or "neutral" vessel.  To spawn a vessel with "base" broadType from a create statement that has no "base" in hullKeys, a vessel that is a station must actually get matched, because only vessels with the highest amount of matches get spawned. For example: hullKeys="bulk command" will match TSN Bulk Cargo and TSN Command Base, both getting 1 match. So you either have to deliberately input a word that is present in one of the stations's class name or broad type, or no vessel has to get a match. And the latter is actually not as impossible as you may think! 
   
-  If you do something as innocent as specifying raceKeys = "enemy", hullKeys = "small", then you will find out that from time to time, TSN Light Cruisers are actually spawning... because Arvonians have no vessel that matches "small"! And therefore, if Avronian race is chosen, then a random Avronian vessel will spawn, and if it's the Avronian Base, then TSN Light Cruiser will spawn.
+  If you do something as innocent as specifying raceKeys = "enemy", hullKeys = "small", then you will find that from time to time, TSN Light Cruisers are actually spawning... because Arvonians have no vessel that matches "small"! And therefore, if the Avronian race is chosen, then a random Avronian vessel will spawn, and if it's the Avronian Base, then a TSN Light Cruiser will spawn.
   
-  In practice this basically means to you that if you ever plan on spawning a generic enemy ship of random enemy race, you have to include "carrier" or "fighter" in the hullKeys or you will risk seeing TSN Light Cruisers on the enemy side.
+  In practice, this basically means to you that if you ever plan on spawning a generic enemy ship of a random enemy race, you have to include "carrier" or "fighter" in the hullKeys or you will risk seeing TSN Light Cruisers on the enemy side.
   
-  Now, if creating "enemy" or "neutral" and "base" is present in hullKeys, then any non-station vessel that is spawned is changed into a TSN Light Cruiser (usually with destroyed Primary Beams system), regardless of the race chosen before, and stations can spawn (but will not function properly, see below). The algorithm for spawning priority remains the same - but note that since all stations currently have the word "base" both in their class name and their broad keys, they get 2 matches for each word "base", so for example, "Escort Base" will only spawn stations, because TSN Escort gets 1 match, but "Transport Base" will spawn both bases and TSN Light Cruisers, because TSN Transport gets 2 matches.
+  Now, if creating an "enemy" or "neutral", and "base" is present in hullKeys, then any non-station vessel that is spawned is changed into a TSN Light Cruiser (usually with destroyed Primary Beams system), regardless of the race chosen before, and stations can spawn (but will not function properly, see below). The algorithm for spawning priority remains the same - but note that since all stations currently have the word "base" both in their class name and their broad keys, they get 2 matches for each word "base", so for example, "Escort Base" will only spawn stations, because TSN Escort gets 1 match, but "Transport Base" will spawn both bases and TSN Light Cruisers, because TSN Transport gets 2 matches.
   
-  Stations spawned this way will grossly misbehave. Some will hold position and indefinetly rotate, while others will turn to Heading 225 (positive direction on X and Z axes) and travel at Warp 4, hit the map boundary and stay there. They will mostly have no rear shields (since stations have 360 degree shields, only front shields are usually defined in the vesselData.xml). They will of course offer no base-specific dialogue or docking functionality.
+  Stations spawned this way will grossly misbehave. Some will hold position and indefinitely rotate, while others will turn to Heading 225 (positive direction on X and Z axes) and travel at Warp 4, hit the map boundary and stay there. They will mostly have no rear shields (since stations have 360 degree shields, only front shields are usually defined in the vesselData.xml). They will of course offer no base-specific dialogue or docking functionality.
   
-  Finally, when creating stations, if TSN Light Cruiser (or even other ship if "base" is not present in hullKeys) spawns, it will behave as a station for all purposes: offer docking, talk like a station, and so on. It will of course look like TSN Light Cruiser. Note that in order for this to happen, you have to severely screw up, seeing as every station has "base" both in its classs name and broad keys, so it will get at least 2 matches from having "base" in hullKeys - so you have to add some specific hullKeys that target non-base vessels. Don't do that and you'll be fine.
+  Finally, when creating stations, if a TSN Light Cruiser (or even another ship if "base" is not present in hullKeys) spawns, it will behave as a station for all purposes: offer docking, talk like a station, and so on. It will of course look like a TSN Light Cruiser. Note that in order for this to happen, you have to severely screw up, seeing as every station has "base" both in its classs name and broad keys, so it will get at least 2 matches from having "base" in hullKeys - so you have to add some specific hullKeys that target non-base vessels. Don't do that and you'll be fine.
 
   
 ====================================================================================

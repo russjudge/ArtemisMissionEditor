@@ -42,27 +42,49 @@
             this._FM_ms_Main_File_SaveMission = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_ms_Main_File_SaveAsMission = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_ms_Main_File_s_1 = new System.Windows.Forms.ToolStripSeparator();
+            this.recentFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dummyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.autosavedVersionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dummyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this._FM_ms_Main_File_Exit = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_ms_Main_Edit = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_ms_Main_Edit_Undo = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_ms_Main_Edit_Redo = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_ms_Main_Edit_s_4 = new System.Windows.Forms.ToolStripSeparator();
             this._FM_ms_Main_Edit_UndoList = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_ms_Main_Edit_RedoList = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_ms_Main_Edit_s_1 = new System.Windows.Forms.ToolStripSeparator();
+            this._FM_ms_Main_Edit_Cut = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_ms_Main_Edit_Copy = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_ms_Main_Edit_Paste = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_ms_Main_Edit_Delete = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_ms_Main_Edit_s_2 = new System.Windows.Forms.ToolStripSeparator();
             this._FM_ms_Main_Edit_FR = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_ms_Main_Edit_Find = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_ms_Main_Edit_Replace = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_ms_Main_Edit_FR_s_1 = new System.Windows.Forms.ToolStripSeparator();
             this._FM_ms_Main_Edit_FindNext = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_ms_Main_Edit_FindPrevious = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_ms_Main_Edit_s_3 = new System.Windows.Forms.ToolStripSeparator();
             this._FM_ms_Main_Edit_Properties = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_ms_Main_Tools = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_ms_Main_Tools_Convert = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_ms_Main_Tools_Comm_into_Names = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_ms_Main_Tools_Comm_into_Names_Ex = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_ms_Main_Tools_Dependencies = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_ms_Main_Tools_Dependencies_ShowForCurrent = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_ms_Main_Tools_Dependencies_OpenForm = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_ms_Main_Tools_HighlightErrors = new System.Windows.Forms.ToolStripMenuItem();
             this.analyzeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_ms_Main_SpaceMap_Help_DebugXML = new System.Windows.Forms.ToolStripMenuItem();
             this.findPotentialProblemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.showHelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_ms_Main_Tools_s_1 = new System.Windows.Forms.ToolStripSeparator();
+            this._FM_ms_Main_Tools_Settings = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_ms_Main_SpaceMap_Help = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpFormToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_ms_Main_SpaceMap_Help_s_1 = new System.Windows.Forms.ToolStripSeparator();
             this._FM_ms_Main_SpaceMap_Help_About = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_tsc_Main = new System.Windows.Forms.ToolStripContainer();
@@ -86,11 +108,19 @@
             this._FM_cms_MissionNodeTree_MoveIn = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_cms_MissionNodeTree_MoveOut = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_cms_MissionNodeTree_s_2 = new System.Windows.Forms.ToolStripSeparator();
+            this._FM_cms_MissionNodeTree_New_Event = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_cms_MissionNodeTree_New_Folder = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_cms_MissionNodeTree_New_Comment = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_cms_MissionNodeTree_s_3 = new System.Windows.Forms.ToolStripSeparator();
+            this._FM_cms_MissionNodeTree_SetAsBackground = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_cms_MissionNodeTree_s_6 = new System.Windows.Forms.ToolStripSeparator();
             this._FM_cms_MissionNodeTree_ConvertTo = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_cms_MissionNodeTree_ConvertTo_Comment = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_cms_MissionNodeTree_ConvertTo_Folder = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_cms_MissionNodeTree_ConvertTo_Event = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_cms_MissionNodeTree_s_4 = new System.Windows.Forms.ToolStripSeparator();
             this._FM_cms_MissionNodeTree_XML = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_cms_MissionNodeTree_ShowXML = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_cms_MissionNodeTree_CopyXML = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_il_Left = new System.Windows.Forms.ImageList(this.components);
             this._FM_sc_Main_Right = new System.Windows.Forms.SplitContainer();
@@ -109,17 +139,30 @@
             this._FM_cms_MissionStatementTree_MoveUp = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_cms_MissionStatementTree_MoveDown = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_cms_MissionStatementTree_s_2 = new System.Windows.Forms.ToolStripSeparator();
+            this._FM_cms_MissionStatementTree_NewCondition = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_cms_MissionStatementTree_NewAction = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_cms_MissionStatementTree_NewComment = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_cms_MissionStatementTree_s_3 = new System.Windows.Forms.ToolStripSeparator();
+            this._FM_cms_MissionStatementTree_AddViaSpaceMap = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_cms_MissionStatementTree_EditOnSpaceMap = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_cms_MissionStatementTree_StatementEditOnSpaceMap = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_cms_MissionStatementTree_s_4 = new System.Windows.Forms.ToolStripSeparator();
             this._FM_cms_MissionStatementTree_XML = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_cms_MissionStatementTree_ShowXML = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_cms_MissionStatementTree_CopyXML = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_cms_MissionStatementTree_XML_s_1 = new System.Windows.Forms.ToolStripSeparator();
+            this._FM_cms_MissionStatementTree_ShowSourceXML = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_cms_MissionStatementTree_Help = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_il_Right = new System.Windows.Forms.ImageList(this.components);
             this._FM_flp_Bottom_Right = new System.Windows.Forms.FlowLayoutPanel();
             this._FM_cms_VesselData = new System.Windows.Forms.ContextMenuStrip(this.components);
             this._FM_cms_VesselData_Load = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_cms_Label = new System.Windows.Forms.ContextMenuStrip(this.components);
             this._FM_cms_Label_Edit = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_cms_Label_EditInDialog = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_cms_Label_EditPreviousValue = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_cms_Label_EditNextValue = new System.Windows.Forms.ToolStripMenuItem();
+            this._FM_cms_Label_EditOnSpaceMap = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_cms_Label_EditPlusMinus = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_cms_Label_EditPlusMinus_M1000 = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_cms_Label_EditPlusMinus_M100 = new System.Windows.Forms.ToolStripMenuItem();
@@ -133,43 +176,6 @@
             this.toolStrip_FM_cms_Label_EditPlusMinus_P100 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip_FM_cms_Label_EditPlusMinus_P1000 = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_t_AutoUpdateTimer = new System.Windows.Forms.Timer(this.components);
-            this._FM_cms_MissionNodeTree_New_Event = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_cms_MissionNodeTree_New_Folder = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_cms_MissionNodeTree_New_Comment = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_cms_MissionNodeTree_SetAsBackground = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_cms_MissionNodeTree_ConvertTo_Comment = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_cms_MissionNodeTree_ConvertTo_Folder = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_cms_MissionNodeTree_ConvertTo_Event = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_cms_MissionNodeTree_ShowXML = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_cms_MissionStatementTree_NewCondition = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_cms_MissionStatementTree_NewAction = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_cms_MissionStatementTree_NewComment = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_cms_MissionStatementTree_AddViaSpaceMap = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_cms_MissionStatementTree_EditOnSpaceMap = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_cms_MissionStatementTree_StatementEditOnSpaceMap = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_cms_MissionStatementTree_ShowXML = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_cms_MissionStatementTree_ShowSourceXML = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_ms_Main_Edit_Undo = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_ms_Main_Edit_Redo = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_ms_Main_Edit_Cut = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_ms_Main_Edit_Copy = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_ms_Main_Edit_Paste = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_ms_Main_Edit_Delete = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_ms_Main_Edit_Find = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_ms_Main_Edit_Replace = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_ms_Main_Tools_Convert = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_ms_Main_Tools_Comm_into_Names = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_ms_Main_Tools_Comm_into_Names_Ex = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_ms_Main_Tools_Dependencies = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_ms_Main_Tools_Dependencies_ShowForCurrent = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_ms_Main_Tools_Dependencies_OpenForm = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_ms_Main_Tools_HighlightErrors = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_ms_Main_Tools_Settings = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpFormToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_cms_Label_EditInDialog = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_cms_Label_EditPreviousValue = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_cms_Label_EditNextValue = new System.Windows.Forms.ToolStripMenuItem();
-            this._FM_cms_Label_EditOnSpaceMap = new System.Windows.Forms.ToolStripMenuItem();
             this._FM_ss_Main.SuspendLayout();
             this._FM_ms_Main.SuspendLayout();
             this._FM_tsc_Main.BottomToolStripPanel.SuspendLayout();
@@ -194,6 +200,7 @@
             // _FM_ss_Main
             // 
             this._FM_ss_Main.Dock = System.Windows.Forms.DockStyle.None;
+            this._FM_ss_Main.ImageScalingSize = new System.Drawing.Size(20, 20);
             this._FM_ss_Main.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._FM_ss_Main_RandomCrap,
             this._FM_ss_Main_s_2,
@@ -201,21 +208,21 @@
             this._FM_ss_Main_VesselData});
             this._FM_ss_Main.Location = new System.Drawing.Point(0, 0);
             this._FM_ss_Main.Name = "_FM_ss_Main";
-            this._FM_ss_Main.Size = new System.Drawing.Size(1050, 22);
+            this._FM_ss_Main.Size = new System.Drawing.Size(1400, 25);
             this._FM_ss_Main.TabIndex = 0;
             this._FM_ss_Main.Text = "statusStrip1";
             // 
             // _FM_ss_Main_RandomCrap
             // 
             this._FM_ss_Main_RandomCrap.Name = "_FM_ss_Main_RandomCrap";
-            this._FM_ss_Main_RandomCrap.Size = new System.Drawing.Size(108, 17);
+            this._FM_ss_Main_RandomCrap.Size = new System.Drawing.Size(137, 20);
             this._FM_ss_Main_RandomCrap.Tag = "objectstotal";
             this._FM_ss_Main_RandomCrap.Text = "Total: 120E 25F 13C";
             // 
             // _FM_ss_Main_s_2
             // 
             this._FM_ss_Main_s_2.Name = "_FM_ss_Main_s_2";
-            this._FM_ss_Main_s_2.Size = new System.Drawing.Size(13, 17);
+            this._FM_ss_Main_s_2.Size = new System.Drawing.Size(17, 20);
             this._FM_ss_Main_s_2.Text = "  ";
             // 
             // _FM_ss_Main_s_1
@@ -225,7 +232,7 @@
             this._FM_ss_Main_s_1.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this._FM_ss_Main_s_1.LinkColor = System.Drawing.SystemColors.ControlText;
             this._FM_ss_Main_s_1.Name = "_FM_ss_Main_s_1";
-            this._FM_ss_Main_s_1.Size = new System.Drawing.Size(750, 17);
+            this._FM_ss_Main_s_1.Size = new System.Drawing.Size(1025, 20);
             this._FM_ss_Main_s_1.Spring = true;
             this._FM_ss_Main_s_1.Text = "  ";
             this._FM_ss_Main_s_1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -237,13 +244,14 @@
             this._FM_ss_Main_VesselData.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
             this._FM_ss_Main_VesselData.LinkColor = System.Drawing.SystemColors.ControlText;
             this._FM_ss_Main_VesselData.Name = "_FM_ss_Main_VesselData";
-            this._FM_ss_Main_VesselData.Size = new System.Drawing.Size(164, 17);
+            this._FM_ss_Main_VesselData.Size = new System.Drawing.Size(206, 20);
             this._FM_ss_Main_VesselData.Text = "[vesselData.xml NOT LOADED";
             this._FM_ss_Main_VesselData.Click += new System.EventHandler(this._E_FM_ss_Main_VesselData_Click);
             // 
             // _FM_ms_Main
             // 
             this._FM_ms_Main.Dock = System.Windows.Forms.DockStyle.None;
+            this._FM_ms_Main.ImageScalingSize = new System.Drawing.Size(20, 20);
             this._FM_ms_Main.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._FM_ms_Main_File,
             this._FM_ms_Main_Edit,
@@ -251,7 +259,7 @@
             this._FM_ms_Main_SpaceMap_Help});
             this._FM_ms_Main.Location = new System.Drawing.Point(0, 0);
             this._FM_ms_Main.Name = "_FM_ms_Main";
-            this._FM_ms_Main.Size = new System.Drawing.Size(1050, 24);
+            this._FM_ms_Main.Size = new System.Drawing.Size(1400, 28);
             this._FM_ms_Main.TabIndex = 1;
             this._FM_ms_Main.Text = "menuStrip1";
             // 
@@ -263,9 +271,12 @@
             this._FM_ms_Main_File_SaveMission,
             this._FM_ms_Main_File_SaveAsMission,
             this._FM_ms_Main_File_s_1,
+            this.recentFilesToolStripMenuItem,
+            this.autosavedVersionsToolStripMenuItem,
+            this.toolStripSeparator2,
             this._FM_ms_Main_File_Exit});
             this._FM_ms_Main_File.Name = "_FM_ms_Main_File";
-            this._FM_ms_Main_File.Size = new System.Drawing.Size(37, 20);
+            this._FM_ms_Main_File.Size = new System.Drawing.Size(44, 24);
             this._FM_ms_Main_File.Text = "File";
             this._FM_ms_Main_File.DropDownOpening += new System.EventHandler(this._E_FM_ms_Main_File_DropDownOpening);
             // 
@@ -273,7 +284,7 @@
             // 
             this._FM_ms_Main_File_NewMission.Name = "_FM_ms_Main_File_NewMission";
             this._FM_ms_Main_File_NewMission.ShortcutKeyDisplayString = "Ctrl+N";
-            this._FM_ms_Main_File_NewMission.Size = new System.Drawing.Size(186, 22);
+            this._FM_ms_Main_File_NewMission.Size = new System.Drawing.Size(223, 26);
             this._FM_ms_Main_File_NewMission.Text = "New";
             this._FM_ms_Main_File_NewMission.Click += new System.EventHandler(this._E_FM_ms_Main_File_NewMission_Click);
             // 
@@ -281,7 +292,7 @@
             // 
             this._FM_ms_Main_File_OpenMission.Name = "_FM_ms_Main_File_OpenMission";
             this._FM_ms_Main_File_OpenMission.ShortcutKeyDisplayString = "Ctrl+O";
-            this._FM_ms_Main_File_OpenMission.Size = new System.Drawing.Size(186, 22);
+            this._FM_ms_Main_File_OpenMission.Size = new System.Drawing.Size(223, 26);
             this._FM_ms_Main_File_OpenMission.Text = "Open";
             this._FM_ms_Main_File_OpenMission.Click += new System.EventHandler(this._E_FM_ms_Main_File_OpenMission_Click);
             // 
@@ -289,7 +300,7 @@
             // 
             this._FM_ms_Main_File_SaveMission.Name = "_FM_ms_Main_File_SaveMission";
             this._FM_ms_Main_File_SaveMission.ShortcutKeyDisplayString = "Ctrl+S";
-            this._FM_ms_Main_File_SaveMission.Size = new System.Drawing.Size(186, 22);
+            this._FM_ms_Main_File_SaveMission.Size = new System.Drawing.Size(223, 26);
             this._FM_ms_Main_File_SaveMission.Text = "Save";
             this._FM_ms_Main_File_SaveMission.Click += new System.EventHandler(this._E_FM_ms_Main_File_SaveMission_Click);
             // 
@@ -297,20 +308,53 @@
             // 
             this._FM_ms_Main_File_SaveAsMission.Name = "_FM_ms_Main_File_SaveAsMission";
             this._FM_ms_Main_File_SaveAsMission.ShortcutKeyDisplayString = "Ctrl+Alt+S";
-            this._FM_ms_Main_File_SaveAsMission.Size = new System.Drawing.Size(186, 22);
+            this._FM_ms_Main_File_SaveAsMission.Size = new System.Drawing.Size(223, 26);
             this._FM_ms_Main_File_SaveAsMission.Text = "Save As...";
             this._FM_ms_Main_File_SaveAsMission.Click += new System.EventHandler(this._E_FM_ms_Main_File_SaveAsMission_Click);
             // 
             // _FM_ms_Main_File_s_1
             // 
             this._FM_ms_Main_File_s_1.Name = "_FM_ms_Main_File_s_1";
-            this._FM_ms_Main_File_s_1.Size = new System.Drawing.Size(183, 6);
+            this._FM_ms_Main_File_s_1.Size = new System.Drawing.Size(220, 6);
+            // 
+            // recentFilesToolStripMenuItem
+            // 
+            this.recentFilesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.dummyToolStripMenuItem});
+            this.recentFilesToolStripMenuItem.Name = "recentFilesToolStripMenuItem";
+            this.recentFilesToolStripMenuItem.Size = new System.Drawing.Size(223, 26);
+            this.recentFilesToolStripMenuItem.Text = "Recent Files";
+            // 
+            // dummyToolStripMenuItem
+            // 
+            this.dummyToolStripMenuItem.Name = "dummyToolStripMenuItem";
+            this.dummyToolStripMenuItem.Size = new System.Drawing.Size(136, 26);
+            this.dummyToolStripMenuItem.Text = "Dummy";
+            // 
+            // autosavedVersionsToolStripMenuItem
+            // 
+            this.autosavedVersionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.dummyToolStripMenuItem1});
+            this.autosavedVersionsToolStripMenuItem.Name = "autosavedVersionsToolStripMenuItem";
+            this.autosavedVersionsToolStripMenuItem.Size = new System.Drawing.Size(223, 26);
+            this.autosavedVersionsToolStripMenuItem.Text = "Autosaved Versions";
+            // 
+            // dummyToolStripMenuItem1
+            // 
+            this.dummyToolStripMenuItem1.Name = "dummyToolStripMenuItem1";
+            this.dummyToolStripMenuItem1.Size = new System.Drawing.Size(136, 26);
+            this.dummyToolStripMenuItem1.Text = "Dummy";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(220, 6);
             // 
             // _FM_ms_Main_File_Exit
             // 
             this._FM_ms_Main_File_Exit.Name = "_FM_ms_Main_File_Exit";
             this._FM_ms_Main_File_Exit.ShortcutKeyDisplayString = "Alt+F4";
-            this._FM_ms_Main_File_Exit.Size = new System.Drawing.Size(186, 22);
+            this._FM_ms_Main_File_Exit.Size = new System.Drawing.Size(223, 26);
             this._FM_ms_Main_File_Exit.Text = "Exit";
             this._FM_ms_Main_File_Exit.Click += new System.EventHandler(this._E_FM_ms_Main_File_Exit_Click);
             // 
@@ -332,36 +376,90 @@
             this._FM_ms_Main_Edit_s_3,
             this._FM_ms_Main_Edit_Properties});
             this._FM_ms_Main_Edit.Name = "_FM_ms_Main_Edit";
-            this._FM_ms_Main_Edit.Size = new System.Drawing.Size(39, 20);
+            this._FM_ms_Main_Edit.Size = new System.Drawing.Size(47, 24);
             this._FM_ms_Main_Edit.Text = "Edit";
             this._FM_ms_Main_Edit.DropDownOpening += new System.EventHandler(this._E_FM_ms_Main_Edit_DropDownOpening);
+            // 
+            // _FM_ms_Main_Edit_Undo
+            // 
+            this._FM_ms_Main_Edit_Undo.Image = global::ArtemisMissionEditor.Properties.Resources.action_back;
+            this._FM_ms_Main_Edit_Undo.Name = "_FM_ms_Main_Edit_Undo";
+            this._FM_ms_Main_Edit_Undo.ShortcutKeyDisplayString = "Ctrl+Z";
+            this._FM_ms_Main_Edit_Undo.Size = new System.Drawing.Size(210, 26);
+            this._FM_ms_Main_Edit_Undo.Text = "Undo";
+            this._FM_ms_Main_Edit_Undo.Click += new System.EventHandler(this._E_FM_ms_Main_Edit_Undo_Click);
+            // 
+            // _FM_ms_Main_Edit_Redo
+            // 
+            this._FM_ms_Main_Edit_Redo.Image = global::ArtemisMissionEditor.Properties.Resources.action_forward;
+            this._FM_ms_Main_Edit_Redo.Name = "_FM_ms_Main_Edit_Redo";
+            this._FM_ms_Main_Edit_Redo.ShortcutKeyDisplayString = "Ctrl+Y";
+            this._FM_ms_Main_Edit_Redo.Size = new System.Drawing.Size(210, 26);
+            this._FM_ms_Main_Edit_Redo.Text = "Redo";
+            this._FM_ms_Main_Edit_Redo.Click += new System.EventHandler(this._E_FM_ms_Main_Edit_Redo_Click);
             // 
             // _FM_ms_Main_Edit_s_4
             // 
             this._FM_ms_Main_Edit_s_4.Name = "_FM_ms_Main_Edit_s_4";
-            this._FM_ms_Main_Edit_s_4.Size = new System.Drawing.Size(174, 6);
+            this._FM_ms_Main_Edit_s_4.Size = new System.Drawing.Size(207, 6);
             // 
             // _FM_ms_Main_Edit_UndoList
             // 
             this._FM_ms_Main_Edit_UndoList.Name = "_FM_ms_Main_Edit_UndoList";
-            this._FM_ms_Main_Edit_UndoList.Size = new System.Drawing.Size(177, 22);
+            this._FM_ms_Main_Edit_UndoList.Size = new System.Drawing.Size(210, 26);
             this._FM_ms_Main_Edit_UndoList.Text = "Undo list...";
             // 
             // _FM_ms_Main_Edit_RedoList
             // 
             this._FM_ms_Main_Edit_RedoList.Name = "_FM_ms_Main_Edit_RedoList";
-            this._FM_ms_Main_Edit_RedoList.Size = new System.Drawing.Size(177, 22);
+            this._FM_ms_Main_Edit_RedoList.Size = new System.Drawing.Size(210, 26);
             this._FM_ms_Main_Edit_RedoList.Text = "Redo list...";
             // 
             // _FM_ms_Main_Edit_s_1
             // 
             this._FM_ms_Main_Edit_s_1.Name = "_FM_ms_Main_Edit_s_1";
-            this._FM_ms_Main_Edit_s_1.Size = new System.Drawing.Size(174, 6);
+            this._FM_ms_Main_Edit_s_1.Size = new System.Drawing.Size(207, 6);
+            // 
+            // _FM_ms_Main_Edit_Cut
+            // 
+            this._FM_ms_Main_Edit_Cut.Image = global::ArtemisMissionEditor.Properties.Resources.cut;
+            this._FM_ms_Main_Edit_Cut.Name = "_FM_ms_Main_Edit_Cut";
+            this._FM_ms_Main_Edit_Cut.ShortcutKeyDisplayString = "Ctrl+X";
+            this._FM_ms_Main_Edit_Cut.Size = new System.Drawing.Size(210, 26);
+            this._FM_ms_Main_Edit_Cut.Text = "Cut";
+            this._FM_ms_Main_Edit_Cut.Click += new System.EventHandler(this._E_FM_ms_Main_Edit_Cut_Click);
+            // 
+            // _FM_ms_Main_Edit_Copy
+            // 
+            this._FM_ms_Main_Edit_Copy.Image = global::ArtemisMissionEditor.Properties.Resources.copy;
+            this._FM_ms_Main_Edit_Copy.Name = "_FM_ms_Main_Edit_Copy";
+            this._FM_ms_Main_Edit_Copy.ShortcutKeyDisplayString = "Ctrl+C";
+            this._FM_ms_Main_Edit_Copy.Size = new System.Drawing.Size(210, 26);
+            this._FM_ms_Main_Edit_Copy.Text = "Copy";
+            this._FM_ms_Main_Edit_Copy.Click += new System.EventHandler(this._E_FM_ms_Main_Edit_Copy_Click);
+            // 
+            // _FM_ms_Main_Edit_Paste
+            // 
+            this._FM_ms_Main_Edit_Paste.Image = global::ArtemisMissionEditor.Properties.Resources.action_paste;
+            this._FM_ms_Main_Edit_Paste.Name = "_FM_ms_Main_Edit_Paste";
+            this._FM_ms_Main_Edit_Paste.ShortcutKeyDisplayString = "Ctrl+V";
+            this._FM_ms_Main_Edit_Paste.Size = new System.Drawing.Size(210, 26);
+            this._FM_ms_Main_Edit_Paste.Text = "Paste";
+            this._FM_ms_Main_Edit_Paste.Click += new System.EventHandler(this._E_FM_ms_Main_Edit_Paste_Click);
+            // 
+            // _FM_ms_Main_Edit_Delete
+            // 
+            this._FM_ms_Main_Edit_Delete.Image = global::ArtemisMissionEditor.Properties.Resources.page_text_delete;
+            this._FM_ms_Main_Edit_Delete.Name = "_FM_ms_Main_Edit_Delete";
+            this._FM_ms_Main_Edit_Delete.ShortcutKeyDisplayString = "Del";
+            this._FM_ms_Main_Edit_Delete.Size = new System.Drawing.Size(210, 26);
+            this._FM_ms_Main_Edit_Delete.Text = "Delete";
+            this._FM_ms_Main_Edit_Delete.Click += new System.EventHandler(this._E_FM_ms_Main_Edit_Delete_Click);
             // 
             // _FM_ms_Main_Edit_s_2
             // 
             this._FM_ms_Main_Edit_s_2.Name = "_FM_ms_Main_Edit_s_2";
-            this._FM_ms_Main_Edit_s_2.Size = new System.Drawing.Size(174, 6);
+            this._FM_ms_Main_Edit_s_2.Size = new System.Drawing.Size(207, 6);
             // 
             // _FM_ms_Main_Edit_FR
             // 
@@ -372,19 +470,37 @@
             this._FM_ms_Main_Edit_FindNext,
             this._FM_ms_Main_Edit_FindPrevious});
             this._FM_ms_Main_Edit_FR.Name = "_FM_ms_Main_Edit_FR";
-            this._FM_ms_Main_Edit_FR.Size = new System.Drawing.Size(177, 22);
+            this._FM_ms_Main_Edit_FR.Size = new System.Drawing.Size(210, 26);
             this._FM_ms_Main_Edit_FR.Text = "Find and Replace";
+            // 
+            // _FM_ms_Main_Edit_Find
+            // 
+            this._FM_ms_Main_Edit_Find.Image = global::ArtemisMissionEditor.Properties.Resources.page_find;
+            this._FM_ms_Main_Edit_Find.Name = "_FM_ms_Main_Edit_Find";
+            this._FM_ms_Main_Edit_Find.ShortcutKeyDisplayString = "Ctrl+F";
+            this._FM_ms_Main_Edit_Find.Size = new System.Drawing.Size(235, 26);
+            this._FM_ms_Main_Edit_Find.Text = "Find...";
+            this._FM_ms_Main_Edit_Find.Click += new System.EventHandler(this._E_FM_ms_Main_Edit_Find_Click);
+            // 
+            // _FM_ms_Main_Edit_Replace
+            // 
+            this._FM_ms_Main_Edit_Replace.Image = global::ArtemisMissionEditor.Properties.Resources.page_edit;
+            this._FM_ms_Main_Edit_Replace.Name = "_FM_ms_Main_Edit_Replace";
+            this._FM_ms_Main_Edit_Replace.ShortcutKeyDisplayString = "Ctrl+H";
+            this._FM_ms_Main_Edit_Replace.Size = new System.Drawing.Size(235, 26);
+            this._FM_ms_Main_Edit_Replace.Text = "Replace...";
+            this._FM_ms_Main_Edit_Replace.Click += new System.EventHandler(this._E_FM_ms_Main_Edit_Replace_Click);
             // 
             // _FM_ms_Main_Edit_FR_s_1
             // 
             this._FM_ms_Main_Edit_FR_s_1.Name = "_FM_ms_Main_Edit_FR_s_1";
-            this._FM_ms_Main_Edit_FR_s_1.Size = new System.Drawing.Size(193, 6);
+            this._FM_ms_Main_Edit_FR_s_1.Size = new System.Drawing.Size(232, 6);
             // 
             // _FM_ms_Main_Edit_FindNext
             // 
             this._FM_ms_Main_Edit_FindNext.Name = "_FM_ms_Main_Edit_FindNext";
             this._FM_ms_Main_Edit_FindNext.ShortcutKeyDisplayString = "F3";
-            this._FM_ms_Main_Edit_FindNext.Size = new System.Drawing.Size(196, 22);
+            this._FM_ms_Main_Edit_FindNext.Size = new System.Drawing.Size(235, 26);
             this._FM_ms_Main_Edit_FindNext.Text = "Find Next";
             this._FM_ms_Main_Edit_FindNext.Click += new System.EventHandler(this._E_FM_ms_Main_Edit_FindNext_Click);
             // 
@@ -392,20 +508,20 @@
             // 
             this._FM_ms_Main_Edit_FindPrevious.Name = "_FM_ms_Main_Edit_FindPrevious";
             this._FM_ms_Main_Edit_FindPrevious.ShortcutKeyDisplayString = "Shift+F3";
-            this._FM_ms_Main_Edit_FindPrevious.Size = new System.Drawing.Size(196, 22);
+            this._FM_ms_Main_Edit_FindPrevious.Size = new System.Drawing.Size(235, 26);
             this._FM_ms_Main_Edit_FindPrevious.Text = "Find Previous";
             this._FM_ms_Main_Edit_FindPrevious.Click += new System.EventHandler(this._E_FM_ms_Main_Edit_FindPrevious_Click);
             // 
             // _FM_ms_Main_Edit_s_3
             // 
             this._FM_ms_Main_Edit_s_3.Name = "_FM_ms_Main_Edit_s_3";
-            this._FM_ms_Main_Edit_s_3.Size = new System.Drawing.Size(174, 6);
+            this._FM_ms_Main_Edit_s_3.Size = new System.Drawing.Size(207, 6);
             // 
             // _FM_ms_Main_Edit_Properties
             // 
             this._FM_ms_Main_Edit_Properties.Name = "_FM_ms_Main_Edit_Properties";
             this._FM_ms_Main_Edit_Properties.ShortcutKeyDisplayString = "Ctrl+P";
-            this._FM_ms_Main_Edit_Properties.Size = new System.Drawing.Size(177, 22);
+            this._FM_ms_Main_Edit_Properties.Size = new System.Drawing.Size(210, 26);
             this._FM_ms_Main_Edit_Properties.Text = "Properties...";
             this._FM_ms_Main_Edit_Properties.Click += new System.EventHandler(this._E_FM_ms_Main_Edit_Properties_Click);
             // 
@@ -419,8 +535,67 @@
             this._FM_ms_Main_Tools_s_1,
             this._FM_ms_Main_Tools_Settings});
             this._FM_ms_Main_Tools.Name = "_FM_ms_Main_Tools";
-            this._FM_ms_Main_Tools.Size = new System.Drawing.Size(48, 20);
+            this._FM_ms_Main_Tools.Size = new System.Drawing.Size(56, 24);
             this._FM_ms_Main_Tools.Text = "Tools";
+            // 
+            // _FM_ms_Main_Tools_Convert
+            // 
+            this._FM_ms_Main_Tools_Convert.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._FM_ms_Main_Tools_Comm_into_Names,
+            this._FM_ms_Main_Tools_Comm_into_Names_Ex});
+            this._FM_ms_Main_Tools_Convert.Image = global::ArtemisMissionEditor.Properties.Resources.page_refresh;
+            this._FM_ms_Main_Tools_Convert.Name = "_FM_ms_Main_Tools_Convert";
+            this._FM_ms_Main_Tools_Convert.Size = new System.Drawing.Size(188, 26);
+            this._FM_ms_Main_Tools_Convert.Text = "Convert";
+            // 
+            // _FM_ms_Main_Tools_Comm_into_Names
+            // 
+            this._FM_ms_Main_Tools_Comm_into_Names.Name = "_FM_ms_Main_Tools_Comm_into_Names";
+            this._FM_ms_Main_Tools_Comm_into_Names.Size = new System.Drawing.Size(397, 26);
+            this._FM_ms_Main_Tools_Comm_into_Names.Text = "Commentaries into names";
+            this._FM_ms_Main_Tools_Comm_into_Names.Click += new System.EventHandler(this._E_FM_ms_Main_Tools_Comm_into_Names_Click);
+            // 
+            // _FM_ms_Main_Tools_Comm_into_Names_Ex
+            // 
+            this._FM_ms_Main_Tools_Comm_into_Names_Ex.Name = "_FM_ms_Main_Tools_Comm_into_Names_Ex";
+            this._FM_ms_Main_Tools_Comm_into_Names_Ex.Size = new System.Drawing.Size(397, 26);
+            this._FM_ms_Main_Tools_Comm_into_Names_Ex.Text = "Commentaries into names (excluding multiline)";
+            this._FM_ms_Main_Tools_Comm_into_Names_Ex.Click += new System.EventHandler(this._E_FM_ms_Main_Tools_Comm_into_Names_Ex_Click);
+            // 
+            // _FM_ms_Main_Tools_Dependencies
+            // 
+            this._FM_ms_Main_Tools_Dependencies.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._FM_ms_Main_Tools_Dependencies_ShowForCurrent,
+            this._FM_ms_Main_Tools_Dependencies_OpenForm});
+            this._FM_ms_Main_Tools_Dependencies.Image = global::ArtemisMissionEditor.Properties.Resources.page_link;
+            this._FM_ms_Main_Tools_Dependencies.Name = "_FM_ms_Main_Tools_Dependencies";
+            this._FM_ms_Main_Tools_Dependencies.ShortcutKeyDisplayString = "";
+            this._FM_ms_Main_Tools_Dependencies.Size = new System.Drawing.Size(188, 26);
+            this._FM_ms_Main_Tools_Dependencies.Text = "Dependencies";
+            // 
+            // _FM_ms_Main_Tools_Dependencies_ShowForCurrent
+            // 
+            this._FM_ms_Main_Tools_Dependencies_ShowForCurrent.Name = "_FM_ms_Main_Tools_Dependencies_ShowForCurrent";
+            this._FM_ms_Main_Tools_Dependencies_ShowForCurrent.ShortcutKeyDisplayString = "F4";
+            this._FM_ms_Main_Tools_Dependencies_ShowForCurrent.Size = new System.Drawing.Size(351, 26);
+            this._FM_ms_Main_Tools_Dependencies_ShowForCurrent.Text = "Show dependencies for current node";
+            this._FM_ms_Main_Tools_Dependencies_ShowForCurrent.Click += new System.EventHandler(this._E_FM_ms_Main_Tools_Dependencies_ShowForCurrent_Click);
+            // 
+            // _FM_ms_Main_Tools_Dependencies_OpenForm
+            // 
+            this._FM_ms_Main_Tools_Dependencies_OpenForm.Name = "_FM_ms_Main_Tools_Dependencies_OpenForm";
+            this._FM_ms_Main_Tools_Dependencies_OpenForm.ShortcutKeyDisplayString = "Shift+F4";
+            this._FM_ms_Main_Tools_Dependencies_OpenForm.Size = new System.Drawing.Size(351, 26);
+            this._FM_ms_Main_Tools_Dependencies_OpenForm.Text = "Open dependencies form";
+            this._FM_ms_Main_Tools_Dependencies_OpenForm.Click += new System.EventHandler(this._E_FM_ms_Main_Tools_Dependencies_OpenForm_Click);
+            // 
+            // _FM_ms_Main_Tools_HighlightErrors
+            // 
+            this._FM_ms_Main_Tools_HighlightErrors.Image = global::ArtemisMissionEditor.Properties.Resources.page_script;
+            this._FM_ms_Main_Tools_HighlightErrors.Name = "_FM_ms_Main_Tools_HighlightErrors";
+            this._FM_ms_Main_Tools_HighlightErrors.Size = new System.Drawing.Size(188, 26);
+            this._FM_ms_Main_Tools_HighlightErrors.Text = "Highlight errors";
+            this._FM_ms_Main_Tools_HighlightErrors.Click += new System.EventHandler(this._E_FM_ms_Main_Tools_HighlightErrors_Click);
             // 
             // analyzeToolStripMenuItem
             // 
@@ -430,40 +605,48 @@
             this.toolStripSeparator1,
             this.showHelpToolStripMenuItem});
             this.analyzeToolStripMenuItem.Name = "analyzeToolStripMenuItem";
-            this.analyzeToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.analyzeToolStripMenuItem.Size = new System.Drawing.Size(188, 26);
             this.analyzeToolStripMenuItem.Text = "Analyze";
             // 
             // _FM_ms_Main_SpaceMap_Help_DebugXML
             // 
             this._FM_ms_Main_SpaceMap_Help_DebugXML.Name = "_FM_ms_Main_SpaceMap_Help_DebugXML";
-            this._FM_ms_Main_SpaceMap_Help_DebugXML.Size = new System.Drawing.Size(200, 22);
+            this._FM_ms_Main_SpaceMap_Help_DebugXML.Size = new System.Drawing.Size(243, 26);
             this._FM_ms_Main_SpaceMap_Help_DebugXML.Text = "Compare with source";
             this._FM_ms_Main_SpaceMap_Help_DebugXML.Click += new System.EventHandler(this._E_FM_ms_Main_SpaceMap_Help_DebugXML_Click);
             // 
             // findPotentialProblemsToolStripMenuItem
             // 
             this.findPotentialProblemsToolStripMenuItem.Name = "findPotentialProblemsToolStripMenuItem";
-            this.findPotentialProblemsToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.findPotentialProblemsToolStripMenuItem.Size = new System.Drawing.Size(243, 26);
             this.findPotentialProblemsToolStripMenuItem.Text = "Find potential problems";
             this.findPotentialProblemsToolStripMenuItem.Click += new System.EventHandler(this.findPotentialProblemsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(197, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(240, 6);
             // 
             // showHelpToolStripMenuItem
             // 
             this.showHelpToolStripMenuItem.Image = global::ArtemisMissionEditor.Properties.Resources.icon_info;
             this.showHelpToolStripMenuItem.Name = "showHelpToolStripMenuItem";
-            this.showHelpToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.showHelpToolStripMenuItem.Size = new System.Drawing.Size(243, 26);
             this.showHelpToolStripMenuItem.Text = "Show Help";
             this.showHelpToolStripMenuItem.Click += new System.EventHandler(this.showHelpToolStripMenuItem_Click);
             // 
             // _FM_ms_Main_Tools_s_1
             // 
             this._FM_ms_Main_Tools_s_1.Name = "_FM_ms_Main_Tools_s_1";
-            this._FM_ms_Main_Tools_s_1.Size = new System.Drawing.Size(154, 6);
+            this._FM_ms_Main_Tools_s_1.Size = new System.Drawing.Size(185, 6);
+            // 
+            // _FM_ms_Main_Tools_Settings
+            // 
+            this._FM_ms_Main_Tools_Settings.Image = global::ArtemisMissionEditor.Properties.Resources.icon_settings;
+            this._FM_ms_Main_Tools_Settings.Name = "_FM_ms_Main_Tools_Settings";
+            this._FM_ms_Main_Tools_Settings.Size = new System.Drawing.Size(188, 26);
+            this._FM_ms_Main_Tools_Settings.Text = "Settings";
+            this._FM_ms_Main_Tools_Settings.Click += new System.EventHandler(this._E_FM_ms_Main_Tools_Settings_Click);
             // 
             // _FM_ms_Main_SpaceMap_Help
             // 
@@ -472,18 +655,26 @@
             this._FM_ms_Main_SpaceMap_Help_s_1,
             this._FM_ms_Main_SpaceMap_Help_About});
             this._FM_ms_Main_SpaceMap_Help.Name = "_FM_ms_Main_SpaceMap_Help";
-            this._FM_ms_Main_SpaceMap_Help.Size = new System.Drawing.Size(44, 20);
+            this._FM_ms_Main_SpaceMap_Help.Size = new System.Drawing.Size(53, 24);
             this._FM_ms_Main_SpaceMap_Help.Text = "Help";
+            // 
+            // helpFormToolStripMenuItem
+            // 
+            this.helpFormToolStripMenuItem.Image = global::ArtemisMissionEditor.Properties.Resources.icon_info;
+            this.helpFormToolStripMenuItem.Name = "helpFormToolStripMenuItem";
+            this.helpFormToolStripMenuItem.Size = new System.Drawing.Size(156, 26);
+            this.helpFormToolStripMenuItem.Text = "Show Help";
+            this.helpFormToolStripMenuItem.Click += new System.EventHandler(this.helpFormToolStripMenuItem_Click);
             // 
             // _FM_ms_Main_SpaceMap_Help_s_1
             // 
             this._FM_ms_Main_SpaceMap_Help_s_1.Name = "_FM_ms_Main_SpaceMap_Help_s_1";
-            this._FM_ms_Main_SpaceMap_Help_s_1.Size = new System.Drawing.Size(149, 6);
+            this._FM_ms_Main_SpaceMap_Help_s_1.Size = new System.Drawing.Size(153, 6);
             // 
             // _FM_ms_Main_SpaceMap_Help_About
             // 
             this._FM_ms_Main_SpaceMap_Help_About.Name = "_FM_ms_Main_SpaceMap_Help_About";
-            this._FM_ms_Main_SpaceMap_Help_About.Size = new System.Drawing.Size(152, 22);
+            this._FM_ms_Main_SpaceMap_Help_About.Size = new System.Drawing.Size(156, 26);
             this._FM_ms_Main_SpaceMap_Help_About.Text = "About";
             this._FM_ms_Main_SpaceMap_Help_About.Click += new System.EventHandler(this._E_FM_ms_Main_SpaceMap_Help_About_Click);
             // 
@@ -498,11 +689,13 @@
             // 
             this._FM_tsc_Main.ContentPanel.AutoScroll = true;
             this._FM_tsc_Main.ContentPanel.Controls.Add(this._FM_sc_Main);
-            this._FM_tsc_Main.ContentPanel.Size = new System.Drawing.Size(1050, 592);
+            this._FM_tsc_Main.ContentPanel.Margin = new System.Windows.Forms.Padding(4);
+            this._FM_tsc_Main.ContentPanel.Size = new System.Drawing.Size(1400, 732);
             this._FM_tsc_Main.Dock = System.Windows.Forms.DockStyle.Fill;
             this._FM_tsc_Main.Location = new System.Drawing.Point(0, 0);
+            this._FM_tsc_Main.Margin = new System.Windows.Forms.Padding(4);
             this._FM_tsc_Main.Name = "_FM_tsc_Main";
-            this._FM_tsc_Main.Size = new System.Drawing.Size(1050, 638);
+            this._FM_tsc_Main.Size = new System.Drawing.Size(1400, 785);
             this._FM_tsc_Main.TabIndex = 2;
             this._FM_tsc_Main.Text = "toolStripContainer1";
             // 
@@ -515,6 +708,7 @@
             this._FM_sc_Main.Dock = System.Windows.Forms.DockStyle.Fill;
             this._FM_sc_Main.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this._FM_sc_Main.Location = new System.Drawing.Point(0, 0);
+            this._FM_sc_Main.Margin = new System.Windows.Forms.Padding(4);
             this._FM_sc_Main.Name = "_FM_sc_Main";
             // 
             // _FM_sc_Main.Panel1
@@ -524,8 +718,9 @@
             // _FM_sc_Main.Panel2
             // 
             this._FM_sc_Main.Panel2.Controls.Add(this._FM_sc_Main_Right);
-            this._FM_sc_Main.Size = new System.Drawing.Size(1050, 592);
+            this._FM_sc_Main.Size = new System.Drawing.Size(1400, 732);
             this._FM_sc_Main.SplitterDistance = 260;
+            this._FM_sc_Main.SplitterWidth = 5;
             this._FM_sc_Main.TabIndex = 0;
             this._FM_sc_Main.TabStop = false;
             // 
@@ -541,17 +736,19 @@
             this._FM_tve_MissionNode.ImageIndex = 0;
             this._FM_tve_MissionNode.ImageList = this._FM_il_Left;
             this._FM_tve_MissionNode.Location = new System.Drawing.Point(0, 0);
+            this._FM_tve_MissionNode.Margin = new System.Windows.Forms.Padding(4);
             this._FM_tve_MissionNode.Name = "_FM_tve_MissionNode";
             this._FM_tve_MissionNode.SelectedImageIndex = 0;
             this._FM_tve_MissionNode.SelectedListNodeFocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(85)))), ((int)(((byte)(185)))), ((int)(((byte)(255)))));
             this._FM_tve_MissionNode.SelectedListNodeUnfocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this._FM_tve_MissionNode.SelectedNodeColorFocused = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(150)))), ((int)(((byte)(250)))));
             this._FM_tve_MissionNode.SelectedNodeColorUnfocused = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(240)))), ((int)(((byte)(255)))));
-            this._FM_tve_MissionNode.Size = new System.Drawing.Size(260, 592);
+            this._FM_tve_MissionNode.Size = new System.Drawing.Size(260, 732);
             this._FM_tve_MissionNode.TabIndex = 0;
             // 
             // _FM_cms_MissionNodeTree
             // 
+            this._FM_cms_MissionNodeTree.ImageScalingSize = new System.Drawing.Size(20, 20);
             this._FM_cms_MissionNodeTree.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._FM_cms_MissionNodeTree_Copy,
             this._FM_cms_MissionNodeTree_Cut,
@@ -580,14 +777,14 @@
             this._FM_cms_MissionNodeTree_s_4,
             this._FM_cms_MissionNodeTree_XML});
             this._FM_cms_MissionNodeTree.Name = "_FM_cms_MissionNodeTree";
-            this._FM_cms_MissionNodeTree.Size = new System.Drawing.Size(237, 464);
+            this._FM_cms_MissionNodeTree.Size = new System.Drawing.Size(282, 540);
             this._FM_cms_MissionNodeTree.Opening += new System.ComponentModel.CancelEventHandler(this._E_FM_cms_MissionNodeTree_Opening);
             // 
             // _FM_cms_MissionNodeTree_Copy
             // 
             this._FM_cms_MissionNodeTree_Copy.Name = "_FM_cms_MissionNodeTree_Copy";
             this._FM_cms_MissionNodeTree_Copy.ShortcutKeyDisplayString = "Ctrl+C";
-            this._FM_cms_MissionNodeTree_Copy.Size = new System.Drawing.Size(236, 22);
+            this._FM_cms_MissionNodeTree_Copy.Size = new System.Drawing.Size(281, 26);
             this._FM_cms_MissionNodeTree_Copy.Text = "Copy";
             this._FM_cms_MissionNodeTree_Copy.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_Copy_Click);
             // 
@@ -595,7 +792,7 @@
             // 
             this._FM_cms_MissionNodeTree_Cut.Name = "_FM_cms_MissionNodeTree_Cut";
             this._FM_cms_MissionNodeTree_Cut.ShortcutKeyDisplayString = "Ctrl+X";
-            this._FM_cms_MissionNodeTree_Cut.Size = new System.Drawing.Size(236, 22);
+            this._FM_cms_MissionNodeTree_Cut.Size = new System.Drawing.Size(281, 26);
             this._FM_cms_MissionNodeTree_Cut.Text = "Cut";
             this._FM_cms_MissionNodeTree_Cut.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_Cut_Click);
             // 
@@ -603,7 +800,7 @@
             // 
             this._FM_cms_MissionNodeTree_Paste.Name = "_FM_cms_MissionNodeTree_Paste";
             this._FM_cms_MissionNodeTree_Paste.ShortcutKeyDisplayString = "Ctrl+V";
-            this._FM_cms_MissionNodeTree_Paste.Size = new System.Drawing.Size(236, 22);
+            this._FM_cms_MissionNodeTree_Paste.Size = new System.Drawing.Size(281, 26);
             this._FM_cms_MissionNodeTree_Paste.Text = "Paste";
             this._FM_cms_MissionNodeTree_Paste.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_Paste_Click);
             // 
@@ -611,20 +808,20 @@
             // 
             this._FM_cms_MissionNodeTree_Delete.Name = "_FM_cms_MissionNodeTree_Delete";
             this._FM_cms_MissionNodeTree_Delete.ShortcutKeyDisplayString = "Del";
-            this._FM_cms_MissionNodeTree_Delete.Size = new System.Drawing.Size(236, 22);
+            this._FM_cms_MissionNodeTree_Delete.Size = new System.Drawing.Size(281, 26);
             this._FM_cms_MissionNodeTree_Delete.Text = "Delete";
             this._FM_cms_MissionNodeTree_Delete.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_Delete_Click);
             // 
             // _FM_cms_MissionNodeTree_s_7
             // 
             this._FM_cms_MissionNodeTree_s_7.Name = "_FM_cms_MissionNodeTree_s_7";
-            this._FM_cms_MissionNodeTree_s_7.Size = new System.Drawing.Size(233, 6);
+            this._FM_cms_MissionNodeTree_s_7.Size = new System.Drawing.Size(278, 6);
             // 
             // _FM_cms_MissionNodeTree_Rename
             // 
             this._FM_cms_MissionNodeTree_Rename.Name = "_FM_cms_MissionNodeTree_Rename";
             this._FM_cms_MissionNodeTree_Rename.ShortcutKeyDisplayString = "F2";
-            this._FM_cms_MissionNodeTree_Rename.Size = new System.Drawing.Size(236, 22);
+            this._FM_cms_MissionNodeTree_Rename.Size = new System.Drawing.Size(281, 26);
             this._FM_cms_MissionNodeTree_Rename.Text = "Rename";
             this._FM_cms_MissionNodeTree_Rename.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_Rename_Click);
             // 
@@ -632,7 +829,7 @@
             // 
             this._FM_cms_MissionNodeTree_Enable.Name = "_FM_cms_MissionNodeTree_Enable";
             this._FM_cms_MissionNodeTree_Enable.ShortcutKeyDisplayString = "Ctrl+Shift+D";
-            this._FM_cms_MissionNodeTree_Enable.Size = new System.Drawing.Size(236, 22);
+            this._FM_cms_MissionNodeTree_Enable.Size = new System.Drawing.Size(281, 26);
             this._FM_cms_MissionNodeTree_Enable.Text = "Enable";
             this._FM_cms_MissionNodeTree_Enable.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_Enable_Click);
             // 
@@ -640,20 +837,20 @@
             // 
             this._FM_cms_MissionNodeTree_Disable.Name = "_FM_cms_MissionNodeTree_Disable";
             this._FM_cms_MissionNodeTree_Disable.ShortcutKeyDisplayString = "Ctrl+D";
-            this._FM_cms_MissionNodeTree_Disable.Size = new System.Drawing.Size(236, 22);
+            this._FM_cms_MissionNodeTree_Disable.Size = new System.Drawing.Size(281, 26);
             this._FM_cms_MissionNodeTree_Disable.Text = "Disable";
             this._FM_cms_MissionNodeTree_Disable.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_DisableEnable_Click);
             // 
             // _FM_cms_MissionNodeTree_s_5
             // 
             this._FM_cms_MissionNodeTree_s_5.Name = "_FM_cms_MissionNodeTree_s_5";
-            this._FM_cms_MissionNodeTree_s_5.Size = new System.Drawing.Size(233, 6);
+            this._FM_cms_MissionNodeTree_s_5.Size = new System.Drawing.Size(278, 6);
             // 
             // _FM_cms_MissionNodeTree_ExpandAll
             // 
             this._FM_cms_MissionNodeTree_ExpandAll.Name = "_FM_cms_MissionNodeTree_ExpandAll";
             this._FM_cms_MissionNodeTree_ExpandAll.ShortcutKeyDisplayString = "Ctrl+E";
-            this._FM_cms_MissionNodeTree_ExpandAll.Size = new System.Drawing.Size(236, 22);
+            this._FM_cms_MissionNodeTree_ExpandAll.Size = new System.Drawing.Size(281, 26);
             this._FM_cms_MissionNodeTree_ExpandAll.Text = "Expand All Folders";
             this._FM_cms_MissionNodeTree_ExpandAll.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_ExpandAll_Click);
             // 
@@ -661,20 +858,20 @@
             // 
             this._FM_cms_MissionNodeTree_CollapseAll.Name = "_FM_cms_MissionNodeTree_CollapseAll";
             this._FM_cms_MissionNodeTree_CollapseAll.ShortcutKeyDisplayString = "Ctrl+R";
-            this._FM_cms_MissionNodeTree_CollapseAll.Size = new System.Drawing.Size(236, 22);
+            this._FM_cms_MissionNodeTree_CollapseAll.Size = new System.Drawing.Size(281, 26);
             this._FM_cms_MissionNodeTree_CollapseAll.Text = "Collapse All Folders";
             this._FM_cms_MissionNodeTree_CollapseAll.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_CollapseAll_Click);
             // 
             // _FM_cms_MissionNodeTree_s_1
             // 
             this._FM_cms_MissionNodeTree_s_1.Name = "_FM_cms_MissionNodeTree_s_1";
-            this._FM_cms_MissionNodeTree_s_1.Size = new System.Drawing.Size(233, 6);
+            this._FM_cms_MissionNodeTree_s_1.Size = new System.Drawing.Size(278, 6);
             // 
             // _FM_cms_MissionNodeTree_MoveUp
             // 
             this._FM_cms_MissionNodeTree_MoveUp.Name = "_FM_cms_MissionNodeTree_MoveUp";
             this._FM_cms_MissionNodeTree_MoveUp.ShortcutKeyDisplayString = "Ctrl+Up";
-            this._FM_cms_MissionNodeTree_MoveUp.Size = new System.Drawing.Size(236, 22);
+            this._FM_cms_MissionNodeTree_MoveUp.Size = new System.Drawing.Size(281, 26);
             this._FM_cms_MissionNodeTree_MoveUp.Text = "Move Up";
             this._FM_cms_MissionNodeTree_MoveUp.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_MoveUp_Click);
             // 
@@ -682,7 +879,7 @@
             // 
             this._FM_cms_MissionNodeTree_MoveDown.Name = "_FM_cms_MissionNodeTree_MoveDown";
             this._FM_cms_MissionNodeTree_MoveDown.ShortcutKeyDisplayString = "Ctrl+Down";
-            this._FM_cms_MissionNodeTree_MoveDown.Size = new System.Drawing.Size(236, 22);
+            this._FM_cms_MissionNodeTree_MoveDown.Size = new System.Drawing.Size(281, 26);
             this._FM_cms_MissionNodeTree_MoveDown.Text = "Move Down";
             this._FM_cms_MissionNodeTree_MoveDown.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_MoveDown_Click);
             // 
@@ -690,7 +887,7 @@
             // 
             this._FM_cms_MissionNodeTree_MoveIn.Name = "_FM_cms_MissionNodeTree_MoveIn";
             this._FM_cms_MissionNodeTree_MoveIn.ShortcutKeyDisplayString = "Ctrl+Right";
-            this._FM_cms_MissionNodeTree_MoveIn.Size = new System.Drawing.Size(236, 22);
+            this._FM_cms_MissionNodeTree_MoveIn.Size = new System.Drawing.Size(281, 26);
             this._FM_cms_MissionNodeTree_MoveIn.Text = "Move In";
             this._FM_cms_MissionNodeTree_MoveIn.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_MoveIn_Click);
             // 
@@ -698,24 +895,60 @@
             // 
             this._FM_cms_MissionNodeTree_MoveOut.Name = "_FM_cms_MissionNodeTree_MoveOut";
             this._FM_cms_MissionNodeTree_MoveOut.ShortcutKeyDisplayString = "Ctrl+Left";
-            this._FM_cms_MissionNodeTree_MoveOut.Size = new System.Drawing.Size(236, 22);
+            this._FM_cms_MissionNodeTree_MoveOut.Size = new System.Drawing.Size(281, 26);
             this._FM_cms_MissionNodeTree_MoveOut.Text = "Move Out";
             this._FM_cms_MissionNodeTree_MoveOut.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_MoveOut_Click);
             // 
             // _FM_cms_MissionNodeTree_s_2
             // 
             this._FM_cms_MissionNodeTree_s_2.Name = "_FM_cms_MissionNodeTree_s_2";
-            this._FM_cms_MissionNodeTree_s_2.Size = new System.Drawing.Size(233, 6);
+            this._FM_cms_MissionNodeTree_s_2.Size = new System.Drawing.Size(278, 6);
+            // 
+            // _FM_cms_MissionNodeTree_New_Event
+            // 
+            this._FM_cms_MissionNodeTree_New_Event.Image = global::ArtemisMissionEditor.Properties.Resources.page;
+            this._FM_cms_MissionNodeTree_New_Event.Name = "_FM_cms_MissionNodeTree_New_Event";
+            this._FM_cms_MissionNodeTree_New_Event.ShortcutKeyDisplayString = "Ins";
+            this._FM_cms_MissionNodeTree_New_Event.Size = new System.Drawing.Size(281, 26);
+            this._FM_cms_MissionNodeTree_New_Event.Text = "New Event";
+            this._FM_cms_MissionNodeTree_New_Event.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_New_Event_Click);
+            // 
+            // _FM_cms_MissionNodeTree_New_Folder
+            // 
+            this._FM_cms_MissionNodeTree_New_Folder.Image = global::ArtemisMissionEditor.Properties.Resources.folder;
+            this._FM_cms_MissionNodeTree_New_Folder.Name = "_FM_cms_MissionNodeTree_New_Folder";
+            this._FM_cms_MissionNodeTree_New_Folder.ShortcutKeyDisplayString = "Alt+Ins";
+            this._FM_cms_MissionNodeTree_New_Folder.Size = new System.Drawing.Size(281, 26);
+            this._FM_cms_MissionNodeTree_New_Folder.Text = "New Folder";
+            this._FM_cms_MissionNodeTree_New_Folder.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_New_Folder_Click);
+            // 
+            // _FM_cms_MissionNodeTree_New_Comment
+            // 
+            this._FM_cms_MissionNodeTree_New_Comment.Image = global::ArtemisMissionEditor.Properties.Resources.commentary2;
+            this._FM_cms_MissionNodeTree_New_Comment.Name = "_FM_cms_MissionNodeTree_New_Comment";
+            this._FM_cms_MissionNodeTree_New_Comment.ShortcutKeyDisplayString = "Ctrl+Shift+Ins";
+            this._FM_cms_MissionNodeTree_New_Comment.Size = new System.Drawing.Size(281, 26);
+            this._FM_cms_MissionNodeTree_New_Comment.Text = "New Comment";
+            this._FM_cms_MissionNodeTree_New_Comment.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._FM_cms_MissionNodeTree_New_Comment.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_New_Comment_Click);
             // 
             // _FM_cms_MissionNodeTree_s_3
             // 
             this._FM_cms_MissionNodeTree_s_3.Name = "_FM_cms_MissionNodeTree_s_3";
-            this._FM_cms_MissionNodeTree_s_3.Size = new System.Drawing.Size(233, 6);
+            this._FM_cms_MissionNodeTree_s_3.Size = new System.Drawing.Size(278, 6);
+            // 
+            // _FM_cms_MissionNodeTree_SetAsBackground
+            // 
+            this._FM_cms_MissionNodeTree_SetAsBackground.Image = global::ArtemisMissionEditor.Properties.Resources.icon_get_world;
+            this._FM_cms_MissionNodeTree_SetAsBackground.Name = "_FM_cms_MissionNodeTree_SetAsBackground";
+            this._FM_cms_MissionNodeTree_SetAsBackground.Size = new System.Drawing.Size(281, 26);
+            this._FM_cms_MissionNodeTree_SetAsBackground.Text = "Set as background";
+            this._FM_cms_MissionNodeTree_SetAsBackground.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_SetAsBackground_Click);
             // 
             // _FM_cms_MissionNodeTree_s_6
             // 
             this._FM_cms_MissionNodeTree_s_6.Name = "_FM_cms_MissionNodeTree_s_6";
-            this._FM_cms_MissionNodeTree_s_6.Size = new System.Drawing.Size(233, 6);
+            this._FM_cms_MissionNodeTree_s_6.Size = new System.Drawing.Size(278, 6);
             // 
             // _FM_cms_MissionNodeTree_ConvertTo
             // 
@@ -724,13 +957,37 @@
             this._FM_cms_MissionNodeTree_ConvertTo_Folder,
             this._FM_cms_MissionNodeTree_ConvertTo_Event});
             this._FM_cms_MissionNodeTree_ConvertTo.Name = "_FM_cms_MissionNodeTree_ConvertTo";
-            this._FM_cms_MissionNodeTree_ConvertTo.Size = new System.Drawing.Size(236, 22);
+            this._FM_cms_MissionNodeTree_ConvertTo.Size = new System.Drawing.Size(281, 26);
             this._FM_cms_MissionNodeTree_ConvertTo.Text = "Convert To...";
+            // 
+            // _FM_cms_MissionNodeTree_ConvertTo_Comment
+            // 
+            this._FM_cms_MissionNodeTree_ConvertTo_Comment.Image = ((System.Drawing.Image)(resources.GetObject("_FM_cms_MissionNodeTree_ConvertTo_Comment.Image")));
+            this._FM_cms_MissionNodeTree_ConvertTo_Comment.Name = "_FM_cms_MissionNodeTree_ConvertTo_Comment";
+            this._FM_cms_MissionNodeTree_ConvertTo_Comment.Size = new System.Drawing.Size(149, 26);
+            this._FM_cms_MissionNodeTree_ConvertTo_Comment.Text = "Comment";
+            this._FM_cms_MissionNodeTree_ConvertTo_Comment.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_ConvertTo_Comment_Click);
+            // 
+            // _FM_cms_MissionNodeTree_ConvertTo_Folder
+            // 
+            this._FM_cms_MissionNodeTree_ConvertTo_Folder.Image = global::ArtemisMissionEditor.Properties.Resources.folder;
+            this._FM_cms_MissionNodeTree_ConvertTo_Folder.Name = "_FM_cms_MissionNodeTree_ConvertTo_Folder";
+            this._FM_cms_MissionNodeTree_ConvertTo_Folder.Size = new System.Drawing.Size(149, 26);
+            this._FM_cms_MissionNodeTree_ConvertTo_Folder.Text = "Folder";
+            this._FM_cms_MissionNodeTree_ConvertTo_Folder.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_ConvertTo_Folder_Click);
+            // 
+            // _FM_cms_MissionNodeTree_ConvertTo_Event
+            // 
+            this._FM_cms_MissionNodeTree_ConvertTo_Event.Image = global::ArtemisMissionEditor.Properties.Resources.page;
+            this._FM_cms_MissionNodeTree_ConvertTo_Event.Name = "_FM_cms_MissionNodeTree_ConvertTo_Event";
+            this._FM_cms_MissionNodeTree_ConvertTo_Event.Size = new System.Drawing.Size(149, 26);
+            this._FM_cms_MissionNodeTree_ConvertTo_Event.Text = "Event";
+            this._FM_cms_MissionNodeTree_ConvertTo_Event.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_ConvertTo_Event_Click);
             // 
             // _FM_cms_MissionNodeTree_s_4
             // 
             this._FM_cms_MissionNodeTree_s_4.Name = "_FM_cms_MissionNodeTree_s_4";
-            this._FM_cms_MissionNodeTree_s_4.Size = new System.Drawing.Size(233, 6);
+            this._FM_cms_MissionNodeTree_s_4.Size = new System.Drawing.Size(278, 6);
             // 
             // _FM_cms_MissionNodeTree_XML
             // 
@@ -738,13 +995,21 @@
             this._FM_cms_MissionNodeTree_ShowXML,
             this._FM_cms_MissionNodeTree_CopyXML});
             this._FM_cms_MissionNodeTree_XML.Name = "_FM_cms_MissionNodeTree_XML";
-            this._FM_cms_MissionNodeTree_XML.Size = new System.Drawing.Size(236, 22);
+            this._FM_cms_MissionNodeTree_XML.Size = new System.Drawing.Size(281, 26);
             this._FM_cms_MissionNodeTree_XML.Text = "XML";
+            // 
+            // _FM_cms_MissionNodeTree_ShowXML
+            // 
+            this._FM_cms_MissionNodeTree_ShowXML.Image = global::ArtemisMissionEditor.Properties.Resources.page_code;
+            this._FM_cms_MissionNodeTree_ShowXML.Name = "_FM_cms_MissionNodeTree_ShowXML";
+            this._FM_cms_MissionNodeTree_ShowXML.Size = new System.Drawing.Size(275, 26);
+            this._FM_cms_MissionNodeTree_ShowXML.Text = "Show node XML";
+            this._FM_cms_MissionNodeTree_ShowXML.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_ShowXML_Click);
             // 
             // _FM_cms_MissionNodeTree_CopyXML
             // 
             this._FM_cms_MissionNodeTree_CopyXML.Name = "_FM_cms_MissionNodeTree_CopyXML";
-            this._FM_cms_MissionNodeTree_CopyXML.Size = new System.Drawing.Size(226, 22);
+            this._FM_cms_MissionNodeTree_CopyXML.Size = new System.Drawing.Size(275, 26);
             this._FM_cms_MissionNodeTree_CopyXML.Text = "Copy node XML to clipboard";
             this._FM_cms_MissionNodeTree_CopyXML.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_CopyXML_Click);
             // 
@@ -912,6 +1177,7 @@
             this._FM_sc_Main_Right.Dock = System.Windows.Forms.DockStyle.Fill;
             this._FM_sc_Main_Right.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this._FM_sc_Main_Right.Location = new System.Drawing.Point(0, 0);
+            this._FM_sc_Main_Right.Margin = new System.Windows.Forms.Padding(4);
             this._FM_sc_Main_Right.Name = "_FM_sc_Main_Right";
             this._FM_sc_Main_Right.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -923,8 +1189,9 @@
             // _FM_sc_Main_Right.Panel2
             // 
             this._FM_sc_Main_Right.Panel2.Controls.Add(this._FM_flp_Bottom_Right);
-            this._FM_sc_Main_Right.Size = new System.Drawing.Size(786, 592);
-            this._FM_sc_Main_Right.SplitterDistance = 407;
+            this._FM_sc_Main_Right.Size = new System.Drawing.Size(1135, 732);
+            this._FM_sc_Main_Right.SplitterDistance = 543;
+            this._FM_sc_Main_Right.SplitterWidth = 5;
             this._FM_sc_Main_Right.TabIndex = 1;
             this._FM_sc_Main_Right.TabStop = false;
             // 
@@ -933,10 +1200,11 @@
             this._FM_lbl_Main.AutoSize = true;
             this._FM_lbl_Main.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this._FM_lbl_Main.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this._FM_lbl_Main.Location = new System.Drawing.Point(3, 0);
+            this._FM_lbl_Main.Location = new System.Drawing.Point(4, 0);
+            this._FM_lbl_Main.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._FM_lbl_Main.Name = "_FM_lbl_Main";
-            this._FM_lbl_Main.Padding = new System.Windows.Forms.Padding(4, 4, 4, 3);
-            this._FM_lbl_Main.Size = new System.Drawing.Size(46, 22);
+            this._FM_lbl_Main.Padding = new System.Windows.Forms.Padding(5, 5, 5, 4);
+            this._FM_lbl_Main.Size = new System.Drawing.Size(60, 29);
             this._FM_lbl_Main.TabIndex = 3;
             this._FM_lbl_Main.Text = "label1";
             this._FM_lbl_Main.Paint += new System.Windows.Forms.PaintEventHandler(this.label1_Paint);
@@ -949,10 +1217,11 @@
             this.doubleBufferedPanel1.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.doubleBufferedPanel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.doubleBufferedPanel1.Controls.Add(this._FM_tve_MissionStatement);
-            this.doubleBufferedPanel1.Location = new System.Drawing.Point(3, 21);
+            this.doubleBufferedPanel1.Location = new System.Drawing.Point(4, 26);
+            this.doubleBufferedPanel1.Margin = new System.Windows.Forms.Padding(4);
             this.doubleBufferedPanel1.Name = "doubleBufferedPanel1";
-            this.doubleBufferedPanel1.Padding = new System.Windows.Forms.Padding(4);
-            this.doubleBufferedPanel1.Size = new System.Drawing.Size(782, 383);
+            this.doubleBufferedPanel1.Padding = new System.Windows.Forms.Padding(5);
+            this.doubleBufferedPanel1.Size = new System.Drawing.Size(925, 390);
             this.doubleBufferedPanel1.TabIndex = 2;
             // 
             // _FM_tve_MissionStatement
@@ -965,18 +1234,20 @@
             this._FM_tve_MissionStatement.HighlightedNodeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(230)))), ((int)(((byte)(220)))));
             this._FM_tve_MissionStatement.ImageIndex = 0;
             this._FM_tve_MissionStatement.ImageList = this._FM_il_Right;
-            this._FM_tve_MissionStatement.Location = new System.Drawing.Point(4, 4);
+            this._FM_tve_MissionStatement.Location = new System.Drawing.Point(5, 5);
+            this._FM_tve_MissionStatement.Margin = new System.Windows.Forms.Padding(4);
             this._FM_tve_MissionStatement.Name = "_FM_tve_MissionStatement";
             this._FM_tve_MissionStatement.SelectedImageIndex = 0;
             this._FM_tve_MissionStatement.SelectedListNodeFocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(85)))), ((int)(((byte)(185)))), ((int)(((byte)(255)))));
             this._FM_tve_MissionStatement.SelectedListNodeUnfocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this._FM_tve_MissionStatement.SelectedNodeColorFocused = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(150)))), ((int)(((byte)(250)))));
             this._FM_tve_MissionStatement.SelectedNodeColorUnfocused = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(240)))), ((int)(((byte)(255)))));
-            this._FM_tve_MissionStatement.Size = new System.Drawing.Size(772, 373);
+            this._FM_tve_MissionStatement.Size = new System.Drawing.Size(913, 378);
             this._FM_tve_MissionStatement.TabIndex = 0;
             // 
             // _FM_cms_MissionStatementTree
             // 
+            this._FM_cms_MissionStatementTree.ImageScalingSize = new System.Drawing.Size(20, 20);
             this._FM_cms_MissionStatementTree.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._FM_cms_MissionStatementTree_Copy,
             this._FM_cms_MissionStatementTree_Cut,
@@ -997,16 +1268,17 @@
             this._FM_cms_MissionStatementTree_EditOnSpaceMap,
             this._FM_cms_MissionStatementTree_StatementEditOnSpaceMap,
             this._FM_cms_MissionStatementTree_s_4,
-            this._FM_cms_MissionStatementTree_XML});
+            this._FM_cms_MissionStatementTree_XML,
+            this._FM_cms_MissionStatementTree_Help});
             this._FM_cms_MissionStatementTree.Name = "_FM_cms_MissionStatementTree";
-            this._FM_cms_MissionStatementTree.Size = new System.Drawing.Size(283, 364);
+            this._FM_cms_MissionStatementTree.Size = new System.Drawing.Size(342, 450);
             this._FM_cms_MissionStatementTree.Opening += new System.ComponentModel.CancelEventHandler(this._E_FM_cms_MissionStatementTree_Opening);
             // 
             // _FM_cms_MissionStatementTree_Copy
             // 
             this._FM_cms_MissionStatementTree_Copy.Name = "_FM_cms_MissionStatementTree_Copy";
             this._FM_cms_MissionStatementTree_Copy.ShortcutKeyDisplayString = "Ctrl+C";
-            this._FM_cms_MissionStatementTree_Copy.Size = new System.Drawing.Size(282, 22);
+            this._FM_cms_MissionStatementTree_Copy.Size = new System.Drawing.Size(341, 26);
             this._FM_cms_MissionStatementTree_Copy.Text = "Copy";
             this._FM_cms_MissionStatementTree_Copy.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_Copy_Click);
             // 
@@ -1014,7 +1286,7 @@
             // 
             this._FM_cms_MissionStatementTree_Cut.Name = "_FM_cms_MissionStatementTree_Cut";
             this._FM_cms_MissionStatementTree_Cut.ShortcutKeyDisplayString = "Ctrl+X";
-            this._FM_cms_MissionStatementTree_Cut.Size = new System.Drawing.Size(282, 22);
+            this._FM_cms_MissionStatementTree_Cut.Size = new System.Drawing.Size(341, 26);
             this._FM_cms_MissionStatementTree_Cut.Text = "Cut";
             this._FM_cms_MissionStatementTree_Cut.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_Cut_Click);
             // 
@@ -1022,7 +1294,7 @@
             // 
             this._FM_cms_MissionStatementTree_Paste.Name = "_FM_cms_MissionStatementTree_Paste";
             this._FM_cms_MissionStatementTree_Paste.ShortcutKeyDisplayString = "Ctrl+V";
-            this._FM_cms_MissionStatementTree_Paste.Size = new System.Drawing.Size(282, 22);
+            this._FM_cms_MissionStatementTree_Paste.Size = new System.Drawing.Size(341, 26);
             this._FM_cms_MissionStatementTree_Paste.Text = "Paste";
             this._FM_cms_MissionStatementTree_Paste.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_Paste_Click);
             // 
@@ -1030,20 +1302,20 @@
             // 
             this._FM_cms_MissionStatementTree_Delete.Name = "_FM_cms_MissionStatementTree_Delete";
             this._FM_cms_MissionStatementTree_Delete.ShortcutKeyDisplayString = "Del";
-            this._FM_cms_MissionStatementTree_Delete.Size = new System.Drawing.Size(282, 22);
+            this._FM_cms_MissionStatementTree_Delete.Size = new System.Drawing.Size(341, 26);
             this._FM_cms_MissionStatementTree_Delete.Text = "Delete";
             this._FM_cms_MissionStatementTree_Delete.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_Delete_Click);
             // 
             // _FM_cms_MissionStatementTree_s_1
             // 
             this._FM_cms_MissionStatementTree_s_1.Name = "_FM_cms_MissionStatementTree_s_1";
-            this._FM_cms_MissionStatementTree_s_1.Size = new System.Drawing.Size(279, 6);
+            this._FM_cms_MissionStatementTree_s_1.Size = new System.Drawing.Size(338, 6);
             // 
             // _FM_cms_MissionStatementTree_Enable
             // 
             this._FM_cms_MissionStatementTree_Enable.Name = "_FM_cms_MissionStatementTree_Enable";
             this._FM_cms_MissionStatementTree_Enable.ShortcutKeyDisplayString = "Ctrl+Shift+D";
-            this._FM_cms_MissionStatementTree_Enable.Size = new System.Drawing.Size(282, 22);
+            this._FM_cms_MissionStatementTree_Enable.Size = new System.Drawing.Size(341, 26);
             this._FM_cms_MissionStatementTree_Enable.Text = "Enable (uncomment)";
             this._FM_cms_MissionStatementTree_Enable.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_Enable_Click);
             // 
@@ -1051,20 +1323,20 @@
             // 
             this._FM_cms_MissionStatementTree_Disable.Name = "_FM_cms_MissionStatementTree_Disable";
             this._FM_cms_MissionStatementTree_Disable.ShortcutKeyDisplayString = "Ctrl+D";
-            this._FM_cms_MissionStatementTree_Disable.Size = new System.Drawing.Size(282, 22);
+            this._FM_cms_MissionStatementTree_Disable.Size = new System.Drawing.Size(341, 26);
             this._FM_cms_MissionStatementTree_Disable.Text = "Disable (comment)";
             this._FM_cms_MissionStatementTree_Disable.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_Disable_Click);
             // 
             // _FM_cms_MissionStatementTree_s_5
             // 
             this._FM_cms_MissionStatementTree_s_5.Name = "_FM_cms_MissionStatementTree_s_5";
-            this._FM_cms_MissionStatementTree_s_5.Size = new System.Drawing.Size(279, 6);
+            this._FM_cms_MissionStatementTree_s_5.Size = new System.Drawing.Size(338, 6);
             // 
             // _FM_cms_MissionStatementTree_MoveUp
             // 
             this._FM_cms_MissionStatementTree_MoveUp.Name = "_FM_cms_MissionStatementTree_MoveUp";
             this._FM_cms_MissionStatementTree_MoveUp.ShortcutKeyDisplayString = "Ctrl+Up";
-            this._FM_cms_MissionStatementTree_MoveUp.Size = new System.Drawing.Size(282, 22);
+            this._FM_cms_MissionStatementTree_MoveUp.Size = new System.Drawing.Size(341, 26);
             this._FM_cms_MissionStatementTree_MoveUp.Text = "Move Up";
             this._FM_cms_MissionStatementTree_MoveUp.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_MoveUp_Click);
             // 
@@ -1072,24 +1344,78 @@
             // 
             this._FM_cms_MissionStatementTree_MoveDown.Name = "_FM_cms_MissionStatementTree_MoveDown";
             this._FM_cms_MissionStatementTree_MoveDown.ShortcutKeyDisplayString = "Ctrl+Down";
-            this._FM_cms_MissionStatementTree_MoveDown.Size = new System.Drawing.Size(282, 22);
+            this._FM_cms_MissionStatementTree_MoveDown.Size = new System.Drawing.Size(341, 26);
             this._FM_cms_MissionStatementTree_MoveDown.Text = "Move Down";
             this._FM_cms_MissionStatementTree_MoveDown.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_MoveDown_Click);
             // 
             // _FM_cms_MissionStatementTree_s_2
             // 
             this._FM_cms_MissionStatementTree_s_2.Name = "_FM_cms_MissionStatementTree_s_2";
-            this._FM_cms_MissionStatementTree_s_2.Size = new System.Drawing.Size(279, 6);
+            this._FM_cms_MissionStatementTree_s_2.Size = new System.Drawing.Size(338, 6);
+            // 
+            // _FM_cms_MissionStatementTree_NewCondition
+            // 
+            this._FM_cms_MissionStatementTree_NewCondition.Image = global::ArtemisMissionEditor.Properties.Resources.Flag_blue_icon;
+            this._FM_cms_MissionStatementTree_NewCondition.Name = "_FM_cms_MissionStatementTree_NewCondition";
+            this._FM_cms_MissionStatementTree_NewCondition.ShortcutKeyDisplayString = "Alt+Ins";
+            this._FM_cms_MissionStatementTree_NewCondition.Size = new System.Drawing.Size(341, 26);
+            this._FM_cms_MissionStatementTree_NewCondition.Text = "New Condition";
+            this._FM_cms_MissionStatementTree_NewCondition.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_NewCondition_Click);
+            // 
+            // _FM_cms_MissionStatementTree_NewAction
+            // 
+            this._FM_cms_MissionStatementTree_NewAction.Image = global::ArtemisMissionEditor.Properties.Resources.sys_command_icon;
+            this._FM_cms_MissionStatementTree_NewAction.Name = "_FM_cms_MissionStatementTree_NewAction";
+            this._FM_cms_MissionStatementTree_NewAction.ShortcutKeyDisplayString = "Ins";
+            this._FM_cms_MissionStatementTree_NewAction.Size = new System.Drawing.Size(341, 26);
+            this._FM_cms_MissionStatementTree_NewAction.Text = "New Action";
+            this._FM_cms_MissionStatementTree_NewAction.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_NewAction_Click);
+            // 
+            // _FM_cms_MissionStatementTree_NewComment
+            // 
+            this._FM_cms_MissionStatementTree_NewComment.Image = global::ArtemisMissionEditor.Properties.Resources.commentary2;
+            this._FM_cms_MissionStatementTree_NewComment.Name = "_FM_cms_MissionStatementTree_NewComment";
+            this._FM_cms_MissionStatementTree_NewComment.ShortcutKeyDisplayString = "Ctrl+Shift+Ins";
+            this._FM_cms_MissionStatementTree_NewComment.Size = new System.Drawing.Size(341, 26);
+            this._FM_cms_MissionStatementTree_NewComment.Text = "New Comment";
+            this._FM_cms_MissionStatementTree_NewComment.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_NewComment_Click);
             // 
             // _FM_cms_MissionStatementTree_s_3
             // 
             this._FM_cms_MissionStatementTree_s_3.Name = "_FM_cms_MissionStatementTree_s_3";
-            this._FM_cms_MissionStatementTree_s_3.Size = new System.Drawing.Size(279, 6);
+            this._FM_cms_MissionStatementTree_s_3.Size = new System.Drawing.Size(338, 6);
+            // 
+            // _FM_cms_MissionStatementTree_AddViaSpaceMap
+            // 
+            this._FM_cms_MissionStatementTree_AddViaSpaceMap.Image = global::ArtemisMissionEditor.Properties.Resources.icon_wand;
+            this._FM_cms_MissionStatementTree_AddViaSpaceMap.Name = "_FM_cms_MissionStatementTree_AddViaSpaceMap";
+            this._FM_cms_MissionStatementTree_AddViaSpaceMap.ShortcutKeyDisplayString = "Shift+F2";
+            this._FM_cms_MissionStatementTree_AddViaSpaceMap.Size = new System.Drawing.Size(341, 26);
+            this._FM_cms_MissionStatementTree_AddViaSpaceMap.Text = "Add objects via space map...";
+            this._FM_cms_MissionStatementTree_AddViaSpaceMap.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_AddViaSpaceMap_Click);
+            // 
+            // _FM_cms_MissionStatementTree_EditOnSpaceMap
+            // 
+            this._FM_cms_MissionStatementTree_EditOnSpaceMap.Image = global::ArtemisMissionEditor.Properties.Resources.icon_get_world;
+            this._FM_cms_MissionStatementTree_EditOnSpaceMap.Name = "_FM_cms_MissionStatementTree_EditOnSpaceMap";
+            this._FM_cms_MissionStatementTree_EditOnSpaceMap.ShortcutKeyDisplayString = "F2";
+            this._FM_cms_MissionStatementTree_EditOnSpaceMap.Size = new System.Drawing.Size(341, 26);
+            this._FM_cms_MissionStatementTree_EditOnSpaceMap.Text = "Edit objects on space map...";
+            this._FM_cms_MissionStatementTree_EditOnSpaceMap.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_EditOnSpaceMap_Click);
+            // 
+            // _FM_cms_MissionStatementTree_StatementEditOnSpaceMap
+            // 
+            this._FM_cms_MissionStatementTree_StatementEditOnSpaceMap.Image = global::ArtemisMissionEditor.Properties.Resources.icon_download;
+            this._FM_cms_MissionStatementTree_StatementEditOnSpaceMap.Name = "_FM_cms_MissionStatementTree_StatementEditOnSpaceMap";
+            this._FM_cms_MissionStatementTree_StatementEditOnSpaceMap.ShortcutKeyDisplayString = "Ctrl+F2";
+            this._FM_cms_MissionStatementTree_StatementEditOnSpaceMap.Size = new System.Drawing.Size(341, 26);
+            this._FM_cms_MissionStatementTree_StatementEditOnSpaceMap.Text = "Edit statement on space map...";
+            this._FM_cms_MissionStatementTree_StatementEditOnSpaceMap.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_StatementEditOnSpaceMap_Click);
             // 
             // _FM_cms_MissionStatementTree_s_4
             // 
             this._FM_cms_MissionStatementTree_s_4.Name = "_FM_cms_MissionStatementTree_s_4";
-            this._FM_cms_MissionStatementTree_s_4.Size = new System.Drawing.Size(279, 6);
+            this._FM_cms_MissionStatementTree_s_4.Size = new System.Drawing.Size(338, 6);
             // 
             // _FM_cms_MissionStatementTree_XML
             // 
@@ -1099,20 +1425,44 @@
             this._FM_cms_MissionStatementTree_XML_s_1,
             this._FM_cms_MissionStatementTree_ShowSourceXML});
             this._FM_cms_MissionStatementTree_XML.Name = "_FM_cms_MissionStatementTree_XML";
-            this._FM_cms_MissionStatementTree_XML.Size = new System.Drawing.Size(282, 22);
+            this._FM_cms_MissionStatementTree_XML.Size = new System.Drawing.Size(341, 26);
             this._FM_cms_MissionStatementTree_XML.Text = "XML";
+            // 
+            // _FM_cms_MissionStatementTree_ShowXML
+            // 
+            this._FM_cms_MissionStatementTree_ShowXML.Image = global::ArtemisMissionEditor.Properties.Resources.page_code;
+            this._FM_cms_MissionStatementTree_ShowXML.Name = "_FM_cms_MissionStatementTree_ShowXML";
+            this._FM_cms_MissionStatementTree_ShowXML.Size = new System.Drawing.Size(307, 26);
+            this._FM_cms_MissionStatementTree_ShowXML.Text = "Show statement XML";
+            this._FM_cms_MissionStatementTree_ShowXML.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_ShowXML_Click);
             // 
             // _FM_cms_MissionStatementTree_CopyXML
             // 
             this._FM_cms_MissionStatementTree_CopyXML.Name = "_FM_cms_MissionStatementTree_CopyXML";
-            this._FM_cms_MissionStatementTree_CopyXML.Size = new System.Drawing.Size(252, 22);
+            this._FM_cms_MissionStatementTree_CopyXML.Size = new System.Drawing.Size(307, 26);
             this._FM_cms_MissionStatementTree_CopyXML.Text = "Copy statement XML to clipboard";
             this._FM_cms_MissionStatementTree_CopyXML.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_CopyXML_Click);
             // 
             // _FM_cms_MissionStatementTree_XML_s_1
             // 
             this._FM_cms_MissionStatementTree_XML_s_1.Name = "_FM_cms_MissionStatementTree_XML_s_1";
-            this._FM_cms_MissionStatementTree_XML_s_1.Size = new System.Drawing.Size(249, 6);
+            this._FM_cms_MissionStatementTree_XML_s_1.Size = new System.Drawing.Size(304, 6);
+            // 
+            // _FM_cms_MissionStatementTree_ShowSourceXML
+            // 
+            this._FM_cms_MissionStatementTree_ShowSourceXML.Image = global::ArtemisMissionEditor.Properties.Resources.page_code;
+            this._FM_cms_MissionStatementTree_ShowSourceXML.Name = "_FM_cms_MissionStatementTree_ShowSourceXML";
+            this._FM_cms_MissionStatementTree_ShowSourceXML.Size = new System.Drawing.Size(307, 26);
+            this._FM_cms_MissionStatementTree_ShowSourceXML.Text = "Show source XML";
+            this._FM_cms_MissionStatementTree_ShowSourceXML.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_ShowSourceXML_Click);
+            // 
+            // _FM_cms_MissionStatementTree_Help
+            // 
+            this._FM_cms_MissionStatementTree_Help.Name = "_FM_cms_MissionStatementTree_Help";
+            this._FM_cms_MissionStatementTree_Help.ShortcutKeyDisplayString = "F1";
+            this._FM_cms_MissionStatementTree_Help.Size = new System.Drawing.Size(341, 26);
+            this._FM_cms_MissionStatementTree_Help.Text = "Help";
+            this._FM_cms_MissionStatementTree_Help.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_Help_Click);
             // 
             // _FM_il_Right
             // 
@@ -1155,26 +1505,28 @@
             this._FM_flp_Bottom_Right.Location = new System.Drawing.Point(0, 0);
             this._FM_flp_Bottom_Right.Margin = new System.Windows.Forms.Padding(0);
             this._FM_flp_Bottom_Right.Name = "_FM_flp_Bottom_Right";
-            this._FM_flp_Bottom_Right.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
-            this._FM_flp_Bottom_Right.Size = new System.Drawing.Size(786, 181);
+            this._FM_flp_Bottom_Right.Padding = new System.Windows.Forms.Padding(7, 0, 0, 0);
+            this._FM_flp_Bottom_Right.Size = new System.Drawing.Size(1135, 184);
             this._FM_flp_Bottom_Right.TabIndex = 0;
             // 
             // _FM_cms_VesselData
             // 
+            this._FM_cms_VesselData.ImageScalingSize = new System.Drawing.Size(20, 20);
             this._FM_cms_VesselData.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._FM_cms_VesselData_Load});
             this._FM_cms_VesselData.Name = "_FM_cms_VesselData";
-            this._FM_cms_VesselData.Size = new System.Drawing.Size(184, 26);
+            this._FM_cms_VesselData.Size = new System.Drawing.Size(218, 28);
             // 
             // _FM_cms_VesselData_Load
             // 
             this._FM_cms_VesselData_Load.Name = "_FM_cms_VesselData_Load";
-            this._FM_cms_VesselData_Load.Size = new System.Drawing.Size(183, 22);
+            this._FM_cms_VesselData_Load.Size = new System.Drawing.Size(217, 24);
             this._FM_cms_VesselData_Load.Text = "Load  vesselData.xml";
             this._FM_cms_VesselData_Load.Click += new System.EventHandler(this._E_FM_cms_VesselData_Load_Click);
             // 
             // _FM_cms_Label
             // 
+            this._FM_cms_Label.ImageScalingSize = new System.Drawing.Size(20, 20);
             this._FM_cms_Label.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._FM_cms_Label_Edit,
             this._FM_cms_Label_EditInDialog,
@@ -1183,16 +1535,52 @@
             this._FM_cms_Label_EditOnSpaceMap,
             this._FM_cms_Label_EditPlusMinus});
             this._FM_cms_Label.Name = "_FM_cms_Label";
-            this._FM_cms_Label.Size = new System.Drawing.Size(231, 136);
+            this._FM_cms_Label.Size = new System.Drawing.Size(279, 160);
             this._FM_cms_Label.Opening += new System.ComponentModel.CancelEventHandler(this._E_FM_cms_Label_Opening);
             // 
             // _FM_cms_Label_Edit
             // 
             this._FM_cms_Label_Edit.Name = "_FM_cms_Label_Edit";
             this._FM_cms_Label_Edit.ShortcutKeyDisplayString = "Enter / F2";
-            this._FM_cms_Label_Edit.Size = new System.Drawing.Size(230, 22);
+            this._FM_cms_Label_Edit.Size = new System.Drawing.Size(278, 26);
             this._FM_cms_Label_Edit.Tag = "edit";
             this._FM_cms_Label_Edit.Text = "Edit...";
+            // 
+            // _FM_cms_Label_EditInDialog
+            // 
+            this._FM_cms_Label_EditInDialog.Image = global::ArtemisMissionEditor.Properties.Resources.box;
+            this._FM_cms_Label_EditInDialog.Name = "_FM_cms_Label_EditInDialog";
+            this._FM_cms_Label_EditInDialog.ShortcutKeyDisplayString = "Ctrl+Enter";
+            this._FM_cms_Label_EditInDialog.Size = new System.Drawing.Size(278, 26);
+            this._FM_cms_Label_EditInDialog.Tag = "edit_dialog";
+            this._FM_cms_Label_EditInDialog.Text = "Edit:  In dialog";
+            // 
+            // _FM_cms_Label_EditPreviousValue
+            // 
+            this._FM_cms_Label_EditPreviousValue.Image = global::ArtemisMissionEditor.Properties.Resources.page_left;
+            this._FM_cms_Label_EditPreviousValue.Name = "_FM_cms_Label_EditPreviousValue";
+            this._FM_cms_Label_EditPreviousValue.ShortcutKeyDisplayString = "Shift+Space";
+            this._FM_cms_Label_EditPreviousValue.Size = new System.Drawing.Size(278, 26);
+            this._FM_cms_Label_EditPreviousValue.Tag = "edit_previous";
+            this._FM_cms_Label_EditPreviousValue.Text = "Edit:  Prev. value";
+            // 
+            // _FM_cms_Label_EditNextValue
+            // 
+            this._FM_cms_Label_EditNextValue.Image = global::ArtemisMissionEditor.Properties.Resources.page_right;
+            this._FM_cms_Label_EditNextValue.Name = "_FM_cms_Label_EditNextValue";
+            this._FM_cms_Label_EditNextValue.ShortcutKeyDisplayString = "Space";
+            this._FM_cms_Label_EditNextValue.Size = new System.Drawing.Size(278, 26);
+            this._FM_cms_Label_EditNextValue.Tag = "edit_next";
+            this._FM_cms_Label_EditNextValue.Text = "Edit:  Next value";
+            // 
+            // _FM_cms_Label_EditOnSpaceMap
+            // 
+            this._FM_cms_Label_EditOnSpaceMap.Image = global::ArtemisMissionEditor.Properties.Resources.icon_download;
+            this._FM_cms_Label_EditOnSpaceMap.Name = "_FM_cms_Label_EditOnSpaceMap";
+            this._FM_cms_Label_EditOnSpaceMap.ShortcutKeyDisplayString = "Ctrl+F2";
+            this._FM_cms_Label_EditOnSpaceMap.Size = new System.Drawing.Size(278, 26);
+            this._FM_cms_Label_EditOnSpaceMap.Tag = "edit_space";
+            this._FM_cms_Label_EditOnSpaceMap.Text = "Edit:  On space map";
             // 
             // _FM_cms_Label_EditPlusMinus
             // 
@@ -1209,14 +1597,14 @@
             this.toolStrip_FM_cms_Label_EditPlusMinus_P100,
             this.toolStrip_FM_cms_Label_EditPlusMinus_P1000});
             this._FM_cms_Label_EditPlusMinus.Name = "_FM_cms_Label_EditPlusMinus";
-            this._FM_cms_Label_EditPlusMinus.Size = new System.Drawing.Size(230, 22);
+            this._FM_cms_Label_EditPlusMinus.Size = new System.Drawing.Size(278, 26);
             this._FM_cms_Label_EditPlusMinus.Text = "Edit: Plus/Minus";
             // 
             // _FM_cms_Label_EditPlusMinus_M1000
             // 
             this._FM_cms_Label_EditPlusMinus_M1000.Name = "_FM_cms_Label_EditPlusMinus_M1000";
             this._FM_cms_Label_EditPlusMinus_M1000.ShortcutKeyDisplayString = "Shift+Ctrl+Num-";
-            this._FM_cms_Label_EditPlusMinus_M1000.Size = new System.Drawing.Size(210, 22);
+            this._FM_cms_Label_EditPlusMinus_M1000.Size = new System.Drawing.Size(254, 26);
             this._FM_cms_Label_EditPlusMinus_M1000.Tag = "edit_-1000";
             this._FM_cms_Label_EditPlusMinus_M1000.Text = "- 1000";
             // 
@@ -1224,7 +1612,7 @@
             // 
             this._FM_cms_Label_EditPlusMinus_M100.Name = "_FM_cms_Label_EditPlusMinus_M100";
             this._FM_cms_Label_EditPlusMinus_M100.ShortcutKeyDisplayString = "Ctrl+Num-";
-            this._FM_cms_Label_EditPlusMinus_M100.Size = new System.Drawing.Size(210, 22);
+            this._FM_cms_Label_EditPlusMinus_M100.Size = new System.Drawing.Size(254, 26);
             this._FM_cms_Label_EditPlusMinus_M100.Tag = "edit_-100";
             this._FM_cms_Label_EditPlusMinus_M100.Text = "- 100";
             // 
@@ -1232,7 +1620,7 @@
             // 
             this._FM_cms_Label_EditPlusMinus_M10.Name = "_FM_cms_Label_EditPlusMinus_M10";
             this._FM_cms_Label_EditPlusMinus_M10.ShortcutKeyDisplayString = "Shift+Num-";
-            this._FM_cms_Label_EditPlusMinus_M10.Size = new System.Drawing.Size(210, 22);
+            this._FM_cms_Label_EditPlusMinus_M10.Size = new System.Drawing.Size(254, 26);
             this._FM_cms_Label_EditPlusMinus_M10.Tag = "edit_-10";
             this._FM_cms_Label_EditPlusMinus_M10.Text = "- 10";
             // 
@@ -1240,7 +1628,7 @@
             // 
             this._FM_cms_Label_EditPlusMinus_M1.Name = "_FM_cms_Label_EditPlusMinus_M1";
             this._FM_cms_Label_EditPlusMinus_M1.ShortcutKeyDisplayString = "Num-";
-            this._FM_cms_Label_EditPlusMinus_M1.Size = new System.Drawing.Size(210, 22);
+            this._FM_cms_Label_EditPlusMinus_M1.Size = new System.Drawing.Size(254, 26);
             this._FM_cms_Label_EditPlusMinus_M1.Tag = "edit_-1";
             this._FM_cms_Label_EditPlusMinus_M1.Text = "- 1";
             // 
@@ -1248,20 +1636,20 @@
             // 
             this._FM_cms_Label_EditPlusMinus_M01.Name = "_FM_cms_Label_EditPlusMinus_M01";
             this._FM_cms_Label_EditPlusMinus_M01.ShortcutKeyDisplayString = "Alt+Num-";
-            this._FM_cms_Label_EditPlusMinus_M01.Size = new System.Drawing.Size(210, 22);
+            this._FM_cms_Label_EditPlusMinus_M01.Size = new System.Drawing.Size(254, 26);
             this._FM_cms_Label_EditPlusMinus_M01.Tag = "edit_-01";
             this._FM_cms_Label_EditPlusMinus_M01.Text = "- 0.1";
             // 
             // _FM_cms_Label_EditPlusMinus_s_1
             // 
             this._FM_cms_Label_EditPlusMinus_s_1.Name = "_FM_cms_Label_EditPlusMinus_s_1";
-            this._FM_cms_Label_EditPlusMinus_s_1.Size = new System.Drawing.Size(207, 6);
+            this._FM_cms_Label_EditPlusMinus_s_1.Size = new System.Drawing.Size(251, 6);
             // 
             // toolStrip_FM_cms_Label_EditPlusMinus_P01
             // 
             this.toolStrip_FM_cms_Label_EditPlusMinus_P01.Name = "toolStrip_FM_cms_Label_EditPlusMinus_P01";
             this.toolStrip_FM_cms_Label_EditPlusMinus_P01.ShortcutKeyDisplayString = "Alt+Num+";
-            this.toolStrip_FM_cms_Label_EditPlusMinus_P01.Size = new System.Drawing.Size(210, 22);
+            this.toolStrip_FM_cms_Label_EditPlusMinus_P01.Size = new System.Drawing.Size(254, 26);
             this.toolStrip_FM_cms_Label_EditPlusMinus_P01.Tag = "edit_+01";
             this.toolStrip_FM_cms_Label_EditPlusMinus_P01.Text = "+ 0.1";
             // 
@@ -1269,7 +1657,7 @@
             // 
             this.toolStrip_FM_cms_Label_EditPlusMinus_P1.Name = "toolStrip_FM_cms_Label_EditPlusMinus_P1";
             this.toolStrip_FM_cms_Label_EditPlusMinus_P1.ShortcutKeyDisplayString = "Num+";
-            this.toolStrip_FM_cms_Label_EditPlusMinus_P1.Size = new System.Drawing.Size(210, 22);
+            this.toolStrip_FM_cms_Label_EditPlusMinus_P1.Size = new System.Drawing.Size(254, 26);
             this.toolStrip_FM_cms_Label_EditPlusMinus_P1.Tag = "edit_+1";
             this.toolStrip_FM_cms_Label_EditPlusMinus_P1.Text = "+ 1";
             // 
@@ -1277,7 +1665,7 @@
             // 
             this.toolStrip_FM_cms_Label_EditPlusMinus_P10.Name = "toolStrip_FM_cms_Label_EditPlusMinus_P10";
             this.toolStrip_FM_cms_Label_EditPlusMinus_P10.ShortcutKeyDisplayString = "Shift+Num+";
-            this.toolStrip_FM_cms_Label_EditPlusMinus_P10.Size = new System.Drawing.Size(210, 22);
+            this.toolStrip_FM_cms_Label_EditPlusMinus_P10.Size = new System.Drawing.Size(254, 26);
             this.toolStrip_FM_cms_Label_EditPlusMinus_P10.Tag = "edit_+10";
             this.toolStrip_FM_cms_Label_EditPlusMinus_P10.Text = "+ 10";
             // 
@@ -1285,7 +1673,7 @@
             // 
             this.toolStrip_FM_cms_Label_EditPlusMinus_P100.Name = "toolStrip_FM_cms_Label_EditPlusMinus_P100";
             this.toolStrip_FM_cms_Label_EditPlusMinus_P100.ShortcutKeyDisplayString = "Ctrl+Num+";
-            this.toolStrip_FM_cms_Label_EditPlusMinus_P100.Size = new System.Drawing.Size(210, 22);
+            this.toolStrip_FM_cms_Label_EditPlusMinus_P100.Size = new System.Drawing.Size(254, 26);
             this.toolStrip_FM_cms_Label_EditPlusMinus_P100.Tag = "edit_+100";
             this.toolStrip_FM_cms_Label_EditPlusMinus_P100.Text = "+ 100";
             // 
@@ -1293,7 +1681,7 @@
             // 
             this.toolStrip_FM_cms_Label_EditPlusMinus_P1000.Name = "toolStrip_FM_cms_Label_EditPlusMinus_P1000";
             this.toolStrip_FM_cms_Label_EditPlusMinus_P1000.ShortcutKeyDisplayString = "Shift+Ctrl+Num+";
-            this.toolStrip_FM_cms_Label_EditPlusMinus_P1000.Size = new System.Drawing.Size(210, 22);
+            this.toolStrip_FM_cms_Label_EditPlusMinus_P1000.Size = new System.Drawing.Size(254, 26);
             this.toolStrip_FM_cms_Label_EditPlusMinus_P1000.Tag = "edit_+1000";
             this.toolStrip_FM_cms_Label_EditPlusMinus_P1000.Text = "+ 1000";
             // 
@@ -1302,337 +1690,17 @@
             this._FM_t_AutoUpdateTimer.Interval = 1000;
             this._FM_t_AutoUpdateTimer.Tick += new System.EventHandler(this._E_FM_t_AutoUpdateTimer_Tick);
             // 
-            // _FM_cms_MissionNodeTree_New_Event
-            // 
-            this._FM_cms_MissionNodeTree_New_Event.Image = global::ArtemisMissionEditor.Properties.Resources.page;
-            this._FM_cms_MissionNodeTree_New_Event.Name = "_FM_cms_MissionNodeTree_New_Event";
-            this._FM_cms_MissionNodeTree_New_Event.ShortcutKeyDisplayString = "Ins";
-            this._FM_cms_MissionNodeTree_New_Event.Size = new System.Drawing.Size(236, 22);
-            this._FM_cms_MissionNodeTree_New_Event.Text = "New Event";
-            this._FM_cms_MissionNodeTree_New_Event.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_New_Event_Click);
-            // 
-            // _FM_cms_MissionNodeTree_New_Folder
-            // 
-            this._FM_cms_MissionNodeTree_New_Folder.Image = global::ArtemisMissionEditor.Properties.Resources.folder;
-            this._FM_cms_MissionNodeTree_New_Folder.Name = "_FM_cms_MissionNodeTree_New_Folder";
-            this._FM_cms_MissionNodeTree_New_Folder.ShortcutKeyDisplayString = "Alt+Ins";
-            this._FM_cms_MissionNodeTree_New_Folder.Size = new System.Drawing.Size(236, 22);
-            this._FM_cms_MissionNodeTree_New_Folder.Text = "New Folder";
-            this._FM_cms_MissionNodeTree_New_Folder.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_New_Folder_Click);
-            // 
-            // _FM_cms_MissionNodeTree_New_Comment
-            // 
-            this._FM_cms_MissionNodeTree_New_Comment.Image = global::ArtemisMissionEditor.Properties.Resources.commentary2;
-            this._FM_cms_MissionNodeTree_New_Comment.Name = "_FM_cms_MissionNodeTree_New_Comment";
-            this._FM_cms_MissionNodeTree_New_Comment.ShortcutKeyDisplayString = "Ctrl+Shift+Ins";
-            this._FM_cms_MissionNodeTree_New_Comment.Size = new System.Drawing.Size(236, 22);
-            this._FM_cms_MissionNodeTree_New_Comment.Text = "New Comment";
-            this._FM_cms_MissionNodeTree_New_Comment.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this._FM_cms_MissionNodeTree_New_Comment.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_New_Comment_Click);
-            // 
-            // _FM_cms_MissionNodeTree_SetAsBackground
-            // 
-            this._FM_cms_MissionNodeTree_SetAsBackground.Image = global::ArtemisMissionEditor.Properties.Resources.icon_get_world;
-            this._FM_cms_MissionNodeTree_SetAsBackground.Name = "_FM_cms_MissionNodeTree_SetAsBackground";
-            this._FM_cms_MissionNodeTree_SetAsBackground.Size = new System.Drawing.Size(236, 22);
-            this._FM_cms_MissionNodeTree_SetAsBackground.Text = "Set as background";
-            this._FM_cms_MissionNodeTree_SetAsBackground.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_SetAsBackground_Click);
-            // 
-            // _FM_cms_MissionNodeTree_ConvertTo_Comment
-            // 
-            this._FM_cms_MissionNodeTree_ConvertTo_Comment.Image = ((System.Drawing.Image)(resources.GetObject("_FM_cms_MissionNodeTree_ConvertTo_Comment.Image")));
-            this._FM_cms_MissionNodeTree_ConvertTo_Comment.Name = "_FM_cms_MissionNodeTree_ConvertTo_Comment";
-            this._FM_cms_MissionNodeTree_ConvertTo_Comment.Size = new System.Drawing.Size(128, 22);
-            this._FM_cms_MissionNodeTree_ConvertTo_Comment.Text = "Comment";
-            this._FM_cms_MissionNodeTree_ConvertTo_Comment.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_ConvertTo_Comment_Click);
-            // 
-            // _FM_cms_MissionNodeTree_ConvertTo_Folder
-            // 
-            this._FM_cms_MissionNodeTree_ConvertTo_Folder.Image = global::ArtemisMissionEditor.Properties.Resources.folder;
-            this._FM_cms_MissionNodeTree_ConvertTo_Folder.Name = "_FM_cms_MissionNodeTree_ConvertTo_Folder";
-            this._FM_cms_MissionNodeTree_ConvertTo_Folder.Size = new System.Drawing.Size(128, 22);
-            this._FM_cms_MissionNodeTree_ConvertTo_Folder.Text = "Folder";
-            this._FM_cms_MissionNodeTree_ConvertTo_Folder.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_ConvertTo_Folder_Click);
-            // 
-            // _FM_cms_MissionNodeTree_ConvertTo_Event
-            // 
-            this._FM_cms_MissionNodeTree_ConvertTo_Event.Image = global::ArtemisMissionEditor.Properties.Resources.page;
-            this._FM_cms_MissionNodeTree_ConvertTo_Event.Name = "_FM_cms_MissionNodeTree_ConvertTo_Event";
-            this._FM_cms_MissionNodeTree_ConvertTo_Event.Size = new System.Drawing.Size(128, 22);
-            this._FM_cms_MissionNodeTree_ConvertTo_Event.Text = "Event";
-            this._FM_cms_MissionNodeTree_ConvertTo_Event.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_ConvertTo_Event_Click);
-            // 
-            // _FM_cms_MissionNodeTree_ShowXML
-            // 
-            this._FM_cms_MissionNodeTree_ShowXML.Image = global::ArtemisMissionEditor.Properties.Resources.page_code;
-            this._FM_cms_MissionNodeTree_ShowXML.Name = "_FM_cms_MissionNodeTree_ShowXML";
-            this._FM_cms_MissionNodeTree_ShowXML.Size = new System.Drawing.Size(226, 22);
-            this._FM_cms_MissionNodeTree_ShowXML.Text = "Show node XML";
-            this._FM_cms_MissionNodeTree_ShowXML.Click += new System.EventHandler(this._E_FM_cms_MissionNodeTree_ShowXML_Click);
-            // 
-            // _FM_cms_MissionStatementTree_NewCondition
-            // 
-            this._FM_cms_MissionStatementTree_NewCondition.Image = global::ArtemisMissionEditor.Properties.Resources.Flag_blue_icon;
-            this._FM_cms_MissionStatementTree_NewCondition.Name = "_FM_cms_MissionStatementTree_NewCondition";
-            this._FM_cms_MissionStatementTree_NewCondition.ShortcutKeyDisplayString = "Alt+Ins";
-            this._FM_cms_MissionStatementTree_NewCondition.Size = new System.Drawing.Size(282, 22);
-            this._FM_cms_MissionStatementTree_NewCondition.Text = "New Condition";
-            this._FM_cms_MissionStatementTree_NewCondition.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_NewCondition_Click);
-            // 
-            // _FM_cms_MissionStatementTree_NewAction
-            // 
-            this._FM_cms_MissionStatementTree_NewAction.Image = global::ArtemisMissionEditor.Properties.Resources.sys_command_icon;
-            this._FM_cms_MissionStatementTree_NewAction.Name = "_FM_cms_MissionStatementTree_NewAction";
-            this._FM_cms_MissionStatementTree_NewAction.ShortcutKeyDisplayString = "Ins";
-            this._FM_cms_MissionStatementTree_NewAction.Size = new System.Drawing.Size(282, 22);
-            this._FM_cms_MissionStatementTree_NewAction.Text = "New Action";
-            this._FM_cms_MissionStatementTree_NewAction.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_NewAction_Click);
-            // 
-            // _FM_cms_MissionStatementTree_NewComment
-            // 
-            this._FM_cms_MissionStatementTree_NewComment.Image = global::ArtemisMissionEditor.Properties.Resources.commentary2;
-            this._FM_cms_MissionStatementTree_NewComment.Name = "_FM_cms_MissionStatementTree_NewComment";
-            this._FM_cms_MissionStatementTree_NewComment.ShortcutKeyDisplayString = "Ctrl+Shift+Ins";
-            this._FM_cms_MissionStatementTree_NewComment.Size = new System.Drawing.Size(282, 22);
-            this._FM_cms_MissionStatementTree_NewComment.Text = "New Comment";
-            this._FM_cms_MissionStatementTree_NewComment.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_NewComment_Click);
-            // 
-            // _FM_cms_MissionStatementTree_AddViaSpaceMap
-            // 
-            this._FM_cms_MissionStatementTree_AddViaSpaceMap.Image = global::ArtemisMissionEditor.Properties.Resources.icon_wand;
-            this._FM_cms_MissionStatementTree_AddViaSpaceMap.Name = "_FM_cms_MissionStatementTree_AddViaSpaceMap";
-            this._FM_cms_MissionStatementTree_AddViaSpaceMap.ShortcutKeyDisplayString = "Shift+F2";
-            this._FM_cms_MissionStatementTree_AddViaSpaceMap.Size = new System.Drawing.Size(282, 22);
-            this._FM_cms_MissionStatementTree_AddViaSpaceMap.Text = "Add objects via space map...";
-            this._FM_cms_MissionStatementTree_AddViaSpaceMap.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_AddViaSpaceMap_Click);
-            // 
-            // _FM_cms_MissionStatementTree_EditOnSpaceMap
-            // 
-            this._FM_cms_MissionStatementTree_EditOnSpaceMap.Image = global::ArtemisMissionEditor.Properties.Resources.icon_get_world;
-            this._FM_cms_MissionStatementTree_EditOnSpaceMap.Name = "_FM_cms_MissionStatementTree_EditOnSpaceMap";
-            this._FM_cms_MissionStatementTree_EditOnSpaceMap.ShortcutKeyDisplayString = "F2";
-            this._FM_cms_MissionStatementTree_EditOnSpaceMap.Size = new System.Drawing.Size(282, 22);
-            this._FM_cms_MissionStatementTree_EditOnSpaceMap.Text = "Edit objects on space map...";
-            this._FM_cms_MissionStatementTree_EditOnSpaceMap.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_EditOnSpaceMap_Click);
-            // 
-            // _FM_cms_MissionStatementTree_StatementEditOnSpaceMap
-            // 
-            this._FM_cms_MissionStatementTree_StatementEditOnSpaceMap.Image = global::ArtemisMissionEditor.Properties.Resources.icon_download;
-            this._FM_cms_MissionStatementTree_StatementEditOnSpaceMap.Name = "_FM_cms_MissionStatementTree_StatementEditOnSpaceMap";
-            this._FM_cms_MissionStatementTree_StatementEditOnSpaceMap.ShortcutKeyDisplayString = "Ctrl+F2";
-            this._FM_cms_MissionStatementTree_StatementEditOnSpaceMap.Size = new System.Drawing.Size(282, 22);
-            this._FM_cms_MissionStatementTree_StatementEditOnSpaceMap.Text = "Edit statement on space map...";
-            this._FM_cms_MissionStatementTree_StatementEditOnSpaceMap.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_StatementEditOnSpaceMap_Click);
-            // 
-            // _FM_cms_MissionStatementTree_ShowXML
-            // 
-            this._FM_cms_MissionStatementTree_ShowXML.Image = global::ArtemisMissionEditor.Properties.Resources.page_code;
-            this._FM_cms_MissionStatementTree_ShowXML.Name = "_FM_cms_MissionStatementTree_ShowXML";
-            this._FM_cms_MissionStatementTree_ShowXML.Size = new System.Drawing.Size(252, 22);
-            this._FM_cms_MissionStatementTree_ShowXML.Text = "Show statement XML";
-            this._FM_cms_MissionStatementTree_ShowXML.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_ShowXML_Click);
-            // 
-            // _FM_cms_MissionStatementTree_ShowSourceXML
-            // 
-            this._FM_cms_MissionStatementTree_ShowSourceXML.Image = global::ArtemisMissionEditor.Properties.Resources.page_code;
-            this._FM_cms_MissionStatementTree_ShowSourceXML.Name = "_FM_cms_MissionStatementTree_ShowSourceXML";
-            this._FM_cms_MissionStatementTree_ShowSourceXML.Size = new System.Drawing.Size(252, 22);
-            this._FM_cms_MissionStatementTree_ShowSourceXML.Text = "Show source XML";
-            this._FM_cms_MissionStatementTree_ShowSourceXML.Click += new System.EventHandler(this._E_FM_cms_MissionStatementTree_ShowSourceXML_Click);
-            // 
-            // _FM_ms_Main_Edit_Undo
-            // 
-            this._FM_ms_Main_Edit_Undo.Image = global::ArtemisMissionEditor.Properties.Resources.action_back;
-            this._FM_ms_Main_Edit_Undo.Name = "_FM_ms_Main_Edit_Undo";
-            this._FM_ms_Main_Edit_Undo.ShortcutKeyDisplayString = "Ctrl+Z";
-            this._FM_ms_Main_Edit_Undo.Size = new System.Drawing.Size(177, 22);
-            this._FM_ms_Main_Edit_Undo.Text = "Undo";
-            this._FM_ms_Main_Edit_Undo.Click += new System.EventHandler(this._E_FM_ms_Main_Edit_Undo_Click);
-            // 
-            // _FM_ms_Main_Edit_Redo
-            // 
-            this._FM_ms_Main_Edit_Redo.Image = global::ArtemisMissionEditor.Properties.Resources.action_forward;
-            this._FM_ms_Main_Edit_Redo.Name = "_FM_ms_Main_Edit_Redo";
-            this._FM_ms_Main_Edit_Redo.ShortcutKeyDisplayString = "Ctrl+Y";
-            this._FM_ms_Main_Edit_Redo.Size = new System.Drawing.Size(177, 22);
-            this._FM_ms_Main_Edit_Redo.Text = "Redo";
-            this._FM_ms_Main_Edit_Redo.Click += new System.EventHandler(this._E_FM_ms_Main_Edit_Redo_Click);
-            // 
-            // _FM_ms_Main_Edit_Cut
-            // 
-            this._FM_ms_Main_Edit_Cut.Image = global::ArtemisMissionEditor.Properties.Resources.cut;
-            this._FM_ms_Main_Edit_Cut.Name = "_FM_ms_Main_Edit_Cut";
-            this._FM_ms_Main_Edit_Cut.ShortcutKeyDisplayString = "Ctrl+X";
-            this._FM_ms_Main_Edit_Cut.Size = new System.Drawing.Size(177, 22);
-            this._FM_ms_Main_Edit_Cut.Text = "Cut";
-            this._FM_ms_Main_Edit_Cut.Click += new System.EventHandler(this._E_FM_ms_Main_Edit_Cut_Click);
-            // 
-            // _FM_ms_Main_Edit_Copy
-            // 
-            this._FM_ms_Main_Edit_Copy.Image = global::ArtemisMissionEditor.Properties.Resources.copy;
-            this._FM_ms_Main_Edit_Copy.Name = "_FM_ms_Main_Edit_Copy";
-            this._FM_ms_Main_Edit_Copy.ShortcutKeyDisplayString = "Ctrl+C";
-            this._FM_ms_Main_Edit_Copy.Size = new System.Drawing.Size(177, 22);
-            this._FM_ms_Main_Edit_Copy.Text = "Copy";
-            this._FM_ms_Main_Edit_Copy.Click += new System.EventHandler(this._E_FM_ms_Main_Edit_Copy_Click);
-            // 
-            // _FM_ms_Main_Edit_Paste
-            // 
-            this._FM_ms_Main_Edit_Paste.Image = global::ArtemisMissionEditor.Properties.Resources.action_paste;
-            this._FM_ms_Main_Edit_Paste.Name = "_FM_ms_Main_Edit_Paste";
-            this._FM_ms_Main_Edit_Paste.ShortcutKeyDisplayString = "Ctrl+V";
-            this._FM_ms_Main_Edit_Paste.Size = new System.Drawing.Size(177, 22);
-            this._FM_ms_Main_Edit_Paste.Text = "Paste";
-            this._FM_ms_Main_Edit_Paste.Click += new System.EventHandler(this._E_FM_ms_Main_Edit_Paste_Click);
-            // 
-            // _FM_ms_Main_Edit_Delete
-            // 
-            this._FM_ms_Main_Edit_Delete.Image = global::ArtemisMissionEditor.Properties.Resources.page_text_delete;
-            this._FM_ms_Main_Edit_Delete.Name = "_FM_ms_Main_Edit_Delete";
-            this._FM_ms_Main_Edit_Delete.ShortcutKeyDisplayString = "Del";
-            this._FM_ms_Main_Edit_Delete.Size = new System.Drawing.Size(177, 22);
-            this._FM_ms_Main_Edit_Delete.Text = "Delete";
-            this._FM_ms_Main_Edit_Delete.Click += new System.EventHandler(this._E_FM_ms_Main_Edit_Delete_Click);
-            // 
-            // _FM_ms_Main_Edit_Find
-            // 
-            this._FM_ms_Main_Edit_Find.Image = global::ArtemisMissionEditor.Properties.Resources.page_find;
-            this._FM_ms_Main_Edit_Find.Name = "_FM_ms_Main_Edit_Find";
-            this._FM_ms_Main_Edit_Find.ShortcutKeyDisplayString = "Ctrl+F";
-            this._FM_ms_Main_Edit_Find.Size = new System.Drawing.Size(196, 22);
-            this._FM_ms_Main_Edit_Find.Text = "Find...";
-            this._FM_ms_Main_Edit_Find.Click += new System.EventHandler(this._E_FM_ms_Main_Edit_Find_Click);
-            // 
-            // _FM_ms_Main_Edit_Replace
-            // 
-            this._FM_ms_Main_Edit_Replace.Image = global::ArtemisMissionEditor.Properties.Resources.page_edit;
-            this._FM_ms_Main_Edit_Replace.Name = "_FM_ms_Main_Edit_Replace";
-            this._FM_ms_Main_Edit_Replace.ShortcutKeyDisplayString = "Ctrl+H";
-            this._FM_ms_Main_Edit_Replace.Size = new System.Drawing.Size(196, 22);
-            this._FM_ms_Main_Edit_Replace.Text = "Replace...";
-            this._FM_ms_Main_Edit_Replace.Click += new System.EventHandler(this._E_FM_ms_Main_Edit_Replace_Click);
-            // 
-            // _FM_ms_Main_Tools_Convert
-            // 
-            this._FM_ms_Main_Tools_Convert.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this._FM_ms_Main_Tools_Comm_into_Names,
-            this._FM_ms_Main_Tools_Comm_into_Names_Ex});
-            this._FM_ms_Main_Tools_Convert.Image = global::ArtemisMissionEditor.Properties.Resources.page_refresh;
-            this._FM_ms_Main_Tools_Convert.Name = "_FM_ms_Main_Tools_Convert";
-            this._FM_ms_Main_Tools_Convert.Size = new System.Drawing.Size(157, 22);
-            this._FM_ms_Main_Tools_Convert.Text = "Convert";
-            // 
-            // _FM_ms_Main_Tools_Comm_into_Names
-            // 
-            this._FM_ms_Main_Tools_Comm_into_Names.Name = "_FM_ms_Main_Tools_Comm_into_Names";
-            this._FM_ms_Main_Tools_Comm_into_Names.Size = new System.Drawing.Size(326, 22);
-            this._FM_ms_Main_Tools_Comm_into_Names.Text = "Commentaries into names";
-            this._FM_ms_Main_Tools_Comm_into_Names.Click += new System.EventHandler(this._E_FM_ms_Main_Tools_Comm_into_Names_Click);
-            // 
-            // _FM_ms_Main_Tools_Comm_into_Names_Ex
-            // 
-            this._FM_ms_Main_Tools_Comm_into_Names_Ex.Name = "_FM_ms_Main_Tools_Comm_into_Names_Ex";
-            this._FM_ms_Main_Tools_Comm_into_Names_Ex.Size = new System.Drawing.Size(326, 22);
-            this._FM_ms_Main_Tools_Comm_into_Names_Ex.Text = "Commentaries into names (excluding multiline)";
-            this._FM_ms_Main_Tools_Comm_into_Names_Ex.Click += new System.EventHandler(this._E_FM_ms_Main_Tools_Comm_into_Names_Ex_Click);
-            // 
-            // _FM_ms_Main_Tools_Dependencies
-            // 
-            this._FM_ms_Main_Tools_Dependencies.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this._FM_ms_Main_Tools_Dependencies_ShowForCurrent,
-            this._FM_ms_Main_Tools_Dependencies_OpenForm});
-            this._FM_ms_Main_Tools_Dependencies.Image = global::ArtemisMissionEditor.Properties.Resources.page_link;
-            this._FM_ms_Main_Tools_Dependencies.Name = "_FM_ms_Main_Tools_Dependencies";
-            this._FM_ms_Main_Tools_Dependencies.ShortcutKeyDisplayString = "";
-            this._FM_ms_Main_Tools_Dependencies.Size = new System.Drawing.Size(157, 22);
-            this._FM_ms_Main_Tools_Dependencies.Text = "Dependencies";
-            // 
-            // _FM_ms_Main_Tools_Dependencies_ShowForCurrent
-            // 
-            this._FM_ms_Main_Tools_Dependencies_ShowForCurrent.Name = "_FM_ms_Main_Tools_Dependencies_ShowForCurrent";
-            this._FM_ms_Main_Tools_Dependencies_ShowForCurrent.ShortcutKeyDisplayString = "F4";
-            this._FM_ms_Main_Tools_Dependencies_ShowForCurrent.Size = new System.Drawing.Size(287, 22);
-            this._FM_ms_Main_Tools_Dependencies_ShowForCurrent.Text = "Show dependencies for current node";
-            this._FM_ms_Main_Tools_Dependencies_ShowForCurrent.Click += new System.EventHandler(this._E_FM_ms_Main_Tools_Dependencies_ShowForCurrent_Click);
-            // 
-            // _FM_ms_Main_Tools_Dependencies_OpenForm
-            // 
-            this._FM_ms_Main_Tools_Dependencies_OpenForm.Name = "_FM_ms_Main_Tools_Dependencies_OpenForm";
-            this._FM_ms_Main_Tools_Dependencies_OpenForm.ShortcutKeyDisplayString = "Shift+F4";
-            this._FM_ms_Main_Tools_Dependencies_OpenForm.Size = new System.Drawing.Size(287, 22);
-            this._FM_ms_Main_Tools_Dependencies_OpenForm.Text = "Open dependencies form";
-            this._FM_ms_Main_Tools_Dependencies_OpenForm.Click += new System.EventHandler(this._E_FM_ms_Main_Tools_Dependencies_OpenForm_Click);
-            // 
-            // _FM_ms_Main_Tools_HighlightErrors
-            // 
-            this._FM_ms_Main_Tools_HighlightErrors.Image = global::ArtemisMissionEditor.Properties.Resources.page_script;
-            this._FM_ms_Main_Tools_HighlightErrors.Name = "_FM_ms_Main_Tools_HighlightErrors";
-            this._FM_ms_Main_Tools_HighlightErrors.Size = new System.Drawing.Size(157, 22);
-            this._FM_ms_Main_Tools_HighlightErrors.Text = "Highlight errors";
-            this._FM_ms_Main_Tools_HighlightErrors.Click += new System.EventHandler(this._E_FM_ms_Main_Tools_HighlightErrors_Click);
-            // 
-            // _FM_ms_Main_Tools_Settings
-            // 
-            this._FM_ms_Main_Tools_Settings.Image = global::ArtemisMissionEditor.Properties.Resources.icon_settings;
-            this._FM_ms_Main_Tools_Settings.Name = "_FM_ms_Main_Tools_Settings";
-            this._FM_ms_Main_Tools_Settings.Size = new System.Drawing.Size(157, 22);
-            this._FM_ms_Main_Tools_Settings.Text = "Settings";
-            this._FM_ms_Main_Tools_Settings.Click += new System.EventHandler(this._E_FM_ms_Main_Tools_Settings_Click);
-            // 
-            // helpFormToolStripMenuItem
-            // 
-            this.helpFormToolStripMenuItem.Image = global::ArtemisMissionEditor.Properties.Resources.icon_info;
-            this.helpFormToolStripMenuItem.Name = "helpFormToolStripMenuItem";
-            this.helpFormToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.helpFormToolStripMenuItem.Text = "Show Help";
-            this.helpFormToolStripMenuItem.Click += new System.EventHandler(this.helpFormToolStripMenuItem_Click);
-            // 
-            // _FM_cms_Label_EditInDialog
-            // 
-            this._FM_cms_Label_EditInDialog.Image = global::ArtemisMissionEditor.Properties.Resources.box;
-            this._FM_cms_Label_EditInDialog.Name = "_FM_cms_Label_EditInDialog";
-            this._FM_cms_Label_EditInDialog.ShortcutKeyDisplayString = "Ctrl+Enter";
-            this._FM_cms_Label_EditInDialog.Size = new System.Drawing.Size(230, 22);
-            this._FM_cms_Label_EditInDialog.Tag = "edit_dialog";
-            this._FM_cms_Label_EditInDialog.Text = "Edit:  In dialog";
-            // 
-            // _FM_cms_Label_EditPreviousValue
-            // 
-            this._FM_cms_Label_EditPreviousValue.Image = global::ArtemisMissionEditor.Properties.Resources.page_left;
-            this._FM_cms_Label_EditPreviousValue.Name = "_FM_cms_Label_EditPreviousValue";
-            this._FM_cms_Label_EditPreviousValue.ShortcutKeyDisplayString = "Shift+Space";
-            this._FM_cms_Label_EditPreviousValue.Size = new System.Drawing.Size(230, 22);
-            this._FM_cms_Label_EditPreviousValue.Tag = "edit_previous";
-            this._FM_cms_Label_EditPreviousValue.Text = "Edit:  Prev. value";
-            // 
-            // _FM_cms_Label_EditNextValue
-            // 
-            this._FM_cms_Label_EditNextValue.Image = global::ArtemisMissionEditor.Properties.Resources.page_right;
-            this._FM_cms_Label_EditNextValue.Name = "_FM_cms_Label_EditNextValue";
-            this._FM_cms_Label_EditNextValue.ShortcutKeyDisplayString = "Space";
-            this._FM_cms_Label_EditNextValue.Size = new System.Drawing.Size(230, 22);
-            this._FM_cms_Label_EditNextValue.Tag = "edit_next";
-            this._FM_cms_Label_EditNextValue.Text = "Edit:  Next value";
-            // 
-            // _FM_cms_Label_EditOnSpaceMap
-            // 
-            this._FM_cms_Label_EditOnSpaceMap.Image = global::ArtemisMissionEditor.Properties.Resources.icon_download;
-            this._FM_cms_Label_EditOnSpaceMap.Name = "_FM_cms_Label_EditOnSpaceMap";
-            this._FM_cms_Label_EditOnSpaceMap.ShortcutKeyDisplayString = "Ctrl+F2";
-            this._FM_cms_Label_EditOnSpaceMap.Size = new System.Drawing.Size(230, 22);
-            this._FM_cms_Label_EditOnSpaceMap.Tag = "edit_space";
-            this._FM_cms_Label_EditOnSpaceMap.Text = "Edit:  On space map";
-            // 
             // FormMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1050, 638);
+            this.ClientSize = new System.Drawing.Size(1400, 785);
             this.Controls.Add(this._FM_tsc_Main);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MainMenuStrip = this._FM_ms_Main;
-            this.MinimumSize = new System.Drawing.Size(100, 100);
+            this.Margin = new System.Windows.Forms.Padding(4);
+            this.MinimumSize = new System.Drawing.Size(127, 112);
             this.Name = "FormMain";
             this.Text = " ";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this._E_FM_FormClosing);
@@ -1806,8 +1874,13 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem showHelpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem findPotentialProblemsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem _FM_cms_MissionStatementTree_Help;
         private DoubleBufferedPanel doubleBufferedPanel1;
         private System.Windows.Forms.Label _FM_lbl_Main;
-
+        private System.Windows.Forms.ToolStripMenuItem recentFilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem dummyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem autosavedVersionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dummyToolStripMenuItem1;
     }
 }

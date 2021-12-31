@@ -33,10 +33,10 @@ namespace ArtemisMissionEditor.Forms
                 form.cbS.Checked = value.Contains('s');
                 form.cbC.Checked = value.Contains('c');
                 form.cbO.Checked = value.Contains('o');
+                form.cbF.Checked = value.Contains('f');
 
                 if (form.ShowDialog() == DialogResult.Cancel)
                     return new KeyValuePair<bool, string>(false, null);
-
                 
                 result += form.cbM.Checked ? "M" : "";
                 result += form.cbH.Checked ? "H" : "";
@@ -45,6 +45,7 @@ namespace ArtemisMissionEditor.Forms
                 result += form.cbS.Checked ? "S" : "";
                 result += form.cbC.Checked ? "C" : "";
                 result += form.cbO.Checked ? "O" : "";
+                result += form.cbF.Checked ? "F" : "";
             }
 			return new KeyValuePair<bool, string>(true, result);
 		}
@@ -69,6 +70,7 @@ namespace ArtemisMissionEditor.Forms
             if (e.KeyData == Keys.S || e.KeyData == Keys.D5) cbS.Checked = !cbS.Checked;
             if (e.KeyData == Keys.C || e.KeyData == Keys.D6) cbC.Checked = !cbC.Checked;
             if (e.KeyData == Keys.O || e.KeyData == Keys.D7) cbO.Checked = !cbO.Checked;
+            if (e.KeyData == Keys.F || e.KeyData == Keys.D8) cbF.Checked = !cbF.Checked;
 
             if (e.KeyData == (Keys.M | Keys.Shift) || e.KeyData == (Keys.D1 | Keys.Shift)) cbM.Checked = true;
             if (e.KeyData == (Keys.H | Keys.Shift) || e.KeyData == (Keys.D2 | Keys.Shift)) cbH.Checked = true;
@@ -77,6 +79,7 @@ namespace ArtemisMissionEditor.Forms
             if (e.KeyData == (Keys.S | Keys.Shift) || e.KeyData == (Keys.D5 | Keys.Shift)) cbS.Checked = true;
             if (e.KeyData == (Keys.C | Keys.Shift) || e.KeyData == (Keys.D6 | Keys.Shift)) cbC.Checked = true;
             if (e.KeyData == (Keys.O | Keys.Shift) || e.KeyData == (Keys.D7 | Keys.Shift)) cbO.Checked = true;
+            if (e.KeyData == (Keys.F | Keys.Shift) || e.KeyData == (Keys.D8 | Keys.Shift)) cbF.Checked = true;
 
             if (e.KeyData == (Keys.M | Keys.Alt) || e.KeyData == (Keys.D1 | Keys.Alt)) cbM.Checked = false;
             if (e.KeyData == (Keys.H | Keys.Alt) || e.KeyData == (Keys.D2 | Keys.Alt)) cbH.Checked = false;
@@ -85,6 +88,7 @@ namespace ArtemisMissionEditor.Forms
             if (e.KeyData == (Keys.S | Keys.Alt) || e.KeyData == (Keys.D5 | Keys.Alt)) cbS.Checked = false;
             if (e.KeyData == (Keys.C | Keys.Alt) || e.KeyData == (Keys.D6 | Keys.Alt)) cbC.Checked = false;
             if (e.KeyData == (Keys.O | Keys.Alt) || e.KeyData == (Keys.D7 | Keys.Alt)) cbO.Checked = false;
+            if (e.KeyData == (Keys.F | Keys.Alt) || e.KeyData == (Keys.D8 | Keys.Alt)) cbF.Checked = false;
 
             if (e.KeyData == (Keys.A | Keys.Shift) || e.KeyData == (Keys.Oemtilde | Keys.Shift))
             {
@@ -95,6 +99,7 @@ namespace ArtemisMissionEditor.Forms
                 cbS.Checked = true;
                 cbC.Checked = true;
                 cbO.Checked = true;
+                cbF.Checked = true;
             }
 
             if (e.KeyData == (Keys.A | Keys.Alt) || e.KeyData == (Keys.Oemtilde | Keys.Alt))
@@ -106,6 +111,7 @@ namespace ArtemisMissionEditor.Forms
                 cbS.Checked = false;
                 cbC.Checked = false;
                 cbO.Checked = false;
+                cbF.Checked = false;
             }
 
             if (e.KeyData == (Keys.A | Keys.Control) || e.KeyData == Keys.A
@@ -120,6 +126,7 @@ namespace ArtemisMissionEditor.Forms
                     cbS.Checked = false;
                     cbC.Checked = false;
                     cbO.Checked = false;
+                    cbF.Checked = false;
                 }
                 else
                 {
@@ -130,6 +137,7 @@ namespace ArtemisMissionEditor.Forms
                     cbS.Checked = true;
                     cbC.Checked = true;
                     cbO.Checked = true;
+                    cbF.Checked = true;
                 }
             }
         }
@@ -137,7 +145,7 @@ namespace ArtemisMissionEditor.Forms
         private void button1_Click(object sender, EventArgs e)
         {
             MessageBox.Show("You can use hotkeys to edit the list of consoles:\r\n"+
-                "Use MHWESCO or 1234567 keys on keyboard to toggle the state.\r\n"+
+                "Use MHWESCOF or 1234567 keys on keyboard to toggle the state.\r\n"+
                 " + Shift to set the state to ON.\r\n"+
                 " + Alt to set the state to OFF.\r\n"+
                 "Use A (optionally with Ctrl) to toggle the state of all consoles.\r\n"+
