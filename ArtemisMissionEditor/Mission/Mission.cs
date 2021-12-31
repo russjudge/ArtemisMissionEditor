@@ -1,104 +1,225 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using System.IO;
 using System.Drawing;
-using System.Diagnostics;
 using ArtemisMissionEditor.Expressions;
+using ArtemisMissionEditor.Forms;
 
 namespace ArtemisMissionEditor
 {
-	/// <summary>
-	/// Represents a mission
-	/// </summary>
+    public sealed class NamesListUpdatedEventArgs : EventArgs { }
+
+    /// <summary>
+    /// Represents a mission
+    /// </summary>
     public sealed class Mission
-	{
-		/// <summary>
-		/// Mission that is currently loaded in the editor.
-		/// </summary>
+    {
+        /// <summary>
+        /// Mission that is currently loaded in the editor.
+        /// </summary>
         public static Mission Current { get { return _current; } set { _current = value; } }
         private static Mission _current;
-        
-        /// <summary> Flag to supress selection events while pasting </summary>
+
+        /// <summary> Flag to suppress selection events while pasting </summary>
         private bool SuppressSelectionEvents;
-        
-        /// <summary> Flag to supress selection events while pasting </summary>
+
+        /// <summary> Flag to suppress selection events while pasting </summary>
         private bool SupressSelectionEvents;
-        
-        /// <summary> Flag to supress afterexpand and aftercollapse events while mass-operating</summary>
+
+        /// <summary> Flag to suppress afterexpand and aftercollapse events while mass-operating</summary>
         private bool SupressExpandCollapseEvents;
-        
+
         /// <summary> Semaphore for begin/end update </summary>
         private int UpdateSemaphoreCounter;
 
-        public static event Action NamesListUpdated;
-        private static void OnNamesListUpdated()
+        public static event EventHandler<NamesListUpdatedEventArgs> NamesListUpdated;
+        private static void OnNamesListUpdated(object sender, NamesListUpdatedEventArgs e)
         {
             if (NamesListUpdated != null)
-                NamesListUpdated();
+                NamesListUpdated(sender, e);
         }
 
-		#region Name lists and other tracked mission parameters
+        #region Name lists and other tracked mission parameters
 
         //The list of names of objects present in such statements as creating set_variable create set_timer
-        
+
         /// <summary> Variable names and headers for context menus</summary>
-		public KeyValuePair<List<string>, List<string>> VariableNamesList { get { return new KeyValuePair<List<string>,List<string>>(VariableNames,VariableNameHeaders); } }
-        
+        public KeyValuePair<List<string>, List<string>> VariableNamesList { get { return new KeyValuePair<List<string>,List<string>>(VariableNames,VariableNameHeaders); } }
+
         /// <summary> Timer names and headers for context menus</summary>
         public KeyValuePair<List<string>, List<string>> TimerNamesList { get { return new KeyValuePair<List<string>,List<string>>(TimerNames,TimerNameHeaders); } }
-        
+
+        /// <summary> External program IDs and headers for context menus</summary>
+        public KeyValuePair<List<string>, List<string>> ExternalProgramIDsList { get { return new KeyValuePair<List<string>,List<string>>(ExternalProgramIDs,ExternalProgramIDHeaders); } }
+
+        /// <summary> All external program IDs that are checked</summary>
+        public List<string> ExternalProgramCheckIDs { get; private set; }
+
+        /// <summary> All external program IDs that are spawned</summary>
+        public List<string> ExternalProgramSpawnIDs { get; private set; }
+
+        /// <summary> All nodes where the external program ID is checked</summary>
+        public Dictionary<string, List<MissionNode>> ExternalProgramCheckLocations { get; private set; }
+
+        /// <summary> GM button names and headers for context menus</summary>
+        public KeyValuePair<List<string>, List<string>> GMButtonTextsList { get { return new KeyValuePair<List<string>,List<string>>(GMButtonNames,GMButtonNameHeaders); } }
+
+        /// <summary> Comms button names and headers for context menus</summary>
+        public KeyValuePair<List<string>, List<string>> CommsButtonTextsList { get { return new KeyValuePair<List<string>,List<string>>(CommsButtonNames,CommsButtonNameHeaders); } }
+
         /// <summary> Station names and headers for context menus</summary>
         public KeyValuePair<List<string>, List<string>> StationNamesList { get { return new KeyValuePair<List<string>, List<string>>(NamedObjectNames["station"], new List<string>()); } }
-        
+
+        /// <summary> Monster names and headers for context menus</summary>
+        public KeyValuePair<List<string>, List<string>> MonsterNamesList { get { return new KeyValuePair<List<string>, List<string>>(NamedObjectNames["monster"], new List<string>()); } }
+
+        /// <summary> Generic mesh names and headers for context menus</summary>
+        public KeyValuePair<List<string>, List<string>> GenericMeshNamesList { get { return new KeyValuePair<List<string>, List<string>>(NamedObjectNames["genericMesh"], new List<string>()); } }
+
+        /// <summary> Enemy names and headers for context menus</summary>
+        public KeyValuePair<List<string>, List<string>> EnemyNamesList { get { return new KeyValuePair<List<string>, List<string>>(NamedObjectNames["enemy"], new List<string>()); } }
+
+        /// <summary> Neutral names and headers for context menus</summary>
+        public KeyValuePair<List<string>, List<string>> NeutralNamesList { get { return new KeyValuePair<List<string>, List<string>>(NamedObjectNames["neutral"], new List<string>()); } }
+
+        /// <summary> Ship names and headers for context menus</summary>
+        public Dictionary<string, List<string>> ShipNamesLists { get {
+                var kvp = new Dictionary<string, List<string>>();
+                kvp.Add("enemy", NamedObjectNames["enemy"]);
+                kvp.Add("neutral", NamedObjectNames["neutral"]);
+                kvp.Add("player", NamedObjectNames["player"]);
+                return kvp;
+            }}
+
+        /// <summary> AI ship names and headers for context menus</summary>
+        public Dictionary<string, List<string>> AIShipNamesLists { get {
+                var kvp = new Dictionary<string, List<string>>();
+                kvp.Add("enemy", NamedObjectNames["enemy"]);
+                kvp.Add("neutral", NamedObjectNames["neutral"]);
+                return kvp;
+            }}
+
+        /// <summary> AI ship and monster names and headers for context menus</summary>
+        public Dictionary<string, List<string>> AIShipOrMonsterNamesLists { get {
+                var kvp = new Dictionary<string, List<string>>();
+                kvp.Add("enemy", NamedObjectNames["enemy"]);
+                kvp.Add("monster", NamedObjectNames["monster"]);
+                kvp.Add("neutral", NamedObjectNames["neutral"]);
+                return kvp;
+            }}
+
+        /// <summary> AI ship and monster names and headers for context menus</summary>
+        public Dictionary<string, List<string>> ShipOrMonsterNamesLists { get {
+                var kvp = new Dictionary<string, List<string>>();
+                kvp.Add("enemy", NamedObjectNames["enemy"]);
+                kvp.Add("monster", NamedObjectNames["monster"]);
+                kvp.Add("neutral", NamedObjectNames["neutral"]);
+                kvp.Add("player", NamedObjectNames["player"]);
+                return kvp;
+            }
+        }
+
+        /// <summary> AI ship names and headers for context menus</summary>
+        public Dictionary<string, List<string>> ScannableObjectNamesLists
+        {
+            get
+            {
+                var kvp = new Dictionary<string, List<string>>();
+                kvp.Add("Anomaly", NamedObjectNames["Anomaly"]);
+                kvp.Add("enemy", NamedObjectNames["enemy"]);
+                kvp.Add("genericMesh", NamedObjectNames["genericMesh"]);
+                kvp.Add("monster", NamedObjectNames["monster"]);
+                kvp.Add("neutral", NamedObjectNames["neutral"]);
+                return kvp;
+            }
+        }
+
         /// <summary> All names of all kinds of named objects </summary>
         public Dictionary<string, List<string>> AllNamesLists { get { return NamedObjectNames; } }
-        
+
         /// <summary> All nodes where the variable is checked</summary>
         public Dictionary<string, List<MissionNode>> VariableCheckLocations { get; private set; }
-        
-        /// <summary> All variables that are set</summary>
-        public List<string> VariableSetNames { get; private set; }
-        
+
+        /// <summary> All float variables that are set</summary>
+        public List<string> FloatVariableSetNames { get; private set; }
+
+        /// <summary> All integer variables that are set</summary>
+        public List<string> IntegerVariableSetNames { get; private set; }
+
         /// <summary> All variables that are checked</summary>
         public List<string> VariableCheckNames { get; private set; }
-        
+
         /// <summary> All timers that are set</summary>
         public List<string> TimerSetNames { get; private set; }
-        
+
         /// <summary> All timers that are checked</summary>
         public List<string> TimerCheckNames { get; private set; }
-        
+
+        /// <summary> All GM buttons that are set</summary>
+        public List<string> GMButtonSetNames { get; private set; }
+
+        /// <summary> All GM buttons that are checked</summary>
+        public List<string> GMButtonCheckNames { get; private set; }
+
+        /// <summary> All Comms buttons that are set</summary>
+        public List<string> CommsButtonSetNames { get; private set; }
+
+        /// <summary> All Comms buttons that are checked</summary>
+        public List<string> CommsButtonCheckNames { get; private set; }
+
         /// <summary> All objects that are created</summary>
         public List<string> AllCreatedObjectNames { get; private set; }
-        
+
         /// <summary> All variables set or checked in the mission</summary>
         private List<string> VariableNames;
-        
+
+        /// <summary> All ships that ever follow comms orders.
+        private List<string> CommandableShipNames;
+
         /// <summary> Variable headers for variable names context menus</summary>
         private List<string> VariableNameHeaders;
-        
+
+        /// <summary> All external programs that are spawned</summary>
+        public List<string> ExternalProgramSpawnNames { get; private set; }
+
+        /// <summary> All external program IDs set or checked in the mission</summary>
+        private List<string> ExternalProgramIDs;
+
+        /// <summary> External program headers for external program IDs context menus</summary>
+        private List<string> ExternalProgramIDHeaders;
+
         /// <summary> All timers set or checked in the mission</summary>
         private List<string> TimerNames;
-        
+
         /// <summary> Timer headers for timer names context menus</summary>
-        private List<string> TimerNameHeaders; 
-        
+        private List<string> TimerNameHeaders;
+
+        /// <summary> All GM buttons set or checked in the mission</summary>
+        private List<string> GMButtonNames;
+
+        /// <summary> GM button headers for GM button names context menus</summary>
+        private List<string> GMButtonNameHeaders;
+
+        /// <summary> All Comms buttons set or checked in the mission</summary>
+        private List<string> CommsButtonNames;
+
+        /// <summary> Comms button headers for Comms button names context menus</summary>
+        private List<string> CommsButtonNameHeaders;
+
         /// <summary> All named objects created in the mission</summary>
         private Dictionary<string, List<string>> NamedObjectNames;
-        
-        /// <summary> Wether or not the mission contains an "End Mission" statement (and how many of them)</summary>
+
+        /// <summary> Whether or not the mission contains an "End Mission" statement (and how many of them)</summary>
         public int AmountOfMissionEndStatements { get; private set; }
 
-        /// <summary> How many "Create player" statements there are in the mission</summary>
-        public int AmountOfCreatePlayerStatements { get; private set; }
-        
-		#endregion
+        #endregion
 
-		#region Mission inner parameters
+        #region Mission inner parameters
 
         /// <summary> Path to the mission file</summary>
         public string FilePath { get { return _filePath; } set { _filePath = value; FormMain.UpdateFormText(); } }
@@ -107,49 +228,52 @@ namespace ArtemisMissionEditor
         /// <summary> Start node of the mission</summary>
         public TreeNode StartNode { get { return _startNode; } }
         private TreeNode _startNode;
-		
-		/// <summary> Node whose create statements are used as background for the Spae Map</summary>
+
+        /// <summary> Node whose create statements are used as background for the Spae Map</summary>
         public TreeNode BackgroundNode { get; set; }
-		
+
         /// <summary> Commentary before mission script root node</summary>
         public string CommentsBeforeRoot;
-        
+
         /// <summary> Commentary after mission script root node</summary>
         public string CommentsAfterRoot;
-        
+
         /// <summary> Player names used in the mission</summary>
         public string[] PlayerShipNames;
-        
-        /// <summary> Mission version </summary>
+
+        /// <summary> Mission version</summary>
         public string VersionNumber;
+
+        /// <summary> Description</summary>
+        public string Description;
 
         /// <summary> Total number of events in the mission</summary>
         public int EventCount { get; private set; }
-		
+
         /// <summary> Flag that there are changes that need saving to file </summary>
         private bool _changesPending = false;
-		
+
         /// <summary> Flag that there are changes that need saving to file </summary>
         public bool ChangesPending { get { return _changesPending; } set { if (_changesPending != value) { _changesPending = value; FormMain.UpdateFormText(); } } }
 
-		/// <summary> Loading from XML is in progress </summary>
+        /// <summary> Loading from XML is in progress </summary>
         public bool Loading { get; private set; }
 
-		/// <summary> Dependancy graph of the mission </summary>
-		public DependencyGraph Dependencies { get; set; }
-        
+        /// <summary> Dependancy graph of the mission </summary>
+        public DependencyGraph Dependencies { get; set; }
+
         /// <summary> Recalculate dependancy graph of the mission </summary>
         public void RecalculateDependencies() { Dependencies.Recalculate(this); }
 
         /// <summary> Stack of states for undo</summary>
         public Stack<MissionSavedState> UndoStack { get; private set; }
-        
+
         /// <summary> Stack of states for redo</summary>
         public Stack<MissionSavedState> RedoStack { get; private set; }
 
         /// <summary> Undo text description</summary>
-		public string UndoDescription { get { if (UndoStack.Count < 2) return null; return UndoStack.Peek().Description; } }
-        
+        public string UndoDescription { get { if (UndoStack.Count < 2) return null; return UndoStack.Peek().Description; } }
+
         /// <summary> Redo text description</summary>
         public string RedoDescription { get { if (RedoStack.Count == 0) return null; return RedoStack.Peek().Description; } }
 
@@ -158,161 +282,161 @@ namespace ArtemisMissionEditor
         #region Assigned Controls
 
         //TODO: this must be rewritten because it's clunky
-		
-		/// <summary> TreeView control that displays a tree of nodes for this mission </summary>
+
+        /// <summary> TreeView control that displays a tree of nodes for this mission </summary>
         private TreeViewEx TreeViewNodes;
-        
+
         /// <summary> TreeView control that displays a tree of statements for this node </summary>
-		private TreeViewEx TreeViewStatements;
-        
+        private TreeViewEx TreeViewStatements;
+
         /// <summary> Flow layout panel that displays expression for the selected statement in this mission</summary>
-		private FlowLayoutPanel FlowLayoutPanelMain;
-		
+        private FlowLayoutPanel FlowLayoutPanelMain;
+
         /// <summary> Form that hosts the mission</summary>
         private Forms.FormMain FormMain;
-        
+
         /// <summary> Label that displays current node name</summary>
-		private Label LabelMain;
-        
+        private Label LabelMain;
+
         /// <summary> Status strip that displays mission information</summary>
-		private StatusStrip StatusStripMain;
-        
+        private StatusStrip StatusStripMain;
+
         /// <summary> Toolstrip that displays total number of objects in the mission</summary>
-		private ToolStripStatusLabel ToolStripObjectsTotal;
-        
+        private ToolStripStatusLabel ToolStripObjectsTotal;
+
         /// <summary> Context strip menu used for right-clicking labels</summary>
         private ContextMenuStrip ContextMenuStripForLabels;
-                
+
         /// <summary> Assign new TreeView for the nodes to the mission</summary>
-		public void AssignNodeTreeView(TreeViewEx value = null)
-		{
-			if (TreeViewNodes != null)
-			{
-				TreeViewNodes.NodesClear();
-				TreeViewNodes.IsFolder_Reset();
-				TreeViewNodes.IsAllowedToHaveRelation_Reset();
+        public void AssignNodeTreeView(TreeViewEx value = null)
+        {
+            if (TreeViewNodes != null)
+            {
+                TreeViewNodes.NodesClear();
+                TreeViewNodes.IsFolder_Reset();
+                TreeViewNodes.IsAllowedToHaveRelation_Reset();
 
-				TreeViewNodes.NodeMoved -= _E_nodeTV_NodeMoved;
-				TreeViewNodes.AfterLabelEdit -= _E_nodeTV_AfterLabelEdit;
-				TreeViewNodes.AfterSelect -= _E_nodeTV_AfterSelect;
-				TreeViewNodes.KeyDown -= _E_nodeTV_KeyDown;
-				TreeViewNodes.AfterExpand -= _E_nodeTV_AfterExpand;
-				TreeViewNodes.AfterCollapse -= _E_nodeTV_AfterCollapse;
-			}
-			TreeViewNodes = null;
+                TreeViewNodes.NodeMoved -= _E_nodeTV_NodeMoved;
+                TreeViewNodes.AfterLabelEdit -= _E_nodeTV_AfterLabelEdit;
+                TreeViewNodes.AfterSelect -= _E_nodeTV_AfterSelect;
+                TreeViewNodes.KeyDown -= _E_nodeTV_KeyDown;
+                TreeViewNodes.AfterExpand -= _E_nodeTV_AfterExpand;
+                TreeViewNodes.AfterCollapse -= _E_nodeTV_AfterCollapse;
+            }
+            TreeViewNodes = null;
 
-			if (value == null)
-				return;
+            if (value == null)
+                return;
 
-			TreeViewNodes = value;
-			TreeViewNodes.IsFolder = (TreeNode ii) => ii.Tag != null && ii.Tag.GetType() == typeof(MissionNode_Folder);
-			TreeViewNodes.IsAllowedToHaveRelation = TreeViewNodes_IsAllowedToHaveRelation;
+            TreeViewNodes = value;
+            TreeViewNodes.IsFolder = (TreeNode ii) => ii.Tag != null && ii.Tag.GetType() == typeof(MissionNode_Folder);
+            TreeViewNodes.IsAllowedToHaveRelation = TreeViewNodes_IsAllowedToHaveRelation;
 
-			TreeViewNodes.NodeMoved += _E_nodeTV_NodeMoved;
-			TreeViewNodes.AfterLabelEdit += _E_nodeTV_AfterLabelEdit;
-			TreeViewNodes.AfterSelect += _E_nodeTV_AfterSelect;
-			TreeViewNodes.KeyDown += _E_nodeTV_KeyDown;
-			TreeViewNodes.AfterExpand += _E_nodeTV_AfterExpand;
-			TreeViewNodes.AfterCollapse += _E_nodeTV_AfterCollapse;
-		}
+            TreeViewNodes.NodeMoved += _E_nodeTV_NodeMoved;
+            TreeViewNodes.AfterLabelEdit += _E_nodeTV_AfterLabelEdit;
+            TreeViewNodes.AfterSelect += _E_nodeTV_AfterSelect;
+            TreeViewNodes.KeyDown += _E_nodeTV_KeyDown;
+            TreeViewNodes.AfterExpand += _E_nodeTV_AfterExpand;
+            TreeViewNodes.AfterCollapse += _E_nodeTV_AfterCollapse;
+        }
 
         /// <summary> Assign new TreeView for the statements to the mission</summary>
-		public void AssignStatementTreeView(TreeViewEx value = null)
-		{
-			if (TreeViewStatements != null)
-			{
-				TreeViewStatements.NodesClear();
-				TreeViewStatements.IsFolder_Reset();
-				TreeViewStatements.IsAllowedToHaveRelation_Reset();
+        public void AssignStatementTreeView(TreeViewEx value = null)
+        {
+            if (TreeViewStatements != null)
+            {
+                TreeViewStatements.NodesClear();
+                TreeViewStatements.IsFolder_Reset();
+                TreeViewStatements.IsAllowedToHaveRelation_Reset();
 
-				TreeViewStatements.NodeMoved -= _E_statementTV_NodeMoved;
-				TreeViewStatements.AfterSelect -= _E_statementTV_AfterSelect;
-				TreeViewStatements.KeyDown -= _E_statementTV_KeyDown;
+                TreeViewStatements.NodeMoved -= _E_statementTV_NodeMoved;
+                TreeViewStatements.AfterSelect -= _E_statementTV_AfterSelect;
+                TreeViewStatements.KeyDown -= _E_statementTV_KeyDown;
                 TreeViewStatements.MouseDoubleClick -= _E_statementTV_MouseDoubleClick;
-			}
-			TreeViewStatements = null;
+            }
+            TreeViewStatements = null;
 
-			if (value == null)
-				return;
+            if (value == null)
+                return;
 
-			TreeViewStatements = value;
-			TreeViewStatements.IsFolder = (TreeNode ii) => (ii.Tag is string);
-			TreeViewStatements.IsAllowedToHaveRelation = TreeViewStatements_IsAllowedToHaveRelation;
+            TreeViewStatements = value;
+            TreeViewStatements.IsFolder = (TreeNode ii) => (ii.Tag is string);
+            TreeViewStatements.IsAllowedToHaveRelation = TreeViewStatements_IsAllowedToHaveRelation;
 
-			TreeViewStatements.NodeMoved += _E_statementTV_NodeMoved;
-			TreeViewStatements.AfterSelect += _E_statementTV_AfterSelect;
-			TreeViewStatements.KeyDown += _E_statementTV_KeyDown;
+            TreeViewStatements.NodeMoved += _E_statementTV_NodeMoved;
+            TreeViewStatements.AfterSelect += _E_statementTV_AfterSelect;
+            TreeViewStatements.KeyDown += _E_statementTV_KeyDown;
             TreeViewStatements.MouseDoubleClick += _E_statementTV_MouseDoubleClick;
-		}
+        }
 
         /// <summary> Assign new flow panel for expression to the mission</summary>
-		public void AssignFlowPanel(FlowLayoutPanel value = null)
-		{
-			if (FlowLayoutPanelMain != null)
-			{
-				FlowLayoutPanel_Clear();
-				FlowLayoutPanelMain.Resize -= _E_flowLP_Resize;
-			}
-			FlowLayoutPanelMain = null;
+        public void AssignFlowPanel(FlowLayoutPanel value = null)
+        {
+            if (FlowLayoutPanelMain != null)
+            {
+                FlowLayoutPanel_Clear();
+                FlowLayoutPanelMain.Resize -= _E_flowLP_Resize;
+            }
+            FlowLayoutPanelMain = null;
 
-			if (value == null)
-				return;
+            if (value == null)
+                return;
 
-			FlowLayoutPanelMain = value;
-			FlowLayoutPanelMain.Resize += _E_flowLP_Resize;
-		}
+            FlowLayoutPanelMain = value;
+            FlowLayoutPanelMain.Resize += _E_flowLP_Resize;
+        }
 
         /// <summary> Assign new form to the mission </summary>
-		public void AssignForm(Forms.FormMain value = null)
-		{
-			if (FormMain != null)
-			{
-				FormMain.KeyDown -= _E_form_KeyDown;
-			}
-			FormMain = null;
+        public void AssignForm(Forms.FormMain value = null)
+        {
+            if (FormMain != null)
+            {
+                FormMain.KeyDown -= _E_form_KeyDown;
+            }
+            FormMain = null;
 
-			if (value == null)
-				return;
+            if (value == null)
+                return;
 
-			FormMain = value;
-			FormMain.KeyDown += _E_form_KeyDown;
-		}
+            FormMain = value;
+            FormMain.KeyDown += _E_form_KeyDown;
+        }
 
         /// <summary> Assign new label to the mission </summary>
-		public void AssignLabel(Label value = null)
-		{
-			if (LabelMain != null)
-			{
-				LabelMain.Text = "";
-			}
-			LabelMain = null;
+        public void AssignLabel(Label value = null)
+        {
+            if (LabelMain != null)
+            {
+                LabelMain.Text = "";
+            }
+            LabelMain = null;
 
-			if (value == null)
-				return;
+            if (value == null)
+                return;
 
-			LabelMain = value;
-		}
+            LabelMain = value;
+        }
 
         /// <summary> Assign new status toolstip to the mission</summary>
-		public void AssignStatusToolStrip(StatusStrip value = null)
-		{
-			if (ToolStripObjectsTotal != null)
-				ToolStripObjectsTotal.Text = "";
+        public void AssignStatusToolStrip(StatusStrip value = null)
+        {
+            if (ToolStripObjectsTotal != null)
+                ToolStripObjectsTotal.Text = "";
 
-			StatusStripMain = null;
-			ToolStripObjectsTotal = null;
+            StatusStripMain = null;
+            ToolStripObjectsTotal = null;
 
-			if (value == null)
-				return;
+            if (value == null)
+                return;
 
-			StatusStripMain = value;
+            StatusStripMain = value;
 
-			foreach (ToolStripItem item in StatusStripMain.Items)
-			{
-				if (item.GetType() == typeof(ToolStripStatusLabel) && item.Tag != null && item.Tag.GetType() == typeof(string) && ((string)item.Tag).ToLower() == "objectstotal")
-					ToolStripObjectsTotal = (ToolStripStatusLabel)item;
-			}
-		}
+            foreach (ToolStripItem item in StatusStripMain.Items)
+            {
+                if (item.GetType() == typeof(ToolStripStatusLabel) && item.Tag != null && item.Tag.GetType() == typeof(string) && ((string)item.Tag).ToLower() == "objectstotal")
+                    ToolStripObjectsTotal = (ToolStripStatusLabel)item;
+            }
+        }
 
         /// <summary> Assign a new context strip menu to the mission</summary>
         public void AssignContextMenuStripForLabels(ContextMenuStrip value = null)
@@ -342,75 +466,75 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// In this method we check wether a node can get placed near another node. 
+        /// In this method we check whether a node can get placed near another node.
         /// </summary>
         /// <param name="parent">Node being the receiver</param>
         /// <param name="child">Node that is trying to get attached</param>
         /// <example>
         /// You are not allowed to place Event above Start, so any relation which makes it so will be denied.
         /// </example>
-		private bool TreeViewNodes_IsAllowedToHaveRelation(TreeNode parent, TreeNode child, NodeRelationship relation)
-		{
-			if (child.Tag == null)
-				throw new ArgumentException("child", "Moving a TreeNode without a Tag, WTF?");
+        private bool TreeViewNodes_IsAllowedToHaveRelation(TreeNode parent, TreeNode child, NodeRelationship relation)
+        {
+            if (child.Tag == null)
+                throw new ArgumentException("child", "Moving a TreeNode without a Tag, WTF?");
             if (parent.Tag == null)
                 throw new ArgumentException("parent", "Moving a TreeNode without a Tag, WTF?");
 
             if (relation == NodeRelationship.ChildGoesInside && !TreeViewNodes.IsFolder(parent))
-				return false;
+                return false;
 
-			//Everything except comments cant go above Start (which can only occur in root)
-			//Therefore, for each node that isnt a comment, and is trying to fit on one level with something that is in root...
+            //Everything except comments can't go above Start (which can only occur in root)
+            //Therefore, for each node that isn't a comment, and is trying to fit on one level with something that is in root...
             if (relation != NodeRelationship.ChildGoesInside && parent.Parent == null && !(child.Tag.GetType() == typeof(MissionNode_Comment) || child.Tag.GetType() == typeof(MissionNode_Start)))
-			{
-				//Check that we are not inserting directly above Start node...
+            {
+                //Check that we are not inserting directly above Start node...
                 if (relation == NodeRelationship.ChildGoesAbove && parent.Tag.GetType() == typeof(MissionNode_Start))
-					return false;
-				//...and check that we are not inserting near a node that is above Start node
-				if (TreeViewNodes.Nodes.IndexOf(_startNode) > TreeViewNodes.Nodes.IndexOf(parent))
-					return false;
-			}
+                    return false;
+                //...and check that we are not inserting near a node that is above Start node
+                if (TreeViewNodes.Nodes.IndexOf(_startNode) > TreeViewNodes.Nodes.IndexOf(parent))
+                    return false;
+            }
 
-			//Start, Comment and Unknown cannot go inside anything, start because it must stay on top and other two because they cant have Parent_ID attribute added to them
-			if (child.Tag.GetType() == typeof(MissionNode_Start) || child.Tag.GetType() == typeof(MissionNode_Comment) || child.Tag.GetType() == typeof(MissionNode_Unknown))
-			{
-				//Refuse to go inside anything...
+            //Start, Comment and Unknown cannot go inside anything, start because it must stay on top and other two because they can't have Parent_ID attribute added to them
+            if (child.Tag.GetType() == typeof(MissionNode_Start) || child.Tag.GetType() == typeof(MissionNode_Comment) || child.Tag.GetType() == typeof(MissionNode_Unknown))
+            {
+                //Refuse to go inside anything...
                 if (relation == NodeRelationship.ChildGoesInside)
-					return false;
-				//...or next to a node that is inside something...
-				if (parent.Parent != null)
-					return false;
-			}
+                    return false;
+                //...or next to a node that is inside something...
+                if (parent.Parent != null)
+                    return false;
+            }
 
-			//Start additionally cannot go below anything that isnt a comment
-			if (child.Tag.GetType() == typeof(MissionNode_Start))
-			{
-				//Never go under anything other than a comment or yourself
+            //Start additionally cannot go below anything that isn't a comment
+            if (child.Tag.GetType() == typeof(MissionNode_Start))
+            {
+                //Never go under anything other than a comment or yourself
                 if (relation == NodeRelationship.ChildGoesUnder && parent.Tag.GetType() != typeof(MissionNode_Comment) && parent != child)
-					return false;
+                    return false;
 
-				//Go through nodes until we meet the node we are becoming parented to
-				//If we find anything except comment on the way, this means we are going below
-				for (int i = 0; i < TreeViewNodes.Nodes.Count; i++)
-				{
-					//When we found something other than a comment and the dragged node
-					if (TreeViewNodes.Nodes[i].Tag.GetType() != typeof(MissionNode_Comment) && TreeViewNodes.Nodes[i] != child)
-						//In case this is the node we are inserting above - allow it, otherwise deny it
+                //Go through nodes until we meet the node we are becoming parented to
+                //If we find anything except comment on the way, this means we are going below
+                for (int i = 0; i < TreeViewNodes.Nodes.Count; i++)
+                {
+                    //When we found something other than a comment and the dragged node
+                    if (TreeViewNodes.Nodes[i].Tag.GetType() != typeof(MissionNode_Comment) && TreeViewNodes.Nodes[i] != child)
+                        //In case this is the node we are inserting above - allow it, otherwise deny it
                         if (relation == NodeRelationship.ChildGoesAbove && TreeViewNodes.Nodes[i] == parent)
-							break;
-						else
-							return false;
+                            break;
+                        else
+                            return false;
 
-					if (TreeViewNodes.Nodes[i] == parent)
-						break;
-				}
-			}
+                    if (TreeViewNodes.Nodes[i] == parent)
+                        break;
+                }
+            }
 
-			return true;
-		}
+            return true;
+        }
 
-		/// <summary>
-        /// In this method we check wether a statement can get placed near another statement. 
+        /// <summary>
+        /// In this method we check whether a statement can get placed near another statement.
         /// </summary>
         /// <param name="parent">Node being the receiver</param>
         /// <param name="child">Node that is trying to get attached</param>
@@ -418,117 +542,131 @@ namespace ArtemisMissionEditor
         /// You are not allowed to place a Condition into Actions root.
         /// </example>
         private bool TreeViewStatements_IsAllowedToHaveRelation(TreeNode parent, TreeNode child, NodeRelationship relation)
-		{
-			if (child.Tag == null || parent.Tag == null) // This might be a comment or a folder
-				return false;
+        {
+            if (child.Tag == null || parent.Tag == null) // This might be a comment or a folder
+                return false;
 
-			//You cannot go inside something that isnt a folder
+            //You cannot go inside something that isn't a folder
             if (relation == NodeRelationship.ChildGoesInside && !TreeViewStatements.IsFolder(parent))
-				return false;
+                return false;
 
-			//Non-statements cannot move at all
-			if (!(child.Tag is MissionStatement))
-				return false;
+            //Non-statements cannot move at all
+            if (!(child.Tag is MissionStatement))
+                return false;
 
-			//If going inside, Conditions can only go inside codintion folder, actions can go inside actions folder, comment can go anywhere
+            //If going inside, Conditions can only go inside codintion folder, actions can go inside actions folder, comment can go anywhere
             if (relation == NodeRelationship.ChildGoesInside && (((string)parent.Tag == "conditions" && ((MissionStatement)child.Tag).Kind == MissionStatementKind.Action) || ((string)parent.Tag == "actions" && ((MissionStatement)child.Tag).Kind == MissionStatementKind.Condition) || ((string)parent.Tag != "actions" && (string)parent.Tag != "conditions")))
-				return false;
+                return false;
 
-			//Comments cannot go inside conditions!
+            //Comments cannot go inside conditions!
             if (relation == NodeRelationship.ChildGoesInside && ((string)parent.Tag == "conditions" && ((MissionStatement)child.Tag).Kind == MissionStatementKind.Commentary))
-				return false;
+                return false;
 
-			//If going adjacent to something
-			//Conditions can only go adjacent to conditions or comments inside conditions folder
-			//Actions can only go adjacent to actions or comments inside actions folder
+            //If going adjacent to something
+            //Conditions can only go adjacent to conditions or comments inside conditions folder
+            //Actions can only go adjacent to actions or comments inside actions folder
             if (relation == NodeRelationship.ChildGoesAbove || relation == NodeRelationship.ChildGoesUnder)
-			{
-				if (!(parent.Tag is MissionStatement))
-					return false;
+            {
+                if (!(parent.Tag is MissionStatement))
+                    return false;
 
-				if ((((MissionStatement)child.Tag).Kind == MissionStatementKind.Action) && ((string)parent.Parent.Tag != "actions"))
-					return false;
+                if ((((MissionStatement)child.Tag).Kind == MissionStatementKind.Action) && ((string)parent.Parent.Tag != "actions"))
+                    return false;
 
-				if ((((MissionStatement)child.Tag).Kind == MissionStatementKind.Condition) && ((string)parent.Parent.Tag != "conditions"))
-					return false;
-			}
+                if ((((MissionStatement)child.Tag).Kind == MissionStatementKind.Condition) && ((string)parent.Parent.Tag != "conditions"))
+                    return false;
+            }
 
-			//Comments also cannot go under last condition
+            //Comments also cannot go under last condition
             if (relation == NodeRelationship.ChildGoesUnder && (((MissionStatement)child.Tag).Kind == MissionStatementKind.Commentary))
-			{
-				if (parent.Parent != null && parent.Parent.LastNode == parent && (string)parent.Parent.Tag == "conditions")
-					return false;
-			}
+            {
+                if (parent.Parent != null && parent.Parent.LastNode == parent && (string)parent.Parent.Tag == "conditions")
+                    return false;
+            }
 
-			return true;
-		}
+            return true;
+        }
 
-		private void FlowLayoutPanel_Clear()
-		{
+        private void FlowLayoutPanel_Clear()
+        {
             foreach (Control c in FlowLayoutPanelMain.Controls)
                 c.Dispose();
             FlowLayoutPanelMain.Controls.Clear();
-		}
+        }
 
-		#endregion
-        
+        #endregion
+
         public Mission()
-		{
-			TreeViewNodes = null;
-			TreeViewStatements = null;
-			FlowLayoutPanelMain = null;
-			FormMain = null;
-			LabelMain = null;
+        {
+            TreeViewNodes = null;
+            TreeViewStatements = null;
+            FlowLayoutPanelMain = null;
+            FormMain = null;
+            LabelMain = null;
             StatusStripMain = null;
             ToolStripObjectsTotal = null;
-			ContextMenuStripForLabels = null;
+            ContextMenuStripForLabels = null;
 
-			AssignFlowPanel();
-			AssignNodeTreeView();
-			AssignStatementTreeView();
-			AssignForm();
-			AssignLabel();
+            AssignFlowPanel();
+            AssignNodeTreeView();
+            AssignStatementTreeView();
+            AssignForm();
+            AssignLabel();
             AssignStatusToolStrip();
-			AssignContextMenuStripForLabels();
+            AssignContextMenuStripForLabels();
 
-			Dependencies = new DependencyGraph();
+            Dependencies = new DependencyGraph();
 
             AmountOfMissionEndStatements = 0;
-            AmountOfCreatePlayerStatements = 0;
-            VariableSetNames = new List<string>();
+            FloatVariableSetNames = new List<string>();
+            IntegerVariableSetNames = new List<string>();
             VariableCheckNames = new List<string>();
             VariableCheckLocations = new Dictionary<string, List<MissionNode>>();
             TimerSetNames = new List<string>();
             TimerCheckNames = new List<string>();
+            GMButtonSetNames = new List<string>();
+            GMButtonCheckNames = new List<string>();
+            CommsButtonSetNames = new List<string>();
+            CommsButtonCheckNames = new List<string>();
             AllCreatedObjectNames = new List<string>();
+            CommandableShipNames = new List<string>();
             VariableNames = new List<string>();
             VariableNameHeaders = new List<string>();
-			TimerNames = new List<string>();
+            TimerNames = new List<string>();
             TimerNameHeaders = new List<string>();
-			NamedObjectNames = new Dictionary<string,List<string>>();
+            ExternalProgramSpawnIDs = new List<string>();
+            ExternalProgramCheckIDs = new List<string>();
+            ExternalProgramCheckLocations = new Dictionary<string, List<MissionNode>>();
+            ExternalProgramIDs = new List<string>();
+            ExternalProgramIDHeaders = new List<string>();
+            GMButtonNames = new List<string>();
+            GMButtonNameHeaders = new List<string>();
+            CommsButtonNames = new List<string>();
+            CommsButtonNameHeaders = new List<string>();
+            NamedObjectNames = new Dictionary<string,List<string>>();
             NamedObjectNames.Add("Anomaly", new List<string>());
             NamedObjectNames.Add("blackHole", new List<string>());
             NamedObjectNames.Add("enemy", new List<string>());
-            NamedObjectNames.Add("neutral", new List<string>());
             NamedObjectNames.Add("genericMesh", new List<string>());
+            NamedObjectNames.Add("monster", new List<string>());
+            NamedObjectNames.Add("neutral", new List<string>());
             NamedObjectNames.Add("player", new List<string>());
             NamedObjectNames.Add("station", new List<string>());
-            NamedObjectNames.Add("monster", new List<string>());
-			NamedObjectNames.Add("whale", new List<string>());
-            
-			UndoStack = new Stack<MissionSavedState>();
-			RedoStack = new Stack<MissionSavedState>();
+            NamedObjectNames.Add("whale", new List<string>());
 
-			EventCount = 0;
-			
+            UndoStack = new Stack<MissionSavedState>();
+            RedoStack = new Stack<MissionSavedState>();
+
+            EventCount = 0;
+
             SuppressSelectionEvents = false;
             SupressSelectionEvents = false;
-			SupressExpandCollapseEvents = false;
+            SupressExpandCollapseEvents = false;
             UpdateSemaphoreCounter = 0;
-		}
+        }
 
-        /// <summary> 
-        /// Begin update of treeviews: calls BeginUpdate() of both TreeViews 
+        /// <summary>
+        /// Begin update of treeviews: calls BeginUpdate() of both TreeViews
         /// </summary>
         private void BeginUpdate(bool suppressSelectionEvents = false)
         {
@@ -543,8 +681,8 @@ namespace ArtemisMissionEditor
             }
         }
 
-        /// <summary> 
-        /// End update of treeviews: calls EndUpdate() of both TreeViews 
+        /// <summary>
+        /// End update of treeviews: calls EndUpdate() of both TreeViews
         /// </summary>
         private void EndUpdate(bool suppressSelectionEvents = false)
         {
@@ -563,8 +701,8 @@ namespace ArtemisMissionEditor
                 }
             }
         }
-        
-		#region Undo / Redo / Change registration
+
+        #region Undo / Redo / Change registration
 
         /// <summary>
         /// Undo mission to a state
@@ -587,33 +725,33 @@ namespace ArtemisMissionEditor
         /// Redo mission to a state
         /// </summary>
         /// <param name="state">If provided, redo until we reach the state, otherwise, redo to the last state</param>
-		public void Redo(MissionSavedState state = null)
-		{
-			if (RedoStack.Count == 0)
-				return;
+        public void Redo(MissionSavedState state = null)
+        {
+            if (RedoStack.Count == 0)
+                return;
 
-			state = state ?? RedoStack.Peek();
-			while (UndoStack.Count == 0 || UndoStack.Peek() != state)
-				UndoStack.Push(RedoStack.Pop());
-			FromState(UndoStack.Peek());
-            
+            state = state ?? RedoStack.Peek();
+            while (UndoStack.Count == 0 || UndoStack.Peek() != state)
+                UndoStack.Push(RedoStack.Pop());
+            FromState(UndoStack.Peek());
+
             UpdateObjectsText();
-		}
-        
-		/// <summary> 
+        }
+
+        /// <summary>
         /// Registers a change, adding a new state into undo the stack and cleaning the redo stack. Also raises ChangesPending flag.
         /// </summary>
-		public void RegisterChange(string shortDescription)
-		{
+        public void RegisterChange(string shortDescription)
+        {
             ChangesPending = true;
             Dependencies.Invalidate();
-            
-			UndoStack.Push(ToState(shortDescription));
-			RedoStack.Clear();
+
+            UndoStack.Push(ToState(shortDescription));
+            RedoStack.Clear();
 
             UpdateObjectsText();
             UpdateNamesLists();
-		}
+        }
 
         /// <summary>
         /// Truncates undo stack, leaving only allowed number of items in it, and creating a root item in case it's required. Also lowers ChangesPending flag.
@@ -632,7 +770,7 @@ namespace ArtemisMissionEditor
             else
                 while (tmpStack.Count > 0)
                     UndoStack.Push(tmpStack.Pop());
-            
+
             UndoStack.Peek().ChangesPending = false;
             ChangesPending = false;
         }
@@ -647,38 +785,38 @@ namespace ArtemisMissionEditor
         /// <param name="force">If set, ignore pending changes.</param>
         public void New(bool force = false)
         {
-			if (!force && ChangesPending)
-			{
-				DialogResult result = MessageBox.Show("Do you want to save unsaved changes?", "Artemis Mission Editor",
-				MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-				if (result == DialogResult.Cancel)
-					return;
-				if (result == DialogResult.Yes)
-					if (!Save())
-						return;
-			}
+            if (!force && ChangesPending)
+            {
+                DialogResult result = MessageBox.Show("Do you want to save unsaved changes?", "Artemis Mission Editor",
+                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                if (result == DialogResult.Cancel)
+                    return;
+                if (result == DialogResult.Yes)
+                    if (!Save())
+                        return;
+            }
 
             Clear();
 
             TreeNode newTNode = new TreeNode();
             MissionNode_Start newMNode = new MissionNode_Start();
-			
-			string xml = "<root>" + Settings.Current.NewMissionStartBlock + "</root>";
-			XmlDocument xDoc = new XmlDocument();
-			try
-			{
-				xDoc.LoadXml(xml);
 
-				foreach (XmlNode node in xDoc.ChildNodes[0].ChildNodes)
-				{
-					newMNode.Actions.Add(MissionStatement.NewFromXML(node, newMNode));
-				}
-			}
-			catch (Exception ex)
-			{
-				Log.Add("Problems while trying to parse new mission start node text:");
-				Log.Add(ex);
-			}
+            string xml = "<root>" + Settings.Current.NewMissionStartBlock + "</root>";
+            XmlDocument xDoc = new XmlDocument();
+            try
+            {
+                xDoc.LoadXml(xml);
+
+                foreach (XmlNode node in xDoc.ChildNodes[0].ChildNodes)
+                {
+                    newMNode.Actions.Add(MissionStatement.NewFromXML(node, newMNode));
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Add("Problems while trying to parse new mission start node text:");
+                Log.Add(ex);
+            }
 
             newTNode.Text = newMNode.Name;
             newTNode.ImageIndex = newMNode.ImageIndex;
@@ -689,15 +827,15 @@ namespace ArtemisMissionEditor
             _startNode = newTNode;
             FlowLayoutPanel_Clear();
 
-			TreeViewNodes.SelectedNode = newTNode;
-			
-			BackgroundNode = newTNode;
-            
+            TreeViewNodes.SelectedNode = newTNode;
+
+            BackgroundNode = newTNode;
+
             TruncateUndoStack(0);
         }
 
-        /// <summary> 
-        /// Clear mission contents 
+        /// <summary>
+        /// Clear mission contents
         /// </summary>
         /// <param name="fromState">True if clearing in order to restore from state, in this case we do not clear file path</param>
         private void Clear(bool fromState = false)
@@ -705,12 +843,13 @@ namespace ArtemisMissionEditor
             if (!fromState)
                 FilePath = "";
             _startNode = null;
-			BackgroundNode = null;
+            BackgroundNode = null;
             CommentsAfterRoot = "";
             CommentsBeforeRoot = "";
             PlayerShipNames = Settings.Current.PlayerShipNames;
             VersionNumber = "1.0";
-            
+            Description = null;
+
             BeginUpdate();
 
             TreeViewNodes.NodesClear();
@@ -720,32 +859,39 @@ namespace ArtemisMissionEditor
 
             EventCount = 0;
 
-			if (Program.FormSearchResultsInstance != null)
-				Program.FormSearchResultsInstance.ClearList();
+            if (Program.FormSearchResultsInstance != null)
+                Program.FormSearchResultsInstance.ClearList();
 
-			if (Program.FormMissionPropertiesInstance != null)
-				if (Program.FormMissionPropertiesInstance.Visible)
-					Program.FormMissionPropertiesInstance.Close();
+            if (Program.FormMissionPropertiesInstance != null)
+                if (Program.FormMissionPropertiesInstance.Visible)
+                    Program.FormMissionPropertiesInstance.Close();
         }
 
         /// <summary>
         /// Fill mission from file
         /// </summary>
+        /// <param name="fileName">Name of file to load</param>
         public void FromFile(string fileName)
         {
             string text;
             using (StreamReader streamReader = new StreamReader(fileName))
                text = streamReader.ReadToEnd();
-            
+
             text = Helper.FixMissionXml(text);
             if (FromXml(text))
             {
                 FilePath = fileName;
                 TreeViewNodes.SelectedNode = _startNode;
                 TruncateUndoStack(0);
+
+                // Add successfully opened file to MRU list.
+                MRUManager.Current.AddRecentFile(fileName);
             }
             else
             {
+                // Remove file from MRU list.
+                MRUManager.Current.RemoveRecentFile(fileName);
+
                 New(true);
             }
         }
@@ -755,10 +901,10 @@ namespace ArtemisMissionEditor
         /// </summary>
         /// <param name="force">If set, ignore pending changes.</param>
         public void Open(bool force = false)
-		{
+        {
             if (!force && ChangesPending)
             {
-				DialogResult result = MessageBox.Show("Do you want to save unsaved changes?", "Artemis Mission Editor",
+                DialogResult result = MessageBox.Show("Do you want to save unsaved changes?", "Artemis Mission Editor",
                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                 if (result==DialogResult.Cancel)
                     return;
@@ -784,168 +930,175 @@ namespace ArtemisMissionEditor
 
                 FromFile(fileName);
             }
-		}
+        }
 
         /// <summary>
         /// Read mission contents from Xml string
         /// </summary>
         /// <param name="text">String containing Xml with the mission</param>
-        /// <param name="supressLoadingSignal">Add no loading warnings to the log</param>
+        /// <param name="suppressLoadingSignal">Add no loading warnings to the log</param>
         /// <param name="fromState">True if clearing in order to restore from state, in this case we do not clear file path</param>
         /// <returns>Success or failure flag</returns>
-        public bool FromXml(string text, bool supressLoadingSignal = false, bool fromState = false)
-		{
-			XmlDocument xDoc = new XmlDocument();
+        public bool FromXml(string text, bool suppressLoadingSignal = false, bool fromState = false)
+        {
+            XmlDocument xDoc = new XmlDocument();
 
-			try
-			{
-				xDoc.LoadXml(text);
-			}
-			catch (Exception ex)
-			{
+            try
+            {
+                xDoc.LoadXml(text);
+            }
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.StackTrace, ex.Message);
-                Log.Add("Loading mission from Xml failed with the following exception: ");
+                Log.Add("Loading mission from XML failed with the following exception: ");
                 Log.Add(ex);
 
-				return false;
-			}
+                return false;
+            }
 
-			Clear(fromState);
-			Loading = !supressLoadingSignal;
-			BeginUpdate();
-			
-			List<TreeNode> NodesToExpand = new List<TreeNode>();
-			Guid? bgGuid = null;
+            Clear(fromState);
+            Loading = !suppressLoadingSignal;
+            BeginUpdate();
 
-			XmlNode root = null;
-			int i;
+            List<TreeNode> NodesToExpand = new List<TreeNode>();
+            Guid? bgGuid = null;
 
-			for (i = 0; i < xDoc.ChildNodes.Count; i++)
-			{
-				XmlNode item = xDoc.ChildNodes[i];
+            XmlNode root = null;
+            int i;
+
+            for (i = 0; i < xDoc.ChildNodes.Count; i++)
+            {
+                XmlNode item = xDoc.ChildNodes[i];
                 if (item.GetType() == typeof(XmlComment))
                     if (root == null)
                         CommentsBeforeRoot += item.Value + "\r\n";
                     else
                         CommentsAfterRoot += item.Value + "\r\n";
                 else
-					root = item;
-			}
-			if (CommentsBeforeRoot.Length >= 2 && CommentsBeforeRoot.Substring(CommentsBeforeRoot.Length - 2, 2) == "\r\n")
-				CommentsBeforeRoot.Substring(0, CommentsBeforeRoot.Length - 2);
-			if (CommentsAfterRoot.Length>=2 && CommentsAfterRoot.Substring(CommentsAfterRoot.Length - 2, 2) == "\r\n")
-				CommentsAfterRoot.Substring(0, CommentsAfterRoot.Length - 2);
+                    root = item;
+            }
+            if (CommentsBeforeRoot.Length >= 2 && CommentsBeforeRoot.Substring(CommentsBeforeRoot.Length - 2, 2) == "\r\n")
+                CommentsBeforeRoot.Substring(0, CommentsBeforeRoot.Length - 2);
+            if (CommentsAfterRoot.Length>=2 && CommentsAfterRoot.Substring(CommentsAfterRoot.Length - 2, 2) == "\r\n")
+                CommentsAfterRoot.Substring(0, CommentsAfterRoot.Length - 2);
 
             if (root == null)
             {
-                Log.Add("No root Xml node found in specified Xml file. Mission was not loaded");
+                Log.Add("No root XML node found in specified XML file. Mission was not loaded");
                 Loading = false;
                 EndUpdate();
                 return false;
             }
 
-			foreach (XmlAttribute att in root.Attributes)
-			{
-				Guid tmp;
-				if (att.Name == "background_id_arme")
-					if (Guid.TryParse(att.Value, out tmp))
-						bgGuid = tmp;
+            foreach (XmlAttribute att in root.Attributes)
+            {
+                Guid tmp;
+                if (att.Name == "background_id_arme")
+                    if (Guid.TryParse(att.Value, out tmp))
+                        bgGuid = tmp;
                 if (att.Name == "playerShipNames_arme")
                     PlayerShipNames = Helper.StringArrayFromLine(att.Value);
                 if (att.Name == "version")
                     VersionNumber = att.Value;
-			}
+            }
 
-			foreach (XmlNode item in root.ChildNodes)
-			{
-				TreeNode newNode = new TreeNode();
-				MissionNode newMissionNode = MissionNode.NewFromXML(item);
+            foreach (XmlNode item in root.ChildNodes)
+            {
+                // Parse mission_description node, if any.
+                if (item.Name == "mission_description")
+                {
+                    Description = item.InnerText.Replace("\r\n", "").Replace("^", "\r\n");
+                    continue;
+                }
 
-				newNode.Text = newMissionNode.Name;
-				newNode.Tag = newMissionNode;
-				newNode.ImageIndex = newMissionNode.ImageIndex;
-				newNode.SelectedImageIndex = newMissionNode.ImageIndex;
-				if (newMissionNode is MissionNode_Event)
-					EventCount++;
+                TreeNode newNode = new TreeNode();
+                MissionNode newMissionNode = MissionNode.NewFromXML(item);
 
-				TreeNode parentNode = newMissionNode.ParentID == null ? null : TreeViewNodes.FindNode((TreeNode ii) => ((MissionNode)ii.Tag).ID == newMissionNode.ParentID);
+                newNode.Text = newMissionNode.Name;
+                newNode.Tag = newMissionNode;
+                newNode.ImageIndex = newMissionNode.ImageIndex;
+                newNode.SelectedImageIndex = newMissionNode.ImageIndex;
+                if (newMissionNode is MissionNode_Event)
+                    EventCount++;
 
-				if (parentNode != null)
-					parentNode.Nodes.Add(newNode);
-				else
-					TreeViewNodes.Nodes.Add(newNode);
+                TreeNode parentNode = newMissionNode.ParentID == null ? null : TreeViewNodes.FindNode((TreeNode ii) => ((MissionNode)ii.Tag).ID == newMissionNode.ParentID);
 
-				if (newMissionNode.ExtraAttributes.Contains("expanded_arme"))
-					NodesToExpand.Add(newNode);
+                if (parentNode != null)
+                    parentNode.Nodes.Add(newNode);
+                else
+                    TreeViewNodes.Nodes.Add(newNode);
 
-				//If background id matches then remember this node
-				if (newMissionNode.ID == bgGuid)
-					BackgroundNode = newNode;
-			}
+                if (newMissionNode.ExtraAttributes.Contains("expanded_arme"))
+                    NodesToExpand.Add(newNode);
 
-			_startNode = TreeViewNodes.FindNode((TreeNode ii) => ii.Tag != null && ii.Tag.GetType() == typeof(MissionNode_Start));
+                //If background id matches then remember this node
+                if (newMissionNode.ID == bgGuid)
+                    BackgroundNode = newNode;
+            }
 
-			if (_startNode == null)
-			{
-				Log.Add("No start node found in the mission! Adding blank start node to the beginning of the mission");
+            _startNode = TreeViewNodes.FindNode((TreeNode ii) => ii.Tag != null && ii.Tag.GetType() == typeof(MissionNode_Start));
 
-				TreeNode newTNode = new TreeNode();
-				MissionNode_Start newMNode = new MissionNode_Start();
+            if (_startNode == null)
+            {
+                Log.Add("No start node found in the mission! Adding blank start node to the beginning of the mission");
 
-				newTNode.Text = newMNode.Name;
-				newTNode.ImageIndex = newMNode.ImageIndex;
-				newTNode.SelectedImageIndex = newMNode.ImageIndex;
-				newTNode.Tag = newMNode;
+                TreeNode newTNode = new TreeNode();
+                MissionNode_Start newMNode = new MissionNode_Start();
 
-				TreeViewNodes.Nodes.Insert(0, newTNode);
-				_startNode = newTNode;
-			}
+                newTNode.Text = newMNode.Name;
+                newTNode.ImageIndex = newMNode.ImageIndex;
+                newTNode.SelectedImageIndex = newMNode.ImageIndex;
+                newTNode.Tag = newMNode;
 
-			if (BackgroundNode == null)
-				BackgroundNode = _startNode;
+                TreeViewNodes.Nodes.Insert(0, newTNode);
+                _startNode = newTNode;
+            }
 
-			EndUpdate();
-			Loading = false;
-			
-			//Expand nodes that are supposed to be expanded
-			foreach (TreeNode node in NodesToExpand)
-				node.Expand();
+            if (BackgroundNode == null)
+                BackgroundNode = _startNode;
 
-			return true;
-		}
-        
+            EndUpdate();
+            Loading = false;
+
+            //Expand nodes that are supposed to be expanded
+            foreach (TreeNode node in NodesToExpand)
+                node.Expand();
+
+            return true;
+        }
+
         /// <summary>
         /// Get Xml string containing the mission
         /// </summary>
         /// <param name="full">If true, output all the attributes that have values set. If false, only output attributes that are defined for the statement kind.</param>
         /// <returns>String containing mission Xml</returns>
         public string ToXml(bool full = false)
-		{
-			XmlDocument xDoc;
-			XmlElement root;
-			XmlAttribute xAtt;
+        {
+            XmlDocument xDoc;
+            XmlElement root;
+            XmlAttribute xAtt;
 
-			xDoc = new XmlDocument();
+            xDoc = new XmlDocument();
 
-			foreach (string item in CommentsBeforeRoot.Split(new string[1]{"\r\n"}, StringSplitOptions.None))
-				if (!string.IsNullOrWhiteSpace(item))
-					xDoc.AppendChild(xDoc.CreateComment(item));
+            foreach (string item in CommentsBeforeRoot.Split(new string[1]{"\r\n"}, StringSplitOptions.None))
+                if (!string.IsNullOrWhiteSpace(item))
+                    xDoc.AppendChild(xDoc.CreateComment(item));
 
-			root = xDoc.CreateElement("mission_data");
-			if (true)
-			{
-				xAtt = xDoc.CreateAttribute("version");
-				xAtt.Value = VersionNumber;
-				root.Attributes.Append(xAtt);
-				xDoc.AppendChild(root);
-			}
-			if (BackgroundNode!=null)
-			{
-				xAtt = xDoc.CreateAttribute("background_id_arme");
-				xAtt.Value = ((MissionNode)BackgroundNode.Tag).ID.ToString();
-				root.Attributes.Append(xAtt);
-				xDoc.AppendChild(root);
-			}
+            root = xDoc.CreateElement("mission_data");
+            if (true)
+            {
+                xAtt = xDoc.CreateAttribute("version");
+                xAtt.Value = VersionNumber;
+                root.Attributes.Append(xAtt);
+                xDoc.AppendChild(root);
+            }
+            if (BackgroundNode != null)
+            {
+                xAtt = xDoc.CreateAttribute("background_id_arme");
+                xAtt.Value = ((MissionNode)BackgroundNode.Tag).ID.ToString();
+                root.Attributes.Append(xAtt);
+                xDoc.AppendChild(root);
+            }
             if (PlayerShipNames.Length > 0)
             {
                 xAtt = xDoc.CreateAttribute("playerShipNames_arme");
@@ -954,33 +1107,40 @@ namespace ArtemisMissionEditor
                 xDoc.AppendChild(root);
             }
 
-			//Out the xml's!
+            if (!String.IsNullOrEmpty(Description))
+            {
+                XmlElement elt = xDoc.CreateElement("mission_description");
+                elt.InnerText = Description.Replace("\r\n", "^");
+                root.AppendChild(elt);
+            }
+
+            //Out the xml's!
             for (int i = 0; i < TreeViewNodes.Nodes.Count; i++)
                 ToXml_RecursivelyOut(root, xDoc, TreeViewNodes.Nodes[i], full);
 
-			foreach (string item in CommentsAfterRoot.Split(new string[1] { "\r\n" }, StringSplitOptions.None))
-				if (!string.IsNullOrWhiteSpace(item))
-					xDoc.AppendChild(xDoc.CreateComment(item));
+            foreach (string item in CommentsAfterRoot.Split(new string[1] { "\r\n" }, StringSplitOptions.None))
+                if (!string.IsNullOrWhiteSpace(item))
+                    xDoc.AppendChild(xDoc.CreateComment(item));
 
-			//I make this look GOOD!
-			StringBuilder sb = new StringBuilder();
-			XmlWriterSettings settings = new XmlWriterSettings();
+            //I make this look GOOD!
+            StringBuilder sb = new StringBuilder();
+            XmlWriterSettings settings = new XmlWriterSettings();
 
-			settings.Indent = true;
-			settings.IndentChars = "  ";
-			settings.NewLineChars = "\r\n";
-			settings.NewLineHandling = NewLineHandling.Replace;
-			settings.OmitXmlDeclaration = true;
-			using (XmlWriter writer = XmlWriter.Create(sb, settings))
-			{
-				xDoc.Save(writer);
-			}
+            settings.Indent = true;
+            settings.IndentChars = "  ";
+            settings.NewLineChars = "\r\n";
+            settings.NewLineHandling = NewLineHandling.Replace;
+            settings.OmitXmlDeclaration = true;
+            using (XmlWriter writer = XmlWriter.Create(sb, settings))
+            {
+                xDoc.Save(writer);
+            }
 
-			return sb.ToString();
-		}
+            return sb.ToString();
+        }
 
         /// <summary>
-        /// Generate Xml for the current node and its contents. 
+        /// Generate Xml for the current node and its contents.
         /// Called from ToXml method, recursively calls itself.
         /// </summary>
         /// <param name="root">Root node of the mission (mission_data)</param>
@@ -995,55 +1155,56 @@ namespace ArtemisMissionEditor
             for (int i = 0; i < tNode.Nodes.Count; i++)
                 ToXml_RecursivelyOut(root, xDoc, tNode.Nodes[i], full);
         }
-		
+
         /// <summary>
         /// Load mission contents from saved state
         /// </summary>
-		private void FromState(MissionSavedState state)
-		{
-			Dependencies.Invalidate();
-			
-			BeginUpdate();
+        private void FromState(MissionSavedState state)
+        {
+            Dependencies.Invalidate();
 
-			FromXml(state.Xml, true, true);
+            BeginUpdate();
 
-			ChangesPending = state.ChangesPending;
-			FilePath = state.FilePath;
-			CommentsBeforeRoot = state.CommentsBefore;
-			CommentsAfterRoot = state.CommentsAfter;
+            FromXml(state.Xml, true, true);
+
+            ChangesPending = state.ChangesPending;
+            FilePath = state.FilePath;
+            CommentsBeforeRoot = state.CommentsBefore;
+            CommentsAfterRoot = state.CommentsAfter;
             PlayerShipNames = state.PlayerShipNames;
             VersionNumber = state.VersionNumber;
+            Description = state.Description;
 
             //Find selected node
-			if (state.SelectedNode >= 0)
-			{
-				int curStep = -1;
-				foreach (TreeNode node in TreeViewNodes.Nodes)
-					FromState_RecursiveSelectByStep(node, ref curStep, state.SelectedNode);
-			}
+            if (state.SelectedNode >= 0)
+            {
+                int curStep = -1;
+                foreach (TreeNode node in TreeViewNodes.Nodes)
+                    FromState_RecursiveSelectByStep(node, ref curStep, state.SelectedNode);
+            }
 
-			if (state.SelectedAction >= 0)
-				foreach (TreeNode node in TreeViewStatements.Nodes)
-					FromState_RecursiveSelectByTag(node, ((MissionNode)TreeViewNodes.SelectedNode.Tag).Actions[state.SelectedAction]);
+            if (state.SelectedAction >= 0)
+                foreach (TreeNode node in TreeViewStatements.Nodes)
+                    FromState_RecursiveSelectByTag(node, ((MissionNode)TreeViewNodes.SelectedNode.Tag).Actions[state.SelectedAction]);
 
-			if (state.SelectedCondition >= 0)
-				foreach (TreeNode node in TreeViewStatements.Nodes)
-					FromState_RecursiveSelectByTag(node, ((MissionNode)TreeViewNodes.SelectedNode.Tag).Conditions[state.SelectedCondition]);
+            if (state.SelectedCondition >= 0)
+                foreach (TreeNode node in TreeViewStatements.Nodes)
+                    FromState_RecursiveSelectByTag(node, ((MissionNode)TreeViewNodes.SelectedNode.Tag).Conditions[state.SelectedCondition]);
 
-			if (state.SelectedLabel >= 0)
-				FlowLayoutPanelMain.Controls[state.SelectedLabel].Focus();
+            if (state.SelectedLabel >= 0)
+                FlowLayoutPanelMain.Controls[state.SelectedLabel].Focus();
 
             RecalculateNodeCount();
 
             EndUpdate();
-		}
+        }
 
         /// <summary>
-        /// Select mission node by "step" value. 
+        /// Select mission node by "step" value.
         /// Called from FromState and recursively calls itself.
         /// </summary>
         /// <param name="node">Currently visited node</param>
-        ///<param name="curStep">Current step</param>
+        /// <param name="curStep">Current step</param>
         /// <param name="targetStep">Target step</param>
         private void FromState_RecursiveSelectByStep(TreeNode node, ref int curStep, int targetStep)
         {
@@ -1055,7 +1216,7 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// Select mission statement by tag value. 
+        /// Select mission statement by tag value.
         /// Called from FromState and recursively calls iself.
         /// </summary>
         /// <param name="node">Currently visited node</param>
@@ -1076,56 +1237,57 @@ namespace ArtemisMissionEditor
         /// Save mission contents to a state
         /// </summary>
         /// <param name="shortDescription">Description of the state</param>
-		private MissionSavedState ToState(string shortDescription)
-		{
-			MissionSavedState result = new MissionSavedState();
-			result.Xml = ToXml(true);
-			result.Description = shortDescription;
+        private MissionSavedState ToState(string shortDescription)
+        {
+            MissionSavedState result = new MissionSavedState();
+            result.Xml = ToXml(true);
+            result.Description = shortDescription;
             result.ChangesPending = ChangesPending;
-			result.FilePath = FilePath;
-			result.CommentsBefore = CommentsBeforeRoot;
-			result.CommentsAfter = CommentsAfterRoot;
+            result.FilePath = FilePath;
+            result.CommentsBefore = CommentsBeforeRoot;
+            result.CommentsAfter = CommentsAfterRoot;
             result.PlayerShipNames = PlayerShipNames;
             result.VersionNumber = VersionNumber;
+            result.Description = Description;
             result.SelectedNode = -1;
-			if (TreeViewNodes.SelectedNode!=null)
-			{
-				int curStep = -1;
-				foreach (TreeNode node in TreeViewNodes.Nodes)
-					if (ToState_RecursivelyGetSelected(node, ref curStep)) 
+            if (TreeViewNodes.SelectedNode!=null)
+            {
+                int curStep = -1;
+                foreach (TreeNode node in TreeViewNodes.Nodes)
+                    if (ToState_RecursivelyGetSelected(node, ref curStep))
                         break;
-				result.SelectedNode = curStep;
-			}
+                result.SelectedNode = curStep;
+            }
 
-			result.SelectedAction = -1;
-			result.SelectedCondition = -1;
-			result.SelectedLabel = -1;
-			if (TreeViewNodes.SelectedNode != null && TreeViewStatements.SelectedNode != null && TreeViewStatements.SelectedNode.Tag is MissionStatement)
-			{
-				MissionNode curNode = (MissionNode)TreeViewNodes.SelectedNode.Tag;
-				MissionStatement curStatement = (MissionStatement)TreeViewStatements.SelectedNode.Tag;
-				if (curNode.Actions.Contains(curStatement))
-					result.SelectedAction = curNode.Actions.IndexOf(curStatement);
-				if (curNode.Conditions.Contains(curStatement))
-					result.SelectedCondition = curNode.Conditions.IndexOf(curStatement);
-				foreach (Control c in FlowLayoutPanelMain.Controls)
-					if (c.Focused)
-						result.SelectedLabel = FlowLayoutPanelMain.Controls.IndexOf(c);
-			}
+            result.SelectedAction = -1;
+            result.SelectedCondition = -1;
+            result.SelectedLabel = -1;
+            if (TreeViewNodes.SelectedNode != null && TreeViewStatements.SelectedNode != null && TreeViewStatements.SelectedNode.Tag is MissionStatement)
+            {
+                MissionNode curNode = (MissionNode)TreeViewNodes.SelectedNode.Tag;
+                MissionStatement curStatement = (MissionStatement)TreeViewStatements.SelectedNode.Tag;
+                if (curNode.Actions.Contains(curStatement))
+                    result.SelectedAction = curNode.Actions.IndexOf(curStatement);
+                if (curNode.Conditions.Contains(curStatement))
+                    result.SelectedCondition = curNode.Conditions.IndexOf(curStatement);
+                foreach (Control c in FlowLayoutPanelMain.Controls)
+                    if (c.Focused)
+                        result.SelectedLabel = FlowLayoutPanelMain.Controls.IndexOf(c);
+            }
 
-			return result;
-		}
+            return result;
+        }
 
-		/// <summary>
-		/// Get selected node. 
+        /// <summary>
+        /// Get selected node.
         /// Called from ToState and recursively calls itself.
-		/// </summary>
-		/// <param name="node">Currently visited node</param>
+        /// </summary>
+        /// <param name="node">Currently visited node</param>
         /// <param name="curStep">Current step (this is incremented until we reach selected node)</param>
         private bool ToState_RecursivelyGetSelected(TreeNode node, ref int curStep)
         {
             foreach (TreeNode child in node.Nodes)
-                if (ToState_RecursivelyGetSelected(child, ref curStep)) 
+                if (ToState_RecursivelyGetSelected(child, ref curStep))
                     return true;
             curStep++;
             if (TreeViewNodes.SelectedNode == node)
@@ -1137,9 +1299,9 @@ namespace ArtemisMissionEditor
         /// <summary>
         /// Save mission by forcing a save dialog and then saving it to file
         /// </summary>
-        /// <returns>Wether mission was saved</returns>
-		public bool SaveAs()
-		{
+        /// <returns>Whether mission was saved</returns>
+        public bool SaveAs()
+        {
             using (SaveFileDialog sfd = new SaveFileDialog())
             {
                 DialogResult res;
@@ -1155,14 +1317,14 @@ namespace ArtemisMissionEditor
 
                 return Save(fileName);
             }
-		}
+        }
 
         /// <summary>
         /// Save mission automatically (if already saved once) or pop a dialog and save (if new mission)
         /// </summary>
-        /// <returns>Wether mission was saved</returns>
-		public bool Save()
-		{
+        /// <returns>Whether mission was saved</returns>
+        public bool Save()
+        {
             if (String.IsNullOrEmpty(FilePath))
                 return SaveAs();
             else
@@ -1170,24 +1332,27 @@ namespace ArtemisMissionEditor
                     return Save(FilePath);
                 else
                     return false;
-		}
+        }
 
-		/// <summary>
-		/// Save mission to a file
-		/// </summary>
-		/// <param name="autosave">If set, mission will not remember specified filename as its new filename</param>
-		/// <returns></returns>
+        /// <summary>
+        /// Save mission to a file
+        /// </summary>
+        /// <param name="autosave">If set, mission will not remember specified filename as its new filename</param>
+        /// <returns>Whether mission was saved</returns>
         public bool Save(string fileName, bool autosave = false)
-		{
+        {
             try
             {
                 using (StreamWriter streamWriter = new StreamWriter(fileName, false))
                     streamWriter.Write(ToXml());
 
-                if (!autosave) 
+                if (!autosave)
                 {
                     FilePath = fileName;
                     TruncateUndoStack(Settings.Current.AmountOfUndoEntriesToKeep);
+
+                    // Add successfully opened file to MRU list.
+                    MRUManager.Current.AddRecentFile(fileName);
                 }
             }
             catch (Exception ex)
@@ -1196,156 +1361,210 @@ namespace ArtemisMissionEditor
                 return false;
             }
             return true;
-		}
+        }
 
         #endregion
 
         #region Statement operation (delete, move, add...)
 
         /// <summary>
-        /// Enables or disables currently selected  statement(s)
+        /// Enables or disables currently selected statement(s)
         /// </summary>
-		public void StatementSetEnabled(bool enabled)
-		{
-			int count = 0;
-			foreach (TreeNode node in TreeViewStatements.SelectedNodes)
-			{
-				if (!(node.Tag is MissionStatement))
-					continue;
+        /// <param name="enabled">true to enable or false to disable</param>
+        public void StatementSetEnabled(bool enabled)
+        {
+            int count = 0;
+            foreach (TreeNode node in TreeViewStatements.SelectedNodes)
+            {
+                if (!(node.Tag is MissionStatement))
+                    continue;
 
-				MissionStatement mNE = (MissionStatement)node.Tag;
+                MissionStatement mNE = (MissionStatement)node.Tag;
 
-				if (enabled && mNE.Kind == MissionStatementKind.Commentary)
-				{
-					try
-					{
-						XmlDocument xD = new XmlDocument();
-						xD.LoadXml(mNE.Body);
-						mNE.FromXml(xD.ChildNodes[0]);
-						mNE.Update();
-						count++;
-					}
-					catch
-					{
-					}
-				}
+                if (enabled && mNE.Kind == MissionStatementKind.Commentary)
+                {
+                    try
+                    {
+                        XmlDocument xD = new XmlDocument();
+                        xD.LoadXml(mNE.Body);
+                        mNE.FromXml(xD.ChildNodes[0]);
+                        mNE.Update();
+                        count++;
+                    }
+                    catch
+                    {
+                    }
+                }
 
-				if (!enabled && mNE.Kind != MissionStatementKind.Commentary)
-				{
-					try
-					{
-						XmlDocument xD = new XmlDocument();
-						xD.LoadXml("<!--" + mNE.ToXml(xD, true).OuterXml + "--><root/>");
-						mNE.FromXml(xD.ChildNodes[0]);
-						mNE.Update();
-						count++;
-					}
-					catch
-					{
-					}
-				}
+                if (!enabled && mNE.Kind != MissionStatementKind.Commentary)
+                {
+                    try
+                    {
+                        XmlDocument xD = new XmlDocument();
+                        xD.LoadXml("<!--" + mNE.ToXml(xD, true).OuterXml + "--><root/>");
+                        mNE.FromXml(xD.ChildNodes[0]);
+                        mNE.Update();
+                        count++;
+                    }
+                    catch
+                    {
+                    }
+                }
 
-				UpdateStatementTree();
+                UpdateStatementTree();
 
-				node.ImageIndex = mNE.ImageIndex;
-				node.SelectedImageIndex = mNE.ImageIndex;
-			}
+                node.ImageIndex = mNE.ImageIndex;
+                node.SelectedImageIndex = mNE.ImageIndex;
+            }
 
-			if (count > 0)
-				RegisterChange((enabled ? "Enabled" : "Disabled") + " " + count + " statement(s)");
-		}
+            if (count > 0)
+                RegisterChange((enabled ? "Enabled" : "Disabled") + " " + count + " statement(s)");
+        }
 
-        /// <summary> 
+        /// <summary>
+        /// Get help on currently selected statement
+        /// </summary>
+        public void StatementHelp()
+        {
+            if (TreeViewStatements.SelectedNode == null)
+                return;
+
+            foreach(TreeNode node in TreeViewStatements.SelectedNodes.ToList())
+                if (node.Tag is MissionStatement)
+                {
+                    MissionStatement statement = node.Tag as MissionStatement;
+                    string name = statement.Name;
+                    string page;
+
+                    switch (name)
+                    {
+                        // Some pages are prefixed with "command_"
+                        case "clear_gm_button":
+                        case "create":
+                        case "destroy":
+                        case "destroy_near":
+                        case "direct":
+                        case "end_mission":
+                        case "incoming_comms_text":
+                        case "log":
+                        case "set_comms_button":
+                        case "set_timer":
+                        case "set_variable":
+                        case "if_distance":
+                        case "if_docked":
+                        case "if_fleet_count":
+                        case "if_inside_box":
+                            page = "command_" + name;
+                            break;
+
+                        // Other pages are just the statement name.
+                        default:
+                            page = name;
+                            break;
+                    }
+
+                    var url = "http://artemiswiki.pbworks.com/" + page;
+                    var psi = new ProcessStartInfo();
+                    psi.UseShellExecute = true;
+                    psi.FileName = url;
+                    Process.Start(psi);
+
+                    return;
+                }
+        }
+
+        /// <summary>
         /// Delete currently selected statement(s)
         /// </summary>
-		public void StatementDelete()
-		{
-			if (TreeViewStatements.SelectedNode == null)
-				return;
+        public void StatementDelete()
+        {
+            if (TreeViewStatements.SelectedNode == null)
+                return;
 
-			BeginUpdate();
+            BeginUpdate();
 
-			foreach(TreeNode node in TreeViewStatements.SelectedNodes.ToList())
-				if (node.Tag is MissionStatement)
-					TreeViewStatements.Nodes.Remove(node);
+            foreach(TreeNode node in TreeViewStatements.SelectedNodes.ToList())
+                if (node.Tag is MissionStatement)
+                    TreeViewStatements.Nodes.Remove(node);
 
-			EndUpdate();
-			
-			ImportMissionNodeContentsFromStatementTree();
+            EndUpdate();
+
+            ImportMissionNodeContentsFromStatementTree();
 
             RegisterChange("Deleted statement(s)");
-		}
+        }
 
         /// <summary>
         /// Move up currently selected statement
         /// </summary>
-		public void StatementMoveUp()
-		{
-			if (TreeViewStatements.SelectedNode == null)
-				return;
+        public void StatementMoveUp()
+        {
+            if (TreeViewStatements.SelectedNode == null)
+                return;
 
-			if (TreeViewStatements.SelectedNode.PrevNode != null)
-			{
-				TreeViewStatements.MoveNode(TreeViewStatements.SelectedNode, TreeViewStatements.SelectedNode.PrevNode, NodeRelationship.ChildGoesAbove);
-				TreeViewStatements.Focus();
-			}
-		}
+            if (TreeViewStatements.SelectedNode.PrevNode != null)
+            {
+                TreeViewStatements.MoveNode(TreeViewStatements.SelectedNode, TreeViewStatements.SelectedNode.PrevNode, NodeRelationship.ChildGoesAbove);
+                TreeViewStatements.Focus();
+            }
+        }
 
         /// <summary>
         /// Move down currently selected statement
         /// </summary>
-		public void StatementMoveDown()
-		{
-			if (TreeViewStatements.SelectedNode == null)
-				return;
+        public void StatementMoveDown()
+        {
+            if (TreeViewStatements.SelectedNode == null)
+                return;
 
-			if (TreeViewStatements.SelectedNode.NextNode != null)
-			{
-				TreeViewStatements.MoveNode(TreeViewStatements.SelectedNode, TreeViewStatements.SelectedNode.NextNode, NodeRelationship.ChildGoesUnder);
-				TreeViewStatements.Focus();
-			}
-		}
+            if (TreeViewStatements.SelectedNode.NextNode != null)
+            {
+                TreeViewStatements.MoveNode(TreeViewStatements.SelectedNode, TreeViewStatements.SelectedNode.NextNode, NodeRelationship.ChildGoesUnder);
+                TreeViewStatements.Focus();
+            }
+        }
 
         /// <summary>
         /// Add commentary statement
         /// </summary>
         /// <param name="nodeUnderCursor">Specified when inserting via dropdown menu, unspecified when inserting via hotkey</param>
-		public void StatementAddCommentary(TreeNode nodeUnderCursor = null)
-		{
-			MissionStatement newStatement = new MissionStatement((MissionNode)TreeViewNodes.SelectedNode.Tag);
+        public void StatementAddCommentary(TreeNode nodeUnderCursor = null)
+        {
+            MissionStatement newStatement = new MissionStatement((MissionNode)TreeViewNodes.SelectedNode.Tag);
             newStatement.IsCommentary = true;
             newStatement.Name = "Commentary";
-            
+
             if (StatementAddNew(newStatement, nodeUnderCursor))
-				RegisterChange("New commentary statement");
-		}
+                RegisterChange("New commentary statement");
+        }
 
         /// <summary>
         /// Add condition statement
         /// </summary>
         /// <param name="nodeUnderCursor">Specified when inserting via dropdown menu, unspecified when inserting via hotkey</param>
-		public void StatementAddCondition(TreeNode nodeUnderCursor = null)
-		{
-			MissionStatement newStatement = new MissionStatement((MissionNode)TreeViewNodes.SelectedNode.Tag);
+        public void StatementAddCondition(TreeNode nodeUnderCursor = null)
+        {
+            MissionStatement newStatement = new MissionStatement((MissionNode)TreeViewNodes.SelectedNode.Tag);
             newStatement.Name = "if_variable";
 
             if (StatementAddNew(newStatement, nodeUnderCursor))
                 RegisterChange("New condition statement");
-		}
+        }
 
         /// <summary>
         /// Add action statement
         /// </summary>
         /// <param name="nodeUnderCursor">Specified when inserting via dropdown menu, unspecified when inserting via hotkey</param>
-		public void StatementAddAction(TreeNode nodeUnderCursor = null)
-		{
-			MissionStatement newStatement = new MissionStatement((MissionNode)TreeViewNodes.SelectedNode.Tag);
+        public void StatementAddAction(TreeNode nodeUnderCursor = null)
+        {
+            MissionStatement newStatement = new MissionStatement((MissionNode)TreeViewNodes.SelectedNode.Tag);
             newStatement.Name = "set_variable";
+            newStatement.SetAttribute("integer", "yes");
 
-			if (StatementAddNew(newStatement, nodeUnderCursor))
+            if (StatementAddNew(newStatement, nodeUnderCursor))
                 RegisterChange("New action statement");
-		}
-        
+        }
+
         /// <summary>
         /// Inner part of adding new statement, returns whether update (change register) is required
         /// </summary>
@@ -1374,140 +1593,140 @@ namespace ArtemisMissionEditor
             return needUpdate;
         }
 
-		/// <summary>
-		/// Insert one statement inside other statement, if possible, or below it (or then above it), if not possible
-		/// </summary>
-		/// <param name="toInsert">Statement to be Added</param>
-		/// <param name="selected">Statement that receives the Added one</param>
-		private bool StatementInsertUnderNode(TreeNode toInsert, TreeNode selected)
-		{
-			TreeNode ultimateParent = null;
-			foreach (TreeNode node in TreeViewStatements.Nodes)
-			{
+        /// <summary>
+        /// Insert one statement inside other statement, if possible, or below it (or then above it), if not possible
+        /// </summary>
+        /// <param name="toInsert">Statement to be Added</param>
+        /// <param name="selected">Statement that receives the Added one</param>
+        private bool StatementInsertUnderNode(TreeNode toInsert, TreeNode selected)
+        {
+            TreeNode ultimateParent = null;
+            foreach (TreeNode node in TreeViewStatements.Nodes)
+            {
                 if (!(node.Tag is string))
                     continue;
-				if ((string)node.Tag == "conditions" && ((MissionStatement)toInsert.Tag).Kind == MissionStatementKind.Condition)
-					ultimateParent = node;
-				if ((string)node.Tag == "actions" && ((MissionStatement)toInsert.Tag).Kind == MissionStatementKind.Action)
-					ultimateParent = node;
-				if (((MissionStatement)toInsert.Tag).Kind == MissionStatementKind.Commentary)
-					ultimateParent = node;
-			}
+                if ((string)node.Tag == "conditions" && ((MissionStatement)toInsert.Tag).Kind == MissionStatementKind.Condition)
+                    ultimateParent = node;
+                if ((string)node.Tag == "actions" && ((MissionStatement)toInsert.Tag).Kind == MissionStatementKind.Action)
+                    ultimateParent = node;
+                if (((MissionStatement)toInsert.Tag).Kind == MissionStatementKind.Commentary)
+                    ultimateParent = node;
+            }
 
-			if (ultimateParent == null)
-				return false;
+            if (ultimateParent == null)
+                return false;
 
-			if (selected != null && TreeViewStatements.IsAllowedToHaveRelation(selected, toInsert, NodeRelationship.ChildGoesInside))
+            if (selected != null && TreeViewStatements.IsAllowedToHaveRelation(selected, toInsert, NodeRelationship.ChildGoesInside))
                 TreeViewStatements.MoveNode(toInsert, selected, NodeRelationship.ChildGoesInside, Settings.Current.InsertNewOverElement ? NodeRelationship.ChildGoesUnder : NodeRelationship.ChildGoesAbove, true);
             else if (selected != null && TreeViewStatements.IsAllowedToHaveRelation(selected, toInsert, Settings.Current.InsertNewOverElement ? NodeRelationship.ChildGoesAbove : NodeRelationship.ChildGoesUnder))
                 TreeViewStatements.MoveNode(toInsert, selected, Settings.Current.InsertNewOverElement ? NodeRelationship.ChildGoesAbove : NodeRelationship.ChildGoesUnder, NodeRelationship.Null, true);
             else if (selected != null && TreeViewStatements.IsAllowedToHaveRelation(selected, toInsert, Settings.Current.InsertNewOverElement ? NodeRelationship.ChildGoesUnder : NodeRelationship.ChildGoesAbove))
                 TreeViewStatements.MoveNode(toInsert, selected, Settings.Current.InsertNewOverElement ? NodeRelationship.ChildGoesUnder : NodeRelationship.ChildGoesAbove, NodeRelationship.Null, true);
-			else
-			{
-				if (!Settings.Current.InsertNewOverElement)
-					ultimateParent.Nodes.Insert(0,toInsert);
-				else
-					ultimateParent.Nodes.Add(toInsert);
-			}
-			
-			return true;
-		}
-        
-        /// <summary>
-        /// Check wether selected statement has source Xml (meaning it was read from file rather than added in the editor)
-        /// </summary>
-		public bool StatementHasSourceXml()
-		{
-			if (TreeViewStatements.SelectedNode == null)
-				return false;
+            else
+            {
+                if (!Settings.Current.InsertNewOverElement)
+                    ultimateParent.Nodes.Insert(0,toInsert);
+                else
+                    ultimateParent.Nodes.Add(toInsert);
+            }
 
-			if (!(TreeViewStatements.SelectedNode.Tag is MissionStatement))
-				return false; 
-			
-			return !string.IsNullOrEmpty(((MissionStatement)TreeViewStatements.SelectedNode.Tag).SourceXML);
-		}
+            return true;
+        }
+
+        /// <summary>
+        /// Check whether selected statement has source Xml (meaning it was read from file rather than added in the editor)
+        /// </summary>
+        public bool StatementHasSourceXml()
+        {
+            if (TreeViewStatements.SelectedNode == null)
+                return false;
+
+            if (!(TreeViewStatements.SelectedNode.Tag is MissionStatement))
+                return false;
+
+            return !string.IsNullOrEmpty(((MissionStatement)TreeViewStatements.SelectedNode.Tag).SourceXML);
+        }
 
         /// <summary>
         /// Get selected statement's Xml
         /// </summary>
-		private string StatementGetXml()
-		{
-			if (TreeViewStatements.SelectedNode == null)
-				return null;
+        private string StatementGetXml()
+        {
+            if (TreeViewStatements.SelectedNode == null)
+                return null;
 
-			if (!(TreeViewStatements.SelectedNode.Tag is MissionStatement))
-				return null;
+            if (!(TreeViewStatements.SelectedNode.Tag is MissionStatement))
+                return null;
 
-			return ((MissionStatement)TreeViewStatements.SelectedNode.Tag).ToXml(new XmlDocument()).OuterXml;
-		}
-		
+            return ((MissionStatement)TreeViewStatements.SelectedNode.Tag).ToXml(new XmlDocument()).OuterXml;
+        }
+
         /// <summary>
         /// Show Xml of the selected statement in a MessageBox
         /// </summary>
         /// <param name="source">If true - show source Xml, if false - show current Xml </param>
-		public void StatementShowXml(bool source = false)
-		{
-			if (TreeViewStatements.SelectedNode == null)
-				return;
+        public void StatementShowXml(bool source = false)
+        {
+            if (TreeViewStatements.SelectedNode == null)
+                return;
 
-			if (!(TreeViewStatements.SelectedNode.Tag is MissionStatement))
-				return;
+            if (!(TreeViewStatements.SelectedNode.Tag is MissionStatement))
+                return;
 
-			if (source)
-			{
-				string result = ((MissionStatement)TreeViewStatements.SelectedNode.Tag).SourceXML;
-				if (result != null)
-					MessageBox.Show(result, "Xml source of the statement");
-			}
-			else
-			{
-				string result = StatementGetXml();
-				if (result != null)
-					MessageBox.Show(result, "Xml code of the statement");
-			}
-		}
+            if (source)
+            {
+                string result = ((MissionStatement)TreeViewStatements.SelectedNode.Tag).SourceXML;
+                if (result != null)
+                    MessageBox.Show(result, "Xml source of the statement");
+            }
+            else
+            {
+                string result = StatementGetXml();
+                if (result != null)
+                    MessageBox.Show(result, "Xml code of the statement");
+            }
+        }
 
         /// <summary>
         /// Puts selected statement's Xml to clipboard
         /// </summary>
-		public void StatementCopyXml()
-		{
-			string result = StatementGetXml();
+        public void StatementCopyXml()
+        {
+            string result = StatementGetXml();
 
-			if (result != null) 
-				Clipboard.SetText(result);
-		}
+            if (result != null)
+                Clipboard.SetText(result);
+        }
 
         /// <summary>
         /// Copy selected statement(s)'s Xml code to clipboard
         /// </summary>
-		public bool StatementCopy()
-		{
-			if (TreeViewStatements.SelectedNode == null)
-				return false;
+        public bool StatementCopy()
+        {
+            if (TreeViewStatements.SelectedNode == null)
+                return false;
 
-			string Xml = "";
+            string Xml = "";
 
-			foreach (TreeNode node in TreeViewStatements.SelectedNodes)
-				if (node.Tag is MissionStatement)
-					Xml += ((MissionStatement)node.Tag).ToXml(new XmlDocument(), true).OuterXml;
+            foreach (TreeNode node in TreeViewStatements.SelectedNodes)
+                if (node.Tag is MissionStatement)
+                    Xml += ((MissionStatement)node.Tag).ToXml(new XmlDocument(), true).OuterXml;
 
-			if (!string.IsNullOrWhiteSpace(Xml))
-				Clipboard.SetText(Xml);
+            if (!string.IsNullOrWhiteSpace(Xml))
+                Clipboard.SetText(Xml);
 
-			return !string.IsNullOrWhiteSpace(Xml);
-		}
+            return !string.IsNullOrWhiteSpace(Xml);
+        }
 
         /// <summary>
         /// Paste contents from clipboard into current node as statement(s)
         /// </summary>
         public bool StatementPaste()
-		{
-			if (TreeViewNodes.SelectedNode==null)
-				return false;
-			if (!(TreeViewNodes.SelectedNode.Tag is MissionNode_Event || TreeViewNodes.SelectedNode.Tag is MissionNode_Start))
-				return false;
+        {
+            if (TreeViewNodes.SelectedNode==null)
+                return false;
+            if (!(TreeViewNodes.SelectedNode.Tag is MissionNode_Event || TreeViewNodes.SelectedNode.Tag is MissionNode_Start))
+                return false;
 
             XmlDocument xDoc = new XmlDocument();
             try
@@ -1521,9 +1740,20 @@ namespace ArtemisMissionEditor
 
             XmlNode root = xDoc.ChildNodes[0];
 
-			List<MissionStatement> newStatements = new List<MissionStatement>();
+            List<MissionStatement> newStatements = new List<MissionStatement>();
             TreeNode lastNode = null;
 
+            // First validate input before actually modifying the mission.
+            foreach (XmlNode childNode in root)
+            {
+                MissionStatement newMStatement = MissionStatement.NewFromXML(childNode, (MissionNode)TreeViewNodes.SelectedNode.Tag);
+                if (newMStatement == null)
+                {
+                    return false;
+                }
+            }
+
+            // The input is valid, so actually do the modifications.
             BeginUpdate(true);
 
             foreach (XmlNode childNode in root)
@@ -1537,7 +1767,7 @@ namespace ArtemisMissionEditor
 
             for (int i = 0; i < newStatements.Count; i++)
             {
-				int j = Settings.Current.InsertNewOverElement ? i : newStatements.Count - 1 - i;
+                int j = Settings.Current.InsertNewOverElement ? i : newStatements.Count - 1 - i;
 
                 TreeNode newTNode = new TreeNode();
                 MissionStatement newMStatement = newStatements[j];
@@ -1551,8 +1781,8 @@ namespace ArtemisMissionEditor
                 needUpdate += StatementInsertUnderNode(newTNode, TreeViewStatements.SelectedNode) ? 1 : 0;
                 TreeViewStatements.SelectedNode = lastNode;
                 lastNode = newTNode;
-				TreeViewStatements.ExpandAll();
-				
+                TreeViewStatements.ExpandAll();
+
                 ImportMissionNodeContentsFromStatementTree();
             }
 
@@ -1566,8 +1796,8 @@ namespace ArtemisMissionEditor
 
             EndUpdate(true);
 
-			return true;
-		}
+            return true;
+        }
 
         #endregion
 
@@ -1577,286 +1807,286 @@ namespace ArtemisMissionEditor
         /// Delete selected node(s)
         /// </summary>
         public void NodeDelete()
-		{
-			if (TreeViewNodes.SelectedNode == null)
-				return;
-			
-			BeginUpdate();
+        {
+            if (TreeViewNodes.SelectedNode == null)
+                return;
 
-			foreach (TreeNode node in TreeViewNodes.SelectedNodes.ToList())
-				if (!(node.Tag is MissionNode_Start))
-				{
-					TreeViewNodes.Nodes.Remove(node);
-					if (BackgroundNode == node)
-						BackgroundNode = _startNode;
-				}
-				else if (Settings.Current.ClearStartNodeOnDelete)
-				{
-					((MissionNode_Start)node.Tag).Actions.Clear();
-					if (node == StartNode)
-						OutputMissionNodeContentsToStatementTree();
-				}
+            BeginUpdate();
 
-			EndUpdate();
-			
+            foreach (TreeNode node in TreeViewNodes.SelectedNodes.ToList())
+                if (!(node.Tag is MissionNode_Start))
+                {
+                    TreeViewNodes.Nodes.Remove(node);
+                    if (BackgroundNode == node)
+                        BackgroundNode = _startNode;
+                }
+                else if (Settings.Current.ClearStartNodeOnDelete)
+                {
+                    ((MissionNode_Start)node.Tag).Actions.Clear();
+                    if (node == StartNode)
+                        OutputMissionNodeContentsToStatementTree();
+                }
+
+            EndUpdate();
+
             RecalculateNodeCount();
 
-			RegisterChange("Deleted node(s)");
-		}
+            RegisterChange("Deleted node(s)");
+        }
 
         /// <summary>
         /// Move selected node up in the treeview
         /// </summary>
-		public void NodeMoveUp()
-		{
-			if (TreeViewNodes.SelectedNode == null)
-				return;
+        public void NodeMoveUp()
+        {
+            if (TreeViewNodes.SelectedNode == null)
+                return;
 
-			if (TreeViewNodes.SelectedNode.PrevNode != null)
+            if (TreeViewNodes.SelectedNode.PrevNode != null)
                 TreeViewNodes.MoveNode(TreeViewNodes.SelectedNode, TreeViewNodes.SelectedNode.PrevNode, NodeRelationship.ChildGoesAbove);
-		}
+        }
 
         /// <summary>
         /// Move selected node down in the treeview
         /// </summary>
-		public void NodeMoveDown()
-		{
-			if (TreeViewNodes.SelectedNode == null)
-				return;
+        public void NodeMoveDown()
+        {
+            if (TreeViewNodes.SelectedNode == null)
+                return;
 
-			if (TreeViewNodes.SelectedNode.NextNode != null)
+            if (TreeViewNodes.SelectedNode.NextNode != null)
                 TreeViewNodes.MoveNode(TreeViewNodes.SelectedNode, TreeViewNodes.SelectedNode.NextNode, NodeRelationship.ChildGoesUnder);
-		}
+        }
         /// <summary>
         /// Move selected node into the previous (or next if no previous) node in the treeview
         /// </summary>
-		public void NodeMoveIn()
-		{
-			if (TreeViewNodes.SelectedNode == null)
-				return;
+        public void NodeMoveIn()
+        {
+            if (TreeViewNodes.SelectedNode == null)
+                return;
 
-            if (TreeViewNodes.SelectedNode.PrevNode != null 
-                && TreeViewNodes.IsFolder(TreeViewNodes.SelectedNode.PrevNode) 
+            if (TreeViewNodes.SelectedNode.PrevNode != null
+                && TreeViewNodes.IsFolder(TreeViewNodes.SelectedNode.PrevNode)
                 && TreeViewNodes.IsAllowedToHaveRelation(TreeViewNodes.SelectedNode.PrevNode, TreeViewNodes.SelectedNode, NodeRelationship.ChildGoesInside))
                 TreeViewNodes.MoveNode(TreeViewNodes.SelectedNode, TreeViewNodes.SelectedNode.PrevNode, NodeRelationship.ChildGoesInside);
-			else if (TreeViewNodes.SelectedNode.NextNode != null)
+            else if (TreeViewNodes.SelectedNode.NextNode != null)
                 TreeViewNodes.MoveNode(TreeViewNodes.SelectedNode, TreeViewNodes.SelectedNode.NextNode, NodeRelationship.ChildGoesInside);
-		}
+        }
 
         /// <summary>
         /// Move selected node out of the parent node in the treeview
         /// </summary>
-		public void NodeMoveOut()
-		{
-			if (TreeViewNodes.SelectedNode == null)
-				return;
+        public void NodeMoveOut()
+        {
+            if (TreeViewNodes.SelectedNode == null)
+                return;
 
-			if (TreeViewNodes.SelectedNode.Parent != null)
+            if (TreeViewNodes.SelectedNode.Parent != null)
                 TreeViewNodes.MoveNode(TreeViewNodes.SelectedNode, TreeViewNodes.SelectedNode.Parent, NodeRelationship.ChildGoesUnder);
-		}
+        }
 
         /// <summary>
         /// Get Xml code that represents selected node
         /// </summary>
-		private string NodeGetXml()
-		{
-			if (TreeViewNodes.SelectedNode == null)
-				return null;
+        private string NodeGetXml()
+        {
+            if (TreeViewNodes.SelectedNode == null)
+                return null;
 
-			if (!(TreeViewNodes.SelectedNode.Tag is MissionNode))
-				return null;
+            if (!(TreeViewNodes.SelectedNode.Tag is MissionNode))
+                return null;
 
-			XmlDocument xDoc = new XmlDocument();
-			xDoc.AppendChild(((MissionNode)TreeViewNodes.SelectedNode.Tag).ToXml(xDoc));
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.AppendChild(((MissionNode)TreeViewNodes.SelectedNode.Tag).ToXml(xDoc));
 
-			StringBuilder sb = new StringBuilder();
-			XmlWriterSettings settings = new XmlWriterSettings();
+            StringBuilder sb = new StringBuilder();
+            XmlWriterSettings settings = new XmlWriterSettings();
 
-			settings.Indent = true;
-			settings.IndentChars = "  ";
-			settings.NewLineChars = "\r\n";
-			settings.NewLineHandling = NewLineHandling.Replace;
-			settings.OmitXmlDeclaration = true;
-			using (XmlWriter writer = XmlWriter.Create(sb, settings))
-			{
-				xDoc.Save(writer);
-			}
+            settings.Indent = true;
+            settings.IndentChars = "  ";
+            settings.NewLineChars = "\r\n";
+            settings.NewLineHandling = NewLineHandling.Replace;
+            settings.OmitXmlDeclaration = true;
+            using (XmlWriter writer = XmlWriter.Create(sb, settings))
+            {
+                xDoc.Save(writer);
+            }
 
-			return sb.ToString(); 
-		}
-		
+            return sb.ToString();
+        }
+
         /// <summary>
         /// Show selected node's Xml in a MessageBox
         /// </summary>
-		public void NodeShowXml()
-		{
-			if (TreeViewNodes.SelectedNode == null)
-				return;
+        public void NodeShowXml()
+        {
+            if (TreeViewNodes.SelectedNode == null)
+                return;
 
-			if (!(TreeViewNodes.SelectedNode.Tag is MissionNode))
-				return;
+            if (!(TreeViewNodes.SelectedNode.Tag is MissionNode))
+                return;
 
-			string result = NodeGetXml();
+            string result = NodeGetXml();
 
-			if (result != null)
-				MessageBox.Show(result, "Xml code of the Node");
-		}
+            if (result != null)
+                MessageBox.Show(result, "Xml code of the Node");
+        }
 
         /// <summary>
         /// Copy selected node's Xml to clipboard
         /// </summary>
-		public void NodeCopyXml()
-		{
-			string result = NodeGetXml();
+        public void NodeCopyXml()
+        {
+            string result = NodeGetXml();
 
-			if (result != null)
-				Clipboard.SetText(result);
-		}
+            if (result != null)
+                Clipboard.SetText(result);
+        }
 
         /// <summary>
         /// Copy selected node(s)'s Xml to clipboard
         /// </summary>
         /// <returns></returns>
-		public bool NodeCopy()
-		{
-			if (TreeViewNodes.SelectedNode == null)
-				return false;
+        public bool NodeCopy()
+        {
+            if (TreeViewNodes.SelectedNode == null)
+                return false;
 
-			string Xml = "";
+            string Xml = "";
 
-			foreach (TreeNode node in TreeViewNodes.SelectedNodes)
-				Xml += ((MissionNode)node.Tag).ToXml(new XmlDocument(), true).OuterXml;
-			
-			if (!string.IsNullOrWhiteSpace(Xml))
-				Clipboard.SetText(Xml);
+            foreach (TreeNode node in TreeViewNodes.SelectedNodes)
+                Xml += ((MissionNode)node.Tag).ToXml(new XmlDocument(), true).OuterXml;
 
-			return !string.IsNullOrWhiteSpace(Xml);
-		}
-		
+            if (!string.IsNullOrWhiteSpace(Xml))
+                Clipboard.SetText(Xml);
+
+            return !string.IsNullOrWhiteSpace(Xml);
+        }
+
         /// <summary>
         /// Paste text from clipboard as nodes
         /// </summary>
-		public bool NodePaste()
-		{
-			XmlDocument xDoc = new XmlDocument();
-			try
-			{
+        public bool NodePaste()
+        {
+            XmlDocument xDoc = new XmlDocument();
+            try
+            {
                 xDoc.LoadXml("<root>" + Helper.FixMissionXml(Clipboard.GetText()) + "</root>");
-			}
-			catch (Exception ex)
-			{
+            }
+            catch (Exception ex)
+            {
                 Log.Add("Error parsing XML: " + ex.Message + " " + ex.StackTrace);
-				return false;
-			}
+                return false;
+            }
 
             XmlNode root = xDoc.ChildNodes[0];
 
-			foreach (XmlNode node in root.ChildNodes)
-				if (node.Name == "mission_data")
-					root = node;
+            foreach (XmlNode node in root.ChildNodes)
+                if (node.Name == "mission_data")
+                    root = node;
 
             List<MissionNode> newNodes = new List<MissionNode>();
             TreeNode lastNode = null;
-			bool needStartUpdate = false;
-			bool folderMode = false;
+            bool needStartUpdate = false;
+            bool folderMode = false;
 
             BeginUpdate(true);
-			
-			//PASTING FOLDER
-			if (root.ChildNodes.Count == 1 && root.ChildNodes[0].Name == "folder_arme")
-			{
-				Guid? guid = null;
-				TreeNode node = null;
 
-				//Continue if there is a node with such guid in the mission
-				if ((guid = MissionNode.NewFromXML(root.ChildNodes[0]).ID) != null && (node = TreeViewNodes.FindNode((TreeNode x) => ((MissionNode)x.Tag).ID == guid)) != null)
-				{
-					folderMode = true;
+            //PASTING FOLDER
+            if (root.ChildNodes.Count == 1 && root.ChildNodes[0].Name == "folder_arme")
+            {
+                Guid? guid = null;
+                TreeNode node = null;
 
-					NodeInsertUnderNode(Helper.CloneProperly(node), TreeViewNodes.SelectedNode);
+                //Continue if there is a node with such guid in the mission
+                if ((guid = MissionNode.NewFromXML(root.ChildNodes[0]).ID) != null && (node = TreeViewNodes.FindNode((TreeNode x) => ((MissionNode)x.Tag).ID == guid)) != null)
+                {
+                    folderMode = true;
 
-					RegisterChange("Pasted folder");
-				}
-			}
-			//PASTING STATEMENTS
-			if (!folderMode)
-			{
-				foreach (XmlNode childNode in root)
-				{
-					if (childNode.Name == "start")
-					{
-						DialogResult res = MessageBox.Show("Shall the start node contents be appended to the current start node's contents (Yes) or replace them (No)?", "Pasting start node", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                    NodeInsertUnderNode(Helper.CloneProperly(node), TreeViewNodes.SelectedNode);
 
-						if (res == DialogResult.Cancel)
-							continue;
-						if (res == DialogResult.No)
-						{
-							needStartUpdate = (((MissionNode)_startNode.Tag).Actions.Count > 0);
-							((MissionNode)_startNode.Tag).Actions.Clear();
-						}
+                    RegisterChange("Pasted folder");
+                }
+            }
+            //PASTING STATEMENTS
+            if (!folderMode)
+            {
+                foreach (XmlNode childNode in root)
+                {
+                    if (childNode.Name == "start")
+                    {
+                        DialogResult res = MessageBox.Show("Shall the start node contents be appended to the current start node's contents (Yes) or replace them (No)?", "Pasting start node", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
 
-						MissionNode newMNode = MissionNode.NewFromXML(childNode);
+                        if (res == DialogResult.Cancel)
+                            continue;
+                        if (res == DialogResult.No)
+                        {
+                            needStartUpdate = (((MissionNode)_startNode.Tag).Actions.Count > 0);
+                            ((MissionNode)_startNode.Tag).Actions.Clear();
+                        }
 
-						foreach (MissionStatement item in newMNode.Actions)
-							((MissionNode)_startNode.Tag).Actions.Add(item);
+                        MissionNode newMNode = MissionNode.NewFromXML(childNode);
 
-						lastNode = _startNode;
+                        foreach (MissionStatement item in newMNode.Actions)
+                            ((MissionNode)_startNode.Tag).Actions.Add(item);
 
-						needStartUpdate = needStartUpdate || newMNode.Actions.Count > 0;
+                        lastNode = _startNode;
 
-						if (needStartUpdate)
-							RegisterChange("Pasted start node");
-					}
-					if (childNode.Name == "event" || childNode.Name == "disabled_event" || childNode is XmlComment || childNode.Name == "folder_arme")
-					{
-						MissionNode newMNode = MissionNode.NewFromXML(childNode);
-						newNodes.Add(newMNode);
-						newMNode.ParentID = null;
-						bool id_exists = NodePaste_Exists(newMNode.ID);
-						if (id_exists)
-							newMNode.ID = Guid.NewGuid();
-						if (childNode.Name == "event" || childNode.Name == "disabled_event")
-							EventCount++;
-					}
-				}
+                        needStartUpdate = needStartUpdate || newMNode.Actions.Count > 0;
 
-				for (int i = 0; i < newNodes.Count; i++)
-				{
-					int j = !Settings.Current.InsertNewOverElement ? newNodes.Count - 1 - i : i;
+                        if (needStartUpdate)
+                            RegisterChange("Pasted start node");
+                    }
+                    if (childNode.Name == "event" || childNode.Name == "disabled_event" || childNode is XmlComment || childNode.Name == "folder_arme")
+                    {
+                        MissionNode newMNode = MissionNode.NewFromXML(childNode);
+                        newNodes.Add(newMNode);
+                        newMNode.ParentID = null;
+                        bool id_exists = NodePaste_Exists(newMNode.ID);
+                        if (id_exists)
+                            newMNode.ID = Guid.NewGuid();
+                        if (childNode.Name == "event" || childNode.Name == "disabled_event")
+                            EventCount++;
+                    }
+                }
 
-					TreeNode newTNode = new TreeNode();
-					MissionNode newMNode = newNodes[j];
+                for (int i = 0; i < newNodes.Count; i++)
+                {
+                    int j = !Settings.Current.InsertNewOverElement ? newNodes.Count - 1 - i : i;
 
-					newTNode.Text = newMNode.Name;
-					newTNode.ImageIndex = newMNode.ImageIndex;
-					newTNode.SelectedImageIndex = newMNode.ImageIndex;
-					newTNode.Tag = newMNode;
+                    TreeNode newTNode = new TreeNode();
+                    MissionNode newMNode = newNodes[j];
 
-					lastNode = TreeViewNodes.SelectedNode;
-					NodeInsertUnderNode(newTNode, TreeViewNodes.SelectedNode);
-					TreeViewNodes.SelectedNode = lastNode;
-					lastNode = newTNode;
-				}
+                    newTNode.Text = newMNode.Name;
+                    newTNode.ImageIndex = newMNode.ImageIndex;
+                    newTNode.SelectedImageIndex = newMNode.ImageIndex;
+                    newTNode.Tag = newMNode;
 
-				if (lastNode != null)
-					TreeViewNodes.SelectedNode = lastNode;
+                    lastNode = TreeViewNodes.SelectedNode;
+                    NodeInsertUnderNode(newTNode, TreeViewNodes.SelectedNode);
+                    TreeViewNodes.SelectedNode = lastNode;
+                    lastNode = newTNode;
+                }
 
-				if (newNodes.Count > 1)
-					RegisterChange("Pasted event nodes");
-				if (newNodes.Count == 1)
-					RegisterChange("Pasted event node");
-			}
+                if (lastNode != null)
+                    TreeViewNodes.SelectedNode = lastNode;
 
-			EndUpdate(true);
+                if (newNodes.Count > 1)
+                    RegisterChange("Pasted event nodes");
+                if (newNodes.Count == 1)
+                    RegisterChange("Pasted event node");
+            }
 
-			if (!needStartUpdate && !folderMode && newNodes.Count == 0)
-				return false;
-			else
-				return true;
-		}
+            EndUpdate(true);
+
+            if (!needStartUpdate && !folderMode && newNodes.Count == 0)
+                return false;
+            else
+                return true;
+        }
 
         /// <summary>
-        /// Find out wether a node with specified GUI exists in the mission. 
+        /// Find out whether a node with specified GUI exists in the mission.
         /// Called from NodePaste.
         /// </summary>
         private bool NodePaste_Exists(Guid? ID)
@@ -1867,7 +2097,7 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// Find out wether a node with specified GUI exists in the current node's children list. 
+        /// Find out whether a node with specified GUI exists in the current node's children list.
         /// Called from NodePaste_Exists, recursively calls itself.
         /// </summary>
         private bool NodePaste_Exists_RecursivelySearch(TreeNode node, Guid? ID)
@@ -1880,61 +2110,61 @@ namespace ArtemisMissionEditor
 
             return false;
         }
-		
+
         /// <summary>
         /// Expand all nodes in the treeview.
         /// </summary>
-		public void NodeExpandAll()
-		{
-			BeginUpdate();
-			TreeViewNodes.ExpandAll();
-			EndUpdate();
-			if (TreeViewNodes.FindNode((TreeNode x) => x.Tag is MissionNode_Folder && x.Nodes.Count > 0) != null)
-				RegisterChange("Expanded all folders");
-		}
+        public void NodeExpandAll()
+        {
+            BeginUpdate();
+            TreeViewNodes.ExpandAll();
+            EndUpdate();
+            if (TreeViewNodes.FindNode((TreeNode x) => x.Tag is MissionNode_Folder && x.Nodes.Count > 0) != null)
+                RegisterChange("Expanded all folders");
+        }
 
         /// <summary>
         /// Collapse all nodes in the treeview
         /// </summary>
-		public void NodeCollapseAll()
-		{
-			BeginUpdate();
-			TreeViewNodes.CollapseAll();
-			EndUpdate();
-			if (TreeViewNodes.FindNode((TreeNode x) => x.Tag is MissionNode_Folder && x.Nodes.Count > 0) != null)
-				RegisterChange("Collapsed all folders");
-		}
+        public void NodeCollapseAll()
+        {
+            BeginUpdate();
+            TreeViewNodes.CollapseAll();
+            EndUpdate();
+            if (TreeViewNodes.FindNode((TreeNode x) => x.Tag is MissionNode_Folder && x.Nodes.Count > 0) != null)
+                RegisterChange("Collapsed all folders");
+        }
 
         /// <summary>
         /// Begin renaming selected mission node
         /// </summary>
-		public void NodeRename()
-		{
-			TreeViewNodes.BeginEdit();
-		}
+        public void NodeRename()
+        {
+            TreeViewNodes.BeginEdit();
+        }
 
-		/// <summary>
-		/// Enable or disable selected node(s)
-		/// </summary>
-		/// <param name="enabled"></param>
+        /// <summary>
+        /// Enable or disable selected node(s)
+        /// </summary>
+        /// <param name="enabled"></param>
         public void NodeSetEnabled(bool enabled)
-		{
-			int count = 0;
-			foreach (TreeNode node in TreeViewNodes.SelectedNodes)
-			{
-				if (!(node.Tag is MissionNode_Event))
-					continue;
+        {
+            int count = 0;
+            foreach (TreeNode node in TreeViewNodes.SelectedNodes)
+            {
+                if (!(node.Tag is MissionNode_Event))
+                    continue;
 
-				MissionNode_Event mNE = (MissionNode_Event)node.Tag;
-				count += mNE.Enabled != enabled ? 1 : 0;
-				mNE.Enabled = enabled;
-				node.ImageIndex = mNE.ImageIndex;
-				node.SelectedImageIndex = mNE.ImageIndex;
-			}
+                MissionNode_Event mNE = (MissionNode_Event)node.Tag;
+                count += mNE.Enabled != enabled ? 1 : 0;
+                mNE.Enabled = enabled;
+                node.ImageIndex = mNE.ImageIndex;
+                node.SelectedImageIndex = mNE.ImageIndex;
+            }
 
-			if (count > 0)
-				RegisterChange((enabled ? "Enabled" : "Disabled") + " " + count + " event(s)");
-		}
+            if (count > 0)
+                RegisterChange((enabled ? "Enabled" : "Disabled") + " " + count + " event(s)");
+        }
 
         /// <summary>
         /// Add new event to the mission
@@ -1957,7 +2187,7 @@ namespace ArtemisMissionEditor
 
             RegisterChange("New event node");
         }
-        
+
         /// <summary>
         /// Add new comment to the mission
         /// </summary>
@@ -1997,7 +2227,7 @@ namespace ArtemisMissionEditor
 
             RegisterChange("New folder node");
         }
-		
+
         /// <summary>
         /// Insert one node inside other node, if possible, or below it, if not possible
         /// </summary>
@@ -2005,25 +2235,25 @@ namespace ArtemisMissionEditor
         /// <param name="selected">Node that receives the added one</param>
         public void NodeInsertUnderNode(TreeNode toInsert, TreeNode selected)
         {
-			SupressExpandCollapseEvents = true;
+            SupressExpandCollapseEvents = true;
             if (selected != null && TreeViewNodes.IsAllowedToHaveRelation(selected, toInsert, NodeRelationship.ChildGoesInside))
                 TreeViewNodes.MoveNode(toInsert, selected, NodeRelationship.ChildGoesInside, Settings.Current.InsertNewOverElement ? NodeRelationship.ChildGoesUnder : NodeRelationship.ChildGoesAbove, true);
             else if (selected != null && TreeViewNodes.IsAllowedToHaveRelation(selected, toInsert, Settings.Current.InsertNewOverElement ? NodeRelationship.ChildGoesAbove : NodeRelationship.ChildGoesUnder))
                 TreeViewNodes.MoveNode(toInsert, selected, Settings.Current.InsertNewOverElement ? NodeRelationship.ChildGoesAbove : NodeRelationship.ChildGoesUnder, NodeRelationship.Null, true);
             else
                 TreeViewNodes.Nodes.Add(toInsert);
-			SupressExpandCollapseEvents = false;
+            SupressExpandCollapseEvents = false;
         }
 
         #endregion
-               
+
         #region Update and Recalculate
 
         /// <summary>
         /// Sets mission node's statement list with contents of statement treeview
         /// </summary>
         /// <remarks>
-        /// Used when drag and drop or copypaste or move or delete or w/e operation was preformed on the Statements TreeView, 
+        /// Used when drag and drop or copypaste or move or delete or w/e operation was preformed on the Statements TreeView,
         /// will reload MissionNode's list of statements from the control
         /// </remarks>
         private void ImportMissionNodeContentsFromStatementTree()
@@ -2122,7 +2352,7 @@ namespace ArtemisMissionEditor
 
             EndUpdate();
         }
-        
+
         /// <summary>
         /// Recalculate mission's node count
         /// </summary>
@@ -2134,7 +2364,7 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// Calculate node count for the nodes that are children to the current node. 
+        /// Calculate node count for the nodes that are children to the current node.
         /// Called from RecalculateNodeCount and recursively calls itself.
         /// </summary>
         /// <param name="node">Current node</param>
@@ -2146,9 +2376,9 @@ namespace ArtemisMissionEditor
             if (node.Tag is MissionNode_Event)
                 EventCount = ((MissionNode_Event)node.Tag).SerialNumber > EventCount ? ((MissionNode_Event)node.Tag).SerialNumber : EventCount;
         }
-        
-        /// <summary> 
-        /// Update "Total: ..." text in the main form's status bar 
+
+        /// <summary>
+        /// Update "Total: ..." text in the main form's status bar
         /// </summary>
         private void UpdateObjectsText()
         {
@@ -2166,7 +2396,7 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// Calculate number of items in the nodes that are child to current node. 
+        /// Calculate number of items in the nodes that are child to current node.
         /// Called from UpdateObjectsText and recursively calls itself.
         /// </summary>
         private void UpdateObjectsText_RecursivelyCount(TreeNode node, ref int folders, ref int events, ref int comments, ref int unknowns, ref int actions, ref int conditions)
@@ -2199,7 +2429,7 @@ namespace ArtemisMissionEditor
                 }
             }
         }
-                
+
         /// <summary>
         /// Update list of all sorts of names used in the mission
         /// </summary>
@@ -2209,24 +2439,40 @@ namespace ArtemisMissionEditor
                 kvp.Value.Clear();
             NamedObjectNames["player"].AddRange(PlayerShipNames);
             AmountOfMissionEndStatements = 0;
-            AmountOfCreatePlayerStatements = 0;
+            ExternalProgramIDs.Clear();
+            ExternalProgramSpawnIDs.Clear();
+            ExternalProgramCheckIDs.Clear();
+            ExternalProgramCheckLocations.Clear();
             VariableNames.Clear();
-            VariableSetNames.Clear();
+            IntegerVariableSetNames.Clear();
+            FloatVariableSetNames.Clear();
             VariableCheckNames.Clear();
             VariableCheckLocations.Clear();
             TimerSetNames.Clear();
+            GMButtonSetNames.Clear();
+            CommsButtonSetNames.Clear();
             TimerCheckNames.Clear();
+            GMButtonCheckNames.Clear();
+            CommsButtonCheckNames.Clear();
             AllCreatedObjectNames.Clear();
             AllCreatedObjectNames.AddRange(PlayerShipNames);
+            CommandableShipNames.Clear();
             VariableNameHeaders.Clear();
             TimerNames.Clear();
             TimerNameHeaders.Clear();
+            GMButtonNames.Clear();
+            GMButtonNameHeaders.Clear();
+            CommsButtonNames.Clear();
+            CommsButtonNameHeaders.Clear();
 
             foreach (TreeNode node in TreeViewNodes.Nodes)
                 UpdateNamesLists_RecursivelyScan(node);
 
+            CommsButtonNames.Sort();
+            GMButtonNames.Sort();
             TimerNames.Sort();
             VariableNames.Sort();
+            ExternalProgramIDs.Sort();
 
             if (VariableNames.Count > Settings.Current.NamesPerSubmenu)
             {
@@ -2240,32 +2486,149 @@ namespace ArtemisMissionEditor
                     VariableNameHeaders.Add(first + " - " + last);
                 }
                 //_variableHeaders.Add(_variables[i * Settings.Current.NamesPerSubmenu] + " - " + _variables[_variables.Count - 1][0]);
-				if (VariableNames.Count - 1 >= i * Settings.Current.NamesPerSubmenu)
-					VariableNameHeaders.Add(VariableNames[i * Settings.Current.NamesPerSubmenu] + " - " + VariableNames[VariableNames.Count - 1]);
+                if (VariableNames.Count - 1 >= i * Settings.Current.NamesPerSubmenu)
+                    VariableNameHeaders.Add(VariableNames[i * Settings.Current.NamesPerSubmenu] + " - " + VariableNames[VariableNames.Count - 1]);
             }
 
-			if (TimerNames.Count > Settings.Current.NamesPerSubmenu)
-			{
-				int i;
-				for (i = 0; i < TimerNames.Count / Settings.Current.NamesPerSubmenu; i++)
-				{
-					string first = TimerNames[i * Settings.Current.NamesPerSubmenu];
-					//if (i == 0 || first[0] != _timers[i * Settings.Current.NamesPerSubmenu - 1][0]) first = first.Substring(0,1).ToUpper();
-					string last = TimerNames[(i + 1) * Settings.Current.NamesPerSubmenu - 1];
-					//if ((i + 1) * Settings.Current.NamesPerSubmenu == _timers.Count - 1 || last[0] != _timers[(i + 1) * Settings.Current.NamesPerSubmenu - 2][0]) last = last.Substring(0, 1).ToUpper();
-					TimerNameHeaders.Add(first + " - " + last);
-				}
-				//_timerHeaders.Add(_timers[i * Settings.Current.NamesPerSubmenu] + " - " + _timers[_timers.Count - 1][0]);
-				if (TimerNames.Count - 1 >= i * Settings.Current.NamesPerSubmenu)
-					TimerNameHeaders.Add(TimerNames[i * Settings.Current.NamesPerSubmenu] + " - " + TimerNames[TimerNames.Count - 1]);
-			}
+            if (TimerNames.Count > Settings.Current.NamesPerSubmenu)
+            {
+                int i;
+                for (i = 0; i < TimerNames.Count / Settings.Current.NamesPerSubmenu; i++)
+                {
+                    string first = TimerNames[i * Settings.Current.NamesPerSubmenu];
+                    //if (i == 0 || first[0] != _timers[i * Settings.Current.NamesPerSubmenu - 1][0]) first = first.Substring(0,1).ToUpper();
+                    string last = TimerNames[(i + 1) * Settings.Current.NamesPerSubmenu - 1];
+                    //if ((i + 1) * Settings.Current.NamesPerSubmenu == _timers.Count - 1 || last[0] != _timers[(i + 1) * Settings.Current.NamesPerSubmenu - 2][0]) last = last.Substring(0, 1).ToUpper();
+                    TimerNameHeaders.Add(first + " - " + last);
+                }
+                //_timerHeaders.Add(_timers[i * Settings.Current.NamesPerSubmenu] + " - " + _timers[_timers.Count - 1][0]);
+                if (TimerNames.Count - 1 >= i * Settings.Current.NamesPerSubmenu)
+                    TimerNameHeaders.Add(TimerNames[i * Settings.Current.NamesPerSubmenu] + " - " + TimerNames[TimerNames.Count - 1]);
+            }
+
+            if (GMButtonNames.Count > Settings.Current.NamesPerSubmenu)
+            {
+                int i;
+                for (i = 0; i < GMButtonNames.Count / Settings.Current.NamesPerSubmenu; i++)
+                {
+                    string first = GMButtonNames[i * Settings.Current.NamesPerSubmenu];
+                    string last = GMButtonNames[(i + 1) * Settings.Current.NamesPerSubmenu - 1];
+                    GMButtonNameHeaders.Add(first + " - " + last);
+                }
+                if (GMButtonNames.Count - 1 >= i * Settings.Current.NamesPerSubmenu)
+                {
+                    GMButtonNameHeaders.Add(GMButtonNames[i * Settings.Current.NamesPerSubmenu] + " - " + GMButtonNames[GMButtonNames.Count - 1]);
+                }
+            }
+
+            if (CommsButtonNames.Count > Settings.Current.NamesPerSubmenu)
+            {
+                int i;
+                for (i = 0; i < CommsButtonNames.Count / Settings.Current.NamesPerSubmenu; i++)
+                {
+                    string first = CommsButtonNames[i * Settings.Current.NamesPerSubmenu];
+                    string last = CommsButtonNames[(i + 1) * Settings.Current.NamesPerSubmenu - 1];
+                    CommsButtonNameHeaders.Add(first + " - " + last);
+                }
+                if (CommsButtonNames.Count - 1 >= i * Settings.Current.NamesPerSubmenu)
+                {
+                    CommsButtonNameHeaders.Add(CommsButtonNames[i * Settings.Current.NamesPerSubmenu] + " - " + CommsButtonNames[CommsButtonNames.Count - 1]);
+                }
+            }
+
+            if (ExternalProgramIDs.Count > Settings.Current.NamesPerSubmenu)
+            {
+                int i;
+                for (i = 0; i < ExternalProgramIDs.Count / Settings.Current.NamesPerSubmenu; i++)
+                {
+                    string first = ExternalProgramIDs[i * Settings.Current.NamesPerSubmenu];
+                    string last = ExternalProgramIDs[(i + 1) * Settings.Current.NamesPerSubmenu - 1];
+                    ExternalProgramIDHeaders.Add(first + " - " + last);
+                }
+                if (ExternalProgramIDs.Count - 1 >= i * Settings.Current.NamesPerSubmenu)
+                {
+                    ExternalProgramIDHeaders.Add(ExternalProgramIDs[i * Settings.Current.NamesPerSubmenu] + " - " + ExternalProgramIDs[ExternalProgramIDs.Count - 1]);
+                }
+            }
 
             if (this == Current)
-                OnNamesListUpdated();
+                OnNamesListUpdated(this, null);
         }
-        
+
         /// <summary>
-        /// Update names lists for nodes that are child to current node. 
+        /// Update names lists for variables embedded in raw text.
+        /// </summary>
+        /// <param name="text">Text to scan</param>
+        private void UpdateNamesLists_ScanText(string text)
+        {
+            if (text == null)
+            {
+                return;
+            }
+            string[] substrings = text.Split('|');
+            for (int i = 1; i < substrings.Length; i += 2)
+            {
+                string var_name = substrings[i];
+                VariableCheckNames.Add(var_name);
+            }
+        }
+
+        /// <summary>
+        /// Update names lists for variables embedded in text in an attribute.
+        /// </summary>
+        /// <param name="statement">Statement</param>
+        /// <param name="attName">Attribute name</param>
+        private void UpdateNamesLists_ScanTextAttribute(MissionStatement statement, string attName)
+        {
+            string text = statement.GetAttribute(attName);
+            UpdateNamesLists_ScanText(text);
+        }
+
+        /// <summary>
+        /// Update names lists for variables in an expression.
+        /// </summary>
+        /// <param name="statement">Statement</param>
+        /// <param name="attName">Attribute name</param>
+        private void UpdateNamesLists_ScanExpression(MissionStatement statement, string attName)
+        {
+            string expr = statement.GetAttribute(attName);
+            if (expr == null)
+            {
+                return;
+            }
+            bool inVariable = false;
+            int startIndex = -1;
+            for (int i = 0; i < expr.Length; i++)
+            {
+                char c = expr[i];
+                if (Char.IsLetter(c) || (c == '_'))
+                {
+                    if (!inVariable)
+                    {
+                        inVariable = true;
+                        startIndex = i;
+                    }
+                }
+                else if (!Char.IsDigit(c))
+                {
+                    if (inVariable)
+                    {
+                        inVariable = false;
+                        string var_name = expr.Substring(startIndex, i - startIndex);
+                        VariableCheckNames.Add(var_name);
+                    }
+                }
+            }
+            if (inVariable)
+            {
+                inVariable = false;
+                string var_name = expr.Substring(startIndex, expr.Length - startIndex);
+                VariableCheckNames.Add(var_name);
+            }
+        }
+
+        /// <summary>
+        /// Update names lists for nodes that are child to current node.
         /// Called from UpdateNamesLists and recursively calls itself.
         /// </summary>
         /// <param name="node">Current node</param>
@@ -2277,17 +2640,35 @@ namespace ArtemisMissionEditor
             if (!(node.Tag is MissionNode_Start || node.Tag is MissionNode_Event))
                 return;
 
-            //Fill lists based on Conditions
+            // Fill lists based on Conditions.
             foreach (MissionStatement statement in ((MissionNode)node.Tag).Conditions)
             {
                 if (statement.Kind != MissionStatementKind.Condition)
                     continue;
+
+                if (statement.Name == "if_external_program_active" ||
+                    statement.Name == "if_external_program_finished")
+                {
+                    string var_id = statement.GetAttribute("id");
+                    if (var_id != null)
+                    {
+                        var_id = CollapseName(var_id);
+                        if (!ExternalProgramIDs.Contains(var_id))
+                            ExternalProgramIDs.Add(var_id);
+                        if (!ExternalProgramCheckIDs.Contains(var_id))
+                            ExternalProgramCheckIDs.Add(var_id);
+                        if (!ExternalProgramCheckLocations.Keys.Contains(var_id))
+                            ExternalProgramCheckLocations.Add(var_id, new List<MissionNode>());
+                        ExternalProgramCheckLocations[var_id].Add(((MissionNode)node.Tag));
+                    }
+                }
 
                 if (statement.Name == "if_variable")
                 {
                     string var_name = statement.GetAttribute("name");
                     if (var_name != null)
                     {
+                        var_name = CollapseName(var_name);
                         if (!VariableNames.Contains(var_name))
                             VariableNames.Add(var_name);
                         if (!VariableCheckNames.Contains(var_name))
@@ -2298,24 +2679,136 @@ namespace ArtemisMissionEditor
                     }
                 }
 
+                if (statement.Name == "if_distance" ||
+                    statement.Name == "if_difficulty" ||
+                    statement.Name == "if_fleet_count" ||
+                    statement.Name == "if_object_property" ||
+                    statement.Name == "if_variable")
+                {
+                    UpdateNamesLists_ScanExpression(statement, "value");
+                }
+
                 if (statement.Name == "if_timer_finished")
                 {
                     string var_timer = statement.GetAttribute("name");
                     if (var_timer != null)
                     {
+                        var_timer = CollapseName(var_timer);
                         if (!TimerNames.Contains(var_timer))
                             TimerNames.Add(var_timer);
                         if (!TimerCheckNames.Contains(var_timer))
                             TimerCheckNames.Add(var_timer);
                     }
                 }
+
+                if (statement.Name == "if_gm_button")
+                {
+                    string var_text = statement.GetAttribute("text");
+                    if (var_text != null)
+                    {
+                        var_text = CollapseName(var_text);
+                        if (!GMButtonNames.Contains(var_text))
+                            GMButtonNames.Add(var_text);
+                        if (!GMButtonCheckNames.Contains(var_text))
+                            GMButtonCheckNames.Add(var_text);
+                    }
+                }
+
+                if (statement.Name == "if_comms_button")
+                {
+                    string var_text = statement.GetAttribute("text");
+                    if (var_text != null)
+                    {
+                        var_text = CollapseName(var_text);
+                        if (!CommsButtonNames.Contains(var_text))
+                            CommsButtonNames.Add(var_text);
+                        if (!CommsButtonCheckNames.Contains(var_text))
+                            CommsButtonCheckNames.Add(var_text);
+                    }
+                }
+
+                if (statement.Name == "if_monster_tag_matches")
+                {
+                    string named_name = statement.GetAttribute("name");
+                    if (!String.IsNullOrEmpty(named_name))
+                    {
+                        named_name = CollapseName(named_name);
+                        if (!NamedObjectNames["monster"].Contains(named_name))
+                            NamedObjectNames["monster"].Add(named_name);
+                    }
+                }
             }
 
-            //Fill lists based on Actions
+            // Fill lists based on Actions.
             foreach (MissionStatement statement in ((MissionNode)node.Tag).Actions)
             {
                 if (statement.Kind != MissionStatementKind.Action)
                     continue;
+
+                if (StatementsThatTakeName.Contains(statement.Name))
+                {
+                    UpdateNamesLists_ScanTextAttribute(statement, "name");
+                }
+                if (StatementsThatTakeTargetName.Contains(statement.Name))
+                {
+                    UpdateNamesLists_ScanTextAttribute(statement, "targetName");
+                }
+                if (StatementsThatTakeObjectName.Contains(statement.Name))
+                {
+                    UpdateNamesLists_ScanTextAttribute(statement, "objectName");
+                }
+                if (StatementsThatTakePlayerName.Contains(statement.Name))
+                {
+                    UpdateNamesLists_ScanTextAttribute(statement, "player_name");
+                }
+                if (StatementsThatTakeName12.Contains(statement.Name))
+                {
+                    UpdateNamesLists_ScanTextAttribute(statement, "name1");
+                    UpdateNamesLists_ScanTextAttribute(statement, "name2");
+                }
+                if (StatementsThatTakeText.Contains(statement.Name))
+                {
+                    UpdateNamesLists_ScanTextAttribute(statement, "text");
+                }
+                if (StatementsWithTextBody.Contains(statement.Name))
+                {
+                    UpdateNamesLists_ScanText(statement.Body);
+                }
+
+                if (statement.Name == "add_ai")
+                {
+                    UpdateNamesLists_ScanExpression(statement, "value1");
+                    UpdateNamesLists_ScanExpression(statement, "value2");
+                    UpdateNamesLists_ScanExpression(statement, "value3");
+                    UpdateNamesLists_ScanExpression(statement, "value4");
+
+                    string type = statement.GetAttribute("type");
+                    if (type == "FOLLOW_COMMS_ORDERS")
+                    {
+                        string named_name = statement.GetAttribute("name");
+                        if (named_name != null)
+                        {
+                            named_name = CollapseName(named_name);
+                        }
+                        if (!CommandableShipNames.Contains(named_name))
+                            CommandableShipNames.Add(named_name);
+                    }
+                }
+
+                if ((statement.Name == "addto_object_property") ||
+                    (statement.Name == "set_object_property"))
+                {
+                    UpdateNamesLists_ScanExpression(statement, "value");
+                }
+
+                if (statement.Name == "set_variable")
+                {
+                    UpdateNamesLists_ScanExpression(statement, "value");
+                    UpdateNamesLists_ScanExpression(statement, "randomIntLow");
+                    UpdateNamesLists_ScanExpression(statement, "randomIntHigh");
+                    UpdateNamesLists_ScanExpression(statement, "randomFloatLow");
+                    UpdateNamesLists_ScanExpression(statement, "randomFloatHigh");
+                }
 
                 if (statement.Name == "create")
                 {
@@ -2323,14 +2816,82 @@ namespace ArtemisMissionEditor
                     string named_name;
                     if (type != null && (named_name = statement.GetAttribute("name")) != null)
                     {
+                        named_name = CollapseName(named_name);
                         if (NamedObjectNames.ContainsKey(type) && !NamedObjectNames[type].Contains(named_name))
                             NamedObjectNames[type].Add(named_name);
                         if (!AllCreatedObjectNames.Contains(named_name))
                             AllCreatedObjectNames.Add(named_name);
                     }
 
-                    if (type == "player")
-                        AmountOfCreatePlayerStatements++;
+                    // Scan the expression for relevant attributes.
+                    if (NamedObjectNames.ContainsKey(type))
+                    {
+                        // Named object attributes.
+                        UpdateNamesLists_ScanExpression(statement, "x");
+                        UpdateNamesLists_ScanExpression(statement, "y");
+                        UpdateNamesLists_ScanExpression(statement, "z");
+                        UpdateNamesLists_ScanExpression(statement, "angle");
+                    }
+                    else
+                    {
+                        // Unnamed object attributes.
+                        UpdateNamesLists_ScanExpression(statement, "startX");
+                        UpdateNamesLists_ScanExpression(statement, "startY");
+                        UpdateNamesLists_ScanExpression(statement, "startZ");
+                        UpdateNamesLists_ScanExpression(statement, "startAngle");
+                        UpdateNamesLists_ScanExpression(statement, "endX");
+                        UpdateNamesLists_ScanExpression(statement, "endY");
+                        UpdateNamesLists_ScanExpression(statement, "endZ");
+                        UpdateNamesLists_ScanExpression(statement, "endAngle");
+                        UpdateNamesLists_ScanExpression(statement, "count");
+                        UpdateNamesLists_ScanExpression(statement, "radius");
+                        UpdateNamesLists_ScanExpression(statement, "randomRange");
+                        UpdateNamesLists_ScanExpression(statement, "randomSeed");
+                    }
+                }
+
+                if (statement.Name == "set_monster_tag_data")
+                {
+                    string named_name = statement.GetAttribute("name");
+                    if (!String.IsNullOrEmpty(named_name))
+                    {
+                        named_name = CollapseName(named_name);
+                        if (!NamedObjectNames["monster"].Contains(named_name))
+                            NamedObjectNames["monster"].Add(named_name);
+                    }
+                }
+
+                if (statement.Name == "set_player_carried_type")
+                {
+                    string named_name = statement.GetAttribute("name");
+                    if (!String.IsNullOrEmpty(named_name))
+                    {
+                        named_name = CollapseName(named_name);
+                        if (!NamedObjectNames["player"].Contains(named_name))
+                            NamedObjectNames["player"].Add(named_name);
+                        if (!AllCreatedObjectNames.Contains(named_name))
+                            AllCreatedObjectNames.Add(named_name);
+                    }
+                }
+
+                if (statement.Name == "big_message")
+                {
+                    UpdateNamesLists_ScanTextAttribute(statement, "title");
+                    UpdateNamesLists_ScanTextAttribute(statement, "subtitle1");
+                    UpdateNamesLists_ScanTextAttribute(statement, "subtitle2");
+                }
+
+                if (statement.Name == "spawn_external_program")
+                {
+                    string var_id = statement.GetAttribute("id");
+                    if (var_id != null)
+                    {
+                        var_id = CollapseName(var_id);
+                        if (!ExternalProgramIDs.Contains(var_id))
+                            ExternalProgramIDs.Add(var_id);
+                        if (!ExternalProgramSpawnIDs.Contains(var_id))
+                            ExternalProgramSpawnIDs.Add(var_id);
+                    }
                 }
 
                 if (statement.Name == "set_variable")
@@ -2338,10 +2899,34 @@ namespace ArtemisMissionEditor
                     string var_name = statement.GetAttribute("name");
                     if (var_name != null)
                     {
+                        var_name = CollapseName(var_name);
                         if (!VariableNames.Contains(var_name))
                             VariableNames.Add(var_name);
-                        if (!VariableSetNames.Contains(var_name))
-                            VariableSetNames.Add(var_name);
+                        if (!IntegerVariableSetNames.Contains(var_name) && !FloatVariableSetNames.Contains(var_name))
+                        {
+                            string isInteger = statement.GetAttribute("integer");
+                            if (isInteger == "yes")
+                            {
+                                IntegerVariableSetNames.Add(var_name);
+                            }
+                            else
+                            {
+                                FloatVariableSetNames.Add(var_name);
+                            }
+                        }
+                    }
+                }
+
+                if (statement.Name == "get_object_property")
+                {
+                    string var_name = statement.GetAttribute("variable");
+                    if (var_name != null)
+                    {
+                        var_name = CollapseName(var_name);
+                        if (!VariableNames.Contains(var_name))
+                            VariableNames.Add(var_name);
+                        if (!IntegerVariableSetNames.Contains(var_name) && !FloatVariableSetNames.Contains(var_name))
+                            FloatVariableSetNames.Add(var_name);
                     }
                 }
 
@@ -2350,11 +2935,89 @@ namespace ArtemisMissionEditor
                     string var_timer = statement.GetAttribute("name");
                     if (var_timer != null)
                     {
+                        var_timer = CollapseName(var_timer);
                         if (!TimerNames.Contains(var_timer))
                             TimerNames.Add(var_timer);
                         if (!TimerSetNames.Contains(var_timer))
                             TimerSetNames.Add(var_timer);
                     }
+
+                    UpdateNamesLists_ScanExpression(statement, "seconds");
+                }
+
+                if (statement.Name == "clear_gm_button")
+                {
+                    string var_text = statement.GetAttribute("text");
+                    if (var_text != null)
+                    {
+                        var_text = CollapseName(var_text);
+                        if (!GMButtonNames.Contains(var_text))
+                            GMButtonNames.Add(var_text);
+                    }
+                    UpdateNamesLists_ScanTextAttribute(statement, "text");
+                }
+
+                if (statement.Name == "set_gm_button")
+                {
+                    string var_text = statement.GetAttribute("text");
+                    if (var_text != null)
+                    {
+                        var_text = CollapseName(var_text);
+                        if (!GMButtonNames.Contains(var_text))
+                            GMButtonNames.Add(var_text);
+                        if (!GMButtonSetNames.Contains(var_text))
+                            GMButtonSetNames.Add(var_text);
+                    }
+                    UpdateNamesLists_ScanTextAttribute(statement, "text");
+                }
+
+                if (statement.Name == "clear_comms_button")
+                {
+                    string var_text = statement.GetAttribute("text");
+                    if (var_text != null)
+                    {
+                        var_text = CollapseName(var_text);
+                        if (!CommsButtonNames.Contains(var_text))
+                            CommsButtonNames.Add(var_text);
+                    }
+                    UpdateNamesLists_ScanTextAttribute(statement, "text");
+                }
+
+                if (statement.Name == "set_comms_button")
+                {
+                    string var_text = statement.GetAttribute("text");
+                    if (var_text != null)
+                    {
+                        var_text = CollapseName(var_text);
+                        if (!CommsButtonNames.Contains(var_text))
+                            CommsButtonNames.Add(var_text);
+                        if (!CommsButtonSetNames.Contains(var_text))
+                            CommsButtonSetNames.Add(var_text);
+                    }
+                    UpdateNamesLists_ScanTextAttribute(statement, "text");
+                }
+
+                if (statement.Name == "set_monster_tag_data")
+                {
+                    UpdateNamesLists_ScanTextAttribute(statement, "datetext");
+                    UpdateNamesLists_ScanTextAttribute(statement, "sourcetext");
+                }
+
+                if (statement.Name == "set_named_object_tag_state")
+                {
+                    UpdateNamesLists_ScanTextAttribute(statement, "tagSourceName");
+                }
+
+                if (statement.Name == "set_player_station_carried")
+                {
+                    UpdateNamesLists_ScanTextAttribute(statement, "singleSeatName");
+                }
+
+                if (statement.Name == "set_ship_text")
+                {
+                    UpdateNamesLists_ScanTextAttribute(statement, "desc");
+                    UpdateNamesLists_ScanTextAttribute(statement, "hailtext");
+                    UpdateNamesLists_ScanTextAttribute(statement, "scan_desc");
                 }
 
                 if (statement.Name == "end_mission")
@@ -2364,158 +3027,158 @@ namespace ArtemisMissionEditor
             }
         }
 
-        /// <summary> 
+        /// <summary>
         /// Update the expression shown in the flow layout panel. Makes sure to select the same item that was selected before.
         /// </summary>
-		public void UpdateExpression()
-		{
+        public void UpdateExpression()
+        {
             // Part 1: Remember information about what was chosen
             Control activeControl = null;
 
-			foreach (Control c in FlowLayoutPanelMain.Controls)
-				if (c.Focused)
-					activeControl = c;
-			
-			ExpressionMemberValueDescription lastFocusedValueDescription = (activeControl != null && activeControl is NormalSelectableLabel && activeControl.Tag is ExpressionMemberContainer) ? ((ExpressionMemberContainer)activeControl.Tag).Member.ValueDescription : null;
-			string lastFocusedValueName = (activeControl != null && activeControl is NormalSelectableLabel && activeControl.Tag is ExpressionMemberContainer) ? ((ExpressionMemberContainer)activeControl.Tag).Member.Name : null;
-			List<NormalLabel> listMatchesValueDescription = new List<NormalLabel>();
-			List<NormalLabel> listMatchesValueName = new List<NormalLabel>();
+            foreach (Control c in FlowLayoutPanelMain.Controls)
+                if (c.Focused)
+                    activeControl = c;
+
+            ExpressionMemberValueDescription lastFocusedValueDescription = (activeControl != null && activeControl is NormalSelectableLabel && activeControl.Tag is ExpressionMemberContainer) ? ((ExpressionMemberContainer)activeControl.Tag).Member.ValueDescription : null;
+            string lastFocusedValueName = (activeControl != null && activeControl is NormalSelectableLabel && activeControl.Tag is ExpressionMemberContainer) ? ((ExpressionMemberContainer)activeControl.Tag).Member.Name : null;
+            List<NormalLabel> listMatchesValueDescription = new List<NormalLabel>();
+            List<NormalLabel> listMatchesValueName = new List<NormalLabel>();
 
             // Part 2: Repopulating FlowLayoutPanel
 
-			TreeNode node = TreeViewStatements.SelectedNode;
-			if (node == null || !(node.Tag is MissionStatement)) 
-				return;
-			MissionStatement statement = (MissionStatement)node.Tag;
+            TreeNode node = TreeViewStatements.SelectedNode;
+            if (node == null || !(node.Tag is MissionStatement))
+                return;
+            MissionStatement statement = (MissionStatement)node.Tag;
 
             int countActiveLabels = 0;
 
             FlowLayoutPanelMain.SuspendLayout();
             FlowLayoutPanel_Clear();
-			
-			//TODO: Update the expression in the flowchart [Forgot what this means] <-- WTF does this mean?
-            // Maybe originally I wanted to update the expression directly in the flow chart without clearing and repopulating it?
-			foreach (ExpressionMemberContainer item in statement.Expression)
-			{
-				if (!item.Member.ValueDescription.IsDisplayed)
-					continue;
 
-				NormalLabel label;
-				if (item.Member.ValueDescription.IsInteractive)
-				{
+            //TODO: Update the expression in the flowchart [Forgot what this means] <-- WTF does this mean?
+            // Maybe originally I wanted to update the expression directly in the flow chart without clearing and repopulating it?
+            foreach (ExpressionMemberContainer item in statement.Expression)
+            {
+                if (!item.Member.ValueDescription.IsDisplayed)
+                    continue;
+
+                NormalLabel label;
+                if (item.Member.ValueDescription.IsInteractive)
+                {
                     label = new NormalSelectableLabel();
                     label.MouseClick += _E_l_MouseClick;
-					label.PreviewKeyDown += _E_l_PreviewKeyDown;
+                    label.PreviewKeyDown += _E_l_PreviewKeyDown;
                     label.Number = ++countActiveLabels;
-				}
-				else
-				{
-					label = new NormalLabel();
-				}
-				
-				label.Tag = item;
+                }
+                else
+                {
+                    label = new NormalLabel();
+                }
+
+                label.Tag = item;
 
                 if (item.Member.RequiresLinebreak)
                     FlowLayoutPanelMain.SetFlowBreak(FlowLayoutPanelMain.Controls[FlowLayoutPanelMain.Controls.Count - 1], true);
 
                 FlowLayoutPanelMain.Controls.Add(label);
-                
+
                 UpdateLabel(label);
-			}
+            }
 
             // Part 3: Selecting label that was selected before update
 
-			//Find all items that match value name or value description
-			foreach (Control c in FlowLayoutPanelMain.Controls)
-			{
-				if (((ExpressionMemberContainer)((NormalLabel)c).Tag).Member.Name == lastFocusedValueName)
-					listMatchesValueName.Add((NormalLabel)c);
-				if (((ExpressionMemberContainer)((NormalLabel)c).Tag).Member.ValueDescription == lastFocusedValueDescription)
-					listMatchesValueDescription.Add((NormalLabel)c);
-			}
+            //Find all items that match value name or value description
+            foreach (Control c in FlowLayoutPanelMain.Controls)
+            {
+                if (((ExpressionMemberContainer)((NormalLabel)c).Tag).Member.Name == lastFocusedValueName)
+                    listMatchesValueName.Add((NormalLabel)c);
+                if (((ExpressionMemberContainer)((NormalLabel)c).Tag).Member.ValueDescription == lastFocusedValueDescription)
+                    listMatchesValueDescription.Add((NormalLabel)c);
+            }
 
-			switch (listMatchesValueDescription.Count)
-			{
-				case 0:
-					//If none matches description - pick one that matches name
-					if (listMatchesValueName.Count > 0) listMatchesValueName[0].Focus();
-					break;
-				case 1:
-					//If only one matches the description - pick it
-					listMatchesValueDescription[0].Focus();
-					break;
-				default:
-					//If more than one matches the description, but none match the name - pick first from description
-					if (listMatchesValueName.Count == 0)
-						listMatchesValueDescription[0].Focus();
-					//If at least one matches in name ...
-					else
-					{
-						//We need to narrow down...
-						for (int i = listMatchesValueName.Count - 1; i >= 0; i--)
-						{
-							//Remove all that match in name that do not match in description
-							if (!listMatchesValueDescription.Contains(listMatchesValueName[i]))
-								listMatchesValueName.RemoveAt(i);
-						}
-						//If none of those matching in name match in description -  pick first from description
-						if (listMatchesValueName.Count == 0)
-							listMatchesValueDescription[0].Focus();
-						//If only one matches in name and in description - pick it
-						if (listMatchesValueName.Count == 1)
-							listMatchesValueName[0].Focus();
-						//If more than one matches in name and in description...
-						if (listMatchesValueName.Count > 1)
-						{
-							//We need to narrow down again
-							for (int i = listMatchesValueDescription.Count - 1; i >= 0; i--)
-							{
-								//Remove all that match in description but do not match in name
-								if (!listMatchesValueName.Contains(listMatchesValueDescription[i]))
-									listMatchesValueDescription.RemoveAt(i);
-							}
-							//If at least one matches in description and in name = pick first from description
-							if (listMatchesValueDescription.Count >= 1)
-								listMatchesValueDescription[0].Focus();
-							else // else pick first from those matching by name
-								listMatchesValueName[0].Focus();
-						}
-					}
-					break;
-			}
+            switch (listMatchesValueDescription.Count)
+            {
+                case 0:
+                    //If none matches description - pick one that matches name
+                    if (listMatchesValueName.Count > 0) listMatchesValueName[0].Focus();
+                    break;
+                case 1:
+                    //If only one matches the description - pick it
+                    listMatchesValueDescription[0].Focus();
+                    break;
+                default:
+                    //If more than one matches the description, but none match the name - pick first from description
+                    if (listMatchesValueName.Count == 0)
+                        listMatchesValueDescription[0].Focus();
+                    // If at least one matches in name ...
+                    else
+                    {
+                        // We need to narrow down...
+                        for (int i = listMatchesValueName.Count - 1; i >= 0; i--)
+                        {
+                            // Remove all that match in name that do not match in description.
+                            if (!listMatchesValueDescription.Contains(listMatchesValueName[i]))
+                                listMatchesValueName.RemoveAt(i);
+                        }
+                        // If none of those matching in name match in description -  pick first from description
+                        if (listMatchesValueName.Count == 0)
+                            listMatchesValueDescription[0].Focus();
+                        // If only one matches in name and in description - pick it
+                        if (listMatchesValueName.Count == 1)
+                            listMatchesValueName[0].Focus();
+                        // If more than one matches in name and in description...
+                        if (listMatchesValueName.Count > 1)
+                        {
+                            // We need to narrow down again.
+                            for (int i = listMatchesValueDescription.Count - 1; i >= 0; i--)
+                            {
+                                // Remove all that match in description but do not match in name.
+                                if (!listMatchesValueName.Contains(listMatchesValueDescription[i]))
+                                    listMatchesValueDescription.RemoveAt(i);
+                            }
+                            //If at least one matches in description and in name = pick first from description
+                            if (listMatchesValueDescription.Count >= 1)
+                                listMatchesValueDescription[0].Focus();
+                            else // else pick first from those matching by name
+                                listMatchesValueName[0].Focus();
+                        }
+                    }
+                    break;
+            }
 
             FlowLayoutPanelMain.ResumeLayout();
-		}
-		
+        }
+
         /// <summary>
-        /// Selects the specified label by it's number (used when pressing a number hotkey)
+        /// Selects the specified label by its number (used when pressing a number hotkey)
         /// </summary>
         /// <param name="index">One-based index of the label</param>
-		private void SelectExpressionLabelByNumber(int index)
-		{
-			foreach (Control c in FlowLayoutPanelMain.Controls)
-			{
-				if (c is NormalSelectableLabel && ((NormalSelectableLabel)c).Number == index)
-				{
+        private void SelectExpressionLabelByNumber(int index)
+        {
+            foreach (Control c in FlowLayoutPanelMain.Controls)
+            {
+                if (c is NormalSelectableLabel && ((NormalSelectableLabel)c).Number == index)
+                {
                     if (((NormalSelectableLabel)c).SelectedByKeyboard && c.Focused)
                         _E_l_Activated((NormalLabel)c);
                     c.Focus();
                     ((NormalSelectableLabel)c).SelectedByKeyboard = true;
-					return;
-				}
-			}
-		}
+                    return;
+                }
+            }
+        }
 
-        /// <summary> 
+        /// <summary>
         /// Update all the statements in the statement tree and updates expression if nessecary.
         /// </summary>
-		public void UpdateStatementTree()
-		{
-			BeginUpdate();
-			foreach (TreeNode node in TreeViewStatements.Nodes)
-				UpdateStatementTree_Recursive(node);
-			EndUpdate();
-		}
+        public void UpdateStatementTree()
+        {
+            BeginUpdate();
+            foreach (TreeNode node in TreeViewStatements.Nodes)
+                UpdateStatementTree_Recursive(node);
+            EndUpdate();
+        }
 
         /// <summary>
         /// Update all statements that are child to the current statement
@@ -2557,12 +3220,12 @@ namespace ArtemisMissionEditor
                 ms.ConfirmUpdate();
             }
         }
-        
-		/// <summary> 
-        /// Refreshes the label display - resetting text, width and height 
+
+        /// <summary>
+        /// Refreshes the label display - resetting text, width and height
         /// </summary>
-		private void UpdateLabel(NormalLabel label)
-		{
+        private void UpdateLabel(NormalLabel label)
+        {
             label.Text = ((ExpressionMemberContainer)label.Tag).GetValueDisplay();
             if (string.IsNullOrWhiteSpace(label.Text) && label is NormalSelectableLabel) label.Text = "[]"; // display something for clickable empty labels
             if (label as NormalSelectableLabel != null)
@@ -2570,13 +3233,13 @@ namespace ArtemisMissionEditor
             label.RequiresLinebreak = ((ExpressionMemberContainer)label.Tag).Member.RequiresLinebreak;
 
             label.UpdateSize();
-		}
+        }
 
-		/// <summary> Output selected node's tag to the tabpage's top text </summary>
-		private void UpdateNodeTag()
-		{
-			LabelMain.Text = ((MissionNode)TreeViewNodes.SelectedNode.Tag).Name;
-		}
+        /// <summary> Output selected node's tag to the tabpage's top text </summary>
+        private void UpdateNodeTag()
+        {
+            LabelMain.Text = ((MissionNode)TreeViewNodes.SelectedNode.Tag).Name;
+        }
 
         #endregion
 
@@ -2584,29 +3247,29 @@ namespace ArtemisMissionEditor
         /// Returns whether the "Get statement's Xml" option is available
         /// </summary>
         public bool CanGetStatementXmlText()
-		{
-			if (TreeViewStatements.SelectedNode == null)
-				return false;
+        {
+            if (TreeViewStatements.SelectedNode == null)
+                return false;
 
-			if (!(TreeViewStatements.SelectedNode.Tag is MissionStatement))
-				return false;
+            if (!(TreeViewStatements.SelectedNode.Tag is MissionStatement))
+                return false;
 
-			return true;
-		}
-		
+            return true;
+        }
+
         /// <summary>
         /// Returns whether the "Get node's Xml" option is available
         /// </summary>
-		public bool CanGetNodeXmlText()
-		{
-			if (TreeViewNodes.SelectedNode == null)
-				return false;
+        public bool CanGetNodeXmlText()
+        {
+            if (TreeViewNodes.SelectedNode == null)
+                return false;
 
-			if (!(TreeViewNodes.SelectedNode.Tag is MissionNode))
-				return false;
+            if (!(TreeViewNodes.SelectedNode.Tag is MissionNode))
+                return false;
 
-			return true;
-		}
+            return true;
+        }
 
         #region Show various forms (DOES THIS EVEN HAVE A PLACE IN THIS CLASS?)
 
@@ -2628,64 +3291,64 @@ namespace ArtemisMissionEditor
         /// <summary>
         /// Show event dependency form
         /// </summary>
-        /// <param name="recalculate">Wether dependencies should be recalcualted for the current node</param>
-		public void ShowEventDependencyForm(bool recalculate = false)
-		{
-			Program.FormDependencyInstance.OpenEventDependency(TreeViewNodes.SelectedNode, recalculate);
-		}
+        /// <param name="recalculate">Whether dependencies should be recalcualted for the current node</param>
+        public void ShowEventDependencyForm(bool recalculate = false)
+        {
+            Program.FormDependencyInstance.OpenEventDependency(TreeViewNodes.SelectedNode, recalculate);
+        }
 
         /// <summary>
         /// Show mission properties form
         /// </summary>
-		public void ShowMissionPropertiesForm()
-		{
-			if (Program.FormMissionPropertiesInstance.Visible)
-				Program.FormMissionPropertiesInstance.BringToFront();
-			else
-			{
-				Program.FormMissionPropertiesInstance.ReadDataFromMission();
-				Program.FormMissionPropertiesInstance.Show();
-			}
-		}
-        
+        public void ShowMissionPropertiesForm()
+        {
+            if (Program.FormMissionPropertiesInstance.Visible)
+                Program.FormMissionPropertiesInstance.BringToFront();
+            else
+            {
+                Program.FormMissionPropertiesInstance.ReadDataFromMission();
+                Program.FormMissionPropertiesInstance.Show();
+            }
+        }
+
         #endregion
 
         #region Find and Replace functionality
 
-        /// <summary> 
-        /// Check for match, taking search terms in account 
+        /// <summary>
+        /// Check for match, taking search terms in account
         /// </summary>
-		private bool Find_CheckStringForMatch(string text1, MissionSearchCommand msc)
-		{
-			string text2 = msc.Input;
-			if (!msc.MatchCase)
-			{
-				text1 = text1.ToLower();
-				text2 = text2.ToLower();
-			}
+        private bool Find_CheckStringForMatch(string text1, MissionSearchCommand msc)
+        {
+            string text2 = msc.Input;
+            if (!msc.MatchCase)
+            {
+                text1 = text1.ToLower();
+                text2 = text2.ToLower();
+            }
 
-			if (msc.MatchExact)
-				return text1 == text2;
-			else
-				return text1.Contains(text2);
-		}
+            if (msc.MatchExact)
+                return text1 == text2;
+            else
+                return text1.Contains(text2);
+        }
 
-        /// <summary> 
-        /// Checks if current selection (node and/or statement) matches the search criteria 
+        /// <summary>
+        /// Checks if current selection (node and/or statement) matches the search criteria
         /// </summary>
         public bool Find_DoesCurrentSelectionMatch(MissionSearchCommand msc)
         {
             if (Find_CheckNodeForMatch(TreeViewNodes.SelectedNode, (MissionNode)TreeViewNodes.SelectedNode.Tag, -1, msc).Valid)
                 return true;
 
-			if (TreeViewStatements.SelectedNode == null || !(TreeViewStatements.SelectedNode.Tag is MissionStatement))
-				return false;
+            if (TreeViewStatements.SelectedNode == null || !(TreeViewStatements.SelectedNode.Tag is MissionStatement))
+                return false;
 
             return Find_CheckStatementForMatch(TreeViewNodes.SelectedNode, (MissionStatement)TreeViewStatements.SelectedNode.Tag, -1, -1, msc).Valid;
         }
 
-        /// <summary> 
-        /// Check if the mission node matches the search criteria, return search result if it does 
+        /// <summary>
+        /// Check if the mission node matches the search criteria, return search result if it does
         /// </summary>
         private MissionSearchResult Find_CheckNodeForMatch(TreeNode node, MissionNode mNode, int curNode, MissionSearchCommand msc)
         {
@@ -2698,15 +3361,15 @@ namespace ArtemisMissionEditor
             //... or commentaries
             if (msc.Commentaries && node.Tag is MissionNode_Comment)
                 statisfies = statisfies | Find_CheckStringForMatch(mNode.Name, msc);
-                    
+
             if (statisfies)
                 return new MissionSearchResult(curNode, 0, mNode.Name, node, null);
 
             return new MissionSearchResult(curNode, 0, null, node, null);
         }
 
-        /// <summary> 
-        /// Check if mission statement matches the search criteria, return search result if it does 
+        /// <summary>
+        /// Check if mission statement matches the search criteria, return search result if it does
         /// </summary>
         private MissionSearchResult Find_CheckStatementForMatch(TreeNode node, MissionStatement statement, int curNode, int curStatement, MissionSearchCommand msc)
         {
@@ -2719,7 +3382,7 @@ namespace ArtemisMissionEditor
 
                 return new MissionSearchResult(curNode, curStatement, null, node, statement);
             }
-            
+
             bool statisfies = false;
 
             //Look for xml attribute names
@@ -2742,14 +3405,14 @@ namespace ArtemisMissionEditor
             return new MissionSearchResult(curNode, curStatement, null, node, statement);
         }
 
-        /// <summary> 
+        /// <summary>
         /// Add the search result to the list if its not null. Returns true if we have to stop after this (we found the first in firstOnly mode, or reached the last)
         /// </summary>
         private bool Find_TryAdd(List<MissionSearchResult> list, MissionSearchResult item, bool firstOnly, ref int limitNode, ref int limitStatement)
         {
             //Stopper for when coming for a second time
             bool last = limitNode == item.CurNode && limitStatement == item.CurStatement;
-            
+
             //Remember from what to begin if in first mode
             if (firstOnly && !last && TreeViewNodes.SelectedNode == item.Node && (GetSelectedNonStatementNodePosition() == item.CurStatement || (TreeViewStatements.SelectedNode != null && TreeViewStatements.SelectedNode.Tag == item.Statement)))
             {
@@ -2767,16 +3430,16 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-		/// Find all items matching the search command's criteria and return the list of matching items.
+        /// Find all items matching the search command's criteria and return the list of matching items.
         /// Also used to look for the first after the current (Find Next and Find Previous).
-		/// </summary>
+        /// </summary>
         /// <remarks>
-        /// In "firstOnly" mode, we actually search twice, because we always start from the first node and statement, 
-        /// but we must actually find first that happens after the current one. 
+        /// In "firstOnly" mode, we actually search twice, because we always start from the first node and statement,
+        /// but we must actually find first that happens after the current one.
         /// Therefore, we start from the first, and when we reach the current, we flag it as "limitNode" and "limitStatement",
-        /// and only since then does the first found node cause a return. 
+        /// and only since then does the first found node cause a return.
         /// And then if we reach the flagged node for the second time, we also return (with zero results)
-        /// </remarks>		
+        /// </remarks>
         public List<MissionSearchResult> FindAll(MissionSearchCommand msc, bool forward = true, bool firstOnly = false)
         {
             List<MissionSearchResult> result = new List<MissionSearchResult>();
@@ -2802,9 +3465,9 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// Recursively look for matches in nodes that are child to the current node. 
-        /// Also used to look for first only (Find Next and Find Previous. 
-        /// Returns if we found first in firstOnly mode or reached last node. 
+        /// Recursively look for matches in nodes that are child to the current node.
+        /// Also used to look for first only (Find Next and Find Previous.
+        /// Returns if we found first in firstOnly mode or reached last node.
         /// Called from FindAll and recursively calls itself.
         /// </summary>
         private bool FindAll_RecursivelyFind(TreeNode node, ref int curNode, List<MissionSearchResult> list, MissionSearchCommand msc, bool forward, bool firstOnly, ref int limitNode, ref int limitStatement)
@@ -2815,39 +3478,39 @@ namespace ArtemisMissionEditor
             int curStatement = forward ? 0 : mNode.Conditions.Count + mNode.Actions.Count + 1;
 
             for (int i = 0; i < node.Nodes.Count; i++)
-                if (FindAll_RecursivelyFind(node.Nodes[forward ? i : node.Nodes.Count - 1 - i], ref curNode, list, msc, forward, firstOnly, ref limitNode, ref limitStatement)) 
+                if (FindAll_RecursivelyFind(node.Nodes[forward ? i : node.Nodes.Count - 1 - i], ref curNode, list, msc, forward, firstOnly, ref limitNode, ref limitStatement))
                     return true;
 
-            //Skip node in we are only looking in the current node and this isnt current node
+            //Skip node in we are only looking in the current node and this isn't current node
             if (msc.OnlyInCurrentNode && !TreeViewNodes.NodeIsInsideNode(node, TreeViewNodes.SelectedNode))
                 return false;
 
             if (forward)
             {
                 //Check if node matches our search criteria
-                if (Find_TryAdd(list, Find_CheckNodeForMatch(node, mNode, curNode, msc), firstOnly, ref limitNode, ref limitStatement)) 
+                if (Find_TryAdd(list, Find_CheckNodeForMatch(node, mNode, curNode, msc), firstOnly, ref limitNode, ref limitStatement))
                     return true;
 
                 //Then we start looking through statements
                 for (int i = 0; i < mNode.Conditions.Count; i++)
-                    if (Find_TryAdd(list, Find_CheckStatementForMatch(node, mNode.Conditions[forward ? i : mNode.Conditions.Count - 1 - i], curNode, forward ? ++curStatement : --curStatement, msc), firstOnly, ref limitNode, ref limitStatement)) 
+                    if (Find_TryAdd(list, Find_CheckStatementForMatch(node, mNode.Conditions[forward ? i : mNode.Conditions.Count - 1 - i], curNode, forward ? ++curStatement : --curStatement, msc), firstOnly, ref limitNode, ref limitStatement))
                         return true;
                 for (int i = 0; i < mNode.Actions.Count; i++)
-                    if (Find_TryAdd(list, Find_CheckStatementForMatch(node, mNode.Actions[forward ? i : mNode.Actions.Count - 1 - i], curNode, forward ? ++curStatement : --curStatement, msc), firstOnly, ref limitNode, ref limitStatement)) 
+                    if (Find_TryAdd(list, Find_CheckStatementForMatch(node, mNode.Actions[forward ? i : mNode.Actions.Count - 1 - i], curNode, forward ? ++curStatement : --curStatement, msc), firstOnly, ref limitNode, ref limitStatement))
                         return true;
             }
             else
             {
                 //Then we start looking through statements
                 for (int i = 0; i < mNode.Actions.Count; i++)
-                    if (Find_TryAdd(list, Find_CheckStatementForMatch(node, mNode.Actions[forward ? i : mNode.Actions.Count - 1 - i], curNode, forward ? ++curStatement : --curStatement, msc), firstOnly, ref limitNode, ref limitStatement)) 
+                    if (Find_TryAdd(list, Find_CheckStatementForMatch(node, mNode.Actions[forward ? i : mNode.Actions.Count - 1 - i], curNode, forward ? ++curStatement : --curStatement, msc), firstOnly, ref limitNode, ref limitStatement))
                         return true;
                 for (int i = 0; i < mNode.Conditions.Count; i++)
-                    if (Find_TryAdd(list, Find_CheckStatementForMatch(node, mNode.Conditions[forward ? i : mNode.Conditions.Count - 1 - i], curNode, forward ? ++curStatement : --curStatement, msc), firstOnly, ref limitNode, ref limitStatement)) 
+                    if (Find_TryAdd(list, Find_CheckStatementForMatch(node, mNode.Conditions[forward ? i : mNode.Conditions.Count - 1 - i], curNode, forward ? ++curStatement : --curStatement, msc), firstOnly, ref limitNode, ref limitStatement))
                         return true;
 
                 //Check if node matches our search criteria
-                if (Find_TryAdd(list, Find_CheckNodeForMatch(node, mNode, curNode, msc), firstOnly, ref limitNode, ref limitStatement)) 
+                if (Find_TryAdd(list, Find_CheckNodeForMatch(node, mNode, curNode, msc), firstOnly, ref limitNode, ref limitStatement))
                     return true;
             }
 
@@ -2863,11 +3526,14 @@ namespace ArtemisMissionEditor
 
             int curNode = 0;
 
+            if (String.IsNullOrEmpty(this.VersionNumber) || (this.VersionNumber == "1.0"))
+                result.Add(new MissionSearchResult(0, 0, "Mission has version 1.0. Suggest setting this to the version of Artemis the mission was designed for, under Edit->Properties...", null, null));
+
+            if (String.IsNullOrEmpty(Description))
+                result.Add(new MissionSearchResult(0, 0, "Mission has no description. Consider adding one under Edit->Properties...", null, null));
+
             foreach (TreeNode node in TreeViewNodes.Nodes)
                 FindProblems_RecursivelyCheckNodes(node, ref curNode, result);
-
-            if (AmountOfCreatePlayerStatements > 1)
-                result.Add(new MissionSearchResult(0, 0, "Multiple \"Create player\" statements detected in the script. Note that creating multiple player ships does not work properly. If your indention is to create a multi-ship mission, you should not create additional player ships, but rather have the players spawn additional ships in the usual way (joining as a Main Screen).", null, null));
 
             if (AmountOfMissionEndStatements == 0)
                 result.Add(new MissionSearchResult(0, 0, "\"End Mission\" action is not present anywhere in the script. Unless you are making a script that only ends with player ship being destroyed, you should consider adding this action.", null, null));
@@ -2876,52 +3542,178 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// Finds problematic places in the child nodes of the current node. 
-        /// Called from FindProblems and recursively calls itself.
+        /// When a name contains variable formatting such as "X|foo|", we cannot
+        /// know the actual name since we do not know the value of foo.  So we
+        /// replace the variable name with "*", as in "X*"
         /// </summary>
-        private void FindProblems_RecursivelyCheckNodes(TreeNode node, ref int curNode, List<MissionSearchResult> result)
+        private string CollapseName(string name)
         {
-            //Preset list of statements that take names (under different, khm, names) of named objects
-            string[] statementsThatTakeName = new string[]{
-                "destroy", 
-                "destroy_near", 
+            if (name == null)
+            {
+                return "";
+            }
+            for (int start = name.IndexOf('|'); start >= 0; start = name.IndexOf("|"))
+            {
+                int end = name.IndexOf('|', start + 1);
+                if (end == -1)
+                {
+                    // Odd number of '|', so leave as is.
+                    return name;
+                }
+
+                // Replace start to end with "*".
+                string newname = name.Substring(0, start);
+                newname += "*";
+                newname += name.Substring(end + 1);
+                name = newname;
+            }
+            return name;
+        }
+
+        /// <summary>
+        /// Finds problems with a file path.
+        /// </summary>
+        private void FindProblems_CheckFilePath(PathRelativityMode pathRelativityMode, string attName, string fileDescription, int curNode, int curStatement, TreeNode node, MissionStatement statement, List<MissionSearchResult> result)
+        {
+            string path = statement.GetAttribute(attName);
+            if (String.IsNullOrWhiteSpace(path))
+                return;
+            if (Path.IsPathRooted(path))
+            {
+                result.Add(new MissionSearchResult(curNode, curStatement, "It looks like you have specified an absolute path. You should avoid using absolute paths, as they will almost never be the same on the other people's computers.", node, statement));
+                return;
+            }
+
+            // Compose mission path.
+            string missionPath = ".";
+            if (!String.IsNullOrEmpty(Mission.Current.FilePath))
+                missionPath = Path.GetDirectoryName(Mission.Current.FilePath);
+
+            // Compose Artemis path.
+            string artemisPath = Path.Combine(missionPath, "..\\..\\..");
+            if (!String.IsNullOrEmpty(VesselData.Path))
+                artemisPath = Path.Combine(Path.GetDirectoryName(VesselData.Path), "..");
+
+            string absolutePathFromArtemis = Path.GetFullPath(Path.Combine(artemisPath, path));
+            string absolutePathFromMission = Path.GetFullPath(Path.Combine(missionPath, path));
+            if (pathRelativityMode == PathRelativityMode.RelativeToArtemisFolder)
+            {
+                if (File.Exists(absolutePathFromArtemis))
+                    return;
+                if (File.Exists(absolutePathFromMission))
+                {
+                    System.Uri uri1 = new Uri(artemisPath);
+                    System.Uri uri2 = new Uri(absolutePathFromMission);
+                    Uri relativeUri = uri1.MakeRelativeUri(uri2);
+                    statement.SetAttribute(attName, relativeUri.ToString());
+
+                    result.Add(new MissionSearchResult(curNode, curStatement, "It looks like you specified a path relative to the mission folder. Paths to " + fileDescription + "s should be relative to the Artemis folder.  This has been automatically corrected.", node, statement));
+                }
+                else
+                    result.Add(new MissionSearchResult(curNode, curStatement, fileDescription + " \"" + path + "\" not found.", node, statement));
+            }
+            if (pathRelativityMode == PathRelativityMode.RelativeToMissionFolder)
+            {
+                if (File.Exists(absolutePathFromMission))
+                    return;
+                if (File.Exists(absolutePathFromArtemis))
+                {
+                    System.Uri uri1 = new Uri(missionPath);
+                    System.Uri uri2 = new Uri(absolutePathFromArtemis);
+                    Uri relativeUri = uri1.MakeRelativeUri(uri2);
+                    statement.SetAttribute(attName, relativeUri.ToString());
+
+                    result.Add(new MissionSearchResult(curNode, curStatement, "It looks like you have specified a path relative to the Artemis folder. Paths to " + fileDescription + "s should be relative to the mission folder.  This has been automatically corrected.", node, statement));
+                }
+                else
+                    result.Add(new MissionSearchResult(curNode, curStatement, fileDescription + " file \"" + path + "\" not found.", node, statement));
+            }
+        }
+
+        // Preset list of statements that take names (under different, khm, names) of named objects.
+        static string[] StatementsThatTakeName = new string[]{
+                "destroy",
+                "destroy_near",
                 "add_ai",
                 "clear_ai",
                 "direct",
+                "get_object_property",
                 "set_object_property",
                 "addto_object_property",
                 "set_to_gm_position",
+                "set_monster_tag_data",
+                "set_named_object_tag_state",
                 "set_ship_text",
-                "set_special",
                 "set_side_value",
+                "set_special",
                 "if_inside_box",
                 "if_outside_box",
                 "if_inside_sphere",
                 "if_outside_sphere",
+                "if_in_nebula",
                 "if_docked",
                 "if_player_is_targeting",
                 "if_exists",
                 "if_not_exists",
                 "if_object_property",
+                "if_monster_tag_matches",
+                "if_scan_level",
                 };
-            string[] statementsThatTakeTargetName = new string[]{
+        string[] StatementsThatTakeTargetName = new string[]{
                 "direct",
                 };
-            string[] statementsThatTakeName12 = new string[]{
+        string[] StatementsThatTakeObjectName = new string[]{
+                "if_object_tag_matches",
+                };
+        string[] StatementsThatTakePlayerName = new string[]{
+                "if_docked",
+                "if_player_is_targeting",
+                };
+        string[] StatementsThatTakeName12 = new string[]{
                 "copy_object_property",
                 "set_relative_position",
                 "if_distance",
                 };
+        string[] StatementsThatTakeText = new string[]{
+                "gm_instructions",
+                "log",
+                };
+        string[] StatementsWithTextBody = new string[]{
+                "gm_instructions",
+                "incoming_comms_text",
+                };
+
+        /// <summary>
+        /// Finds problematic places in the child nodes of the current node.
+        /// Called from FindProblems and recursively calls itself.
+        /// </summary>
+        private void FindProblems_RecursivelyCheckNodes(TreeNode node, ref int curNode, List<MissionSearchResult> result)
+        {
+            string[] statementsThatTakeObjectProperty = new string[]{
+                "addto_object_property",
+                "copy_object_property",
+                "if_object_property",
+                "get_object_property",
+                "set_object_property",
+                };
+            string[] noticableOnEndMissionStatements = new string[]{
+                "big_message",
+                "log",
+                "play_sound_now",
+                "spawn_external_program",
+                "warning_popup_message",
+                };
 
             curNode++;
 
-            if (node.Tag as MissionNode_Start != null || node.Tag as MissionNode_Event != null)
+            if ((node.Tag as MissionNode_Start != null) || (node.Tag as MissionNode_Event != null))
             {
                 MissionNode mNode = (MissionNode)node.Tag;
                 bool isStartNode = node.Tag as MissionNode_Start != null;
 
-                // Find all objects created in this node
+                // Find all objects created in this node.
                 List<string> namesCreatedInThisNode = new List<string>();
+                List<string> namesDestroyedInThisNode = new List<string>();
                 bool hasEndMission = false;
                 bool hasNonEndMission = false;
                 foreach (MissionStatement statement in mNode.Actions)
@@ -2930,70 +3722,117 @@ namespace ArtemisMissionEditor
                         continue;
                     string attName;
                     if (statement.Name == "create" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")))
-                        namesCreatedInThisNode.Add(attName);
+                        namesCreatedInThisNode.Add(CollapseName(attName));
+                    if (statement.Name == "destroy" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")))
+                        namesDestroyedInThisNode.Add(CollapseName(attName));
                     if (statement.Name == "end_mission")
                         hasEndMission = true;
-                    else
+                    else if (!noticableOnEndMissionStatements.Contains(statement.Name))
                         hasNonEndMission = true;
                 }
 
                 if (hasEndMission && hasNonEndMission)
                     result.Add(new MissionSearchResult(curNode, -1, "Other actions in the same node with the \"End Mission\" action make little sense, as the mission will end immediately and their effects will most likely go unnoticed by the players.", node, null));
 
+                List<string> gmButtonsCheckedHere = new List<string>();
+
+                // Check for problems on conditions.
                 if (!isStartNode)
                 {
-                    // Event has no conditions
+                    // Event has no conditions.
                     if (mNode.Conditions.Count == 0)
                     {
-                        result.Add(new MissionSearchResult(curNode, 0, "An event contains no conditions. It will keep executing on every tick, potentially introducing performance issues or even crashes.", node, null));
+                        result.Add(new MissionSearchResult(curNode, 0, "An event contains no conditions. It will keep executing on every tick, potentially introducing performance issues.", node, null));
                     }
                     if (mNode.Conditions.Count > 0)
                     {
-                        bool onlyTimers = true;
-                        bool onlyNotExists = true;
-                        bool noIfVariable = true;
+                        List<string> namesCheckedHere = new List<string>();
+                        List<string> namesCheckedForNonExistenceHere = new List<string>();
                         List<string> variablesCheckedHere = new List<string>();
                         List<string> timersCheckedHere = new List<string>();
+                        List<string> commsButtonsCheckedHere = new List<string>();
+                        List<string> propertiesCheckedHere = new List<string>();
+                        int gmKeysCheckedHere = 0;
+                        int clientKeysCheckedHere = 0;
                         foreach (MissionStatement statement in mNode.Conditions)
                         {
-                            if (statement.Kind == MissionStatementKind.Condition && statement.Name != "if_timer_finished")
-                                onlyTimers = false;
-                            if (statement.Kind == MissionStatementKind.Condition && statement.Name != "if_not_exists")
-                                onlyNotExists = false;
-                            if (statement.Kind == MissionStatementKind.Condition && statement.Name == "if_variable")
+                            if (statement.Kind != MissionStatementKind.Condition)
+                                continue;
+                            if (statement.Name == "if_not_exists")
+                                namesCheckedForNonExistenceHere.Add(CollapseName(statement.GetAttribute("name")));
+                            if (statement.Name == "if_variable")
+                                variablesCheckedHere.Add(CollapseName(statement.GetAttribute("name")));
+                            if (statement.Name == "if_timer_finished")
+                                timersCheckedHere.Add(CollapseName(statement.GetAttribute("name")));
+                            if (statement.Name == "if_client_key")
+                                clientKeysCheckedHere++;
+                            if (statement.Name == "if_gm_key")
+                                gmKeysCheckedHere++;
+                            if (statement.Name == "if_gm_button")
+                                gmButtonsCheckedHere.Add(CollapseName(statement.GetAttribute("text")));
+                            if (statement.Name == "if_comms_button")
+                                commsButtonsCheckedHere.Add(CollapseName(statement.GetAttribute("text")));
+                            if (statement.Name == "if_object_property")
                             {
-                                noIfVariable = false;
-                                variablesCheckedHere.Add(statement.GetAttribute("name"));
+                                string name = CollapseName(statement.GetAttribute("name")) + "." + statement.GetAttribute("property");
+                                propertiesCheckedHere.Add(name);
                             }
-                            if (statement.Kind == MissionStatementKind.Condition && statement.Name == "if_timer_finished")
-                                timersCheckedHere.Add(statement.GetAttribute("name"));
+                            // Look for names whose existence is checked for.
+                            if (StatementsThatTakeName.Contains(statement.Name) && statement.Name != "if_not_exists")
+                            {
+                                string name = statement.GetAttribute("name");
+                                if (!String.IsNullOrEmpty(name))
+                                    namesCheckedHere.Add(CollapseName(name));
+                            }
+                            if (StatementsThatTakeName12.Contains(statement.Name))
+                            {
+                                string name = statement.GetAttribute("name1");
+                                if (!String.IsNullOrEmpty(name))
+                                    namesCheckedHere.Add(CollapseName(name));
+                                name = statement.GetAttribute("name2");
+                                if (!String.IsNullOrEmpty(name))
+                                    namesCheckedHere.Add(CollapseName(name));
+                            }
                         }
-                        
-                        // Event has only "timer_finished" conditions
-                        if (onlyTimers && !hasEndMission)
-                            result.Add(new MissionSearchResult(curNode, 0, "Event contains only \"Timer finished\" condition(s). Once the timer finishes, it will keep executing on every tick, potentially introducing performance issues or even crashes.", node, null));
-                        
-                        // Event has only "object_not_exists" conditions
-                        if (onlyNotExists && !hasEndMission)
-                            result.Add(new MissionSearchResult(curNode, 0, "Event contains only \"Object does not exist\" condition(s). While the specified object does not exist, it will keep executing on every tick, potentially introducing performance issues or even crashes.", node, null));
-                        
-                        // Event has no "if_variable" conditions
-                        if (noIfVariable && !hasEndMission)
-                            result.Add(new MissionSearchResult(curNode, 0, "Event contains no \"If variable\" condition. While this is not a mistake, it is recommended to have at least one such condition, or ensure that something inside the event always invalidates one of the conditions.", node, null));
-                        
-                        // Event has no set_variable mirroring if_variable
+
+                        // Event has no set_variable mirroring if_variable.
                         if (timersCheckedHere.Count > 0 || variablesCheckedHere.Count > 0)
                         {
                             List<string> variablesSetHere = new List<string>();
+                            List<string> propertiesSetHere = new List<string>();
                             List<string> timersSetHere = new List<string>();
                             for (int i = 0; i < mNode.Actions.Count; i++)
                             {
-                                if (mNode.Actions[i].Kind == MissionStatementKind.Action && mNode.Actions[i].Name == "set_variable")
-                                    variablesSetHere.Add(mNode.Actions[i].GetAttribute("name"));
-                                if (mNode.Actions[i].Kind == MissionStatementKind.Action && mNode.Actions[i].Name == "set_timer")
-                                    timersSetHere.Add(mNode.Actions[i].GetAttribute("name"));
+                                if (mNode.Actions[i].Kind != MissionStatementKind.Action)
+                                    continue;
+                                if (mNode.Actions[i].Name == "set_variable")
+                                    variablesSetHere.Add(CollapseName(mNode.Actions[i].GetAttribute("name")));
+                                if (mNode.Actions[i].Name == "get_object_property")
+                                    variablesSetHere.Add(CollapseName(mNode.Actions[i].GetAttribute("variable")));
+                                if (mNode.Actions[i].Name == "set_timer")
+                                    timersSetHere.Add(CollapseName(mNode.Actions[i].GetAttribute("name")));
+                                if (mNode.Actions[i].Name == "set_side_value")
+                                {
+                                    string name = mNode.Actions[i].GetAttribute("name") + ".sideValue";
+                                    propertiesSetHere.Add(CollapseName(name));
+                                }
+                                if (mNode.Actions[i].Name == "set_object_property" || mNode.Actions[i].Name == "addto_object_property")
+                                {
+                                    string name = mNode.Actions[i].GetAttribute("name") + "." + mNode.Actions[i].GetAttribute("property");
+                                    propertiesSetHere.Add(CollapseName(name));
+                                }
+                                if (mNode.Actions[i].Name == "copy_object_property")
+                                {
+                                    string name = mNode.Actions[i].GetAttribute("name2") + "." + mNode.Actions[i].GetAttribute("property");
+                                    propertiesSetHere.Add(CollapseName(name));
+                                }
                             }
                             bool noCorrespondingSet = true;
+                            if (gmKeysCheckedHere > 0 || clientKeysCheckedHere > 0)
+                            {
+                                // Keypress only fires once per press.
+                                noCorrespondingSet = false;
+                            }
                             foreach (string checkedVar in variablesCheckedHere)
                             {
                                 if (String.IsNullOrEmpty(checkedVar))
@@ -3006,6 +3845,32 @@ namespace ArtemisMissionEditor
                                         noCorrespondingSet = false;
                                 }
                             }
+                            foreach (string checkedProp in propertiesCheckedHere)
+                            {
+                                if (String.IsNullOrEmpty(checkedProp))
+                                    continue;
+                                foreach (string setProp in propertiesSetHere)
+                                {
+                                    if (String.IsNullOrEmpty(setProp))
+                                        continue;
+                                    if (setProp == checkedProp)
+                                        noCorrespondingSet = false;
+                                }
+                            }
+                            foreach (string checkedGMButton in gmButtonsCheckedHere)
+                            {
+                                if (String.IsNullOrEmpty(checkedGMButton))
+                                    continue;
+                                // Button press only fires once per press.
+                                noCorrespondingSet = false;
+                            }
+                            foreach (string checkedCommsButton in commsButtonsCheckedHere)
+                            {
+                                if (String.IsNullOrEmpty(checkedCommsButton))
+                                    continue;
+                                // Button press only fires once per press.
+                                noCorrespondingSet = false;
+                            }
                             foreach (string checkedTimer in timersCheckedHere)
                             {
                                 if (String.IsNullOrEmpty(checkedTimer))
@@ -3015,6 +3880,30 @@ namespace ArtemisMissionEditor
                                     if (String.IsNullOrEmpty(setTimer))
                                         continue;
                                     if (setTimer == checkedTimer)
+                                        noCorrespondingSet = false;
+                                }
+                            }
+                            foreach (string checkedName in namesCheckedHere)
+                            {
+                                if (String.IsNullOrEmpty(checkedName))
+                                    continue;
+                                foreach (string destroyedName in namesDestroyedInThisNode)
+                                {
+                                    if (String.IsNullOrEmpty(destroyedName))
+                                        continue;
+                                    if (destroyedName == checkedName)
+                                        noCorrespondingSet = false;
+                                }
+                            }
+                            foreach (string checkedName in namesCheckedForNonExistenceHere)
+                            {
+                                if (String.IsNullOrEmpty(checkedName))
+                                    continue;
+                                foreach (string createdName in namesCreatedInThisNode)
+                                {
+                                    if (String.IsNullOrEmpty(createdName))
+                                        continue;
+                                    if (createdName == checkedName)
                                         noCorrespondingSet = false;
                                 }
                             }
@@ -3035,29 +3924,66 @@ namespace ArtemisMissionEditor
                             if (statement.Kind != MissionStatementKind.Condition)
                                 continue;
 
+                            if (!statement.IsGreen())
+                                result.Add(new MissionSearchResult(curNode, i + 1, "Invalid syntax for " + statement.Name + " condition.", node, statement));
+
                             // Reference to a variable that is never set
                             string attName;
-                            if (statement.Name == "if_variable" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && !VariableSetNames.Contains(attName))
+                            if (statement.Name == "if_variable" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && !FloatVariableSetNames.Contains(CollapseName(attName)) && !IntegerVariableSetNames.Contains(CollapseName(attName)))
                                 result.Add(new MissionSearchResult(curNode, i + 1, "Variable named \"" + attName + "\" is checked for, but never set.", node, statement));
 
+                            // Reference to an external program ID that is never spawned
+                            if ((statement.Name == "if_external_program_active" || statement.Name == "if_external_program_finished") && !String.IsNullOrEmpty(attName = statement.GetAttribute("id")) && !ExternalProgramSpawnIDs.Contains(CollapseName(attName)))
+                                result.Add(new MissionSearchResult(curNode, i + 1, "External program with ID \"" + attName + "\" is checked for, but never spawned.", node, statement));
+
                             // Reference to a timer that is never set
-                            if (statement.Name == "if_timer_finished" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && !TimerSetNames.Contains(attName))
+                            if (statement.Name == "if_timer_finished" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && !TimerSetNames.Contains(CollapseName(attName)))
                                 result.Add(new MissionSearchResult(curNode, i + 1, "Timer named \"" + attName + "\" is checked for, but never set.", node, statement));
+
+                            // Reference to a GM key.
+                            if (statement.Name == "if_gm_key")
+                                result.Add(new MissionSearchResult(curNode, i + 1, "GM key is checked for, but keypresses are unreliable. Use GM buttons instead.", node, statement));
+
+                            // Reference to a GM button that is never set
+                            if (statement.Name == "if_gm_button" && !String.IsNullOrEmpty(attName = statement.GetAttribute("text")) && !GMButtonSetNames.Contains(CollapseName(attName)))
+                                result.Add(new MissionSearchResult(curNode, i + 1, "GM button named \"" + attName + "\" is checked for, but never set.", node, statement));
+
+                            // Reference to a Comms button that is never set
+                            if (statement.Name == "if_comms_button" && !String.IsNullOrEmpty(attName = statement.GetAttribute("text")) && !CommsButtonSetNames.Contains(CollapseName(attName)))
+                                result.Add(new MissionSearchResult(curNode, i + 1, "Comms button named \"" + attName + "\" is checked for, but never set.", node, statement));
 
                             // Distance equality check (hardly ever happens)
                             if (statement.Name == "if_distance" && (statement.GetAttribute("comparator") == "EQUALS" || statement.GetAttribute("comparator") == "NOT"))
                                 result.Add(new MissionSearchResult(curNode, i + 1, "Distance is checked for equality. In practice, distance will almost never be equal to an exact value. You should use \"lesser\" and \"greater\" comparisons instead.", node, statement));
 
+                            if (statement.Name == "if_client_key")
+                                result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Keypresses are unreliable. Consider using \"if_comms_button\" instead of \"if_client_key\".", node, statement));
+
+                            // Check with a player name that is not checked for existence
+                            if ((statement.Name == "if_docked" || statement.Name == "if_player_is_targeting") && !String.IsNullOrEmpty(attName = statement.GetAttribute("player_name")) && !namesCheckedHere.Contains(CollapseName(attName)))
+                                result.Add(new MissionSearchResult(curNode, i + 1, "Ship named \"" + attName + "\" is checked with " + statement.Name + ", but not tested for existence so ship 0 might be tested instead.", node, statement));
+
+                            if (statementsThatTakeObjectProperty.Contains(statement.Name))
+                            {
+                                string propertyName = statement.GetAttribute("property");
+                                if (propertyName == "triggersMines" || propertyName == "blocksShotFlag")
+                                    result.Add(new MissionSearchResult(curNode, i + 1, "The property \"" + propertyName + "\" does not work.  It has no effect.", node, statement));
+                            }
+
                             // Reference to a name never created
                             List<string> namesToCheck = new List<string>();
-                            if (statementsThatTakeName.Contains(statement.Name))
-                                namesToCheck.Add(statement.GetAttribute("name"));
-                            if (statementsThatTakeTargetName.Contains(statement.Name))
-                                namesToCheck.Add(statement.GetAttribute("targetName"));
-                            if (statementsThatTakeName12.Contains(statement.Name))
+                            if (StatementsThatTakeName.Contains(statement.Name))
+                                namesToCheck.Add(CollapseName(statement.GetAttribute("name")));
+                            if (StatementsThatTakeTargetName.Contains(statement.Name))
+                                namesToCheck.Add(CollapseName(statement.GetAttribute("targetName")));
+                            if (StatementsThatTakeObjectName.Contains(statement.Name))
+                                namesToCheck.Add(CollapseName(statement.GetAttribute("objectName")));
+                            if (StatementsThatTakePlayerName.Contains(statement.Name))
+                                namesToCheck.Add(CollapseName(statement.GetAttribute("player_name")));
+                            if (StatementsThatTakeName12.Contains(statement.Name))
                             {
-                                namesToCheck.Add(statement.GetAttribute("name1"));
-                                namesToCheck.Add(statement.GetAttribute("name2"));
+                                namesToCheck.Add(CollapseName(statement.GetAttribute("name1")));
+                                namesToCheck.Add(CollapseName(statement.GetAttribute("name2")));
                             }
                             foreach (string name in namesToCheck)
                             {
@@ -3070,69 +3996,141 @@ namespace ArtemisMissionEditor
                     }
                 }
 
+                // Check for problems on actions.
+                if (mNode.Actions.Count == 0)
+                {
+                    result.Add(new MissionSearchResult(curNode, 0, "An event contains no actions, and so will not do anything.", node, null));
+                }
                 for (int i = 0; i < mNode.Actions.Count; i++)
                 {
                     MissionStatement statement = mNode.Actions[i];
                     if (statement.Kind != MissionStatementKind.Action)
                         continue;
 
-                    // Reference to a variable that is never checked
+                    // Trying to set specialAbilityBits.
+                    if (((statement.Name == "set_object_property") || (statement.Name == "addto_object_property") ||
+                         (statement.Name == "copy_object_property")) &&
+                        (statement.GetAttribute("property") == "specialAbilityBits"))
+                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "The specialAbilityBits property cannot be modified, use set_special instead.", node, statement));
+                    else if (!statement.IsGreen())
+                        result.Add(new MissionSearchResult(curNode, i + 1, "Invalid syntax for " + statement.Name + " action.", node, statement));
+
+                    // Reference to a variable that is never checked.
                     string attName;
-                    if (statement.Name == "set_variable" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && !VariableCheckNames.Contains(attName))
+                    if (statement.Name == "set_variable" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && !VariableCheckNames.Contains(CollapseName(attName)))
                         result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Variable named \"" + attName + "\" is set, but never checked.", node, statement));
-                    
-                    // Reference to a timer that is never checked
-                    if (statement.Name == "set_timer" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && !TimerCheckNames.Contains(attName))
+                    if (statement.Name == "get_object_property" && !String.IsNullOrEmpty(attName = statement.GetAttribute("variable")) && !VariableCheckNames.Contains(CollapseName(attName)))
+                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Variable named \"" + attName + "\" is set, but never checked.", node, statement));
+
+                    // Reference to an integer variable from get_object_property.
+                    if (statement.Name == "get_object_property" && !String.IsNullOrEmpty(attName = statement.GetAttribute("variable")) && IntegerVariableSetNames.Contains(CollapseName(attName)))
+                        result.Add(new MissionSearchResult(curNode, i + 1, "Integer variable named \"" + attName + "\" is used with get_object_property which requires a Float variable.", node, statement));
+
+                    // Setting a float variable with integer=yes.
+                    string attInteger;
+                    if (statement.Name == "set_variable" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) &&
+                        !String.IsNullOrEmpty(attInteger = statement.GetAttribute("integer")) && (attInteger == "yes") &&
+                        FloatVariableSetNames.Contains(CollapseName(attName)))
+                        result.Add(new MissionSearchResult(curNode, i + 1, "Float variable named \"" + attName + "\" is set as an Integer.", node, statement));
+
+                    // Setting an integer variable without integer=yes.
+                    if (statement.Name == "set_variable" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) &&
+                        String.IsNullOrEmpty(attInteger = statement.GetAttribute("integer")) &&
+                        IntegerVariableSetNames.Contains(CollapseName(attName)))
+                        result.Add(new MissionSearchResult(curNode, i + 1, "Integer variable named \"" + attName + "\" is set as a Float.", node, statement));
+
+                    // Reference to a timer that is never checked.
+                    if (statement.Name == "set_timer" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && !TimerCheckNames.Contains(CollapseName(attName)))
                         result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Timer named \"" + attName + "\" is set, but never checked.", node, statement));
-                    
-                    // Add/set_property for object which name figures in the list of objects created in the same statement
-                    //TODO: Confirm or denyt this problem exists and fix this statement (also maybe copy_object_property?
-                    //if ((statement.Name == "addto_object_property" || statement.Name == "set_object_property"|| statement.Name == "add_ai"|| statement.Name == "clear_ai") && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && listCreatedInThisNode.Contains(attName))
-                    //    result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Changing properties of an object \"" + attName + "\" in the event where it was just created will not work correctly.", node, statement));
-                    
-                    // Setting side of an object that was just created
-                    if (statement.Name == "set_side_value" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && namesCreatedInThisNode.Contains(attName))
-                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "You can set the side value of an object \"" + attName + "\" in its create statement without utilising a second statement.", node, statement));
-                    
-                    // Check path to art
-                    if (statement.Name == "create" && statement.GetAttribute("type") == "genericMesh")
+
+                    // Reference to a GM button that is never checked.
+                    if (statement.Name == "set_gm_button" && !String.IsNullOrEmpty(attName = statement.GetAttribute("text")) && !GMButtonCheckNames.Contains(CollapseName(attName)))
+                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "GM button named \"" + attName + "\" is set, but never checked.", node, statement));
+
+                    // Reference to clearing a GM button that is never set.
+                    if (statement.Name == "clear_gm_button" && !String.IsNullOrEmpty(attName = statement.GetAttribute("text")) && !GMButtonSetNames.Contains(CollapseName(attName)))
+                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "GM button named \"" + attName + "\" is cleared, but never set.", node, statement));
+
+                    // Reference to a Comms button that is never checked.
+                    if (statement.Name == "set_comms_button" && !String.IsNullOrEmpty(attName = statement.GetAttribute("text")) && !CommsButtonCheckNames.Contains(CollapseName(attName)))
+                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Comms button named \"" + attName + "\" is set, but never checked.", node, statement));
+
+                    // Reference to clearing a Comms button that is never set.
+                    if (statement.Name == "clear_comms_button" && !String.IsNullOrEmpty(attName = statement.GetAttribute("text")) && !CommsButtonSetNames.Contains(CollapseName(attName)))
+                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Comms button named \"" + attName + "\" is cleared, but never set.", node, statement));
+
+                    if (statementsThatTakeObjectProperty.Contains(statement.Name))
                     {
-                        string[] pathsToCheck = new string[] { statement.GetAttribute("meshFileName"), statement.GetAttribute("textureFileName") };
-                        foreach (string path in pathsToCheck)
+                        string propertyName = statement.GetAttribute("property");
+                        if (propertyName == "triggersMines" || propertyName == "blocksShotFlag")
+                            result.Add(new MissionSearchResult(curNode, i + 1, "The property \"" + propertyName + "\" does not work.  It has no effect.", node, statement));
+                    }
+
+                    // Adding a monster AI block to a ship or vice versa.
+                    string attType;
+                    if (statement.Name == "add_ai" && 
+                        !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) &&
+                        !String.IsNullOrEmpty(attType = statement.GetAttribute("type")))
+                    {
+                        string type = "<UNKNOWN_TYPE>";
+                        if (ExpressionMemberCheck_AddAIType.AITypeDictionary.ContainsKey(attType))
+                            type = ExpressionMemberCheck_AddAIType.AITypeDictionary[attType];
+                        if (NamedObjectNames["monster"].Contains(CollapseName(attName)))
                         {
-                            if (String.IsNullOrWhiteSpace(path))
-                                continue;
-                            if (path.Contains(":\\"))
-                                result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "It looks like you have specified an absolute path. You should avoid using absolute paths, as they will almost never be the same on the other people's computers.", node, statement));
-                            else if (!path.Contains("dat"))
-                                result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "It looks like you have specified a path relative to the mission folder. Paths to art assets should be relative to the Artemis folder.", node, statement));
+                            if (type.StartsWith("<SHIP_"))
+                            {
+                                result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Ship AI block \"" + attType + "\" is added to monster \"" + attName + "\".", node, statement));
+                            }
+                        }
+                        else
+                        {
+                            if (type.StartsWith("<MONSTER_"))
+                            {
+                                result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Monster AI block \"" + attType + "\" is added to ship \"" + attName + "\".", node, statement));
+                            }
                         }
                     }
-                    
-                    // Check path to sound
-                    string soundPath;
-                    if ((statement.Name == "incoming_message" && !String.IsNullOrWhiteSpace(soundPath = statement.GetAttribute("fileName")))
-                     || (statement.Name == "play_sound_now" && !String.IsNullOrWhiteSpace(soundPath = statement.GetAttribute("filemame"))))
+
+                    // Add/set_property for object which name figures in the list of objects created in the same statement.
+                    //TODO: Confirm or deny that this problem exists and fix this statement (also maybe copy_object_property?)
+                    //if ((statement.Name == "addto_object_property" || statement.Name == "set_object_property" || statement.Name == "add_ai"|| statement.Name == "clear_ai") && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && listCreatedInThisNode.Contains(CollapseName(attName)))
+                    //    result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Changing properties of an object \"" + attName + "\" in the event where it was just created will not work correctly.", node, statement));
+
+                    // Setting side of an object that was just created.
+                    if (statement.Name == "set_side_value" && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")) && namesCreatedInThisNode.Contains(CollapseName(attName)))
+                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "You can set the side value of an object \"" + attName + "\" in its create statement without utilising a second statement.", node, statement));
+
+                    // Check path to art.
+                    if ((statement.Name == "create") && (statement.GetAttribute("type") == "genericMesh"))
                     {
-                        string path = soundPath;
-                        if (String.IsNullOrWhiteSpace(path))
-                            continue;
-                        if (path.Contains(":\\"))
-                            result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "It looks like you have specified an absolute path. You should avoid using absolute paths, as they will almost never be the same on the other people's computers.", node, statement));
-                        else if (path.Contains("dat"))
-                            result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "It looks like you have specified a path relative to the Artemis folder. Paths to sound assets should be relative to the mission folder.", node, statement));
+                        FindProblems_CheckFilePath(PathRelativityMode.RelativeToArtemisFolder, "meshFileName", "art asset", curNode, mNode.Conditions.Count + i + 1, node, statement, result);
+                        FindProblems_CheckFilePath(PathRelativityMode.RelativeToArtemisFolder, "textureFileName", "art asset", curNode, mNode.Conditions.Count + i + 1, node, statement, result);
                     }
-                    
-                    // Refernce to a name never created
-                    List<string> namesToCheck = new List<string>();
-                    if (statementsThatTakeName.Contains(statement.Name))
-                        namesToCheck.Add(statement.GetAttribute("name"));
-                    if (statementsThatTakeTargetName.Contains(statement.Name))
-                        namesToCheck.Add(statement.GetAttribute("targetName"));
-                    if (statementsThatTakeName12.Contains(statement.Name))
+
+                    // Check path to sound.
+                    if (statement.Name == "incoming_message")
                     {
-                        namesToCheck.Add(statement.GetAttribute("name1"));
-                        namesToCheck.Add(statement.GetAttribute("name2"));
+                        FindProblems_CheckFilePath(PathRelativityMode.RelativeToMissionFolder, "fileName", "OGG file", curNode, mNode.Conditions.Count + i + 1, node, statement, result);
+                    }
+                    if (statement.Name == "play_sound_now")
+                    {
+                        FindProblems_CheckFilePath(PathRelativityMode.RelativeToArtemisFolder, "fileName", "WAV file", curNode, mNode.Conditions.Count + i + 1, node, statement, result);
+                    }
+
+                    // Reference to a name never created.
+                    List<string> namesToCheck = new List<string>();
+                    if (StatementsThatTakeName.Contains(statement.Name) && !String.IsNullOrEmpty(attName = statement.GetAttribute("name")))
+                        namesToCheck.Add(CollapseName(attName));
+                    if (StatementsThatTakeTargetName.Contains(statement.Name))
+                        namesToCheck.Add(CollapseName(statement.GetAttribute("targetName")));
+                    if (StatementsThatTakeObjectName.Contains(statement.Name))
+                        namesToCheck.Add(CollapseName(statement.GetAttribute("objectName")));
+                    if (StatementsThatTakePlayerName.Contains(statement.Name))
+                        namesToCheck.Add(CollapseName(statement.GetAttribute("player_name")));
+                    if (StatementsThatTakeName12.Contains(statement.Name))
+                    {
+                        namesToCheck.Add(CollapseName(statement.GetAttribute("name1")));
+                        namesToCheck.Add(CollapseName(statement.GetAttribute("name2")));
                     }
                     foreach (string name in namesToCheck)
                     {
@@ -3142,27 +4140,96 @@ namespace ArtemisMissionEditor
                             result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Object named \"" + name + "\" is referenced in a statement, but never created.", node, statement));
                     }
 
-                    // Create statement having wrong keys
-                    if (statement.Name == "create" && statement.GetAttribute("type") == "station")
+                    // Using GM buttons with a GM position command.
+                    if ((statement.Name == "create" || statement.Name == "destroy_near") &&
+                        (gmButtonsCheckedHere.Count > 0) &&
+                        (statement.GetAttribute("use_gm_position") != null))
                     {
-                        if (String.IsNullOrWhiteSpace(statement.GetAttribute("hullID"))
-                            && !statement.GetAttribute("hullKeys","").Contains("base"))
-                            result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "\"Create station\" statement does not specify a hullID and does not specify \"base\" in its list of hull keys. When this statement is executed wierd things will happen.", node, statement));
+                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "use_gm_position will not work in a statement under an if_gm_button condition", node, statement));
                     }
-                    if (statement.Name == "create" && (statement.GetAttribute("type") == "enemy" ||statement.GetAttribute("type") == "neutral" ))
+
+                    // warning_popup_message with a ship name other than Artemis.
+                    if (statement.Name == "warning_popup_message")
                     {
-                        if (String.IsNullOrWhiteSpace(statement.GetAttribute("hullID"))
-                            && statement.GetAttribute("hullKeys", "").Contains("base"))
-                            result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "\"Create " + statement.GetAttribute("type") + "\" statement does not specify a hullID and contains \"base\" in its list of hull keys. When this statement is executed wierd things will happen.", node, statement));
+                        string name = statement.GetAttribute("name");
+                        if (!string.IsNullOrEmpty(name) && (name != "Artemis"))
+                        {
+                            result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "warning_popup_message does not support ship names other than Artemis", node, statement));
+                        }
                     }
-                    if (statement.Name == "create" && (statement.GetAttribute("type") == "station" || statement.GetAttribute("type") == "enemy" || statement.GetAttribute("type") == "neutral"))
+
+                    if (statement.Name == "create")
                     {
-                        if (String.IsNullOrWhiteSpace(statement.GetAttribute("hullID")))
-                            result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "\"Create " + statement.GetAttribute("type") + "\" statement does not specify a hullID and no hull keys. When this statement is executed the sever will crash.", node, statement));
+                        string type = statement.GetAttribute("type");
+
+                        // Create statement not supporting an angle.
+                        if (type == "station" || type == "anomaly" || type == "blackHole" || type == "genericMesh")
+                        {
+                            string angle = statement.GetAttribute("angle");
+                            if (angle != null)
+                                result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "\"Create " + statement.GetAttribute("type") + "\" statement no longer supports setting an angle for initial bearing, instead use set_object_property to set angle.", node, statement));
+                        }
+
+                        // Create statement having wrong keys.
+                        if (type == "station" || type == "enemy" || type == "neutral")
+                        {
+                            if (String.IsNullOrWhiteSpace(statement.GetAttribute("hullID")) && String.IsNullOrWhiteSpace(statement.GetAttribute("hullKeys")))
+                                result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "\"Create " + statement.GetAttribute("type") + "\" statement does not specify a hullID and no hull keys. When this statement is executed, weird things will happen such as using a TSN Light Cruiser.", node, statement));
+                            else
+                            {
+                                if (type == "station")
+                                {
+                                    if (String.IsNullOrWhiteSpace(statement.GetAttribute("hullID"))
+                                        && !statement.GetAttribute("hullKeys", "").ToLower().Contains("base"))
+                                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "\"Create station\" statement does not specify a hullID and does not specify \"base\" in its list of hull keys. When this statement is executed, weird things will happen.", node, statement));
+                                }
+                                if (type == "enemy" || type == "neutral")
+                                {
+                                    if (String.IsNullOrWhiteSpace(statement.GetAttribute("hullID"))
+                                        && statement.GetAttribute("hullKeys", "").ToLower().Contains("base"))
+                                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "\"Create " + type + "\" statement does not specify a hullID and contains \"base\" in its list of hull keys. When this statement is executed, weird things will happen.", node, statement));
+                                }
+                            }
+                        }
+
+                        if (type == "neutral")
+                        {
+                            string named_name = statement.GetAttribute("name");
+                            if (!String.IsNullOrEmpty(named_name))
+                            {
+                                named_name = CollapseName(named_name);
+                            }
+                            if (!CommandableShipNames.Contains(named_name))
+                            {
+                                result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Created neutral ship " + named_name + " that will never FOLLOW_COMMS_ORDERS.  Consider adding an add_ai statement for it.", node, statement));
+                            }
+                        }
                     }
+
+                    // Use of obsolete command.
+                    if (statement.Name == "incoming_message")
+                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "The incoming_message statement no longer works.  Convert the OGG file to a WAV file, and use the set_comms_button statement with play_sound_now instead.", node, statement));
+                    if (statement.Name == "direct")
+                    {
+                        attName = statement.GetAttribute("name");
+                        if (String.IsNullOrEmpty(attName) || !NamedObjectNames["genericMesh"].Contains(CollapseName(attName)))
+                            result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "The \"Direct\" statement only works with a named generic mesh.", node, statement));
+                    }
+                    if (statement.Name == "set_object_property")
+                    {
+                        string attProperty = statement.GetAttribute("property");
+                        if (attProperty == "eliteAIType")
+                            result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "The \"eliteAIType\" property no longer works. Use add_ai with TARGET_THROTTLE or CHASE_PLAYER instead.", node, statement));
+                        else if (attProperty == "willAcceptCommsOrders")
+                            result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "The \"willAcceptCommsOrders\" property no longer works. Use add_ai with FOLLOW_COMMS_ORDERS instead of setting this to 1.", node, statement));
+                    }
+                    if (statement.Name == "start_getting_keypresses_from")
+                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Keypresses are unreliable. Consider using \"set_comms_button\" instead of \"start_getting_keypresses_from\".", node, statement));
+                    if (statement.Name == "end_getting_keypresses_from")
+                        result.Add(new MissionSearchResult(curNode, mNode.Conditions.Count + i + 1, "Keypresses are unreliable. Consider using \"clear_comms_button\" instead of \"end_getting_keypresses_from\".", node, statement));
                 }
             }
-            
+
             foreach (TreeNode child in node.Nodes)
                 FindProblems_RecursivelyCheckNodes(child, ref curNode, result);
         }
@@ -3171,23 +4238,23 @@ namespace ArtemisMissionEditor
         /// Highlight all errors. Uses the same highlighting system as the Find function does
         /// </summary>
         public void HighlightErrors()
-		{
-			TreeViewNodes.HighlightedTagList.Clear();
-			TreeViewStatements.HighlightedTagList.Clear();
+        {
+            TreeViewNodes.HighlightedTagList.Clear();
+            TreeViewStatements.HighlightedTagList.Clear();
 
-			int count = 0;
+            int count = 0;
 
-			foreach (TreeNode node in TreeViewNodes.Nodes)
-				count += HighlightErrors_RecursivelyFind(node);
+            foreach (TreeNode node in TreeViewNodes.Nodes)
+                count += HighlightErrors_RecursivelyFind(node);
 
-			Log.Add("Total "+count+" nodes with errors found.");
+            Log.Add("Total "+count+" nodes with errors found.");
 
-			TreeViewNodes.Invalidate();
-			TreeViewStatements.Invalidate();
-		}
+            TreeViewNodes.Invalidate();
+            TreeViewStatements.Invalidate();
+        }
 
         /// <summary>
-        /// Highlight errors in nodes that are child to the current node. Returns how many nodes were highlighted. 
+        /// Highlight errors in nodes that are child to the current node. Returns how many nodes were highlighted.
         /// Called from HighlightErrors and recursively calls itself.
         /// </summary>
         public int HighlightErrors_RecursivelyFind(TreeNode node)
@@ -3211,9 +4278,9 @@ namespace ArtemisMissionEditor
 
             return count;
         }
-        
+
         /// <summary>
-        /// Highlights statement if it's erroneous and returns wether or not it was highlighted
+        /// Highlights statement if it's erroneous and returns whether or not it was highlighted
         /// </summary>
         /// <param name="statement"></param>
         /// <returns></returns>
@@ -3234,52 +4301,52 @@ namespace ArtemisMissionEditor
                 text1 = msc.Replacement;
             else
                 if (msc.MatchCase)
-					text1 = text1.Replace(msc.Input, msc.Replacement);
+                    text1 = text1.Replace(msc.Input, msc.Replacement);
                 else
-					text1 = Helper.StringReplaceEx(text1, msc.Input, msc.Replacement);
+                    text1 = Helper.StringReplaceEx(text1, msc.Input, msc.Replacement);
             return text1;
         }
 
         /// <summary>
         /// Replace according to search command in the specified node (name). Returns how many replacements were done.
         /// </summary>
-		public int Replace_InNode(TreeNode node, int curNode, List<MissionSearchResult> list, MissionSearchCommand msc)
+        public int Replace_InNode(TreeNode node, int curNode, List<MissionSearchResult> list, MissionSearchCommand msc)
         {
             int replacements = 0;
 
             //Replace in node name
-			if ((msc.NodeNames || msc.Commentaries) && node != null)
-			{
-				MissionNode mNode = (MissionNode)node.Tag;
+            if ((msc.NodeNames || msc.Commentaries) && node != null)
+            {
+                MissionNode mNode = (MissionNode)node.Tag;
 
-				//We are interested in event/start/folder nodes...
-				if ((msc.NodeNames && (node.Tag is MissionNode_Event || node.Tag is MissionNode_Folder || node.Tag is MissionNode_Start))
-					|| msc.Commentaries && node.Tag is MissionNode_Comment)
-					if (Find_CheckStringForMatch(mNode.Name, msc))
-					{
-						mNode.Name = Replace_ReplaceInString(mNode.Name, msc);
-						replacements++;
-					}
+                //We are interested in event/start/folder nodes...
+                if ((msc.NodeNames && (node.Tag is MissionNode_Event || node.Tag is MissionNode_Folder || node.Tag is MissionNode_Start))
+                    || msc.Commentaries && node.Tag is MissionNode_Comment)
+                    if (Find_CheckStringForMatch(mNode.Name, msc))
+                    {
+                        mNode.Name = Replace_ReplaceInString(mNode.Name, msc);
+                        replacements++;
+                    }
 
-				node.Text = mNode.Name;
-				if (replacements>0)
-					list.Add(new MissionSearchResult(curNode, 0, mNode.Name, node, null));
-			}
+                node.Text = mNode.Name;
+                if (replacements>0)
+                    list.Add(new MissionSearchResult(curNode, 0, mNode.Name, node, null));
+            }
 
-			return replacements;
-		}
+            return replacements;
+        }
 
         /// <summary>
         /// Replace according to search command in the specified statement. Returns how many replacements were done.
         /// </summary>
-		public int Replace_InStatement(TreeNode node, MissionStatement statement, int curNode, int curStatement, List<MissionSearchResult> list, MissionSearchCommand msc)
-		{
-			int replacements = 0;
+        public int Replace_InStatement(TreeNode node, MissionStatement statement, int curNode, int curStatement, List<MissionSearchResult> list, MissionSearchCommand msc)
+        {
+            int replacements = 0;
 
             //Replace in statement
-			if (statement!=null)
+            if (statement!=null)
             {
-				//We are interested in comments only if we are especially looking for them
+                //We are interested in comments only if we are especially looking for them
                 if (statement.Kind == MissionStatementKind.Commentary)
                 {
                     if (msc.Commentaries)
@@ -3297,55 +4364,55 @@ namespace ArtemisMissionEditor
                                 statement.SetAttribute(kvp.Key, Replace_ReplaceInString(kvp.Value, msc));
                                 replacements++;
                             }
-				statement.Update();
-				if (replacements>0)
-					list.Add(new MissionSearchResult(curNode, curStatement, statement.Text, node, statement));
+                statement.Update();
+                if (replacements>0)
+                    list.Add(new MissionSearchResult(curNode, curStatement, statement.Text, node, statement));
             }
-
-			return replacements;
-        }
-
-		/// <summary> 
-        /// Replace in currently selected node and statement 
-        /// </summary>
-		public int ReplaceCurrent(MissionSearchCommand msc)
-		{
-			int replacements = 0;
-
-			replacements += Replace_InNode(TreeViewNodes.SelectedNode, 0, new List<MissionSearchResult>(), msc);
-			replacements += TreeViewStatements.SelectedNode == null || !(TreeViewStatements.SelectedNode.Tag is MissionStatement) ? 0 : Replace_InStatement(TreeViewNodes.SelectedNode, (MissionStatement)TreeViewStatements.SelectedNode.Tag, 0, 0, new List<MissionSearchResult>(), msc);
-
-			OutputMissionNodeContentsToStatementTree();
-
-			RegisterChange("Replaced '" + msc.Input + "' with '" + msc.Replacement + "' " + replacements.ToString() + " time(s).");
-
-			return replacements;
-		}
-
-		/// <summary>
-		/// Replace according to specified command in all mission nodes. Returns number of replacements made.
-		/// </summary>
-        public int ReplaceAll(List<MissionSearchResult> list, MissionSearchCommand msc)
-        {
-            BeginUpdate();
-
-			int replacements = 0;
-			int curNode = 0;
-
-			for (int i = 0; i < TreeViewNodes.Nodes.Count; i++)
-				replacements += ReplaceAll_RecursiveReplace(TreeViewNodes.Nodes[i], ref curNode, list, msc);
-
-			OutputMissionNodeContentsToStatementTree();
-			
-            RegisterChange("Replaced '" + msc.Input + "' with '" + msc.Replacement + "' " + replacements.ToString() + " time(s).");
-
-			EndUpdate();
 
             return replacements;
         }
 
         /// <summary>
-        /// Replace according to specified command in all nodes that are child to the current node. 
+        /// Replace in currently selected node and statement
+        /// </summary>
+        public int ReplaceCurrent(MissionSearchCommand msc)
+        {
+            int replacements = 0;
+
+            replacements += Replace_InNode(TreeViewNodes.SelectedNode, 0, new List<MissionSearchResult>(), msc);
+            replacements += TreeViewStatements.SelectedNode == null || !(TreeViewStatements.SelectedNode.Tag is MissionStatement) ? 0 : Replace_InStatement(TreeViewNodes.SelectedNode, (MissionStatement)TreeViewStatements.SelectedNode.Tag, 0, 0, new List<MissionSearchResult>(), msc);
+
+            OutputMissionNodeContentsToStatementTree();
+
+            RegisterChange("Replaced '" + msc.Input + "' with '" + msc.Replacement + "' " + replacements.ToString() + " time(s).");
+
+            return replacements;
+        }
+
+        /// <summary>
+        /// Replace according to specified command in all mission nodes. Returns number of replacements made.
+        /// </summary>
+        public int ReplaceAll(List<MissionSearchResult> list, MissionSearchCommand msc)
+        {
+            BeginUpdate();
+
+            int replacements = 0;
+            int curNode = 0;
+
+            for (int i = 0; i < TreeViewNodes.Nodes.Count; i++)
+                replacements += ReplaceAll_RecursiveReplace(TreeViewNodes.Nodes[i], ref curNode, list, msc);
+
+            OutputMissionNodeContentsToStatementTree();
+
+            RegisterChange("Replaced '" + msc.Input + "' with '" + msc.Replacement + "' " + replacements.ToString() + " time(s).");
+
+            EndUpdate();
+
+            return replacements;
+        }
+
+        /// <summary>
+        /// Replace according to specified command in all nodes that are child to the current node.
         /// Called from ReplaceAll and recursively calls itself.
         /// </summary>
         private int ReplaceAll_RecursiveReplace(TreeNode node, ref int curNode, List<MissionSearchResult> list, MissionSearchCommand msc)
@@ -3358,7 +4425,7 @@ namespace ArtemisMissionEditor
             for (int i = 0; i < node.Nodes.Count; i++)
                 replacements += ReplaceAll_RecursiveReplace(node.Nodes[i], ref curNode, list, msc);
 
-            //Skip node in we are only looking in the current node and this isnt current node
+            //Skip node in we are only looking in the current node and this isn't current node
             if (msc.OnlyInCurrentNode && !TreeViewNodes.NodeIsInsideNode(node, TreeViewNodes.SelectedNode))
                 return replacements;
 
@@ -3389,22 +4456,22 @@ namespace ArtemisMissionEditor
         /// <summary>
         /// Get Node from TreeView for Statements that represents the supplied statement
         /// </summary>
-		public TreeNode GetStatementNode(MissionStatement statement)
-		{
-			if (statement == null)
-				return null;
+        public TreeNode GetStatementNode(MissionStatement statement)
+        {
+            if (statement == null)
+                return null;
 
-			TreeNode result = null;
-			
-			foreach (TreeNode node in TreeViewStatements.Nodes)
-				if ((result = GetStatementNode_RecursivelySelect(node, statement)) != null) 
+            TreeNode result = null;
+
+            foreach (TreeNode node in TreeViewStatements.Nodes)
+                if ((result = GetStatementNode_RecursivelySelect(node, statement)) != null)
                     return result;
 
-			return null;
-		}
+            return null;
+        }
 
         /// <summary>
-        /// Try to find node that represents the supplied statement in the child nodes of the current node. 
+        /// Try to find node that represents the supplied statement in the child nodes of the current node.
         /// Called from GetStatementNode and recursively calls itself.
         /// </summary>
         /// <param name="node"></param>
@@ -3414,7 +4481,7 @@ namespace ArtemisMissionEditor
         {
             TreeNode result = null;
             foreach (TreeNode child in node.Nodes)
-                if ((result = GetStatementNode_RecursivelySelect(child, statement)) != null) 
+                if ((result = GetStatementNode_RecursivelySelect(child, statement)) != null)
                     return result;
 
             if (node.Tag == statement)
@@ -3422,291 +4489,291 @@ namespace ArtemisMissionEditor
 
             return null;
         }
-		
+
         /// <summary>
         /// Select statement (either forcing it to be single selected statement or allowing it to get added to selection if Shift was pressed)
         /// </summary>
         /// <param name="forbidMultiSelect">If true, will make sure this statement will be the only one selected</param>
         public void SelectStatement(MissionStatement statement, bool forbidMultiSelect = false)
         {
-			TreeNode node = GetStatementNode(statement);
+            TreeNode node = GetStatementNode(statement);
 
-			if (node != null)
-			{
+            if (node != null)
+            {
                 if (forbidMultiSelect)
                     TreeViewStatements.SelectedNodes.Clear();
-				TreeViewStatements.SelectedNode = node;
-				TreeViewStatements.SelectedNode.EnsureVisible();
-			}
-			else
+                TreeViewStatements.SelectedNode = node;
+                TreeViewStatements.SelectedNode.EnsureVisible();
+            }
+            else
             {
                 TreeViewStatements.SelectedNode = null;
                 _E_statementTV_AfterSelect(null, null);
             }
         }
-        
+
         /// <summary>
-        /// Find first label in the list of labels representing currently selected statement that is capable of receiving +/- commands. 
+        /// Find first label in the list of labels representing currently selected statement that is capable of receiving +/- commands.
         /// </summary>
         /// <remarks>
         /// Used to increment or decrement statement's value without selecting it when appropriate (like, with set_variable action)
         /// </remarks>
-		public NormalLabel FindFirstPlusMinusAbleLabel()
-		{
-			NormalLabel l = null;
-			foreach(Control c in FlowLayoutPanelMain.Controls)
-				if (c is NormalLabel)
-				{
-					l = (NormalLabel)c;
-					ExpressionMemberContainer emc = ((ExpressionMemberContainer)c.Tag);
-					if (emc.Member as ExpressionMemberCheck == null && (emc.Member.ValueDescription.Type == ExpressionMemberValueType.VarBool || emc.Member.ValueDescription.Type == ExpressionMemberValueType.VarDouble || emc.Member.ValueDescription.Type == ExpressionMemberValueType.VarInteger))
-						break;
-					l = null;
-				}
-			return l;
-		}
+        public NormalLabel FindFirstPlusMinusAbleLabel()
+        {
+            NormalLabel l = null;
+            foreach(Control c in FlowLayoutPanelMain.Controls)
+                if (c is NormalLabel)
+                {
+                    l = (NormalLabel)c;
+                    ExpressionMemberContainer emc = ((ExpressionMemberContainer)c.Tag);
+                    if (emc.Member as ExpressionMemberCheck == null && (emc.Member.ValueDescription.Type == ExpressionMemberValueType.VarBool || emc.Member.ValueDescription.Type == ExpressionMemberValueType.VarDouble || emc.Member.ValueDescription.Type == ExpressionMemberValueType.VarInteger))
+                        break;
+                    l = null;
+                }
+            return l;
+        }
 
-		/// <summary>
-		/// Applies highlighting based on the results of a search.
-		/// </summary>
+        /// <summary>
+        /// Applies highlighting based on the results of a search.
+        /// </summary>
         public void ApplyHighlighting(List<MissionSearchResult> list = null)
-		{
-			TreeViewNodes.HighlightedTagList.Clear();
-			TreeViewStatements.HighlightedTagList.Clear();
+        {
+            TreeViewNodes.HighlightedTagList.Clear();
+            TreeViewStatements.HighlightedTagList.Clear();
 
-			if (list != null)
-			{
-				foreach (MissionSearchResult item in list)
-				{
-					if (!TreeViewNodes.HighlightedTagList.Contains(item.NodeTag) && item.NodeTag != null)
-						TreeViewNodes.HighlightedTagList.Add(item.NodeTag);
-					if (!TreeViewStatements.HighlightedTagList.Contains(item.Statement) && item.NodeTag != null)
-						TreeViewStatements.HighlightedTagList.Add(item.NodeTag);
-					if (!TreeViewStatements.HighlightedTagList.Contains(item.Statement) && item.Statement != null)
-						TreeViewStatements.HighlightedTagList.Add(item.Statement);
-				}
-			}
+            if (list != null)
+            {
+                foreach (MissionSearchResult item in list)
+                {
+                    if (!TreeViewNodes.HighlightedTagList.Contains(item.NodeTag) && item.NodeTag != null)
+                        TreeViewNodes.HighlightedTagList.Add(item.NodeTag);
+                    if (!TreeViewStatements.HighlightedTagList.Contains(item.Statement) && item.NodeTag != null)
+                        TreeViewStatements.HighlightedTagList.Add(item.NodeTag);
+                    if (!TreeViewStatements.HighlightedTagList.Contains(item.Statement) && item.Statement != null)
+                        TreeViewStatements.HighlightedTagList.Add(item.Statement);
+                }
+            }
 
-			TreeViewNodes.Invalidate();
-			TreeViewStatements.Invalidate();
-		}
+            TreeViewNodes.Invalidate();
+            TreeViewStatements.Invalidate();
+        }
 
         /// <summary>
         /// Applies highlighting based on the results of a dependency scan
         /// </summary>
         public void ApplyHighlighting(DependencyEvent precursorEvent, DependencyEvent selectedEvent, bool highlightActions)
-		{
-			TreeViewNodes.HighlightedTagList.Clear();
-			TreeViewStatements.HighlightedTagList.Clear();
+        {
+            TreeViewNodes.HighlightedTagList.Clear();
+            TreeViewStatements.HighlightedTagList.Clear();
 
-			foreach (DependencyCondition condition in selectedEvent.Conditions)
-			{
-				DependencyPrecursor dp = condition.GetPrecursor(precursorEvent);
-				if (dp != null)
-				{
-					if (highlightActions)
-					{
-						TreeViewStatements.HighlightedTagList.Add(dp.Statement);
-						if (TreeViewStatements.SelectedNode == null)
-							GetStatementNode(dp.Statement).EnsureVisible();
-					}
-					else
-					{
-						TreeViewStatements.HighlightedTagList.Add(condition.Statement);
-						if (TreeViewStatements.SelectedNode == null)
-							GetStatementNode(condition.Statement).EnsureVisible();
-					}
-				}
-			}
+            foreach (DependencyCondition condition in selectedEvent.Conditions)
+            {
+                DependencyPrecursor dp = condition.GetPrecursor(precursorEvent);
+                if (dp != null)
+                {
+                    if (highlightActions)
+                    {
+                        TreeViewStatements.HighlightedTagList.Add(dp.Statement);
+                        if (TreeViewStatements.SelectedNode == null)
+                            GetStatementNode(dp.Statement).EnsureVisible();
+                    }
+                    else
+                    {
+                        TreeViewStatements.HighlightedTagList.Add(condition.Statement);
+                        if (TreeViewStatements.SelectedNode == null)
+                            GetStatementNode(condition.Statement).EnsureVisible();
+                    }
+                }
+            }
 
-			TreeViewNodes.Invalidate();
-			TreeViewStatements.Invalidate();
-		}
+            TreeViewNodes.Invalidate();
+            TreeViewStatements.Invalidate();
+        }
 
         #region Conversion of nodes to different types
 
         /// <summary>
-		/// Converts selected nodes to comments. Will ask for confirmation via a dialog box for converting non-empty events and non-empty folders.
-		/// </summary>
+        /// Converts selected nodes to comments. Will ask for confirmation via a dialog box for converting non-empty events and non-empty folders.
+        /// </summary>
         public void ConvertSelectedNodesToComments()
-		{
-			bool convertEvents = false;
-			bool convertFolders = false;
-			int convertedCount = 0;
-			
-			foreach (TreeNode node in TreeViewNodes.SelectedNodes)
-			{
-				if (node.Parent != null)
-					continue; 
-				
-				convertEvents = convertEvents || (node.Tag is MissionNode_Event && (((MissionNode_Event)node.Tag).Actions.Count > 0 || ((MissionNode_Event)node.Tag).Conditions.Count > 0));
-				convertFolders = convertFolders || (node.Nodes.Count > 0);
-			}
+        {
+            bool convertEvents = false;
+            bool convertFolders = false;
+            int convertedCount = 0;
 
-			convertEvents = convertEvents && MessageBox.Show("Selection contains non-empty events.\r\nDo you want them to be converted as well?\r\n(This will clear their contents)", "Artemis Mission Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
-			convertFolders = convertFolders && MessageBox.Show("Selection contains non-empty folders.\r\nDo you want them to be converted as well?\r\n(This will clear their contents)", "Artemis Mission Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
+            foreach (TreeNode node in TreeViewNodes.SelectedNodes)
+            {
+                if (node.Parent != null)
+                    continue;
 
-			foreach (TreeNode node in TreeViewNodes.SelectedNodes.ToList())
-			{
-				//Node was already removed since a folder with it was converted to comment earlier in this loop
-				if (TreeViewNodes.FindNode((TreeNode x) => x == node) == null)
-					continue;
-				//Cant touch start node
-				if (node.Tag is MissionNode_Start)
-					continue;
-				//Skip nodes of already correct type
-				if (node.Tag is MissionNode_Comment)
-					continue;
-				//Cannot convert node inside a folder to comment
-				if (node.Parent != null)
-					continue;
-				//Skip nodes user decided not to convert
-				if (!convertEvents && (node.Tag is MissionNode_Event && (((MissionNode_Event)node.Tag).Actions.Count > 0 || ((MissionNode_Event)node.Tag).Conditions.Count > 0)))
-					continue;
-				if (!convertFolders && node.Nodes.Count > 0)
-					continue;
-				
-				
-				MissionNode_Comment mnc = new MissionNode_Comment();
-				mnc.Name = node.Text;
-				node.Nodes.Clear();
-				node.Tag = mnc;
-				node.ImageIndex = mnc.ImageIndex;
-				node.SelectedImageIndex = mnc.ImageIndex;
-				
-				if (node == TreeViewNodes.SelectedNode)
-					OutputMissionNodeContentsToStatementTree();
+                convertEvents = convertEvents || (node.Tag is MissionNode_Event && (((MissionNode_Event)node.Tag).Actions.Count > 0 || ((MissionNode_Event)node.Tag).Conditions.Count > 0));
+                convertFolders = convertFolders || (node.Nodes.Count > 0);
+            }
 
-				convertedCount++;
-			}
+            convertEvents = convertEvents && MessageBox.Show("Selection contains non-empty events.\r\nDo you want them to be converted as well?\r\n(This will clear their contents)", "Artemis Mission Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
+            convertFolders = convertFolders && MessageBox.Show("Selection contains non-empty folders.\r\nDo you want them to be converted as well?\r\n(This will clear their contents)", "Artemis Mission Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
 
-			if (convertedCount > 0)
-				RegisterChange("Converted node(s) type to comment");
-		}
+            foreach (TreeNode node in TreeViewNodes.SelectedNodes.ToList())
+            {
+                //Node was already removed since a folder with it was converted to comment earlier in this loop
+                if (TreeViewNodes.FindNode((TreeNode x) => x == node) == null)
+                    continue;
+                //Cant touch start node
+                if (node.Tag is MissionNode_Start)
+                    continue;
+                //Skip nodes of already correct type
+                if (node.Tag is MissionNode_Comment)
+                    continue;
+                //Cannot convert node inside a folder to comment
+                if (node.Parent != null)
+                    continue;
+                //Skip nodes user decided not to convert
+                if (!convertEvents && (node.Tag is MissionNode_Event && (((MissionNode_Event)node.Tag).Actions.Count > 0 || ((MissionNode_Event)node.Tag).Conditions.Count > 0)))
+                    continue;
+                if (!convertFolders && node.Nodes.Count > 0)
+                    continue;
+
+
+                MissionNode_Comment mnc = new MissionNode_Comment();
+                mnc.Name = node.Text;
+                node.Nodes.Clear();
+                node.Tag = mnc;
+                node.ImageIndex = mnc.ImageIndex;
+                node.SelectedImageIndex = mnc.ImageIndex;
+
+                if (node == TreeViewNodes.SelectedNode)
+                    OutputMissionNodeContentsToStatementTree();
+
+                convertedCount++;
+            }
+
+            if (convertedCount > 0)
+                RegisterChange("Converted node(s) type to comment");
+        }
 
         /// <summary>
         /// Converts selected nodes to events. Will ask for confirmation via a dialog box for converting non-empty folders.
         /// </summary>
         public void ConvertSelectedNodesToEvents()
-		{
-			bool convertFolders = false;
-			int convertedCount = 0;
+        {
+            bool convertFolders = false;
+            int convertedCount = 0;
 
-			foreach (TreeNode node in TreeViewNodes.SelectedNodes)
-			{
-				if (node.Tag is MissionNode_Comment && TreeViewNodes.Nodes.IndexOf(_startNode) > TreeViewNodes.Nodes.IndexOf(node))
-					continue; 
-				
-				convertFolders = convertFolders || (node.Nodes.Count > 0);
-			}
+            foreach (TreeNode node in TreeViewNodes.SelectedNodes)
+            {
+                if (node.Tag is MissionNode_Comment && TreeViewNodes.Nodes.IndexOf(_startNode) > TreeViewNodes.Nodes.IndexOf(node))
+                    continue;
 
-			convertFolders = convertFolders && MessageBox.Show("Selection contains non-empty folders.\r\nDo you want them to be converted as well?\r\n(This will clear their contents)", "Artemis Mission Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
+                convertFolders = convertFolders || (node.Nodes.Count > 0);
+            }
 
-			foreach (TreeNode node in TreeViewNodes.SelectedNodes.ToList())
-			{
-				//Node was already removed since a folder with it was converted to comment earlier in this loop
-				if (TreeViewNodes.FindNode((TreeNode x) => x == node) == null)
-					continue;
-				//Cant touch start node
-				if (node.Tag is MissionNode_Start)
-					continue;
-				//Skip nodes of already correct type
-				if (node.Tag is MissionNode_Event)
-					continue;
-				//Cannot convert comment over start node to something else
-				if (node.Tag is MissionNode_Comment && TreeViewNodes.Nodes.IndexOf(_startNode) > TreeViewNodes.Nodes.IndexOf(node))
-					continue;
-				//Skip nodes user decided not to convert
-				if (!convertFolders && node.Nodes.Count > 0)
-					continue;
+            convertFolders = convertFolders && MessageBox.Show("Selection contains non-empty folders.\r\nDo you want them to be converted as well?\r\n(This will clear their contents)", "Artemis Mission Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
 
-				MissionNode mn = (MissionNode)node.Tag;
-				MissionNode_Event mne = new MissionNode_Event();
-				mne.Name = node.Text;
-				if (mn.ID != null)
-				{
-					mne.ID = mn.ID;
-					mne.ParentID = mn.ParentID;
-				}
-				else
-				{
-					mne.ID = Guid.NewGuid();
-					mne.ParentID = null;
-				}
-				node.Nodes.Clear();
-				node.Tag = mne;
-				node.ImageIndex = mne.ImageIndex;
-				node.SelectedImageIndex = mne.ImageIndex;
+            foreach (TreeNode node in TreeViewNodes.SelectedNodes.ToList())
+            {
+                //Node was already removed since a folder with it was converted to comment earlier in this loop
+                if (TreeViewNodes.FindNode((TreeNode x) => x == node) == null)
+                    continue;
+                //Cant touch start node
+                if (node.Tag is MissionNode_Start)
+                    continue;
+                //Skip nodes of already correct type
+                if (node.Tag is MissionNode_Event)
+                    continue;
+                //Cannot convert comment over start node to something else
+                if (node.Tag is MissionNode_Comment && TreeViewNodes.Nodes.IndexOf(_startNode) > TreeViewNodes.Nodes.IndexOf(node))
+                    continue;
+                //Skip nodes user decided not to convert
+                if (!convertFolders && node.Nodes.Count > 0)
+                    continue;
 
-				if (node == TreeViewNodes.SelectedNode)
-					OutputMissionNodeContentsToStatementTree();
+                MissionNode mn = (MissionNode)node.Tag;
+                MissionNode_Event mne = new MissionNode_Event();
+                mne.Name = node.Text;
+                if (mn.ID != null)
+                {
+                    mne.ID = mn.ID;
+                    mne.ParentID = mn.ParentID;
+                }
+                else
+                {
+                    mne.ID = Guid.NewGuid();
+                    mne.ParentID = null;
+                }
+                node.Nodes.Clear();
+                node.Tag = mne;
+                node.ImageIndex = mne.ImageIndex;
+                node.SelectedImageIndex = mne.ImageIndex;
 
-				convertedCount++;
-			}
+                if (node == TreeViewNodes.SelectedNode)
+                    OutputMissionNodeContentsToStatementTree();
 
-			if (convertedCount > 0)
-				RegisterChange("Converted node(s) type to event");
-		}
+                convertedCount++;
+            }
+
+            if (convertedCount > 0)
+                RegisterChange("Converted node(s) type to event");
+        }
 
         /// <summary>
         /// Converts selected nodes to folders. Will ask for confirmation via a dialog box for converting non-empty events.
         /// </summary>
         public void ConvertSelectedNodesToFolders()
-		{
-			bool convertEvents = false;
-			int convertedCount = 0;
+        {
+            bool convertEvents = false;
+            int convertedCount = 0;
 
-			foreach (TreeNode node in TreeViewNodes.SelectedNodes)
-			{
-				if (node.Tag is MissionNode_Comment && TreeViewNodes.Nodes.IndexOf(_startNode) > TreeViewNodes.Nodes.IndexOf(node))
-					continue; 
+            foreach (TreeNode node in TreeViewNodes.SelectedNodes)
+            {
+                if (node.Tag is MissionNode_Comment && TreeViewNodes.Nodes.IndexOf(_startNode) > TreeViewNodes.Nodes.IndexOf(node))
+                    continue;
 
-				convertEvents = convertEvents || (node.Tag is MissionNode_Event && (((MissionNode_Event)node.Tag).Actions.Count > 0 || ((MissionNode_Event)node.Tag).Conditions.Count > 0));
-			}
+                convertEvents = convertEvents || (node.Tag is MissionNode_Event && (((MissionNode_Event)node.Tag).Actions.Count > 0 || ((MissionNode_Event)node.Tag).Conditions.Count > 0));
+            }
 
-			convertEvents = convertEvents && MessageBox.Show("Selection contains non-empty events.\r\nDo you want them to be converted as well?\r\n(This will clear their contents)", "Artemis Mission Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
+            convertEvents = convertEvents && MessageBox.Show("Selection contains non-empty events.\r\nDo you want them to be converted as well?\r\n(This will clear their contents)", "Artemis Mission Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
 
-			foreach (TreeNode node in TreeViewNodes.SelectedNodes.ToList())
-			{
-				//Cant touch start node
-				if (node.Tag is MissionNode_Start)
-					continue;
-				//Skip nodes of already correct type
-				if (node.Tag is MissionNode_Folder)
-					continue;
-				//Cannot convert comment over start node to something else
-				if (node.Tag is MissionNode_Comment && TreeViewNodes.Nodes.IndexOf(_startNode) > TreeViewNodes.Nodes.IndexOf(node))
-					continue;
-				//Skip nodes user decided not to convert
-				if (!convertEvents && (node.Tag is MissionNode_Event && (((MissionNode_Event)node.Tag).Actions.Count > 0 || ((MissionNode_Event)node.Tag).Conditions.Count > 0)))
-					continue;
+            foreach (TreeNode node in TreeViewNodes.SelectedNodes.ToList())
+            {
+                //Cant touch start node
+                if (node.Tag is MissionNode_Start)
+                    continue;
+                //Skip nodes of already correct type
+                if (node.Tag is MissionNode_Folder)
+                    continue;
+                //Cannot convert comment over start node to something else
+                if (node.Tag is MissionNode_Comment && TreeViewNodes.Nodes.IndexOf(_startNode) > TreeViewNodes.Nodes.IndexOf(node))
+                    continue;
+                //Skip nodes user decided not to convert
+                if (!convertEvents && (node.Tag is MissionNode_Event && (((MissionNode_Event)node.Tag).Actions.Count > 0 || ((MissionNode_Event)node.Tag).Conditions.Count > 0)))
+                    continue;
 
-				MissionNode mn = (MissionNode)node.Tag;
-				MissionNode_Folder mnf = new MissionNode_Folder();
-				mnf.Name = node.Text;
-				if (mn.ID != null)
-				{
-					mnf.ID = mn.ID;
-					mnf.ParentID = mn.ParentID;
-				}
-				else
-				{
-					mnf.ID = Guid.NewGuid();
-					mnf.ParentID = null;
-				} 
-				node.Tag = mnf;
-				node.ImageIndex = mnf.ImageIndex;
-				node.SelectedImageIndex = mnf.ImageIndex;
+                MissionNode mn = (MissionNode)node.Tag;
+                MissionNode_Folder mnf = new MissionNode_Folder();
+                mnf.Name = node.Text;
+                if (mn.ID != null)
+                {
+                    mnf.ID = mn.ID;
+                    mnf.ParentID = mn.ParentID;
+                }
+                else
+                {
+                    mnf.ID = Guid.NewGuid();
+                    mnf.ParentID = null;
+                }
+                node.Tag = mnf;
+                node.ImageIndex = mnf.ImageIndex;
+                node.SelectedImageIndex = mnf.ImageIndex;
 
-				if (node == TreeViewNodes.SelectedNode)
-					OutputMissionNodeContentsToStatementTree();
+                if (node == TreeViewNodes.SelectedNode)
+                    OutputMissionNodeContentsToStatementTree();
 
-				convertedCount++;
-			}
+                convertedCount++;
+            }
 
-			if (convertedCount > 0)
-				RegisterChange("Converted node(s) type to folder");
-		}
+            if (convertedCount > 0)
+                RegisterChange("Converted node(s) type to folder");
+        }
 
         /// <summary>
         /// Convert all commentaries in the  mission script (at node level) into names of the nodes following them.
@@ -3748,8 +4815,8 @@ namespace ArtemisMissionEditor
         #region Space map interaction
 
         /// <summary>
-        /// Returns wether or not the user can invoke "Add via space map" 
-        /// or "Edit on space map" options on the specified node. 
+        /// Returns whether or not the user can invoke "Add via space map"
+        /// or "Edit on space map" options on the specified node.
         /// If not specified, selected node from Nodes TreeView is used.
         /// </summary>
         /// <param name="node">Node from Nodes Treeview. If null - selected node is used.</param>
@@ -3759,7 +4826,7 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// Returns wether or not the user can invoke "Edit on space map" option on the specified node. 
+        /// Returns whether or not the user can invoke "Edit on space map" option on the specified node.
         /// If not specified, selected node from Nodes TreeView is used.
         /// </summary>
         /// <param name="node">Node from Nodes Treeview. If null - selected node is used.</param>
@@ -3769,8 +4836,8 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// Returns wether or not the user can invoke "Add via space map" 
-        /// but not "Edit on space map" option on the specified node. 
+        /// Returns whether or not the user can invoke "Add via space map"
+        /// but not "Edit on space map" option on the specified node.
         /// If not specified, selected node from Nodes TreeView is used.
         /// </summary>
         /// <param name="node">Node from Nodes Treeview. If null - selected node is used.</param>
@@ -3780,7 +4847,7 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// Returns the amount of "create" statements the specified node. 
+        /// Returns the amount of "create" statements the specified node.
         /// Returns -1 if specified node cannot contain a create statement.
         /// If not specified, selected node from Nodes TreeView is used.
         /// </summary>
@@ -3800,7 +4867,7 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// Handles everything about "Add via space map" feature 
+        /// Handles everything about "Add via space map" feature
         /// (preparing data, opening the map, parsing the results).
         /// </summary>
         /// <param name="nodeUnderCursor">Specified when invoked via dropdown menu, unspecified when invoked via hotkey</param>
@@ -3814,50 +4881,50 @@ namespace ArtemisMissionEditor
 
             MissionNode curNode = (MissionNode)TreeViewNodes.SelectedNode.Tag;
 
-			XmlDocument xDoc;
-			XmlNode root;
-			string bgXml = "<bgInput></bgInput>";
-			
-			if (Settings.Current.ShowStartStatementsInBackground && BackgroundNode != TreeViewNodes.SelectedNode)
-			{
-				MissionNode bgNode = (MissionNode)BackgroundNode.Tag;
+            XmlDocument xDoc;
+            XmlNode root;
+            string bgXml = "<bgInput></bgInput>";
 
-				xDoc = new XmlDocument();
-				root = xDoc.CreateElement("bgInput");
-				xDoc.AppendChild(root);
+            if (Settings.Current.ShowStartStatementsInBackground && BackgroundNode != TreeViewNodes.SelectedNode)
+            {
+                MissionNode bgNode = (MissionNode)BackgroundNode.Tag;
 
-				for (i = 0; i < bgNode.Actions.Count; i++)
-				{
-					MissionStatement statement = bgNode.Actions[i];
-					if (statement.IsCreateNamedStatement())
-						root.AppendChild(statement.ToXml(xDoc, true));
-					if (statement.IsCreateNamelessStatement())
-						root.AppendChild(statement.ToXml(xDoc, true));
-				}
-				bgXml = xDoc.OuterXml;
-			}
+                xDoc = new XmlDocument();
+                root = xDoc.CreateElement("bgInput");
+                xDoc.AppendChild(root);
+
+                for (i = 0; i < bgNode.Actions.Count; i++)
+                {
+                    MissionStatement statement = bgNode.Actions[i];
+                    if (statement.IsCreateNamedStatement())
+                        root.AppendChild(statement.ToXml(xDoc, true));
+                    if (statement.IsCreateNamelessStatement())
+                        root.AppendChild(statement.ToXml(xDoc, true));
+                }
+                bgXml = xDoc.OuterXml;
+            }
 
             TreeNode curTreeNode = nodeUnderCursor ?? TreeViewStatements.SelectedNode;
 
-			if (curTreeNode != null)
-			{
-				if (curTreeNode.Tag is string)
-				{
-					//What to do if actions node is selected
-					if (curTreeNode.Tag.ToString() == "actions")
-						topmost = -1;
+            if (curTreeNode != null)
+            {
+                if (curTreeNode.Tag is string)
+                {
+                    //What to do if actions node is selected
+                    if (curTreeNode.Tag.ToString() == "actions")
+                        topmost = -1;
 
-					//What to do if conditions node is selected
-					if (curTreeNode.Tag.ToString() == "conditions")
-						topmost = -1;
-				}
-				if (curTreeNode.Tag is MissionStatement)
-				{
-					for (i = 0; i < curNode.Actions.Count && topmost == -1; i++)
-						if (curNode.Actions[i] == (MissionStatement)curTreeNode.Tag)
-							topmost = i + 1;
-				}
-			}
+                    //What to do if conditions node is selected
+                    if (curTreeNode.Tag.ToString() == "conditions")
+                        topmost = -1;
+                }
+                if (curTreeNode.Tag is MissionStatement)
+                {
+                    for (i = 0; i < curNode.Actions.Count && topmost == -1; i++)
+                        if (curNode.Actions[i] == (MissionStatement)curTreeNode.Tag)
+                            topmost = i + 1;
+                }
+            }
 
             SpaceMap.Space result = Forms.FormSpaceMap.AddViaSpaceMap(bgXml);
 
@@ -3865,18 +4932,18 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// Handles everything about "Edit on space map" feature 
+        /// Handles everything about "Edit on space map" feature
         /// (preparing data, opening the map, parsing the results).
         /// </summary>
         /// <param name="nodeUnderCursor">Specified when invoked via dropdown menu, unspecified when invoked via hotkey</param>
         public void EditCreateStatementsOnSpaceMap(TreeNode nodeUnderCursor = null)
         {
-			if (CanInvokeSpaceMapAddOnly())
-			{
-				AddCreateStatementsViaSpaceMap(nodeUnderCursor);
-				return;
-			}
-			if (!CanInvokeSpaceMapAddOrEdit())
+            if (CanInvokeSpaceMapAddOnly())
+            {
+                AddCreateStatementsViaSpaceMap(nodeUnderCursor);
+                return;
+            }
+            if (!CanInvokeSpaceMapAddOrEdit())
                 return;
 
             int i = 0;
@@ -3888,11 +4955,11 @@ namespace ArtemisMissionEditor
             List<int> namelessObjects = new List<int>();
             List<MissionStatement> toDelete = new List<MissionStatement>();
 
-			XmlDocument xDoc;
-			XmlNode root;
+            XmlDocument xDoc;
+            XmlNode root;
             string editXml = "<createInput></createInput>";
             string bgXml = "<bgInput></bgInput>";
-			
+
             xDoc = new XmlDocument();
             root = xDoc.CreateElement("createInput");
             xDoc.AppendChild(root);
@@ -3913,26 +4980,26 @@ namespace ArtemisMissionEditor
                     root.AppendChild(statement.ToXml(xDoc, true));
                 }
             }
-			editXml = xDoc.OuterXml;
+            editXml = xDoc.OuterXml;
 
-			if (Settings.Current.ShowStartStatementsInBackground && BackgroundNode != TreeViewNodes.SelectedNode)
-			{
-				MissionNode bgNode = (MissionNode)BackgroundNode.Tag;
+            if (Settings.Current.ShowStartStatementsInBackground && BackgroundNode != TreeViewNodes.SelectedNode)
+            {
+                MissionNode bgNode = (MissionNode)BackgroundNode.Tag;
 
-				xDoc = new XmlDocument();
-				root = xDoc.CreateElement("bgInput");
-				xDoc.AppendChild(root);
+                xDoc = new XmlDocument();
+                root = xDoc.CreateElement("bgInput");
+                xDoc.AppendChild(root);
 
-				for (i = 0; i < bgNode.Actions.Count; i++)
-				{
-					MissionStatement statement = bgNode.Actions[i];
-					if (statement.IsCreateNamedStatement())
-						root.AppendChild(statement.ToXml(xDoc, true));
-					if (statement.IsCreateNamelessStatement())
-						root.AppendChild(statement.ToXml(xDoc, true));
-				}
-				 bgXml = xDoc.OuterXml;
-			}
+                for (i = 0; i < bgNode.Actions.Count; i++)
+                {
+                    MissionStatement statement = bgNode.Actions[i];
+                    if (statement.IsCreateNamedStatement())
+                        root.AppendChild(statement.ToXml(xDoc, true));
+                    if (statement.IsCreateNamelessStatement())
+                        root.AppendChild(statement.ToXml(xDoc, true));
+                }
+                 bgXml = xDoc.OuterXml;
+            }
 
             topmost = (namedObjects.Count > 0 && (namedObjects[0] < topmost || topmost == -1)) ? namedObjects[0] : topmost;
             topmost = (namelessObjects.Count > 0 && (namelessObjects[0] < topmost || topmost == -1)) ? namelessObjects[0] : topmost;
@@ -3943,7 +5010,7 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// Process results from "Add via space map" or "Edit on space map" features. 
+        /// Process results from "Add via space map" or "Edit on space map" features.
         /// Adds and removes nessecary actions to the current statement.
         /// </summary>
         /// <param name="toDelete">List of original statements that were submitted for editing.</param>
@@ -3961,7 +5028,7 @@ namespace ArtemisMissionEditor
 
             //Target point for all objects that are not after an Imported object
             int target_point = topmost == -1 ? curNode.Actions.Count : topmost;
-            
+
             // Import Named objects from Space map
 
             i = result.NamedObjects.Count;
@@ -3995,7 +5062,7 @@ namespace ArtemisMissionEditor
             {
                 ParseSpaceMapCreateResults_InsertNameless(ref i, curNode, target_point, result, xDoc, missingProperties);
             }
-            
+
             //Final stuff
 
             foreach (MissionStatement statement in toDelete)
@@ -4011,7 +5078,7 @@ namespace ArtemisMissionEditor
         private void ParseSpaceMapCreateResults_InsertNamed(ref int i, MissionNode curNode, int position, SpaceMap.Space result, XmlDocument xDoc, List<string> missingProperties)
         {
             i--;
-            missingProperties.Clear(); 
+            missingProperties.Clear();
             curNode.Actions.Insert(position,
                 MissionStatement.NewFromXML(result.NamedObjects[i].ToXml(xDoc, missingProperties), curNode));
 
@@ -4038,7 +5105,7 @@ namespace ArtemisMissionEditor
             }
         }
 
-        /// <summary> Wether or not user can "Edit statement on space map" </summary>
+        /// <summary> Whether or not user can "Edit statement on space map" </summary>
         public bool CanInvokeSpaceMapStatement()
         {
             if (TreeViewNodes.SelectedNode == null || TreeViewStatements.SelectedNode == null)
@@ -4052,7 +5119,7 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// Handles everything about "Edit statement on space map" feature 
+        /// Handles everything about "Edit statement on space map" feature
         /// (preparing data, opening the map, parsing the results).
         /// </summary>
         public void EditStatementOnSpaceMap()
@@ -4063,7 +5130,7 @@ namespace ArtemisMissionEditor
             int i = 0;
 
             MissionNode curNode = (MissionNode)TreeViewNodes.SelectedNode.Tag;
-            
+
             XmlDocument xDoc;
             XmlNode root;
             string statementXml = "<statementInput></statementInput>";
@@ -4091,10 +5158,10 @@ namespace ArtemisMissionEditor
             MissionStatement curStatement = (MissionStatement)TreeViewStatements.SelectedNode.Tag;
             root.AppendChild(curStatement.ToXml(xDoc));
             statementXml = xDoc.OuterXml;
-			
+
             if (Settings.Current.ShowStartStatementsInBackground)
             {
-				MissionNode bgNode = (MissionNode)BackgroundNode.Tag;
+                MissionNode bgNode = (MissionNode)BackgroundNode.Tag;
 
                 xDoc = new XmlDocument();
                 root = xDoc.CreateElement("bgInput");
@@ -4117,7 +5184,7 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// Process results from "Edit statement on space map" feature. 
+        /// Process results from "Edit statement on space map" feature.
         /// </summary>
         /// <param name="curStatement">Statement being edited</param>
         /// <param name="result">Result from space map dialog</param>
@@ -4155,7 +5222,7 @@ namespace ArtemisMissionEditor
             }
              ((ExpressionMemberContainer)label.Tag).OnClick(label, where, mode);
         }
-       
+
         /// <summary>
         /// Label was clicked by mouse.
         /// </summary>
@@ -4163,13 +5230,13 @@ namespace ArtemisMissionEditor
         /// <param name="e"></param>
         private void _E_l_MouseClick(object sender, MouseEventArgs e)
         {
-			if (e.Button == MouseButtons.Left)
-				_E_l_Activated((NormalLabel)sender, true);
-			if (e.Button == MouseButtons.Right)
-			{
-				ContextMenuStripForLabels.Tag = sender;
-				ContextMenuStripForLabels.Show(((NormalLabel)sender).PointToScreen(e.Location));
-			}
+            if (e.Button == MouseButtons.Left)
+                _E_l_Activated((NormalLabel)sender, true);
+            if (e.Button == MouseButtons.Right)
+            {
+                ContextMenuStripForLabels.Tag = sender;
+                ContextMenuStripForLabels.Show(((NormalLabel)sender).PointToScreen(e.Location));
+            }
         }
 
         /// <summary>
@@ -4177,70 +5244,70 @@ namespace ArtemisMissionEditor
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-		private void _E_l_CMS_Click(object sender, EventArgs e)
-		{
-			string tag = (string)((ToolStripItem)sender).Tag;
-			switch (tag)
-			{
-				case "edit":
-					_E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag);
-					break;
-				case "edit_dialog":
-					_E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.ForceDialog);
-					break;
-				case "edit_next":
-					_E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.NextMenuItem);
-					break;
-				case "edit_previous":
-					_E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.PreviousMenuItem);
-					break;
-				case "edit_-1000":
-					_E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Minus1000);
-					break;
-				case "edit_-100":
-					_E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Minus100);
-					break;
-				case "edit_-10":
-					_E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Minus10);
-					break;
-				case "edit_-1":
-					_E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Minus);
-					break;
-				case "edit_-01":
-					_E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Minus01);
-					break;
-				case "edit_+01":
-					_E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Plus01);
-					break;
-				case "edit_+1":
-					_E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Plus);
-					break;
-				case "edit_+10":
-					_E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Plus10);
-					break;
-				case "edit_+100":
-					_E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Plus100);
-					break;
-				case "edit_+1000":
-					_E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Plus1000);
-					break;
-				case "edit_space":
-					EditStatementOnSpaceMap();
-					break;
-			}
-		}
+        private void _E_l_CMS_Click(object sender, EventArgs e)
+        {
+            string tag = (string)((ToolStripItem)sender).Tag;
+            switch (tag)
+            {
+                case "edit":
+                    _E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag);
+                    break;
+                case "edit_dialog":
+                    _E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.ForceDialog);
+                    break;
+                case "edit_next":
+                    _E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.NextMenuItem);
+                    break;
+                case "edit_previous":
+                    _E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.PreviousMenuItem);
+                    break;
+                case "edit_-1000":
+                    _E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Minus1000);
+                    break;
+                case "edit_-100":
+                    _E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Minus100);
+                    break;
+                case "edit_-10":
+                    _E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Minus10);
+                    break;
+                case "edit_-1":
+                    _E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Minus);
+                    break;
+                case "edit_-01":
+                    _E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Minus01);
+                    break;
+                case "edit_+01":
+                    _E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Plus01);
+                    break;
+                case "edit_+1":
+                    _E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Plus);
+                    break;
+                case "edit_+10":
+                    _E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Plus10);
+                    break;
+                case "edit_+100":
+                    _E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Plus100);
+                    break;
+                case "edit_+1000":
+                    _E_l_Activated((NormalLabel)ContextMenuStripForLabels.Tag, false, ExpressionMemberValueEditorActivationMode.Plus1000);
+                    break;
+                case "edit_space":
+                    EditStatementOnSpaceMap();
+                    break;
+            }
+        }
 
         /// <summary>
         /// Key is pressed when label is focused
         /// </summary>
-		private void _E_l_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        private void _E_l_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             //Back to Statement tree
-			if (e.KeyData == (Keys.Enter | Keys.Shift))
-			{
-				e.IsInputKey = true;
-				TreeViewStatements.Focus();
-			}
+            if (e.KeyData == (Keys.Enter | Keys.Shift))
+            {
+                e.IsInputKey = true;
+                TreeViewStatements.Focus();
+            }
             //Label activation
             if (e.KeyData == Keys.Enter || e.KeyData == Keys.F2)
             {
@@ -4252,214 +5319,215 @@ namespace ArtemisMissionEditor
                 e.IsInputKey = true;
                 _E_l_Activated((NormalLabel)sender, false, ExpressionMemberValueEditorActivationMode.ForceDialog);
             }
-			if (e.KeyData == (Keys.F2 | Keys.Control))
-			{
-				e.IsInputKey = true;
-				EditStatementOnSpaceMap();
-			}
+            if (e.KeyData == (Keys.F2 | Keys.Control))
+            {
+                e.IsInputKey = true;
+                EditStatementOnSpaceMap();
+            }
             if (e.KeyData == Keys.Space)
             {
                 e.IsInputKey = true;
                 _E_l_Activated((NormalLabel)sender, false, ExpressionMemberValueEditorActivationMode.NextMenuItem);
             }
-			if (e.KeyData == (Keys.Space | Keys.Shift))
-			{
-				e.IsInputKey = true;
-				_E_l_Activated((NormalLabel)sender, false, ExpressionMemberValueEditorActivationMode.PreviousMenuItem);
-			}
-			if (e.KeyCode == Keys.OemMinus || e.KeyCode == Keys.Subtract)
-			{
-				e.IsInputKey = true;
-				
-				ExpressionMemberValueEditorActivationMode mode = ExpressionMemberValueEditorActivationMode.Minus;
-				mode = Control.ModifierKeys == (Keys.Alt)					? ExpressionMemberValueEditorActivationMode.Minus01		: mode;
-				mode = Control.ModifierKeys == (Keys.Shift)					? ExpressionMemberValueEditorActivationMode.Minus10		: mode;
-				mode = Control.ModifierKeys == (Keys.Control)				? ExpressionMemberValueEditorActivationMode.Minus100		: mode;
-				mode = Control.ModifierKeys == (Keys.Shift | Keys.Control)	? ExpressionMemberValueEditorActivationMode.Minus1000	: mode;
+            if (e.KeyData == (Keys.Space | Keys.Shift))
+            {
+                e.IsInputKey = true;
+                _E_l_Activated((NormalLabel)sender, false, ExpressionMemberValueEditorActivationMode.PreviousMenuItem);
+            }
+            if (e.KeyCode == Keys.OemMinus || e.KeyCode == Keys.Subtract)
+            {
+                e.IsInputKey = true;
 
-				_E_l_Activated((NormalLabel)sender, false, mode);
-			}
-			if (e.KeyCode == Keys.Oemplus || e.KeyCode == Keys.Add)
-			{
-				e.IsInputKey = true;
-				
-				ExpressionMemberValueEditorActivationMode mode =              ExpressionMemberValueEditorActivationMode.Plus;
-				mode = Control.ModifierKeys == (Keys.Alt)					? ExpressionMemberValueEditorActivationMode.Plus01		: mode;
-				mode = Control.ModifierKeys == (Keys.Shift)					? ExpressionMemberValueEditorActivationMode.Plus10		: mode;
-				mode = Control.ModifierKeys == (Keys.Control)				? ExpressionMemberValueEditorActivationMode.Plus100		: mode;
-				mode = Control.ModifierKeys == (Keys.Shift | Keys.Control)	? ExpressionMemberValueEditorActivationMode.Plus1000		: mode;
+                ExpressionMemberValueEditorActivationMode mode = ExpressionMemberValueEditorActivationMode.Minus;
+                mode = Control.ModifierKeys == (Keys.Alt)                    ? ExpressionMemberValueEditorActivationMode.Minus01        : mode;
+                mode = Control.ModifierKeys == (Keys.Shift)                    ? ExpressionMemberValueEditorActivationMode.Minus10        : mode;
+                mode = Control.ModifierKeys == (Keys.Control)                ? ExpressionMemberValueEditorActivationMode.Minus100        : mode;
+                mode = Control.ModifierKeys == (Keys.Shift | Keys.Control)    ? ExpressionMemberValueEditorActivationMode.Minus1000    : mode;
 
-				_E_l_Activated((NormalLabel)sender, false, mode);
-			}
+                _E_l_Activated((NormalLabel)sender, false, mode);
+            }
+            if (e.KeyCode == Keys.Oemplus || e.KeyCode == Keys.Add)
+            {
+                e.IsInputKey = true;
 
-			if (!e.IsInputKey)
-			{
-				_E_statementTV_KeyDown(sender, new KeyEventArgs(e.KeyData));
-			}
+                ExpressionMemberValueEditorActivationMode mode =              ExpressionMemberValueEditorActivationMode.Plus;
+                mode = Control.ModifierKeys == (Keys.Alt)                    ? ExpressionMemberValueEditorActivationMode.Plus01        : mode;
+                mode = Control.ModifierKeys == (Keys.Shift)                    ? ExpressionMemberValueEditorActivationMode.Plus10        : mode;
+                mode = Control.ModifierKeys == (Keys.Control)                ? ExpressionMemberValueEditorActivationMode.Plus100        : mode;
+                mode = Control.ModifierKeys == (Keys.Shift | Keys.Control)    ? ExpressionMemberValueEditorActivationMode.Plus1000        : mode;
+
+                _E_l_Activated((NormalLabel)sender, false, mode);
+            }
+
+            if (!e.IsInputKey)
+            {
+                _E_statementTV_KeyDown(sender, new KeyEventArgs(e.KeyData));
+            }
         }
 
         /// <summary>
         /// After node was selected in statements tree
         /// </summary>
-		public void _E_statementTV_AfterSelect(object sender, TreeViewEventArgs e)
-		{
+        public void _E_statementTV_AfterSelect(object sender, TreeViewEventArgs e)
+        {
             if (!SuppressSelectionEvents)
                 UpdateExpression();
-		}
+        }
 
         /// <summary>
         /// After node was moved in statements tree
         /// </summary>
-        private void _E_statementTV_NodeMoved(TreeNode node, bool suspendUpdate)
-		{
-			ImportMissionNodeContentsFromStatementTree();
+        private void _E_statementTV_NodeMoved(Object sender, NodeMovedEventArgs e)
+        {
+            ImportMissionNodeContentsFromStatementTree();
 
-            if (!suspendUpdate)
-			    RegisterChange("Statement moved");
-		}
-		
+            if (!e.SuspendUpdate)
+                RegisterChange("Statement moved");
+        }
+
         /// <summary>
         /// After node was selected in mission nodes tree
         /// </summary>
-		private void _E_nodeTV_AfterSelect(object sender, TreeViewEventArgs e)
-		{
+        private void _E_nodeTV_AfterSelect(object sender, TreeViewEventArgs e)
+        {
             if (!SupressSelectionEvents)
                 OutputMissionNodeContentsToStatementTree();
-		}
+        }
 
         /// <summary>
         /// After node name was edited in mission nodes tree
         /// </summary>
         private void _E_nodeTV_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
-		{
-			if (e.Label == null)
-				return;
-			MissionNode mNode = (MissionNode)e.Node.Tag;
-			string prevName = mNode.Name;
-			try
-			{
-				mNode.Name = e.Label;
-				// Miscrosoft.Preformance is so helpful! Yeah sure, if I could just call OuterXml without assigning it, I'd never do this!
+        {
+            if (e.Label == null)
+                return;
+            MissionNode mNode = (MissionNode)e.Node.Tag;
+            string prevName = mNode.Name;
+            try
+            {
+                mNode.Name = e.Label;
+                // Miscrosoft.Preformance is so helpful! Yeah sure, if I could just call OuterXml without assigning it, I'd never do this!
                 string justSoThatOuterXmlGetLogicIsCalled = mNode.ToXml(new XmlDocument()).OuterXml;
-			}
-			catch (Exception ee)
-			{
-				MessageBox.Show(ee.Message,"Bad node name!");
-				mNode.Name = prevName;
-				e.CancelEdit = true;
-				return;
-			}
-			UpdateNodeTag();
-			if (mNode is MissionNode_Folder || mNode is MissionNode_Comment)
-				OutputMissionNodeContentsToStatementTree();
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message,"Bad node name!");
+                mNode.Name = prevName;
+                e.CancelEdit = true;
+                return;
+            }
+            UpdateNodeTag();
+            if (mNode is MissionNode_Folder || mNode is MissionNode_Comment)
+                OutputMissionNodeContentsToStatementTree();
 
-			RegisterChange("Node label edited");
-		}
+            RegisterChange("Node label edited");
+        }
 
         /// <summary>
         /// After node was moved in mission nodes tree
         /// </summary>
-        private void _E_nodeTV_NodeMoved(TreeNode node, bool suspendUpdate)
-		{
-			if (node == null)
-				return;
+        private void _E_nodeTV_NodeMoved(object sender, NodeMovedEventArgs e)
+        {
+            TreeNode node = sender as TreeNode;
+            if (node == null)
+                return;
 
-			//Assign parentship
-			if (node.Parent != null)
-				((MissionNode)node.Tag).ParentID = ((MissionNode)node.Parent.Tag).ID;
-			else
-				((MissionNode)node.Tag).ParentID = null;
+            //Assign parentship
+            if (node.Parent != null)
+                ((MissionNode)node.Tag).ParentID = ((MissionNode)node.Parent.Tag).ID;
+            else
+                ((MissionNode)node.Tag).ParentID = null;
 
-			//Adjust start node
-			if (_startNode.Tag == node.Tag)
-				_startNode = node;
+            //Adjust start node
+            if (_startNode.Tag == node.Tag)
+                _startNode = node;
 
-            if (!suspendUpdate)
-			    RegisterChange("Node moved");
-		}
+            if (!e.SuspendUpdate)
+                RegisterChange("Node moved");
+        }
 
         /// <summary>
         /// After node was expanded in mission nodes tree
         /// </summary>
         private void _E_nodeTV_AfterExpand(object sender, TreeViewEventArgs e)
-		{
-			MissionNode mNode = ((MissionNode)e.Node.Tag);
-			if (!mNode.ExtraAttributes.Contains("expanded_arme"))
-			{
-				mNode.ExtraAttributes.Add("expanded_arme");
-				if (!SupressExpandCollapseEvents && !TreeViewNodes.DraggingInProgress)
-					RegisterChange("Expanded folder");
-			}
-		}
+        {
+            MissionNode mNode = ((MissionNode)e.Node.Tag);
+            if (!mNode.ExtraAttributes.Contains("expanded_arme"))
+            {
+                mNode.ExtraAttributes.Add("expanded_arme");
+                if (!SupressExpandCollapseEvents && !TreeViewNodes.DraggingInProgress)
+                    RegisterChange("Expanded folder");
+            }
+        }
 
         /// <summary>
         /// After node was collapsed in mission nodes tree
         /// </summary>
         private void _E_nodeTV_AfterCollapse(object sender, TreeViewEventArgs e)
-		{
-			MissionNode mNode = ((MissionNode)e.Node.Tag);
-			if (mNode.ExtraAttributes.Contains("expanded_arme"))
-			{
-				mNode.ExtraAttributes.Remove("expanded_arme");
-				if (!SupressExpandCollapseEvents && !TreeViewNodes.DraggingInProgress)
-					RegisterChange("Collapsed folder");
-			}
-		}
+        {
+            MissionNode mNode = ((MissionNode)e.Node.Tag);
+            if (mNode.ExtraAttributes.Contains("expanded_arme"))
+            {
+                mNode.ExtraAttributes.Remove("expanded_arme");
+                if (!SupressExpandCollapseEvents && !TreeViewNodes.DraggingInProgress)
+                    RegisterChange("Collapsed folder");
+            }
+        }
 
         /// <summary>
         /// After key was pressed in the main form
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-		private void _E_form_KeyDown(object sender, KeyEventArgs e)
-		{
-			//File commands
+        private void _E_form_KeyDown(object sender, KeyEventArgs e)
+        {
+            //File commands
             if (e.KeyData == (Keys.N | Keys.Control))
             {
                 e.SuppressKeyPress = true;//TODO: Figure out why BeginInvoke is nessecary here?
                 FormMain.BeginInvoke(new Action(() =>
-				New()
-				));
-            } 
+                New()
+                ));
+            }
             if (e.KeyData == (Keys.O | Keys.Control))
-			{
-				e.SuppressKeyPress = true;
-				FormMain.BeginInvoke(new Action(() =>
-				Open()
-				));
-			}
+            {
+                e.SuppressKeyPress = true;
+                FormMain.BeginInvoke(new Action(() =>
+                Open()
+                ));
+            }
             if (e.KeyData == (Keys.S | Keys.Control))
-			{
-				e.SuppressKeyPress = true;
-				FormMain.BeginInvoke(new Action(() =>
-				Save()
-				));
-			}
+            {
+                e.SuppressKeyPress = true;
+                FormMain.BeginInvoke(new Action(() =>
+                Save()
+                ));
+            }
             if (e.KeyData == (Keys.S | Keys.Control | Keys.Alt))
             {
                 e.SuppressKeyPress = true;
-				FormMain.BeginInvoke(new Action(() =>
-				SaveAs()
-				));
+                FormMain.BeginInvoke(new Action(() =>
+                SaveAs()
+                ));
             }
 
-			//Edit commands
-			if (e.KeyData == (Keys.Z | Keys.Control))
-			{
-				e.SuppressKeyPress = true;
-				Undo();
+            //Edit commands
+            if (e.KeyData == (Keys.Z | Keys.Control))
+            {
+                e.SuppressKeyPress = true;
+                Undo();
             }
             if (e.KeyData == (Keys.Y | Keys.Control))
             {
                 e.SuppressKeyPress = true;
                 Redo();
             }
-			if (e.KeyData == (Keys.F | Keys.Control) || e.KeyData == (Keys.F | Keys.Control | Keys.Shift))
-			{
-				e.SuppressKeyPress = true;
-				ShowFindForm();
-			}
-			if (e.KeyData == (Keys.H | Keys.Control) || e.KeyData == (Keys.H | Keys.Control | Keys.Shift))
+            if (e.KeyData == (Keys.F | Keys.Control) || e.KeyData == (Keys.F | Keys.Control | Keys.Shift))
+            {
+                e.SuppressKeyPress = true;
+                ShowFindForm();
+            }
+            if (e.KeyData == (Keys.H | Keys.Control) || e.KeyData == (Keys.H | Keys.Control | Keys.Shift))
             {
                 e.SuppressKeyPress = true;
                 ShowReplaceForm();
@@ -4477,317 +5545,322 @@ namespace ArtemisMissionEditor
             if (e.KeyData == Keys.F4)
             {
                 e.SuppressKeyPress = true;
-				ShowEventDependencyForm(true);
+                ShowEventDependencyForm(true);
             }
             if (e.KeyData == (Keys.F4 | Keys.Shift))
             {
                 e.SuppressKeyPress = true;
-				ShowEventDependencyForm();
+                ShowEventDependencyForm();
             }
-			if (e.KeyData == (Keys.P | Keys.Control))
-			{
-				e.SuppressKeyPress = true;
-				ShowMissionPropertiesForm();
-			}
+            if (e.KeyData == (Keys.P | Keys.Control))
+            {
+                e.SuppressKeyPress = true;
+                ShowMissionPropertiesForm();
+            }
             //Label selection keys
-			if (e.KeyCode == Keys.D1)
-			{
-				SelectExpressionLabelByNumber(1);
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.D2)
-			{
-				SelectExpressionLabelByNumber(2);
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.D3)
-			{
-				SelectExpressionLabelByNumber(3);
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.D4)
-			{
-				SelectExpressionLabelByNumber(4);
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.D5)
-			{
-				SelectExpressionLabelByNumber(5);
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.D6)
-			{
-				SelectExpressionLabelByNumber(6);
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.D7)
-			{
-				SelectExpressionLabelByNumber(7);
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.D8)
-			{
-				SelectExpressionLabelByNumber(8);
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.D9)
-			{
-				SelectExpressionLabelByNumber(9);
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.D0)
-			{
-				SelectExpressionLabelByNumber(10);
-				e.SuppressKeyPress = true;
-			}
+            if (e.KeyCode == Keys.D1)
+            {
+                SelectExpressionLabelByNumber(1);
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.D2)
+            {
+                SelectExpressionLabelByNumber(2);
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.D3)
+            {
+                SelectExpressionLabelByNumber(3);
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.D4)
+            {
+                SelectExpressionLabelByNumber(4);
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.D5)
+            {
+                SelectExpressionLabelByNumber(5);
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.D6)
+            {
+                SelectExpressionLabelByNumber(6);
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.D7)
+            {
+                SelectExpressionLabelByNumber(7);
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.D8)
+            {
+                SelectExpressionLabelByNumber(8);
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.D9)
+            {
+                SelectExpressionLabelByNumber(9);
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.D0)
+            {
+                SelectExpressionLabelByNumber(10);
+                e.SuppressKeyPress = true;
+            }
 
-			//Expand/collapse
-			if (e.KeyData == (Keys.E | Keys.Control))
-			{
-				e.SuppressKeyPress = true;
-				NodeExpandAll();
-			}
-			if (e.KeyData == (Keys.R | Keys.Control))
-			{
-				e.SuppressKeyPress = true;
-				NodeCollapseAll();
-			}
-		}
+            //Expand/collapse
+            if (e.KeyData == (Keys.E | Keys.Control))
+            {
+                e.SuppressKeyPress = true;
+                NodeExpandAll();
+            }
+            if (e.KeyData == (Keys.R | Keys.Control))
+            {
+                e.SuppressKeyPress = true;
+                NodeCollapseAll();
+            }
+        }
 
         /// <summary>
         /// After key was pressed in mission nodes tree
         /// </summary>
-		private void _E_nodeTV_KeyDown(object sender, KeyEventArgs e)
-		{
-			//Forward to Statement tree
-			if (e.KeyCode == Keys.Enter && Control.ModifierKeys == Keys.None)
-			{
-				TreeViewStatements.Focus();
-				e.SuppressKeyPress = true;
-			}
+        private void _E_nodeTV_KeyDown(object sender, KeyEventArgs e)
+        {
+            //Forward to Statement tree
+            if (e.KeyCode == Keys.Enter && Control.ModifierKeys == Keys.None)
+            {
+                TreeViewStatements.Focus();
+                e.SuppressKeyPress = true;
+            }
 
-			//Edit menu keys
-			if (e.KeyData == (Keys.C | Keys.Control) || e.KeyData == (Keys.Insert | Keys.Control))
-			{
-				if (NodeCopy())
-					e.SuppressKeyPress = true;
-			}
-			if (e.KeyData == (Keys.X | Keys.Control) || e.KeyData == (Keys.Delete | Keys.Shift))
-			{
-				if (NodeCopy())
-				{
-					e.SuppressKeyPress = true;
-					NodeDelete();
-				}
-			}
-			if (e.KeyData == (Keys.V | Keys.Control) || e.KeyData == (Keys.Insert | Keys.Shift))
-			{
-				e.SuppressKeyPress = true;
+            //Edit menu keys
+            if (e.KeyData == (Keys.C | Keys.Control) || e.KeyData == (Keys.Insert | Keys.Control))
+            {
+                if (NodeCopy())
+                    e.SuppressKeyPress = true;
+            }
+            if (e.KeyData == (Keys.X | Keys.Control) || e.KeyData == (Keys.Delete | Keys.Shift))
+            {
+                if (NodeCopy())
+                {
+                    e.SuppressKeyPress = true;
+                    NodeDelete();
+                }
+            }
+            if (e.KeyData == (Keys.V | Keys.Control) || e.KeyData == (Keys.Insert | Keys.Shift))
+            {
+                e.SuppressKeyPress = true;
 
-				if (!NodePaste() && StatementPaste() && Settings.Current.FocusOnStatementPaste)
-				{
-					TreeViewStatements.Focus();
-				}
-			}
-			//CMS keys
-			if (e.KeyCode == Keys.Up && Control.ModifierKeys == Keys.Control)
-			{
-				NodeMoveUp();
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.Down && Control.ModifierKeys == Keys.Control)
-			{
-				NodeMoveDown();
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.Right && Control.ModifierKeys == Keys.Control)
-			{
-				NodeMoveIn();
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.Left && Control.ModifierKeys == Keys.Control)
-			{
-				NodeMoveOut();
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.Delete && Control.ModifierKeys == Keys.None)
-			{
-				NodeDelete();
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyData == (Keys.Control | Keys.D))
-			{
-				e.SuppressKeyPress = true;
-				NodeSetEnabled(false);
-			}
-			if (e.KeyData == (Keys.Control |Keys.Shift | Keys.D))
-			{
-				e.SuppressKeyPress = true;
-				NodeSetEnabled(true);
-			}
-			if (e.KeyCode == Keys.F2 && Control.ModifierKeys == Keys.None)
-			{
-				NodeRename();
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.Insert && Control.ModifierKeys == Keys.None)
-			{
-				NodeAddEvent();
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.Insert && Control.ModifierKeys == Keys.Alt)
-			{
-				NodeAddFolder();
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.Insert && Control.ModifierKeys == (Keys.Control | Keys.Shift))
-			{
-				NodeAddCommentary();
-				e.SuppressKeyPress = true;
-			}
+                if (!NodePaste() && StatementPaste() && Settings.Current.FocusOnStatementPaste)
+                {
+                    TreeViewStatements.Focus();
+                }
+            }
+            //CMS keys
+            if (e.KeyCode == Keys.Up && Control.ModifierKeys == Keys.Control)
+            {
+                NodeMoveUp();
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.Down && Control.ModifierKeys == Keys.Control)
+            {
+                NodeMoveDown();
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.Right && Control.ModifierKeys == Keys.Control)
+            {
+                NodeMoveIn();
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.Left && Control.ModifierKeys == Keys.Control)
+            {
+                NodeMoveOut();
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.Delete && Control.ModifierKeys == Keys.None)
+            {
+                NodeDelete();
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyData == (Keys.Control | Keys.D))
+            {
+                e.SuppressKeyPress = true;
+                NodeSetEnabled(false);
+            }
+            if (e.KeyData == (Keys.Control |Keys.Shift | Keys.D))
+            {
+                e.SuppressKeyPress = true;
+                NodeSetEnabled(true);
+            }
+            if (e.KeyCode == Keys.F2 && Control.ModifierKeys == Keys.None)
+            {
+                NodeRename();
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.Insert && Control.ModifierKeys == Keys.None)
+            {
+                NodeAddEvent();
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.Insert && Control.ModifierKeys == Keys.Alt)
+            {
+                NodeAddFolder();
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.Insert && Control.ModifierKeys == (Keys.Control | Keys.Shift))
+            {
+                NodeAddCommentary();
+                e.SuppressKeyPress = true;
+            }
 
-			//Catch events that will DING
+            //Catch events that will DING
             if (e.KeyData == (Keys.Control | Keys.F) || e.KeyData == (Keys.Control | Keys.H))
-			{
-				e.Handled = true;
-				e.SuppressKeyPress = true;
-			}
-		}
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        }
 
         /// <summary>
         /// After key was pressed in the statements tree
         /// </summary>
-		private void _E_statementTV_KeyDown(object sender, KeyEventArgs e)
-		{
-			//Forward to Flow layout panel
-			if (e.KeyCode == Keys.Enter && Control.ModifierKeys == Keys.None)
-			{
-				e.SuppressKeyPress = true;
-				SelectExpressionLabelByNumber(1);
-			}
+        private void _E_statementTV_KeyDown(object sender, KeyEventArgs e)
+        {
+            //Forward to Flow layout panel
+            if (e.KeyCode == Keys.Enter && Control.ModifierKeys == Keys.None)
+            {
+                e.SuppressKeyPress = true;
+                SelectExpressionLabelByNumber(1);
+            }
 
-			//Back to Node tree
-			if (e.KeyCode == Keys.Enter && Control.ModifierKeys == Keys.Shift)
-			{
-				e.SuppressKeyPress = true;
-				TreeViewNodes.Focus();
-			}
+            //Back to Node tree
+            if (e.KeyCode == Keys.Enter && Control.ModifierKeys == Keys.Shift)
+            {
+                e.SuppressKeyPress = true;
+                TreeViewNodes.Focus();
+            }
 
             //Edit menu keys
-			if (e.KeyData == (Keys.C | Keys.Control) || e.KeyData == (Keys.Insert | Keys.Control))
-			{
-				if (StatementCopy())
-					e.SuppressKeyPress = true;
-			}
-			if (e.KeyData == (Keys.X | Keys.Control) || e.KeyData == (Keys.Delete | Keys.Shift))
-			{
-				if (StatementCopy())
-				{
-					e.SuppressKeyPress = true;
-					StatementDelete();
-				}
-			}
-			if (e.KeyData == (Keys.V | Keys.Control) || e.KeyData == (Keys.Insert | Keys.Shift))
-			{
-				e.SuppressKeyPress = true;
-				StatementPaste();
-				TreeViewStatements.Focus();
-			}
+            if (e.KeyData == (Keys.C | Keys.Control) || e.KeyData == (Keys.Insert | Keys.Control))
+            {
+                if (StatementCopy())
+                    e.SuppressKeyPress = true;
+            }
+            if (e.KeyData == (Keys.X | Keys.Control) || e.KeyData == (Keys.Delete | Keys.Shift))
+            {
+                if (StatementCopy())
+                {
+                    e.SuppressKeyPress = true;
+                    StatementDelete();
+                }
+            }
+            if (e.KeyData == (Keys.V | Keys.Control) || e.KeyData == (Keys.Insert | Keys.Shift))
+            {
+                e.SuppressKeyPress = true;
+                StatementPaste();
+                TreeViewStatements.Focus();
+            }
+            if (e.KeyData == Keys.F1)
+            {
+                e.SuppressKeyPress = true;
+                StatementHelp();
+            }
             //EDIT keys
             if (e.KeyData == Keys.F2)
             {
-				e.SuppressKeyPress = true;
-				EditCreateStatementsOnSpaceMap();
+                e.SuppressKeyPress = true;
+                EditCreateStatementsOnSpaceMap();
             }
             if (e.KeyData == (Keys.F2 | Keys.Shift))
             {
-				e.SuppressKeyPress = true;
-				AddCreateStatementsViaSpaceMap();
+                e.SuppressKeyPress = true;
+                AddCreateStatementsViaSpaceMap();
             }
             if (e.KeyData == (Keys.F2 | Keys.Control))
             {
-				e.SuppressKeyPress = true;
-				EditStatementOnSpaceMap();
+                e.SuppressKeyPress = true;
+                EditStatementOnSpaceMap();
             }
-			if (e.KeyData == (Keys.Control | Keys.D))
-			{
-				e.SuppressKeyPress = true;
-				StatementSetEnabled(false);
-			}
-			if (e.KeyData == (Keys.Control | Keys.Shift | Keys.D))
-			{
-				e.SuppressKeyPress = true;
-				StatementSetEnabled(true);
-			}
-			
-			//CMS keys
-			if (e.KeyCode == Keys.Up && Control.ModifierKeys == Keys.Control)
-			{
-				StatementMoveUp();
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.Down && Control.ModifierKeys == Keys.Control)
-			{
-				StatementMoveDown();
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.Delete && Control.ModifierKeys == Keys.None)
-			{
-				StatementDelete();
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.Insert && Control.ModifierKeys == Keys.None)
-			{
-				StatementAddAction();
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.Insert && Control.ModifierKeys == Keys.Alt)
-			{
-				StatementAddCondition();
-				e.SuppressKeyPress = true;
-			}
-			if (e.KeyCode == Keys.Insert && Control.ModifierKeys == (Keys.Control | Keys.Shift))
-			{
-				StatementAddCommentary();
-				e.SuppressKeyPress = true;
-			}
+            if (e.KeyData == (Keys.Control | Keys.D))
+            {
+                e.SuppressKeyPress = true;
+                StatementSetEnabled(false);
+            }
+            if (e.KeyData == (Keys.Control | Keys.Shift | Keys.D))
+            {
+                e.SuppressKeyPress = true;
+                StatementSetEnabled(true);
+            }
+
+            //CMS keys
+            if (e.KeyCode == Keys.Up && Control.ModifierKeys == Keys.Control)
+            {
+                StatementMoveUp();
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.Down && Control.ModifierKeys == Keys.Control)
+            {
+                StatementMoveDown();
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.Delete && Control.ModifierKeys == Keys.None)
+            {
+                StatementDelete();
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.Insert && Control.ModifierKeys == Keys.None)
+            {
+                StatementAddAction();
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.Insert && Control.ModifierKeys == Keys.Alt)
+            {
+                StatementAddCondition();
+                e.SuppressKeyPress = true;
+            }
+            if (e.KeyCode == Keys.Insert && Control.ModifierKeys == (Keys.Control | Keys.Shift))
+            {
+                StatementAddCommentary();
+                e.SuppressKeyPress = true;
+            }
 
             //Catch events that will DING
-			if (e.KeyData == (Keys.Control | Keys.F) || e.KeyData == (Keys.Shift | Keys.Control | Keys.F) || e.KeyData == (Keys.Control | Keys.H) || e.KeyData == (Keys.Shift | Keys.Control | Keys.H))
+            if (e.KeyData == (Keys.Control | Keys.F) || e.KeyData == (Keys.Shift | Keys.Control | Keys.F) || e.KeyData == (Keys.Control | Keys.H) || e.KeyData == (Keys.Shift | Keys.Control | Keys.H))
             {
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
 
-			//Catch +/-
-			if (e.KeyCode == Keys.OemMinus || e.KeyCode == Keys.Subtract || e.KeyCode == Keys.Oemplus || e.KeyCode == Keys.Add)
-			{
-				NormalLabel l = FindFirstPlusMinusAbleLabel();
-				if (l != null)
-				{
-					if (Settings.Current.SelectLabelWhenUsingPlusMinus)
-						l.Focus();
-					e.SuppressKeyPress = true;
-					_E_l_PreviewKeyDown(l, new PreviewKeyDownEventArgs(e.KeyData));
-				}
-			}
-		}
+            //Catch +/-
+            if (e.KeyCode == Keys.OemMinus || e.KeyCode == Keys.Subtract || e.KeyCode == Keys.Oemplus || e.KeyCode == Keys.Add)
+            {
+                NormalLabel l = FindFirstPlusMinusAbleLabel();
+                if (l != null)
+                {
+                    if (Settings.Current.SelectLabelWhenUsingPlusMinus)
+                        l.Focus();
+                    e.SuppressKeyPress = true;
+                    _E_l_PreviewKeyDown(l, new PreviewKeyDownEventArgs(e.KeyData));
+                }
+            }
+        }
 
         /// <summary>
         /// After flow layout panel was resized
         /// </summary>
         private void _E_flowLP_Resize(object sender, EventArgs e)
-		{
-			foreach (Control c in FlowLayoutPanelMain.Controls)
-			{
-				if (c is NormalLabel)
-					UpdateLabel((NormalLabel)c);
-			}
+        {
+            foreach (Control c in FlowLayoutPanelMain.Controls)
+            {
+                if (c is NormalLabel)
+                    UpdateLabel((NormalLabel)c);
+            }
 
-			FlowLayoutPanelMain.PerformLayout();
+            FlowLayoutPanelMain.PerformLayout();
 
-			FlowLayoutPanelMain.Invalidate(true);
-		}
+            FlowLayoutPanelMain.Invalidate(true);
+        }
 
         /// <summary>
         /// Node was doubleclicked in the statements tree
@@ -4822,15 +5895,15 @@ namespace ArtemisMissionEditor
         /// Gets text representation of the difference between current data and source Xml (if present)
         /// </summary>
         public string GetDifferenceVersusSource()
-		{
-			string output = "";
-			foreach (TreeNode node in TreeViewNodes.Nodes)
-				GetDifferenceVersusSource_RecursivelyOutput(node, ref output);
-			return output;
+        {
+            string output = "";
+            foreach (TreeNode node in TreeViewNodes.Nodes)
+                GetDifferenceVersusSource_RecursivelyOutput(node, ref output);
+            return output;
         }
 
         /// <summary>
-        /// Gets text representation of the difference for nodes that are child to the current node. 
+        /// Gets text representation of the difference for nodes that are child to the current node.
         /// Called from GetDifferenceVersusSource and recursively calls itself.
         /// </summary>
         private void GetDifferenceVersusSource_RecursivelyOutput
@@ -4885,7 +5958,7 @@ namespace ArtemisMissionEditor
             {
                 XmlAttribute atto = xOld.Attributes[attn.Name];
                 if (atto == null)
-                    diffs += "\r\n" + "Attribute: added <" + attn.Name + ">";
+                    diffs += "\r\n" + "Attribute: <" + attn.Name + "> added";
             }
             if (!String.IsNullOrEmpty(diffs))
             {
@@ -4926,14 +5999,14 @@ namespace ArtemisMissionEditor
         /// Get the list of nodes in the mission. Nodes are ordered top to bottom, folders come before their contents.
         /// </summary>
         public List<TreeNode> GetNodes()
-		{
-			List<TreeNode> list = new List<TreeNode>();
+        {
+            List<TreeNode> list = new List<TreeNode>();
 
-			foreach (TreeNode node in TreeViewNodes.Nodes)
-				GetNodes_RecursivelyAdd(node, list);
+            foreach (TreeNode node in TreeViewNodes.Nodes)
+                GetNodes_RecursivelyAdd(node, list);
 
-			return list;
-		}
+            return list;
+        }
 
         /// <summary>
         /// Get list of nodes that are child to the current node and add them to the list.
@@ -4951,14 +6024,14 @@ namespace ArtemisMissionEditor
         /// Get TreeNode of the mission node that is selected
         /// </summary>
         public TreeNode GetSelectedNode()
-		{
-			return TreeViewNodes.SelectedNode;
-		}
+        {
+            return TreeViewNodes.SelectedNode;
+        }
 
         /// <summary>
         /// Get selected node position in statements tree ONLY IF it is not actually a statement (but a "Conditions" or "Actions" node)
         /// </summary>
-		public int GetSelectedNonStatementNodePosition()
+        public int GetSelectedNonStatementNodePosition()
         {
             if (TreeViewStatements.SelectedNode == null)
                 return 0;
@@ -4972,5 +6045,3 @@ namespace ArtemisMissionEditor
         #endregion
     }
 }
-
-

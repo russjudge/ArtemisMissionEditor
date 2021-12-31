@@ -203,11 +203,11 @@ namespace ArtemisMissionEditor
 
 		/// <summary> Gets the attribute value </summary>
 		/// <param name="name">Name of the value, as in XML</param>
-		/// <returns>Value if attribute exists, null if doesnt</returns>
+		/// <returns>Value if attribute exists, null if doesn't</returns>
 		public string GetAttribute(string name)
 		{
 			if (String.IsNullOrEmpty(name))
-				throw new ArgumentOutOfRangeException("name", "Attribute cannot have a blank name!");
+				throw new ArgumentOutOfRangeException(name, "Attribute cannot have a blank name!");
 
 			//Try reading directly
 			if (Attributes.ContainsKey(name))
@@ -244,15 +244,15 @@ namespace ArtemisMissionEditor
 				return Attributes[name];
 			}
 
-			//Tell them it doesnt exist
+			//Tell them it doesn't exist
 			return null;
 		}
 		/// <summary> 
 		/// Gets the attribute value 
 		/// </summary>
 		/// <param name="name">Name of the value, as in XML</param>
-		/// <param name="valueIfNull">Set value to this if its null</param>
-		/// <returns>Value if attribute exists, null if doesnt</returns>
+		/// <param name="valueIfNull">Set value to this if it's null</param>
+		/// <returns>Value if attribute exists, null if it doesn't</returns>
 		public string GetAttribute(string name, string valueIfNull)
 		{
 			string result = GetAttribute(name);
@@ -270,7 +270,7 @@ namespace ArtemisMissionEditor
 		/// </summary>
 		/// <param name="name">Name of the attribute</param>
 		/// <param name="value">If value=null, attribute will be removed, if present. If value!=null, attribute will be set, if present, or added, if not present</param>
-		private void AttribuesAddSetRemove(string name, string value)
+		private void AttributesAddSetRemove(string name, string value)
 		{
 			if (Attributes.ContainsKey(name))
 			{
@@ -296,10 +296,10 @@ namespace ArtemisMissionEditor
 				if (arr.Contains(name))
 					foreach (string item in arr)
 						if (name != item)
-							AttribuesAddSetRemove(item, null);
+							AttributesAddSetRemove(item, null);
 
 			//Then set the attribute
-			AttribuesAddSetRemove(name, value);
+			AttributesAddSetRemove(name, value);
 
 			//Then check for bound attributes
 			if (value != null)
@@ -320,8 +320,8 @@ namespace ArtemisMissionEditor
 					if (Helper.DoubleTryParse(lowSValue == null ? null : lowSValue, out lowValue) && Helper.DoubleTryParse(highSValue == null ? null : highSValue, out highValue))
 						if (lowValue > highValue)
 						{
-							AttribuesAddSetRemove(low, highSValue);
-							AttribuesAddSetRemove(high, lowSValue);
+							AttributesAddSetRemove(low, highSValue);
+							AttributesAddSetRemove(high, lowSValue);
 						}
 				}
 			}
@@ -343,12 +343,16 @@ namespace ArtemisMissionEditor
         /// Contains arrays of attribute names that share the same value, like, x/startX/centerX/... 
         /// </summary>
         private static readonly string[][] LinkedAttributes = new string[][]{
-            new string[]{ "x", "startX", "centerX", "pointX" },
-            new string[]{ "y", "startY", "centerY", "pointY" },
-            new string[]{ "z", "startZ", "centerZ", "pointZ" },
+            new string[]{ "x", "startX", "centerX", "pointX", "targetpointX" /* obsolete */ },
+            new string[]{ "y", "startY", "centerY", "pointY", "targetpointY" /* obsolete */ },
+            new string[]{ "z", "startZ", "centerZ", "pointZ", "targetpointZ" /* obsolete */ },
             new string[]{ "use_gm_position", "use_gm_selection" },
             new string[]{ "name", "name1" },
             new string[]{ "name2", "targetName" },
+
+            // New names for obsolete attribute names.
+            new string[]{ "scan_desc", "scandesc" },
+            new string[]{ "hullID", "hulltype" },
         };
 
 		/// <summary> 
@@ -369,6 +373,11 @@ namespace ArtemisMissionEditor
             MissionStatement mn = new MissionStatement(parent);
 
 			mn.FromXml(item);
+
+			if (string.IsNullOrEmpty(mn.Name))
+			{
+				return null;
+			}
 
 			mn.Update();
 
@@ -398,7 +407,6 @@ namespace ArtemisMissionEditor
 			if (expressionChanged)
 				Expression = newExpr;
 
-			//TODO: Correctly update string representation [Forgot what this means, maybe already done?] <-- WTF does it mean?
 			_text = "";
 
 			foreach (ExpressionMemberContainer item in Expression)
@@ -444,8 +452,11 @@ namespace ArtemisMissionEditor
                             continue;
                         XmlAttribute cAtt = xDoc.CreateAttribute(container.Member.Name);
                         cAtt.Value = container.GetAttribute();
-                        if (container.Member.ValueDescription.BehaviorInXml == ExpressionMemberValueBehaviorInXml.StoredAsIs || !String.IsNullOrEmpty(cAtt.Value))
-                            result.Attributes.Append(cAtt);
+                        if (container.Member.ValueDescription.BehaviorInXml != ExpressionMemberValueBehaviorInXml.StoredAsIs && String.IsNullOrEmpty(cAtt.Value))
+                            continue;
+                        if (container.Member.ValueDescription.BehaviorInXml == ExpressionMemberValueBehaviorInXml.StoredWhenNonDefault && cAtt.Value == container.Member.ValueDescription.DefaultIfNull)
+                            continue;
+                        result.Attributes.Append(cAtt);
                     }
                 if (!String.IsNullOrEmpty(Body))
                     result.InnerText = Body;

@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ArtemisMissionEditor
 {
-	/// <summary> 
+    /// <summary> 
     /// Stores data about one mission node (Start, Event, Folder or Comment)
     /// </summary>
     [Serializable]
@@ -23,23 +19,23 @@ namespace ArtemisMissionEditor
         /// <summary> Extra attributes of the node. Used to store states such as "collapsed/expanded" state of the folder</summary>
         public List<string> ExtraAttributes { get; set; }
 
-        /// <summary> Wether the node is using it's default name or not.</summary>
+        /// <summary> Whether the node is using its default name or not.</summary>
         public bool HasDefaultName { get { return _hasDefaultName; } protected set { _hasDefaultName = value; } }
         protected bool _hasDefaultName;
-		
+        
         /// <summary> Name of the node. </summary>
         public string Name
-		{
-			get { return _name; }
+        {
+            get { return _name; }
             set { _name = value; _hasDefaultName = false; }
-		}
+        }
         protected string _name;
 
         /// <summary> List of conditions of this node (if any)</summary>
         public List<MissionStatement> Conditions { get; set; }
 
         /// <summary> List of actions of this node (if any)</summary>
-		public List<MissionStatement> Actions { get; set; }
+        public List<MissionStatement> Actions { get; set; }
 
         #region SHARED
         
@@ -56,10 +52,10 @@ namespace ArtemisMissionEditor
                 case "event":
                     mn = new MissionNode_Event();
                     break;
-				case "disabled_event":
-					mn = new MissionNode_Event();
-					break;
-				case "start":
+                case "disabled_event":
+                    mn = new MissionNode_Event();
+                    break;
+                case "start":
                     mn = new MissionNode_Start();
                     break;
                 case "#comment":
@@ -102,34 +98,34 @@ namespace ArtemisMissionEditor
         public abstract void FromXml(XmlNode item);
 
         /// <summary> Clone this MissionNode appropriately</summary>
-		public object Clone()
-		{
-			//Copy mission node
-			MissionNode result = MissionNode.NewFromXML(this.ToXml(new XmlDocument(), true));
+        public object Clone()
+        {
+            //Copy mission node
+            MissionNode result = MissionNode.NewFromXML(this.ToXml(new XmlDocument(), true));
 
-			//Exchange IDs
-			if (result.ID.HasValue)
-				if (Helper.GuidDictionary.ContainsKey(result.ID.Value))
-					result.ID = Helper.GuidDictionary[result.ID.Value];
-				else
-					Helper.GuidDictionary.Add(result.ID.Value, (result.ID = Guid.NewGuid()).Value);
-			if (result.ParentID.HasValue)
-				if (Helper.GuidDictionary.ContainsKey(result.ParentID.Value))
-					result.ParentID = Helper.GuidDictionary[result.ParentID.Value];
-				else
-					Helper.GuidDictionary.Add(result.ParentID.Value, (result.ParentID = Guid.NewGuid()).Value);
+            //Exchange IDs
+            if (result.ID.HasValue)
+                if (Helper.GuidDictionary.ContainsKey(result.ID.Value))
+                    result.ID = Helper.GuidDictionary[result.ID.Value];
+                else
+                    Helper.GuidDictionary.Add(result.ID.Value, (result.ID = Guid.NewGuid()).Value);
+            if (result.ParentID.HasValue)
+                if (Helper.GuidDictionary.ContainsKey(result.ParentID.Value))
+                    result.ParentID = Helper.GuidDictionary[result.ParentID.Value];
+                else
+                    Helper.GuidDictionary.Add(result.ParentID.Value, (result.ParentID = Guid.NewGuid()).Value);
 
-			return result;
-		}
+            return result;
+        }
 
         protected MissionNode()
         {
             ID = null;
             ParentID = null;
-            SetDefaultName();
+            Name = null;
             ExtraAttributes = new List<string>();
             Conditions = new List<MissionStatement>();
-			Actions = new List<MissionStatement>();
+            Actions = new List<MissionStatement>();
         }
 
         #endregion
@@ -185,9 +181,9 @@ namespace ArtemisMissionEditor
     /// Stores data about one event node
     /// </summary>
     [Serializable]
-	public sealed class MissionNode_Event : MissionNode
+    public sealed class MissionNode_Event : MissionNode
     {
-		/// <summary> Wether this event is enabled or not.</summary>
+        /// <summary> Whether this event is enabled or not.</summary>
         public bool Enabled;
 
         /// <summary> Serial number of this event.</summary>
@@ -219,9 +215,12 @@ namespace ArtemisMissionEditor
                 xElem.Attributes.Append(xAttr);
 
             }
-            xAttr = xDoc.CreateAttribute("id_arme");
-            xAttr.Value = ID.ToString();
-            xElem.Attributes.Append(xAttr);
+            if (ID != null)
+            {
+                xAttr = xDoc.CreateAttribute("id_arme");
+                xAttr.Value = ID.ToString();
+                xElem.Attributes.Append(xAttr);
+            }
             if (ParentID != null)
             {
                 xAttr = xDoc.CreateAttribute("parent_id_arme");
@@ -231,8 +230,8 @@ namespace ArtemisMissionEditor
 
             foreach (MissionStatement item in Conditions)
                 xElem.AppendChild(item.ToXml(xDoc,full));
-			foreach (MissionStatement item in Actions)
-				xElem.AppendChild(item.ToXml(xDoc,full));
+            foreach (MissionStatement item in Actions)
+                xElem.AppendChild(item.ToXml(xDoc,full));
 
             return xElem;
         }
@@ -243,14 +242,14 @@ namespace ArtemisMissionEditor
         /// <param name="item">Source node</param>
         public override void FromXml(XmlNode item)
         {
-			SerialNumber = Mission.Current.EventCount + 1;
+            SerialNumber = Mission.Current.EventCount + 1;
             Enabled = item.Name == "event";
             ID = null;
             ParentID = null;
             Conditions.Clear();
-			Actions.Clear();
+            Actions.Clear();
 
-			List<MissionStatement> commentHolder = new List<MissionStatement>();
+            List<MissionStatement> commentHolder = new List<MissionStatement>();
 
             foreach (XmlAttribute att in item.Attributes)
             {
@@ -258,46 +257,46 @@ namespace ArtemisMissionEditor
                     ID = Helper.GuidTryRead(att.Value, true);
                 if (att.Name == "parent_id_arme")
                     ParentID = Helper.GuidTryRead(att.Value, true);
-				if (att.Name == "name" || att.Name == "name")
-				{
-					Name = att.Value;
-					if (Name.Contains("Event") && Helper.IntTryParse(Name.Substring(5, Name.Length - 5)))
-						SerialNumber = Helper.StringToInt(Name.Substring(5, Name.Length - 5));
-				}
+                if (att.Name == "name_arme" || att.Name == "name")
+                {
+                    Name = att.Value;
+                    if (Name.Contains("Event") && Helper.IntTryParse(Name.Substring(5, Name.Length - 5)))
+                        SerialNumber = Helper.StringToInt(Name.Substring(5, Name.Length - 5));
+                }
             }
 
             if (ID == null)
                 ID = Guid.NewGuid();
 
-			foreach (XmlNode xNode in item.ChildNodes)
-			{
-				MissionStatement nStatement = MissionStatement.NewFromXML(xNode,this);
-				switch (nStatement.Kind)
-				{
-					case MissionStatementKind.Action:
-						{
-							foreach (MissionStatement mS in commentHolder)
-								Actions.Add(mS);
-							commentHolder.Clear();
-							Actions.Add(nStatement);
-						}
-						break;
-					case MissionStatementKind.Condition:
-						{
-							foreach (MissionStatement mS in commentHolder)
-								Conditions.Add(mS);
-							commentHolder.Clear();
-							Conditions.Add(nStatement);
-						}
-						break;
-					case MissionStatementKind.Commentary:
-						commentHolder.Add(nStatement);
-						break;
-				}
-			}
+            foreach (XmlNode xNode in item.ChildNodes)
+            {
+                MissionStatement nStatement = MissionStatement.NewFromXML(xNode,this);
+                switch (nStatement.Kind)
+                {
+                    case MissionStatementKind.Action:
+                        {
+                            foreach (MissionStatement mS in commentHolder)
+                                Actions.Add(mS);
+                            commentHolder.Clear();
+                            Actions.Add(nStatement);
+                        }
+                        break;
+                    case MissionStatementKind.Condition:
+                        {
+                            foreach (MissionStatement mS in commentHolder)
+                                Conditions.Add(mS);
+                            commentHolder.Clear();
+                            Conditions.Add(nStatement);
+                        }
+                        break;
+                    case MissionStatementKind.Commentary:
+                        commentHolder.Add(nStatement);
+                        break;
+                }
+            }
 
-			foreach (MissionStatement mS in commentHolder)
-				Actions.Add(mS);
+            foreach (MissionStatement mS in commentHolder)
+                Actions.Add(mS);
         }
 
         public MissionNode_Event()
@@ -305,8 +304,8 @@ namespace ArtemisMissionEditor
         {
             ID = Guid.NewGuid();
             ParentID = null;
-			Enabled = true;
-			SerialNumber = Mission.Current.EventCount;
+            Enabled = true;
+            SerialNumber = Mission.Current.EventCount;
             SetDefaultName();
         }
 
@@ -345,9 +344,12 @@ namespace ArtemisMissionEditor
                 xElem.Attributes.Append(xAttr);
 
             }
-            xAttr = xDoc.CreateAttribute("id_arme");
-            xAttr.Value = ID.ToString();
-            xElem.Attributes.Append(xAttr);
+            if (ID != null)
+            {
+                xAttr = xDoc.CreateAttribute("id_arme");
+                xAttr.Value = ID.ToString();
+                xElem.Attributes.Append(xAttr);
+            }
             if (ParentID != null)
             {
                 xAttr = xDoc.CreateAttribute("parent_id_arme");
@@ -383,7 +385,7 @@ namespace ArtemisMissionEditor
                     ID = Helper.GuidTryRead(att.Value, true);
                 else if (att.Name == "parent_id_arme")
                     ParentID = Helper.GuidTryRead(att.Value, true);
-                else if (att.Name == "name")
+                else if (att.Name == "name_arme" || att.Name == "name")
                     Name = att.Value;
                 else
                     ExtraAttributes.Add(att.Name);
@@ -408,7 +410,7 @@ namespace ArtemisMissionEditor
     /// Stores data about one start node
     /// </summary>
     [Serializable]
-	public sealed class MissionNode_Start : MissionNode
+    public sealed class MissionNode_Start : MissionNode
     {
         #region INHERITANCE
 
@@ -436,9 +438,12 @@ namespace ArtemisMissionEditor
                 xElem.Attributes.Append(xAttr);
 
             }
-            xAttr = xDoc.CreateAttribute("id_arme");
-            xAttr.Value = ID.ToString();
-            xElem.Attributes.Append(xAttr);
+            if (ID != null)
+            {
+                xAttr = xDoc.CreateAttribute("id_arme");
+                xAttr.Value = ID.ToString();
+                xElem.Attributes.Append(xAttr);
+            }
             
             // Start node should not have parent id
             //if (ParentID != null)
@@ -449,10 +454,10 @@ namespace ArtemisMissionEditor
             //}
             
             // Start node should not have conditions
-			//foreach (MissionStatement item in Conditions)
-			//	xElem.AppendChild(item.ToXml(xDoc));
-			foreach (MissionStatement item in Actions)
-				xElem.AppendChild(item.ToXml(xDoc,full));
+            //foreach (MissionStatement item in Conditions)
+            //    xElem.AppendChild(item.ToXml(xDoc));
+            foreach (MissionStatement item in Actions)
+                xElem.AppendChild(item.ToXml(xDoc,full));
 
             return xElem;
         }
@@ -467,9 +472,9 @@ namespace ArtemisMissionEditor
             ID = null;
             ParentID = null;
             Conditions.Clear();
-			Actions.Clear();
+            Actions.Clear();
 
-			List<MissionStatement> commentHolder = new List<MissionStatement>();
+            List<MissionStatement> commentHolder = new List<MissionStatement>();
 
             foreach (XmlAttribute att in item.Attributes)
             {
@@ -478,36 +483,36 @@ namespace ArtemisMissionEditor
                 // Start node should not have parent id
                 //if (att.Name == "parent_id_arme")
                 //    ParentID = new Guid(att.Value);
-				if (att.Name == "name" || att.Name == "name")
+                if (att.Name == "name_arme" || att.Name == "name")
                     Name = att.Value;
             }
 
-			foreach (XmlNode xNode in item.ChildNodes)
-			{
-				MissionStatement nStatement = MissionStatement.NewFromXML(xNode, this);
-				switch (nStatement.Kind)
-				{
-					case MissionStatementKind.Action:
-						{
-							foreach (MissionStatement mS in commentHolder)
-								Actions.Add(mS);
-							commentHolder.Clear();
-							Actions.Add(nStatement);
-						}
-						break;
-					case MissionStatementKind.Condition:
-						{
-							Log.Add("Found a condition in start block! It was ignored as start nodes are not allowed to have conditions.");	
-						}
-						break;
-					case MissionStatementKind.Commentary:
-						commentHolder.Add(nStatement);
-						break;
-				}
-			}
+            foreach (XmlNode xNode in item.ChildNodes)
+            {
+                MissionStatement nStatement = MissionStatement.NewFromXML(xNode, this);
+                switch (nStatement.Kind)
+                {
+                    case MissionStatementKind.Action:
+                        {
+                            foreach (MissionStatement mS in commentHolder)
+                                Actions.Add(mS);
+                            commentHolder.Clear();
+                            Actions.Add(nStatement);
+                        }
+                        break;
+                    case MissionStatementKind.Condition:
+                        {
+                            Log.Add("Found a condition in start block! It was ignored as start nodes are not allowed to have conditions.");    
+                        }
+                        break;
+                    case MissionStatementKind.Commentary:
+                        commentHolder.Add(nStatement);
+                        break;
+                }
+            }
 
-			foreach (MissionStatement mS in commentHolder)
-				Actions.Add(mS); 
+            foreach (MissionStatement mS in commentHolder)
+                Actions.Add(mS); 
         }
 
         public MissionNode_Start()
@@ -525,7 +530,7 @@ namespace ArtemisMissionEditor
     /// Stores data about one unknown node
     /// </summary>
     [Serializable]
-	public sealed class MissionNode_Unknown : MissionNode
+    public sealed class MissionNode_Unknown : MissionNode
     {
         /// <summary> XmlNode containing this node.</summary>
         [NonSerialized]
