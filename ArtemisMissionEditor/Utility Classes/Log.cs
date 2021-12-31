@@ -7,6 +7,8 @@ using System.Windows.Forms;
 
 namespace ArtemisMissionEditor
 {
+    public sealed class NewLogEntryEventArgs : EventArgs { }
+
     public static class Log
     {
         public static string _fileName = "log.txt";
@@ -15,12 +17,12 @@ namespace ArtemisMissionEditor
         private static List<string> _logLines = new List<string>();
         public static List<string> LogDisplayLinesTemp = new List<string>();
 
-        public static event Action NewLogEntry;
+        public static event EventHandler<NewLogEntryEventArgs> NewLogEntry;
 
-        private static void OnNewLogEntry()
+        private static void OnNewLogEntry(object sender, NewLogEntryEventArgs e)
         {
             if (NewLogEntry!=null)
-				NewLogEntry();
+				NewLogEntry(sender, e);
         }
 
         public static int UnreadLines { get; set; }
@@ -55,7 +57,7 @@ namespace ArtemisMissionEditor
                 Program.FormLogInstance._FL_lb_Log.Items.Add(DateTime.Now.ToString("[HH:mm:ss] ") + text);
             UnreadLines++;
             
-            OnNewLogEntry();
+            OnNewLogEntry(null, null);
         }
 
         public static void Add(Exception ex) { Add(ex.Message + " "+ex.StackTrace); }

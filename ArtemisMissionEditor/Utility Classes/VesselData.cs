@@ -96,18 +96,21 @@ namespace ArtemisMissionEditor
         }
     }
 
+    public class VesselDataChangedEventArgs : EventArgs { }
+
     public sealed class VesselData
     {
+        public static string Path { get; private set; }
         private static List<string> ParserLog;
 
         private static VesselData _current = new VesselData();
-        public static VesselData Current { get { return _current; } set { _current = value; OnVesselDataChaged(); } }
+        public static VesselData Current { get { return _current; } set { _current = value; OnVesselDataChanged(null, null); } }
 
-        public static event Action VesselDataChanged;
-        private static void OnVesselDataChaged()
+        public static event EventHandler<VesselDataChangedEventArgs> VesselDataChanged;
+        private static void OnVesselDataChanged(object sender, VesselDataChangedEventArgs e)
         {
             if (VesselDataChanged != null)
-                VesselDataChanged();
+                VesselDataChanged(sender, e);
         }
 
         public List<string> RaceNames { get; private set; }
@@ -720,26 +723,20 @@ namespace ArtemisMissionEditor
                     ParserLog.Add("Could not locate version attribute in vessel_data tag or it was blank");
             }
 
-            //Parse based on the version
-            switch (version){
+            // Parse based on the version.
+            switch (version)
+            {
                 case "1.56":
-                    FromXml_Version_1_56(xDoc);
-                    break;
-				case "1.65":
-					FromXml_Version_1_56(xDoc);
-					break;
+                case "1.65":
                 case "1.66":
-                    FromXml_Version_1_56(xDoc);
-                    break;
                 case "1.7":
-                    FromXml_Version_1_56(xDoc);
-                    break;
                 case "2.1":
+                case "2.6":
                     FromXml_Version_1_56(xDoc);
                     break;
                 default:
-                    ParserLog.Add("Attempting to parse unknown version: \""+version+"\", will use oldest loading method possible.");
-                    FromXml_Version_1_56(xDoc); //Using oldest method
+                    ParserLog.Add("Attempting to parse unknown version: \""+version+"\", will use newest loading method possible.");
+                    FromXml_Version_1_56(xDoc); // Using newest method
                     break;
             }
         }
@@ -752,6 +749,7 @@ namespace ArtemisMissionEditor
             try
             {
                 xDoc.Load(path);
+                Path = path;
             }
             catch (Exception ex)
             {
@@ -760,7 +758,7 @@ namespace ArtemisMissionEditor
                 Log.Add("Unable to open file: " + path );
                 Log.Add("Error message: ");
                 Log.Add(ex);
-                OnVesselDataChaged(); 
+                OnVesselDataChanged(this, null); 
 				Log.Add("There were problems when loading vesselData.xml");
                 return;
             }
@@ -790,7 +788,7 @@ namespace ArtemisMissionEditor
                 foreach (string item in ParserLog)
                     Log.Add(item);
             }
-            OnVesselDataChaged();
+            OnVesselDataChanged(this, null);
 
 			if (error)
 				Log.Add("There were problems when loading vesselData.xml");

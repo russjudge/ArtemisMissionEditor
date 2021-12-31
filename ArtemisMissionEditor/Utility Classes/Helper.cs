@@ -62,10 +62,10 @@ namespace ArtemisMissionEditor
         }
 
         /// <summary>
-        /// Outputs double to string without different stupid shit M$ does by default
+        /// Outputs double to string
         /// </summary>
         /// <param name="input"></param>
-        /// <param name="decimalZero">Wether a decimal zero must be present.</param>
+        /// <param name="decimalZero">Whether a decimal zero must be present.</param>
         public static string DoubleToString(double input, bool decimalZero = true)
         {
 			if (decimalZero)
@@ -364,8 +364,10 @@ namespace ArtemisMissionEditor
         /// <returns></returns>
         public static string StringFromCompressedByte(byte[] gZipBuffer)
         {
-            using (var memoryStream = new MemoryStream())
+            MemoryStream memoryStream = null;
+            try
             {
+                memoryStream = new MemoryStream();
                 int dataLength = BitConverter.ToInt32(gZipBuffer, 0);
                 memoryStream.Write(gZipBuffer, 4, gZipBuffer.Length - 4);
 
@@ -374,10 +376,18 @@ namespace ArtemisMissionEditor
                 memoryStream.Position = 0;
                 using (var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
                 {
+                    memoryStream = null;
                     gZipStream.Read(buffer, 0, buffer.Length);
                 }
 
                 return Encoding.UTF8.GetString(buffer);
+            }
+            finally
+            {
+                if (memoryStream != null)
+                {
+                    memoryStream.Dispose();
+                }
             }
         }
 
